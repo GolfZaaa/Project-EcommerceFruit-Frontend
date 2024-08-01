@@ -88,7 +88,7 @@ export default function FirstScreen() {
             >
               <Button
                 variant="contained"
-                href={RoutePath.HomeScreen}
+                href={RoutePath.homeScreen}
                 style={{ backgroundColor: "#00973c", color: "#fff" }}
               >
                 เริ่มต้นการใช้งาน

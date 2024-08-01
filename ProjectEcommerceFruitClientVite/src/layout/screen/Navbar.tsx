@@ -9,7 +9,7 @@ export default function Navbar() {
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           <NavLink
-            to={RoutePath.HomeScreen}
+            to={RoutePath.homeScreen}
             style={{ textDecoration: "none", color: "#fff" }}
           >
             เกษตรกรไทยแท้แน่นวล
