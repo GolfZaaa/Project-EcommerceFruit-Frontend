@@ -93,7 +93,7 @@ export default observer(function HomeScreen() {
           </FilterCard>
           <ContentSection>
             <Typography variant="h4" gutterBottom align="left">
-              Product List ({products.length})
+              สินค้าจำนวน ({products.length}) ชิ้น
             </Typography>
             <Grid container spacing={4} justifyContent="center">
               {products.map((product) => (
@@ -160,7 +160,7 @@ const StyledCard: any = styled(Card)(({ theme }) => ({
   maxWidth: "300px",
 }));
 
-const StyledCardMedia: any = styled(CardMedia)(({ theme }) => ({
+const StyledCardMedia: any = styled(CardMedia)(() => ({
   height: 200,
   borderRadius: "12px 12px 0 0",
   objectFit: "cover",

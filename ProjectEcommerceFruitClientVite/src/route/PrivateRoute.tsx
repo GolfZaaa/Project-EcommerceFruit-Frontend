@@ -3,7 +3,7 @@ import DashboardShopScreen from "../Screen/Private/DashboardShopScreen";
 export const PrivateRoute: any = [
   {
     id: 0,
-    path: "/DashboardShopScreen",
+    path: "/dashboard-shop-screen",
     element: <DashboardShopScreen />,
-  }
+  },
 ];

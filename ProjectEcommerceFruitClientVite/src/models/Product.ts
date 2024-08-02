@@ -1,0 +1,20 @@
+import { CartItem } from "./CartItem";
+import { OrderItem } from "./OrderItem";
+import { ProductGI } from "./ProductGI";
+
+export interface Product {
+  id: number;
+  image: string | null;
+  weight: number;
+  price: number;
+  sold: number;
+  detail: string;
+  status: boolean;
+  createdAt: Date;
+
+  productGIId: number;
+  productGI: ProductGI;
+
+  cartItems: CartItem[] | [];
+  orderItems: OrderItem[] | [];
+}
