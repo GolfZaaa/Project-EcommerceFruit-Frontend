@@ -1,5 +1,4 @@
 import { observer } from "mobx-react-lite";
-import Footer from "../layout/screen/Footer";
 import {
   Container,
   Typography,
@@ -18,9 +17,18 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import Navbar from "../layout/screen/Navbar";
+import { useStore } from "../store/store";
+import { useEffect, useState } from "react";
 
 export default observer(function HomeScreen() {
+  const { product, getProduct, category, getCategory } =
+    useStore().productStore;
+
+  useEffect(() => {
+    getProduct(0);
+    getCategory();
+  }, []);
+
   const products = [
     {
       id: 1,
@@ -62,20 +70,38 @@ export default observer(function HomeScreen() {
     },
   ];
 
-  return (
-    <div >
-      <Navbar />
-      
-      <Container maxWidth="xl" >
+  const data = [...product, ...product];
 
-        <Section >
-          <FilterCard>
+  const categories = [
+    {
+      id: 0,
+      name: "ทั้งหมด",
+    },
+    ...category,
+  ];
+
+  const onSelectCate = (categoryId: number) => {
+    getProduct(categoryId);
+  };
+
+  return (
+    <>
+      <Container maxWidth="xl">
+        <Section>
+          <FilterSection>
+            <TypographySectiontop>ตัวกรอง</TypographySectiontop>
             <FormControl fullWidth>
-              <InputLabel>Category</InputLabel>
-              <Select defaultValue="">
-                <MenuItem value="">All</MenuItem>
-                <MenuItem value="fruit">Fruit</MenuItem>
-                <MenuItem value="vegetable">Vegetable</MenuItem>
+              <InputLabel>ประเภท</InputLabel>
+              <Select defaultValue="0">
+                {categories.map((item) => (
+                  <MenuItem
+                    key={item.id}
+                    value={item.id}
+                    onClick={() => onSelectCate(item.id)}
+                  >
+                    {item.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             <FormGroup>
@@ -86,30 +112,39 @@ export default observer(function HomeScreen() {
             <TypographySection>Price</TypographySection>
             <FormGroup>
               <StyledFormControlLabel control={<Checkbox />} label="50 - 100" />
-              <StyledFormControlLabel control={<Checkbox />} label="100 - 150" />
-              <StyledFormControlLabel control={<Checkbox />} label="150 - 200" />
-              <StyledFormControlLabel control={<Checkbox />} label="200 - 250" />
+              <StyledFormControlLabel
+                control={<Checkbox />}
+                label="100 - 150"
+              />
+              <StyledFormControlLabel
+                control={<Checkbox />}
+                label="150 - 200"
+              />
+              <StyledFormControlLabel
+                control={<Checkbox />}
+                label="200 - 250"
+              />
             </FormGroup>
-          </FilterCard>
+          </FilterSection>
           <ContentSection>
             <Typography variant="h4" gutterBottom align="left">
               สินค้าจำนวน ({products.length}) ชิ้น
             </Typography>
-            <Grid container spacing={4} justifyContent="center">
-              {products.map((product) => (
-                <Grid item key={product.id} xs={12} sm={6} md={4}>
+            <Grid container spacing={4} justifyContent="left">
+              {data.map((product, i) => (
+                <Grid item key={i} xs={12} sm={6} md={4}>
                   <StyledCard>
                     <StyledCardMedia
                       component="img"
-                      alt={product.name}
-                      image={product.imageUrl}
+                      alt={product.productGI.name}
+                      image={products[i % 2].imageUrl}
                     />
                     <StyledCardContent>
                       <ProductTitle variant="h6" component="div">
-                        {product.name}
+                        {product.productGI.name}
                       </ProductTitle>
                       <ProductDescription variant="body2">
-                        {product.description}
+                        {product.productGI.description}
                       </ProductDescription>
                       <ButtonWrapper>
                         <FullWidthButton variant="outlined">
@@ -124,8 +159,7 @@ export default observer(function HomeScreen() {
           </ContentSection>
         </Section>
       </Container>
-      <Footer />
-    </div>
+    </>
   );
 });
 
@@ -134,16 +168,6 @@ export default observer(function HomeScreen() {
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   color: theme.palette.text.disabled,
   fontWeight: 800,
-}));
-
-const FilterCard = styled(Card)(({ theme }) => ({
-  padding: theme.spacing(2),
-  borderRadius: "4px",
-  marginBottom: theme.spacing(4),
-  display: "flex",
-  flexDirection: "column",
-  border: `0.5px solid ${theme.palette.divider}`,
-  width:'360px'
 }));
 
 const StyledCard: any = styled(Card)(({ theme }) => ({
@@ -187,6 +211,13 @@ const Section: any = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(8),
   marginBottom: theme.spacing(8),
   display: "flex",
+}));
+
+const FilterSection: any = styled(Box)(({ theme }) => ({
+  width: "250px",
+  padding: theme.spacing(2),
+  borderRight: `1px solid ${theme.palette.divider}`,
+  marginRight: "20px",
 }));
 
 const ContentSection: any = styled(Box)(({ theme }) => ({

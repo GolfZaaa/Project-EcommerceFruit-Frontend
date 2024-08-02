@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { store } from "../store/store";
 import { User } from "./user.api";
 import { Shop } from "./shop.api";
+import { Product } from "./product.api";
 
 // axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_API_URL;
 
@@ -12,7 +13,7 @@ const responseBody = <T>(res: AxiosResponse<T>) => res.data;
 axios.interceptors.request.use(async (config: any) => {
   const token = await store.commonStore.token;
 
-  console.log("token", token);
+  // console.log("token", token);
 
   if (token) config.headers!.Authorization = `Bearer ${token}`;
   return config;
@@ -53,4 +54,5 @@ export const requests = {
 export default {
   User,
   Shop,
+  Product,
 };
