@@ -11,8 +11,6 @@ export default observer(function Navbar() {
     userStore: { user },
   } = useStore();
 
-  console.log("user", user);
-
   return (
     <AppBar position="static" sx={{ backgroundColor: "#1976d2" }}>
       <Toolbar>
