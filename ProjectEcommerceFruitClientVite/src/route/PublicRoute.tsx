@@ -8,6 +8,7 @@ import CreateProductScreen from "../Screen/Shopping/CreateProductScreen";
 import HomeScreen from "../Screen/HomeScreen";
 import NotFoundScreen from "../Screen/NotFoundScreen";
 import FirstScreen from "../Screen/FirstScreen";
+import CartScreen from "../Screen/CartScreen";
 
 export const PublicRoute: any = [
   {
@@ -59,5 +60,10 @@ export const PublicRoute: any = [
     id: 9,
     path: "/",
     element: <FirstScreen />,
+  },
+  {
+    id: 10,
+    path: "/cart-screen",
+    element: <CartScreen />,
   },
 ];

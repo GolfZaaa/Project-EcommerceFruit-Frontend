@@ -56,7 +56,7 @@ import {
     ];
   
     return (
-      <Container maxWidth="sm">
+      <Container maxWidth="lg">
         <Box
           display="flex"
           flexDirection="column"
