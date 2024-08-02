@@ -63,11 +63,13 @@ export default observer(function HomeScreen() {
   ];
 
   return (
-    <>
-      <Container maxWidth="xl">
-        <Section>
-          <FilterSection>
-            <TypographySectiontop>Filters</TypographySectiontop>
+    <div >
+      <Navbar />
+      
+      <Container maxWidth="xl" >
+
+        <Section >
+          <FilterCard>
             <FormControl fullWidth>
               <InputLabel>Category</InputLabel>
               <Select defaultValue="">
@@ -84,20 +86,11 @@ export default observer(function HomeScreen() {
             <TypographySection>Price</TypographySection>
             <FormGroup>
               <StyledFormControlLabel control={<Checkbox />} label="50 - 100" />
-              <StyledFormControlLabel
-                control={<Checkbox />}
-                label="100 - 150"
-              />
-              <StyledFormControlLabel
-                control={<Checkbox />}
-                label="150 - 200"
-              />
-              <StyledFormControlLabel
-                control={<Checkbox />}
-                label="200 - 250"
-              />
+              <StyledFormControlLabel control={<Checkbox />} label="100 - 150" />
+              <StyledFormControlLabel control={<Checkbox />} label="150 - 200" />
+              <StyledFormControlLabel control={<Checkbox />} label="200 - 250" />
             </FormGroup>
-          </FilterSection>
+          </FilterCard>
           <ContentSection>
             <Typography variant="h4" gutterBottom align="left">
               Product List ({products.length})
@@ -131,7 +124,8 @@ export default observer(function HomeScreen() {
           </ContentSection>
         </Section>
       </Container>
-    </>
+      <Footer />
+    </div>
   );
 });
 
@@ -140,6 +134,16 @@ export default observer(function HomeScreen() {
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   color: theme.palette.text.disabled,
   fontWeight: 800,
+}));
+
+const FilterCard = styled(Card)(({ theme }) => ({
+  padding: theme.spacing(2),
+  borderRadius: "4px",
+  marginBottom: theme.spacing(4),
+  display: "flex",
+  flexDirection: "column",
+  border: `0.5px solid ${theme.palette.divider}`,
+  width:'360px'
 }));
 
 const StyledCard: any = styled(Card)(({ theme }) => ({
@@ -185,13 +189,6 @@ const Section: any = styled(Box)(({ theme }) => ({
   display: "flex",
 }));
 
-const FilterSection: any = styled(Box)(({ theme }) => ({
-  width: "250px",
-  padding: theme.spacing(2),
-  borderRight: `1px solid ${theme.palette.divider}`,
-  marginRight: "20px",
-}));
-
 const ContentSection: any = styled(Box)(({ theme }) => ({
   flexGrow: 1,
   padding: theme.spacing(2),
@@ -215,13 +212,13 @@ const FullWidthButton: any = styled(Button)(({ theme }) => ({
   },
 }));
 
-const TypographySection: any = styled(Box)(({ theme }) => ({
+const TypographySection: any = styled(Box)(() => ({
   fontSize: 22,
   fontWeight: 600,
   marginTop: 20,
 }));
 
-const TypographySectiontop: any = styled(Box)(({ theme }) => ({
+const TypographySectiontop: any = styled(Box)(() => ({
   fontSize: 22,
   fontWeight: 600,
 }));
