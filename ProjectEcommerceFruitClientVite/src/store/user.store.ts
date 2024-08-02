@@ -47,4 +47,12 @@ export default class UserStore {
       return error;
     }
   };
+  getUserDetailbyId = async() => {
+    try {
+      const user = await agent.User.getUserDetailbyId();
+      this.user = user;
+    } catch (error) {
+      return error;
+    }
+  }
 }

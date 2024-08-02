@@ -89,7 +89,6 @@ export default observer(function HomeScreen() {
       <Container maxWidth="xl">
         <Section>
           <FilterSection>
-            <TypographySectiontop>ตัวกรอง</TypographySectiontop>
             <FormControl fullWidth>
               <InputLabel>ประเภท</InputLabel>
               <Select defaultValue="0">
@@ -112,19 +111,11 @@ export default observer(function HomeScreen() {
             <TypographySection>Price</TypographySection>
             <FormGroup>
               <StyledFormControlLabel control={<Checkbox />} label="50 - 100" />
-              <StyledFormControlLabel
-                control={<Checkbox />}
-                label="100 - 150"
-              />
-              <StyledFormControlLabel
-                control={<Checkbox />}
-                label="150 - 200"
-              />
-              <StyledFormControlLabel
-                control={<Checkbox />}
-                label="200 - 250"
-              />
+              <StyledFormControlLabel control={<Checkbox />} label="100 - 150" />
+              <StyledFormControlLabel control={<Checkbox />} label="150 - 200" />
+              <StyledFormControlLabel control={<Checkbox />} label="200 - 250" />
             </FormGroup>
+
           </FilterSection>
           <ContentSection>
             <Typography variant="h4" gutterBottom align="left">
