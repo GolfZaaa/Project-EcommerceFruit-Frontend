@@ -19,7 +19,7 @@ import Divider from "@mui/material/Divider";
 
 export default observer(function Navbar() {
   const navigate = useNavigate();
-  const { user, getUserDetailbyId, logout } = useStore().userStore;
+  const { user, getUserDetailbyId} = useStore().userStore;
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -85,18 +85,6 @@ export default observer(function Navbar() {
               )}
 
               <Divider />
-              <MenuItem
-                style={{
-                  color: "red",
-                }}
-                onClick={() => {
-                  logout();
-                  navigate(RoutePath.homeScreen);
-                  handleClose();
-                }}
-              >
-                Logout
-              </MenuItem>
             </Menu>
             <IconButton color="inherit" aria-label="cart">
               <Badge badgeContent={4} color="error">
