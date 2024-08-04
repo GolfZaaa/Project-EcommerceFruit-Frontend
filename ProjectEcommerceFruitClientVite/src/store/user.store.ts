@@ -51,6 +51,7 @@ export default class UserStore {
     try {
       const user = await agent.User.getUserDetailbyId();
       this.user = user;
+      return user;
     } catch (error) {
       return error;
     }
