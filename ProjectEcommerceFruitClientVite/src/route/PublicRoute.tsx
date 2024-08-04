@@ -72,4 +72,9 @@ export const PublicRoute: any = [
     path: "/productdetail-screen",
     element: <ProductDetailScreen />,
   },
+  {
+    id: 12,
+    path: "/",
+    element: <FirstScreen />,
+  },
 ];
