@@ -19,6 +19,15 @@ function App() {
 
   const Routers = [...PublicRoute, ...PrivateRoute];
 
+  const { token } = useStore().commonStore;
+  const { getUserDetailbyId } = useStore().userStore;
+
+  useEffect(() => {
+    if (token) {
+      getUserDetailbyId();
+    }
+  }, []);
+  
   return (
     <BrowserRouter>
       <Navbar />
