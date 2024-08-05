@@ -6,6 +6,8 @@ import Navbar from "./layout/screen/Navbar";
 import Footer from "./layout/screen/Footer";
 import { useEffect } from "react";
 import { useStore } from "./store/store";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 function App() {
   const Routers = [...PublicRoute, ...PrivateRoute];

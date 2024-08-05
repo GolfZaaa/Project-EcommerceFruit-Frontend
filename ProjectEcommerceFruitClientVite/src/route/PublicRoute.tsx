@@ -3,14 +3,14 @@ import LoginScreen from "../Screen/LoginScreen";
 import RegisterScreen from "../Screen/RegisterScreen";
 import SuccessShopScreen from "../Screen/Shopping/SuccessShopScreen";
 import ShopAddressScreen from "../Screen/ShopAddressScreen";
-import CreateFruitGIScreen from "../Screen/Shopping/CreateFruitGIScreen";
 import CreateProductScreen from "../Screen/Shopping/CreateProductScreen";
 import HomeScreen from "../Screen/HomeScreen";
 import NotFoundScreen from "../Screen/NotFoundScreen";
 import FirstScreen from "../Screen/FirstScreen";
-import CartScreen from "../Screen/CartScreen";
-import ProductDetailScreen from "../Screen/ProductDetailScreen";
 import FirstScreenNew from "../Screen/FirstScreenNew";
+import ProductDetailScreen from "../Screen/ProductDetailScreen";
+import CartScreen from "../Screen/CartScreen";
+import CreateFruitGIScreen from "../Screen/Shopping/CreateFruitGIScreen";
 
 export const PublicRoute: any = [
   {
@@ -38,11 +38,11 @@ export const PublicRoute: any = [
     path: "/shop-address-screen",
     element: <ShopAddressScreen />,
   },
-  {
-    id: 5,
-    path: "/create-fruitGI-screen",
-    element: <CreateFruitGIScreen />,
-  },
+  // {
+  //   id: 5,
+  //   path: "/create-fruitGI-screen",
+  //   element: <CreateFruitGIScreen />,
+  // },
   {
     id: 6,
     path: "/create-product-screen",
