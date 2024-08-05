@@ -40,7 +40,7 @@ const defaultTheme = createTheme();
 export default observer(function LoginScreen() {
   const navigate = useNavigate();
 
-  const { login } = useStore().userStore;
+  const { login, getUserDetailbyId } = useStore().userStore;
   const { setToken, token } = useStore().commonStore;
 
   const handleSubmit = async (event: any) => {
@@ -57,6 +57,7 @@ export default observer(function LoginScreen() {
       } else {
         setToken(user);
         navigate(RoutePath.homeScreen);
+        getUserDetailbyId();
       }
     } else {
       alert("รหัสผ่านผิด");

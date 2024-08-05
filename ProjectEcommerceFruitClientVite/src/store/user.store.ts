@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import agent from "../api/agent";
 import { User } from "../models/User";
+import { store } from "./store";
 
 interface RegisterInterface {
   Username: string;
@@ -41,13 +42,18 @@ export default class UserStore {
     const data = { username: Username, password: Password };
     try {
       const user = await agent.User.Login(data);
-      this.user = user;
       return user;
     } catch (error) {
       return error;
     }
   };
-  getUserDetailbyId = async() => {
+
+  logout = () => {
+    this.user = null;
+    store.commonStore.setToken(null);
+  };
+
+  getUserDetailbyId = async () => {
     try {
       const user = await agent.User.getUserDetailbyId();
       this.user = user;
@@ -55,5 +61,5 @@ export default class UserStore {
     } catch (error) {
       return error;
     }
-  }
+  };
 }

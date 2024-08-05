@@ -21,8 +21,4 @@ export default class CommonStore {
   setToken = (token: string | null) => {
     this.token = token;
   };
-
-  getUser = async () => {
-    this.user = await agent.User.getUser();
-  }
 }

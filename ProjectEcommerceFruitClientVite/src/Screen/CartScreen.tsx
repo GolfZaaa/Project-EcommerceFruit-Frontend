@@ -1,5 +1,5 @@
 import React from "react";
-import { BsShop } from "react-icons/bs";
+// import { BsShop } from "react-icons/bs";
 import Navbar from "../layout/screen/Navbar";
 import Footer from "../layout/screen/Footer";
 

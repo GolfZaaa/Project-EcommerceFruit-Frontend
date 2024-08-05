@@ -30,8 +30,8 @@ import { useStore } from "../../store/store";
 import imageDashboard from "../../image/DashboardShop.png";
 import { Link } from "react-router-dom";
 import CreateShopScreen from "../Shopping/CreateShopScreen";
-import CreateFruitGIScreen from "../Shopping/CreateFruitGIScreen";
 import CreateProductScreen from "../Shopping/CreateProductScreen";
+import ProductGIList from "../Shopping/GI/ProductGIList";
 
 const drawerWidth = 240;
 
@@ -40,11 +40,8 @@ export default observer(function DashboardShopScreen() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   useEffect(() => {
-    const test = GetShopByUserId();
-    console.log("test", test);
+    GetShopByUserId();
   }, []);
-
-  console.log("usershop", usershop);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -56,8 +53,8 @@ export default observer(function DashboardShopScreen() {
     switch (screenComponent) {
       case "CreateShop":
         return <CreateShopScreen />;
-      case "CreateFruit":
-        return <CreateFruitGIScreen />;
+      case "ProductGIList":
+        return <ProductGIList />;
       case "CreateProduct":
         return <CreateProductScreen />;
       case "dashboard":
@@ -159,8 +156,12 @@ export default observer(function DashboardShopScreen() {
     <div>
       <Toolbar />
       <Divider />
-      <List>
-        <ListItem button onClick={() => setScreenComponent("dashboard")}>
+      <List
+        style={{
+          cursor: "pointer",
+        }}
+      >
+        <ListItem onClick={() => setScreenComponent("dashboard")}>
           <ListItemIcon>
             <DashboardIcon />
           </ListItemIcon>
@@ -168,31 +169,31 @@ export default observer(function DashboardShopScreen() {
         </ListItem>
         <Collapse timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItem button component={Link} to="/">
+            <ListItem component={Link} to="/">
               <ListItemText primary="Dashboard Home" sx={{ pl: 4 }} />
             </ListItem>
           </List>
         </Collapse>
-        <ListItem button onClick={() => setScreenComponent("CreateShop")}>
+        <ListItem onClick={() => setScreenComponent("CreateShop")}>
           <ListItemIcon>
             <ShoppingCartIcon />
           </ListItemIcon>
           <ListItemText primary="แก้ไขร้านค้า" />
         </ListItem>
-         <ListItem button onClick={() => setScreenComponent("CreateFruit")}>
+        <ListItem onClick={() => setScreenComponent("ProductGIList")}>
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
           <ListItemText primary="สร้างสินค้า GI" />
         </ListItem>
-        
-        <ListItem button onClick={() => setScreenComponent("CreateProduct")}>
+
+        <ListItem onClick={() => setScreenComponent("CreateProduct")}>
           <ListItemIcon>
             <BarChartIcon />
           </ListItemIcon>
           <ListItemText primary="สร้างสินค้า" />
         </ListItem>
-        {/* <ListItem button component={Link} to="/integrations">
+        {/* <ListItem   component={Link} to="/integrations">
           <ListItemIcon>
             <LayersIcon />
           </ListItemIcon>
@@ -226,7 +227,7 @@ export default observer(function DashboardShopScreen() {
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
             ร้านค้า {usershop && usershop.name}
           </Typography>
-          <p>{usershop && usershop.user.username}</p>
+          <p>{usershop && usershop.user.fullName}</p>
         </Toolbar>
       </AppBar>
       <Box
