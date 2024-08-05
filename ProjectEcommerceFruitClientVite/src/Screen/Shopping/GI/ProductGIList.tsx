@@ -46,6 +46,7 @@ interface TablePaginationActionsProps {
   ) => void;
 }
 
+
 function TablePaginationActions(props: TablePaginationActionsProps) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
