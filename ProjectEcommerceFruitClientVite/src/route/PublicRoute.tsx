@@ -10,6 +10,7 @@ import NotFoundScreen from "../Screen/NotFoundScreen";
 import FirstScreen from "../Screen/FirstScreen";
 import CartScreen from "../Screen/CartScreen";
 import ProductDetailScreen from "../Screen/ProductDetailScreen";
+import FirstScreenNew from "../Screen/FirstScreenNew";
 
 export const PublicRoute: any = [
   {
@@ -74,7 +75,7 @@ export const PublicRoute: any = [
   },
   {
     id: 12,
-    path: "/",
-    element: <FirstScreen />,
+    path: "/FirstScreenNew",
+    element: <FirstScreenNew />,
   },
 ];
