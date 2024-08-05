@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Container,
   TextField,
@@ -12,27 +12,35 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
+import { RoutePath } from "../../constants/RoutePath";
 
 export default observer(function CreateShopScreen() {
   const navigate = useNavigate();
-  const { createandupdate } = useStore().shopuserStore;
+  const { usershop, GetShopByUserId, createandupdate } =
+    useStore().shopuserStore;
 
+  useEffect(() => {
+    GetShopByUserId();
+  }, []);
 
-  const { usershop } = useStore().shopuserStore;
-  console.log("usershopusershop",usershop)
+  console.log("usershop", JSON.stringify(usershop));
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const formData: any = Object.fromEntries(data.entries());
 
-    await createandupdate(formData);
-    navigate("/SuccessShopScreen");
+    await createandupdate(formData).then((result) => {
+      if (result) {
+        navigate(RoutePath.successShopScreen);
+      }
+      console.log("res", result);
+    });
     console.log("formData", formData);
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="md">
       <Box
         display="flex"
         flexDirection="column"
@@ -49,33 +57,39 @@ export default observer(function CreateShopScreen() {
         >
           <CardContent>
             <Typography variant="h4" component="h1" gutterBottom align="center">
-              {usershop && usershop.id ? <p>แก้ไขรายละเอียด</p> : <p>สร้างร้านค้า</p>}
+              {usershop && usershop.id ? (
+                <p>แก้ไขรายละเอียด</p>
+              ) : (
+                <p>สร้างร้านค้า</p>
+              )}
             </Typography>
             <Box mt={2} component="form" onSubmit={handleSubmit}>
               <TextField
+                defaultValue={usershop?.name}
                 fullWidth
-                label="Shop Name"
+                label="ชื่อร้านค้า"
                 variant="outlined"
                 margin="normal"
-                name="Name"
+                name="name"
                 autoFocus
                 required
               />
               <TextField
+                defaultValue={usershop?.description}
                 fullWidth
-                label="Shop Address"
+                label="รายละเอียด"
                 variant="outlined"
                 margin="normal"
-                name="Description"
+                name="description"
                 required
               />
               <TextField
+                value={usershop?.id || 0}
                 fullWidth
-                label="Shop Description"
+                label="Shop Id"
                 variant="outlined"
                 margin="normal"
-                name="Id"
-                defaultValue={0}
+                name="id"
                 style={{ display: "none" }}
               />
               <Button
@@ -85,7 +99,7 @@ export default observer(function CreateShopScreen() {
                 size="large"
                 fullWidth
               >
-                Create Shop
+                บันทึก
               </Button>
             </Box>
           </CardContent>

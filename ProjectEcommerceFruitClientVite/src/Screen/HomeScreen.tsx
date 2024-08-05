@@ -19,6 +19,8 @@ import {
 import { styled } from "@mui/material/styles";
 import { useStore } from "../store/store";
 import { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
+import { RoutePath } from "../constants/RoutePath";
 
 export default observer(function HomeScreen() {
   const { product, getProduct, category, getCategory } =
@@ -111,11 +113,19 @@ export default observer(function HomeScreen() {
             <TypographySection>Price</TypographySection>
             <FormGroup>
               <StyledFormControlLabel control={<Checkbox />} label="50 - 100" />
-              <StyledFormControlLabel control={<Checkbox />} label="100 - 150" />
-              <StyledFormControlLabel control={<Checkbox />} label="150 - 200" />
-              <StyledFormControlLabel control={<Checkbox />} label="200 - 250" />
+              <StyledFormControlLabel
+                control={<Checkbox />}
+                label="100 - 150"
+              />
+              <StyledFormControlLabel
+                control={<Checkbox />}
+                label="150 - 200"
+              />
+              <StyledFormControlLabel
+                control={<Checkbox />}
+                label="200 - 250"
+              />
             </FormGroup>
-
           </FilterSection>
           <ContentSection>
             <Typography variant="h4" gutterBottom align="left">
@@ -125,11 +135,17 @@ export default observer(function HomeScreen() {
               {data.map((product, i) => (
                 <Grid item key={i} xs={12} sm={6} md={4}>
                   <StyledCard>
-                    <StyledCardMedia
-                      component="img"
-                      alt={product.productGI.name}
-                      image={products[i % 2].imageUrl}
-                    />
+                    <NavLink
+                      to={RoutePath.productDetail}
+                      state={product.id}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <StyledCardMedia
+                        component="img"
+                        alt={product.productGI.name}
+                        image={products[i % 2].imageUrl}
+                      />
+                    </NavLink>
                     <StyledCardContent>
                       <ProductTitle variant="h6" component="div">
                         {product.productGI.name}

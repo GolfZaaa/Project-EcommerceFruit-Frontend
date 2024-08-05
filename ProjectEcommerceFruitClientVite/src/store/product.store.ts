@@ -1,10 +1,11 @@
 import { makeAutoObservable } from "mobx";
 import agent from "../api/agent";
 import { Product } from "../models/Product";
-import { Category } from "../models/ProductGI";
+import { Category, ProductGI } from "../models/ProductGI";
 
 export default class ProductStore {
   product: Product[] = [];
+  productGI: ProductGI[] = [];
   category: Category[] = [];
 
   constructor() {
@@ -19,6 +20,40 @@ export default class ProductStore {
       return error;
     }
   };
+
+  //-------------------------------------------- product-GI ----------------------------------------------------//
+
+  getProductGI = async () => {
+    try {
+      const result = await agent.Product.getProductGI();
+
+      console.log("result", result);
+
+      this.productGI = result;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  createUpdateProductGI = async (values: any) => {
+    try {
+      const result = await agent.Product.createUpdateProductGI(values);
+      this.getProductGI();
+      return result;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  removeProductGI = async (id: number) => {
+    try {
+      await agent.Product.removeProductGI(id);
+      this.getProductGI(); 
+    } catch (error) {
+      return error;
+    }
+  };
+
 
   //-------------------------------------------- category ----------------------------------------------------//
 

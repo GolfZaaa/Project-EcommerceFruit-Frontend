@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import agent from "../api/agent";
 import { Product } from "../models/Product";
+import { Store } from "../models/Store";
 
 interface CreateandUpdateInterface {
   Id: number;
@@ -13,31 +14,17 @@ interface User {
   fullName: string;
   phoneNumber: number;
 }
-
-interface ShopUser {
-  user: User;
-  id: number;
-  name: "";
-  description: "";
-  createdAt: Date;
-  userId: number;
-}
-
+ 
 export default class ShopUserStore {
-  usershop: ShopUser | null = null;
+  usershop: Store | null = null;
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  createandupdate = async ({
-    Id,
-    Name,
-    Description,
-  }: CreateandUpdateInterface) => {
-    const data = { id: Id, name: Name, description: Description };
+  createandupdate = async (value: CreateandUpdateInterface) => { 
     try {
-      const func = await agent.Shop.CreateandUpdate(data);
+      const func = await agent.Shop.CreateandUpdate(value);
       return func;
     } catch (error) {
       return error;

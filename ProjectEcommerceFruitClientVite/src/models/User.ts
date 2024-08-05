@@ -1,11 +1,11 @@
-import { Address } from "cluster";
 import { Store } from "./Store";
 import { CartItem } from "./CartItem";
+import { Address } from "./Address";
 
 export interface User {
   id: number;
   fullName: string;
-  userName: string;
+  username: string;
   password: string;
   phoneNumber: number;
 

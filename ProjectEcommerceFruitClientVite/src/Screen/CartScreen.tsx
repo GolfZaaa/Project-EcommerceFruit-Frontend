@@ -1,18 +1,18 @@
 import React from "react";
-import { BsShop } from "react-icons/bs";
+// import { BsShop } from "react-icons/bs";
 import Navbar from "../layout/screen/Navbar";
 import Footer from "../layout/screen/Footer";
 
 export default function CartScreen() {
   return (
     <div style={{ backgroundColor: "#fbfbfb" }}>
-        <Navbar/>
+      <Navbar />
       <div>
         <div className="cart-screen">
           <div className="cart-item-all">
             <div style={{ marginBottom: 13, marginLeft: 15 }}>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <BsShop size={20} style={{ marginRight: "8px" }} />
+                {/* <BsShop size={20} style={{ marginRight: "8px" }} /> */}
                 <p style={{ marginTop: 5 }}>ชื่อร้านค้า</p>
               </div>
             </div>
@@ -120,7 +120,7 @@ export default function CartScreen() {
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
