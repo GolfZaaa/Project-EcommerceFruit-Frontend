@@ -132,7 +132,7 @@ export default observer(function HomeScreen() {
               สินค้าจำนวน ({products.length}) ชิ้น
             </Typography>
             <Grid container spacing={4} justifyContent="left">
-              {data.map((product, i) => (
+              {product.map((product, i) => (
                 <Grid item key={i} xs={12} sm={6} md={4}>
                   <StyledCard>
                     <NavLink
@@ -151,7 +151,7 @@ export default observer(function HomeScreen() {
                         {product.productGI.name}
                       </ProductTitle>
                       <ProductDescription variant="body2">
-                        {product.productGI.description}
+                        ฿ {product.price}
                       </ProductDescription>
                       <ButtonWrapper>
                         <FullWidthButton variant="outlined">
