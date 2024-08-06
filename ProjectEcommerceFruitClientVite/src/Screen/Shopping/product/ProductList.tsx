@@ -33,6 +33,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import CreateProductScreen from "../CreateProductScreen";
 import { Product } from "../../../models/Product";
+import HTMLReactParser from "html-react-parser/lib/index";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -235,7 +236,7 @@ const ProductList = () => {
                         // style={{ width: 160 }}
                         //   align="right"
                       >
-                        {row.detail}
+                        {HTMLReactParser(row.detail)}
                       </TableCell>
                       <TableCell>{row?.productGI?.category.name}</TableCell>
                       <TableCell>{row?.price}</TableCell>

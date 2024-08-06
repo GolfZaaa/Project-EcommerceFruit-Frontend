@@ -6,8 +6,6 @@ import Navbar from "./layout/screen/Navbar";
 import Footer from "./layout/screen/Footer";
 import { useEffect, useState } from "react";
 import { useStore } from "./store/store";
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 
 function App() {
 

@@ -36,7 +36,9 @@ export default observer(function CreateProductScreen({
 
   const [editorHtml, setEditorHtml] = useState(dataEdit?.detail || "");
 
-  const [selectGI, setSelectGI] = useState<number | null>();
+  const [selectGI, setSelectGI] = useState<number | null>(
+    dataEdit?.productGIId || null
+  );
 
   useEffect(() => {
     getProductGI();

@@ -35,6 +35,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import HTMLReactParser from "html-react-parser/lib/index";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -45,7 +46,6 @@ interface TablePaginationActionsProps {
     newPage: number
   ) => void;
 }
-
 
 function TablePaginationActions(props: TablePaginationActionsProps) {
   const theme = useTheme();
@@ -237,7 +237,7 @@ const ProductGIList = () => {
                       // style={{ width: 160 }}
                       //   align="right"
                       >
-                        {row.description}
+                        {HTMLReactParser(row.description)}
                       </TableCell>
                       <TableCell>{row?.category?.name}</TableCell>
                       <TableCell style={{ width: 100 }}>

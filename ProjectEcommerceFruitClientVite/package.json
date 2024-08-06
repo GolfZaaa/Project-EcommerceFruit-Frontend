@@ -16,8 +16,8 @@
     "@mui/x-data-grid": "^7.11.1",
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",
-    "html-react-parser": "^5.1.12",
     "cluster": "^0.7.7",
+    "html-react-parser": "^5.1.12",
     "mobx": "^6.13.1",
     "mobx-react-lite": "^4.0.7",
     "quill": "^2.0.2",
@@ -43,7 +43,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
-    "postcss": "^8.4.40",
+    "postcss": "^8.4.41",
     "tailwindcss": "^3.4.7",
     "typescript": "^5.2.2",
     "vite": "^5.3.4"
