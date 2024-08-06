@@ -20,6 +20,7 @@ import Divider from "@mui/material/Divider";
 export default observer(function Navbar() {
   const navigate = useNavigate();
   const { user, getUserDetailbyId, logout } = useStore().userStore;
+  const { token } = useStore().commonStore;
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -46,11 +47,11 @@ export default observer(function Navbar() {
           </NavLink>
         </Typography>
 
-        {user ? (
+        {token ? (
           <div style={{ display: "flex", alignItems: "center" }}>
             <ButtonMui color="inherit" onClick={handleClick}>
               <Typography variant="body1" color="inherit">
-                {user.fullName}
+                {user?.fullName}
               </Typography>
             </ButtonMui>
             <Menu
@@ -64,7 +65,7 @@ export default observer(function Navbar() {
             >
               <MenuItem onClick={handleClose}>ข้อมูลส่วนตัว</MenuItem>
 
-              {user.stores.length ? (
+              {user?.stores.length ? (
                 <MenuItem onClick={handleClose}>
                   <NavLink
                     to={RoutePath.dashboardShopScreen}
@@ -79,7 +80,7 @@ export default observer(function Navbar() {
                     to={RoutePath.createShopScreen}
                     style={{ textDecoration: "none", color: "#000" }}
                   >
-                    ลงทะเบียนเพื่อขาย
+                    ลงทะเบียนร้านค้า
                   </NavLink>
                 </MenuItem>
               )}
@@ -95,7 +96,7 @@ export default observer(function Navbar() {
                   handleClose();
                 }}
               >
-                Logout
+                ออกจากระบบ
               </MenuItem>
             </Menu>
             <IconButton color="inherit" aria-label="cart">
@@ -111,7 +112,7 @@ export default observer(function Navbar() {
                 to={RoutePath.loginScreen}
                 style={{ textDecoration: "none", color: "#fff" }}
               >
-                Login
+                เข้าสู่ระบบ
               </NavLink>
             </Button>
             <Button color="inherit">
@@ -119,7 +120,7 @@ export default observer(function Navbar() {
                 to={RoutePath.registerScreen}
                 style={{ textDecoration: "none", color: "#fff" }}
               >
-                Sign Up
+                สมัครสมาชิก
               </NavLink>
             </Button>
           </div>

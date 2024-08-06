@@ -26,15 +26,13 @@ import {
 import { useStore } from "../../../store/store";
 import TableHead from "@mui/material/TableHead";
 import AddIcon from "@mui/icons-material/Add";
-import { NavLink } from "react-router-dom";
-import { RoutePath } from "../../../constants/RoutePath";
-import CreateFruitGIScreen from "../CreateFruitGIScreen";
-import { ProductGI } from "../../../models/ProductGI";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import CreateProductScreen from "../CreateProductScreen";
+import { Product } from "../../../models/Product";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -116,26 +114,25 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
   );
 }
 
-const ProductGIList = () => {
-  const { productGI, getProductGI, getCategory, removeProductGI } =
-    useStore().productStore;
+const ProductList = () => {
+  const { product, getProductByStore, removeProduct } = useStore().productStore;
+  const { user } = useStore().userStore;
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [onCreate, setOnCreate] = useState(false);
 
-  const [dataEdit, setDataEdit] = useState<ProductGI | null>();
+  const [dataEdit, setDataEdit] = useState<Product | null>();
 
   const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
-    getProductGI();
-    getCategory();
-  }, []);
+    getProductByStore(user?.stores[0].id || 0);
+  }, [open, onCreate]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - productGI.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - product.length) : 0;
 
   const handleChangePage = (
     _event: React.MouseEvent<HTMLButtonElement> | null,
@@ -155,6 +152,8 @@ const ProductGIList = () => {
     { id: "name", label: "ชื่อ" },
     { id: "description", label: "ข้อมูลเพิ่มเติม" },
     { id: "category", label: "ประเภท" },
+    { id: "price", label: "ราคา" },
+    { id: "weight", label: "จำนวน" },
     { id: "edit", label: "ตัวเลือก" },
     { id: "remove", label: "ตัวเลือก" },
   ];
@@ -172,7 +171,7 @@ const ProductGIList = () => {
   return (
     <>
       {onCreate ? (
-        <CreateFruitGIScreen onChangeCU={onChangeCU} dataEdit={dataEdit} />
+        <CreateProductScreen onChangeCU={onChangeCU} dataEdit={dataEdit} />
       ) : (
         <Container maxWidth="lg">
           <Box
@@ -183,7 +182,7 @@ const ProductGIList = () => {
             mt={4}
           >
             <Typography variant="h4" component="h1" gutterBottom align="center">
-              เพิ่มข้อมูล (GI) สินค้า
+              เพิ่มสินค้า
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={11}></Grid>
@@ -213,7 +212,7 @@ const ProductGIList = () => {
                     {columns.map((column, i) => (
                       <TableCell
                         key={column.id}
-                        align={i > 2 ? "center" : "left"}
+                        align={i > 4 ? "center" : "left"}
                       >
                         {column.label}
                       </TableCell>
@@ -222,23 +221,25 @@ const ProductGIList = () => {
                 </TableHead>
                 <TableBody>
                   {(rowsPerPage > 0
-                    ? productGI.slice(
+                    ? product.slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
-                    : productGI
+                    : product
                   ).map((row) => (
-                    <TableRow key={row.name}>
+                    <TableRow key={row.id}>
                       <TableCell component="th" scope="row">
-                        {row.name}
+                        {row.productGI.name}
                       </TableCell>
                       <TableCell
-                      // style={{ width: 160 }}
-                      //   align="right"
+                        // style={{ width: 160 }}
+                        //   align="right"
                       >
-                        {row.description}
+                        {row.detail}
                       </TableCell>
-                      <TableCell>{row?.category?.name}</TableCell>
+                      <TableCell>{row?.productGI?.category.name}</TableCell>
+                      <TableCell>{row?.price}</TableCell>
+                      <TableCell>{row?.weight}</TableCell>
                       <TableCell style={{ width: 100 }}>
                         <Button
                           variant="contained"
@@ -283,7 +284,8 @@ const ProductGIList = () => {
                           <Button onClick={handleClose}>ยกเลิก</Button>
                           <Button
                             onClick={() => {
-                              removeProductGI(row.id);
+                              removeProduct(row.id);
+                              getProductByStore(user?.stores[0].id || 0);
                               handleClose();
                             }}
                             autoFocus
@@ -310,7 +312,7 @@ const ProductGIList = () => {
                         { label: "ทั้งหมด", value: -1 },
                       ]}
                       colSpan={3}
-                      count={productGI.length}
+                      count={product.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       slotProps={{
@@ -336,4 +338,4 @@ const ProductGIList = () => {
   );
 };
 
-export default observer(ProductGIList);
+export default observer(ProductList);

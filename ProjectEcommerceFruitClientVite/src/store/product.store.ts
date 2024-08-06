@@ -21,6 +21,32 @@ export default class ProductStore {
     }
   };
 
+  getProductByStore = async (storeId: number) => {
+    try {
+      const result = await agent.Product.getProductByStore(storeId);
+      this.product = result;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  createUpdateProduct = async (values: any) => {
+    try {
+      const result = await agent.Product.createUpdateProduct(values);
+      return result;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  removeProduct = async (id: number) => {
+    try {
+      await agent.Product.removeProduct(id);
+    } catch (error) {
+      return error;
+    }
+  };
+
   //-------------------------------------------- product-GI ----------------------------------------------------//
 
   getProductGI = async () => {
@@ -48,12 +74,11 @@ export default class ProductStore {
   removeProductGI = async (id: number) => {
     try {
       await agent.Product.removeProductGI(id);
-      this.getProductGI(); 
+      this.getProductGI();
     } catch (error) {
       return error;
     }
   };
-
 
   //-------------------------------------------- category ----------------------------------------------------//
 
