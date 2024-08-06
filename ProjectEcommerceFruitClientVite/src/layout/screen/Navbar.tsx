@@ -37,15 +37,34 @@ export default observer(function Navbar() {
 
   return (
     <AppBar position="static" sx={{ backgroundColor: "#1976d2" }}>
-      <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          <NavLink
-            to={RoutePath.homeScreen}
-            style={{ textDecoration: "none", color: "#fff" }}
-          >
-            เกษตรกรไทยแท้แน่นวล
-          </NavLink>
-        </Typography>
+      <Toolbar style={{ justifyContent: "space-between" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <div>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              <NavLink
+                to={RoutePath.firstscreen}
+                style={{ textDecoration: "none", color: "#fff" }}
+              >
+                ระบบส่งเสริมสินค้าเกษตรกร
+              </NavLink>
+            </Typography>
+          </div>
+          <div style={{ marginLeft: 50 }}>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              <NavLink
+                to={RoutePath.homeScreen}
+                style={{ textDecoration: "none", color: "#fff" }}
+              >
+                สินค้า
+              </NavLink>
+            </Typography>
+          </div>
+        </div>
 
         {token ? (
           <div style={{ display: "flex", alignItems: "center" }}>
