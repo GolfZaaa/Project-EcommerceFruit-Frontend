@@ -3,6 +3,7 @@ import { store } from "../store/store";
 import { User } from "./user.api";
 import { Shop } from "./shop.api";
 import { Product } from "./product.api";
+import { Order } from "./order.api";
 
 // axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_API_URL;
 
@@ -55,4 +56,5 @@ export default {
   User,
   Shop,
   Product,
+  Order
 };

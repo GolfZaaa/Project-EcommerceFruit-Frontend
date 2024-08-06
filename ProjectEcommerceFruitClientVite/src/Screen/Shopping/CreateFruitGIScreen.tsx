@@ -93,8 +93,6 @@ export default observer(function CreateFruitGIScreen({
     setSelectCate(id);
   };
 
-  console.log("data", JSON.stringify(dataEdit));
-
   return (
     // <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
     <Box
@@ -104,11 +102,16 @@ export default observer(function CreateFruitGIScreen({
       component="form"
       onSubmit={handleSubmit}
     >
-      <Card style={{ width: "70%", marginTop: 20 }}>
+      <Card
+        sx={{
+          width: "100%",
+          boxShadow: 3,
+          padding: 3,
+        }}
+      >
         <Grid container spacing={2}>
           <Grid item xs={1}>
             <Button
-              type="submit"
               variant="contained"
               color="primary"
               size="large"
@@ -141,8 +144,8 @@ export default observer(function CreateFruitGIScreen({
               </Grid>
               <Grid item xs={4}>
                 <FormControl fullWidth variant="outlined" margin="normal">
-                  <InputLabel>ข้อมูลผลไม้ (IG)</InputLabel>
-                  <Select defaultValue={dataEdit?.categoryId}>
+                  <InputLabel>ประเภท</InputLabel>
+                  <Select defaultValue={dataEdit?.categoryId} label="ประเภท">
                     {category.map((item) => (
                       <MenuItem
                         key={item.id}

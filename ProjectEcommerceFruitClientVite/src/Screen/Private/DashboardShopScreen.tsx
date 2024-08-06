@@ -30,8 +30,10 @@ import { useStore } from "../../store/store";
 import imageDashboard from "../../image/DashboardShop.png";
 import { Link } from "react-router-dom";
 import CreateShopScreen from "../Shopping/CreateShopScreen";
-import CreateProductScreen from "../Shopping/CreateProductScreen";
 import ProductGIList from "../Shopping/GI/ProductGIList";
+import ProductList from "../Shopping/product/ProductList";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import OrderList from "../order/OrderList";
 
 const drawerWidth = 240;
 
@@ -55,8 +57,10 @@ export default observer(function DashboardShopScreen() {
         return <CreateShopScreen />;
       case "ProductGIList":
         return <ProductGIList />;
-      case "CreateProduct":
-        return <CreateProductScreen />;
+      case "ProductList":
+        return <ProductList />;
+      case "OrderList":
+        return <OrderList />;
       case "dashboard":
         return (
           <>
@@ -184,14 +188,20 @@ export default observer(function DashboardShopScreen() {
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
-          <ListItemText primary="สร้างสินค้า GI" />
+          <ListItemText primary="เพิ่มข้อมูลสินค้า (GI)" />
         </ListItem>
 
-        <ListItem onClick={() => setScreenComponent("CreateProduct")}>
+        <ListItem onClick={() => setScreenComponent("ProductList")}>
           <ListItemIcon>
             <BarChartIcon />
           </ListItemIcon>
-          <ListItemText primary="สร้างสินค้า" />
+          <ListItemText primary="เพิ่มสินค้า" />
+        </ListItem>
+        <ListItem onClick={() => setScreenComponent("OrderList")}>
+          <ListItemIcon>
+            <ReceiptLongIcon />
+          </ListItemIcon>
+          <ListItemText primary="คำสั่งซื้อ" />
         </ListItem>
         {/* <ListItem   component={Link} to="/integrations">
           <ListItemIcon>

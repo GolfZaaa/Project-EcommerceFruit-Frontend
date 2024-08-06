@@ -118,7 +118,7 @@ export default observer(function Navbar() {
                 to={RoutePath.loginScreen}
                 style={{ textDecoration: "none", color: "#fff" }}
               >
-                Login
+                เข้าสู่ระบบ
               </NavLink>
             </Button>
             <Button color="inherit">
@@ -126,7 +126,7 @@ export default observer(function Navbar() {
                 to={RoutePath.registerScreen}
                 style={{ textDecoration: "none", color: "#fff" }}
               >
-                Sign Up
+                สมัครสมาชิก
               </NavLink>
             </Button>
           </div>

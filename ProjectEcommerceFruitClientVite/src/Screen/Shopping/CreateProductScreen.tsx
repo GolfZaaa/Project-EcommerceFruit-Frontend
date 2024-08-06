@@ -13,26 +13,62 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { RoutePath } from "../../constants/RoutePath";
+import { Product } from "../../models/Product";
+import { observer } from "mobx-react-lite";
+import { useStore } from "../../store/store";
 
-export default function CreateProductScreen() {
-  const [editorHtml, setEditorHtml] = useState("");
+interface props {
+  onChangeCU: any;
+  dataEdit?: Product | null;
+}
+
+export default observer(function CreateProductScreen({
+  onChangeCU,
+  dataEdit,
+}: props) {
+  const { productGI, getProductGI, createUpdateProduct } =
+    useStore().productStore;
+
+  const [editorHtml, setEditorHtml] = useState(dataEdit?.detail || "");
+
+  const [selectGI, setSelectGI] = useState<number | null>();
+
+  useEffect(() => {
+    getProductGI();
+  }, []);
 
   const handleChange = (html: any) => {
     setEditorHtml(html);
   };
 
-  const [fruitType, setFruitType] = useState("");
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const formData: any = Object.fromEntries(data.entries());
 
-  const handleFruitTypeChange = (event: any) => {
-    setFruitType(event.target.value);
+    const dataForm = {
+      id: dataEdit?.id || 0,
+      // images: null,
+      weight: formData.weight,
+      price: formData.price,
+      detail: editorHtml,
+      productGIId: selectGI,
+    };
+
+    console.log("dataForm", dataForm);
+
+    await createUpdateProduct(dataForm).then((result) => {
+      if (result) {
+        onChangeCU();
+      }
+      console.log("res", result);
+    });
   };
-
-  console.log("editorHtml", editorHtml);
 
   const modules = {
     toolbar: [
@@ -56,109 +92,123 @@ export default function CreateProductScreen() {
     "image",
   ];
 
+  const onSelectGI = (id: number) => {
+    setSelectGI(id);
+  };
+
   return (
-    <Container maxWidth="lg">
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        mt={4}
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      component="form"
+      onSubmit={handleSubmit}
+    >
+      <Card
+        sx={{
+          width: "100%",
+          boxShadow: 3,
+          padding: 3,
+        }}
       >
-        <Card
-          sx={{
-            width: "100%",
-            boxShadow: 3,
-            padding: 3,
-          }}
-        >
-          <CardContent>
-            <Typography variant="h4" component="h1" gutterBottom align="center">
-              สร้างสินค้า
-            </Typography>
-            <Box mt={2}>
+        <Grid container spacing={2}>
+          <Grid item xs={1}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              size="large"
+              fullWidth
+              onClick={onChangeCU}
+            >
+              กลับ
+            </Button>
+          </Grid>
+          <Grid item xs={11} />
+        </Grid>
+        <CardContent>
+          <Typography variant="h4" component="h1" gutterBottom align="center">
+            สร้างสินค้า
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <FormControl fullWidth variant="outlined" margin="normal">
+                <InputLabel>ข้อมูลผลไม้ (IG)</InputLabel>
+                <Select
+                  defaultValue={dataEdit?.productGIId}
+                  label="ข้อมูลผลไม้ (IG)"
+                >
+                  {productGI.map((item) => (
+                    <MenuItem
+                      key={item.id}
+                      value={item.id}
+                      onClick={() => onSelectGI(item.id)}
+                    >
+                      {item.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
               <TextField
+                defaultValue={dataEdit?.weight}
+                type="number"
                 fullWidth
-                label="ชื่อสินค้า"
+                label="จำนวน"
                 variant="outlined"
                 margin="normal"
+                name="weight"
+                autoFocus
+                required
               />
-              <Grid spacing={2}>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label="จำนวน"
-                    variant="outlined"
-                    margin="normal"
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label="น้ำหนัก"
-                    variant="outlined"
-                    margin="normal"
-                  />
-                </Grid>
-              </Grid>
+            </Grid>
+          </Grid>
 
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    label="ราคา"
-                    variant="outlined"
-                    margin="normal"
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <FormControl fullWidth variant="outlined" margin="normal">
-                    <InputLabel>ข้อมูลผลไม้ (IG)</InputLabel>
-                    <Select
-                      value={fruitType}
-                      onChange={handleFruitTypeChange}
-                      label="ข้อมูลผลไม้ (IG)"
-                    >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value="apple">Apple</MenuItem>
-                      <MenuItem value="banana">Banana</MenuItem>
-                      <MenuItem value="orange">Orange</MenuItem>
-                      {/* Add more fruit options as needed */}
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-
-              <Typography variant="h6" component="h2" gutterBottom>
-                คำอธิบาย & รูปภาพ
-              </Typography>
-              <div className="editor-container">
-                <ReactQuill
-                  value={editorHtml}
-                  onChange={handleChange}
-                  modules={modules}
-                  formats={formats}
-                  className="vertical-text-editor" // Add custom class here
-                />
-              </div>
-            </Box>
-          </CardContent>
-          <CardActions sx={{ justifyContent: "center", mt: 2 }}>
-            <Link to={RoutePath.successShopScreen}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                defaultValue={dataEdit?.price}
+                type="number"
                 fullWidth
-              >
-                สร้าง
-              </Button>
-            </Link>
-          </CardActions>
-        </Card>
-      </Box>
-    </Container>
+                label="ราคา"
+                variant="outlined"
+                margin="normal"
+                name="price"
+                autoFocus
+                required
+              />
+            </Grid>
+            <Grid item xs={6}>
+              ช่องใส่รูปภาพ
+            </Grid>
+          </Grid>
+
+          <Typography variant="h6" component="h2" gutterBottom>
+            คำอธิบาย & รูปภาพ
+          </Typography>
+          <div className="editor-container">
+            <ReactQuill
+              value={editorHtml}
+              onChange={handleChange}
+              modules={modules}
+              formats={formats}
+              className="vertical-text-editor" // Add custom class here
+            />
+          </div>
+        </CardContent>
+        <CardActions sx={{ justifyContent: "center", mt: 2 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            size="large"
+            fullWidth
+          >
+            บันทึก
+          </Button>
+        </CardActions>
+      </Card>
+    </Box>
   );
-}
+});

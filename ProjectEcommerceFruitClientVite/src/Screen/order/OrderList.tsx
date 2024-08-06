@@ -23,18 +23,15 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { useStore } from "../../../store/store";
 import TableHead from "@mui/material/TableHead";
 import AddIcon from "@mui/icons-material/Add";
-import { NavLink } from "react-router-dom";
-import { RoutePath } from "../../../constants/RoutePath";
-import CreateFruitGIScreen from "../CreateFruitGIScreen";
-import { ProductGI } from "../../../models/ProductGI";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useStore } from "../../store/store";
+import { Order } from "../../models/Order";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -45,7 +42,6 @@ interface TablePaginationActionsProps {
     newPage: number
   ) => void;
 }
-
 
 function TablePaginationActions(props: TablePaginationActionsProps) {
   const theme = useTheme();
@@ -117,26 +113,25 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
   );
 }
 
-const ProductGIList = () => {
-  const { productGI, getProductGI, getCategory, removeProductGI } =
-    useStore().productStore;
+const OrderList = () => {
+  const { order, getOrderByStore } = useStore().orderStore;
+  const { user } = useStore().userStore;
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [onCreate, setOnCreate] = useState(false);
 
-  const [dataEdit, setDataEdit] = useState<ProductGI | null>();
+  const [dataEdit, setDataEdit] = useState<Order | null>();
 
   const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
-    getProductGI();
-    getCategory();
-  }, []);
+    getOrderByStore(user?.stores[0].id || 0);
+  }, [open, onCreate]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - productGI.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - order.length) : 0;
 
   const handleChangePage = (
     _event: React.MouseEvent<HTMLButtonElement> | null,
@@ -153,9 +148,9 @@ const ProductGIList = () => {
   };
 
   const columns = [
-    { id: "name", label: "ชื่อ" },
-    { id: "description", label: "ข้อมูลเพิ่มเติม" },
-    { id: "category", label: "ประเภท" },
+    { id: "paymentImage", label: "รูปภาพสลิป" },
+    { id: "description", label: "tag ขนส่ง" },
+    { id: "status", label: "สถานะ" },
     { id: "edit", label: "ตัวเลือก" },
     { id: "remove", label: "ตัวเลือก" },
   ];
@@ -173,7 +168,7 @@ const ProductGIList = () => {
   return (
     <>
       {onCreate ? (
-        <CreateFruitGIScreen onChangeCU={onChangeCU} dataEdit={dataEdit} />
+        <></>
       ) : (
         <Container maxWidth="lg">
           <Box
@@ -184,25 +179,8 @@ const ProductGIList = () => {
             mt={4}
           >
             <Typography variant="h4" component="h1" gutterBottom align="center">
-              เพิ่มข้อมูล (GI) สินค้า
+              คำสั่งซื้อ
             </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={11}></Grid>
-              <Grid item xs={1}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  fullWidth
-                  onClick={() => {
-                    setDataEdit(null);
-                    onChangeCU();
-                  }}
-                >
-                  เพิ่ม <AddIcon />
-                </Button>
-              </Grid>
-            </Grid>
 
             <TableContainer component={Paper}>
               <Table
@@ -223,23 +201,27 @@ const ProductGIList = () => {
                 </TableHead>
                 <TableBody>
                   {(rowsPerPage > 0
-                    ? productGI.slice(
+                    ? order.slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
-                    : productGI
+                    : order
                   ).map((row) => (
-                    <TableRow key={row.name}>
+                    <TableRow key={row.id}>
                       <TableCell component="th" scope="row">
-                        {row.name}
+                        paymentImage
                       </TableCell>
                       <TableCell
                       // style={{ width: 160 }}
                       //   align="right"
                       >
-                        {row.description}
+                        {row.tag}
                       </TableCell>
-                      <TableCell>{row?.category?.name}</TableCell>
+                      <TableCell>
+                        {row.status === 0
+                          ? "กำลังรออนุมัติ"
+                          : "ยืนยันคำสั่งซื้อแล้ว"}
+                      </TableCell>
                       <TableCell style={{ width: 100 }}>
                         <Button
                           variant="contained"
@@ -284,7 +266,8 @@ const ProductGIList = () => {
                           <Button onClick={handleClose}>ยกเลิก</Button>
                           <Button
                             onClick={() => {
-                              removeProductGI(row.id);
+                              //   removeProduct(row.id);
+                              //   getProductByStore(user?.stores[0].id || 0);
                               handleClose();
                             }}
                             autoFocus
@@ -311,7 +294,7 @@ const ProductGIList = () => {
                         { label: "ทั้งหมด", value: -1 },
                       ]}
                       colSpan={3}
-                      count={productGI.length}
+                      count={order.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       slotProps={{
@@ -337,4 +320,4 @@ const ProductGIList = () => {
   );
 };
 
-export default observer(ProductGIList);
+export default observer(OrderList);
