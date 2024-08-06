@@ -60,7 +60,7 @@ export const PublicRoute: any = [
   },
   {
     id: 9,
-    path: "/",
+    path: "/FirstScreen",
     element: <FirstScreen />,
   },
   {
@@ -75,7 +75,7 @@ export const PublicRoute: any = [
   },
   {
     id: 12,
-    path: "/FirstScreenNew",
+    path: "/",
     element: <FirstScreenNew />,
   },
 ];

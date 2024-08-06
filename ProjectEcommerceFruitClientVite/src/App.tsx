@@ -29,7 +29,7 @@ function App() {
           <Route key={item.id} element={item.element} path={item.path} />
         ))}
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </BrowserRouter>
   );
 }

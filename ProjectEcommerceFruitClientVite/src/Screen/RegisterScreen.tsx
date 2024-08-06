@@ -47,6 +47,7 @@ import {
       const data = new FormData(event.currentTarget);
       const formData: any = Object.fromEntries(data.entries());
       register(formData);
+      console.log("formData",formData)
     };
   
     return (

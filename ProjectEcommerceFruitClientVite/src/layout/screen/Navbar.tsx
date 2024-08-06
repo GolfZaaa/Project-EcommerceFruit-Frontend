@@ -99,11 +99,17 @@ export default observer(function Navbar() {
                 ออกจากระบบ
               </MenuItem>
             </Menu>
-            <IconButton color="inherit" aria-label="cart">
-              <Badge badgeContent={4} color="error">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
+
+            <NavLink
+              to={RoutePath.cartScreen}
+              style={{ textDecoration: "none" }}
+            >
+              <IconButton color="inherit" aria-label="cart">
+                <Badge badgeContent={4} color="error">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+            </NavLink>
           </div>
         ) : (
           <div>
