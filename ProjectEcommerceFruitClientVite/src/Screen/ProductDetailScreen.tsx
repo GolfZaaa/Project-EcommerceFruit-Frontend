@@ -9,29 +9,29 @@ export default function ProductDetailScreen() {
         <img
           className="w-full"
           alt="img of a girl posing"
-          src="https://i.ibb.co/QMdWfzX/component-image-one.png"
+          src="https://media.komchadluek.net/uploads/images/contents/w1024/2022/04/y6VZFGYAEI7QZPt9qIar.webp?x-image-process=style/lg-webp"
         />
 <div className="flex  justify-between mt-2 space-x-4">
           <img
             alt="img-tag-one"
             className="md:w-24 md:h-24 "
-            src="https://i.ibb.co/cYDrVGh/Rectangle-245.png"
+            src="https://media.komchadluek.net/uploads/images/contents/w1024/2022/04/y6VZFGYAEI7QZPt9qIar.webp?x-image-process=style/lg-webp"
           />
           <img
+            alt="img-tag-one"
+            className="md:w-24 md:h-24 "
+            src="https://media.komchadluek.net/uploads/images/contents/w1024/2022/04/y6VZFGYAEI7QZPt9qIar.webp?x-image-process=style/lg-webp"
+          />
+          <img
+            alt="img-tag-one"
+            className="md:w-24 md:h-24 "
+            src="https://media.komchadluek.net/uploads/images/contents/w1024/2022/04/y6VZFGYAEI7QZPt9qIar.webp?x-image-process=style/lg-webp"
+          />
+          {/* <img
             alt="img-tag-one"
             className="md:w-24 md:h-24 "
             src="https://i.ibb.co/f17NXrW/Rectangle-244.png"
-          />
-          <img
-            alt="img-tag-one"
-            className="md:w-24 md:h-24 "
-            src="https://i.ibb.co/cYDrVGh/Rectangle-245.png"
-          />
-          <img
-            alt="img-tag-one"
-            className="md:w-24 md:h-24 "
-            src="https://i.ibb.co/f17NXrW/Rectangle-244.png"
-          />
+          /> */}
         </div>
       </div>
 
@@ -177,7 +177,7 @@ export default function ProductDetailScreen() {
                         mt-4 
 					"
         >
-          <svg
+          {/* <svg
             className="mr-3"
             width="16"
             height="17"
@@ -213,7 +213,7 @@ export default function ProductDetailScreen() {
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-          </svg>
+          </svg> */}
           เพิ่มลงตะกร้า
         </button>
       </div>

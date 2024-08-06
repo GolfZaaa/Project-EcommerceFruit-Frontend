@@ -15,6 +15,8 @@ export const RoutePath = {
   createProductScreen: `${HOST}create-product-screen`,
   productDetail: `${HOST}product-detail`,
   createshop: `${HOST}create-shop`,
+  cartScreen: `${HOST}cart-screen`,
+
 
   // private routes
   dashboardShopScreen: `${HOST}dashboard-shop-screen`,

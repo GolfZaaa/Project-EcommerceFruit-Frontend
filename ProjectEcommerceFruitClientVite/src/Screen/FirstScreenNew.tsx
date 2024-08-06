@@ -10,6 +10,8 @@ import News4 from "../image/News4.jpg";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Navbar from "../layout/screen/Navbar";
+import Footer from "../layout/screen/Footer";
 
 const images = [
     image1,
@@ -637,6 +639,7 @@ export default function FirstScreenNew() {
         <div />
       </div>
       {/* ข่าวสาร End */}
+      <Footer/>
     </div>
   );
 }
