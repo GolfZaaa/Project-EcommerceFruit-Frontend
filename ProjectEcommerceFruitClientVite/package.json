@@ -16,6 +16,7 @@
     "@mui/x-data-grid": "^7.11.1",
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",
+    "html-react-parser": "^5.1.12",
     "mobx": "^6.13.1",
     "mobx-react-lite": "^4.0.7",
     "quill": "^2.0.2",
