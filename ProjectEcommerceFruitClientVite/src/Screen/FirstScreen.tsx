@@ -3,7 +3,7 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import { RoutePath } from "../constants/RoutePath";
 
-export default function FirstScreen() {
+export default observer(function FirstScreen() {
   return (
     <div>
       <section
@@ -107,4 +107,4 @@ export default function FirstScreen() {
       </section>
     </div>
   );
-}
+});
