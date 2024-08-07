@@ -13,7 +13,9 @@ export const RoutePath = {
   shopAddressScreen: `${HOST}shop-address-screen`,
   createFruitGIScreen: `${HOST}create-fruitGI-screen`,
   createProductScreen: `${HOST}create-product-screen`,
-  productDetail: `${HOST}product-detail`,
+  
+  productDetail: (id: string) => `${HOST}product-detail-screen/${id}`,
+
   createshop: `${HOST}create-shop`,
   cartScreen: `${HOST}cart-screen`,
 

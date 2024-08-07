@@ -19,10 +19,13 @@ import {
 import { styled } from "@mui/material/styles";
 import { useStore } from "../store/store";
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { RoutePath } from "../constants/RoutePath";
+import Loading from "../layout/component/LoadingComponent";
 
 export default observer(function HomeScreen() {
+  const navigate = useNavigate();
+
   const { product, getProduct, category, getCategory } =
     useStore().productStore;
 
@@ -72,8 +75,6 @@ export default observer(function HomeScreen() {
     },
   ];
 
-  const data = [...product, ...product];
-
   const categories = [
     {
       id: 0,
@@ -85,6 +86,21 @@ export default observer(function HomeScreen() {
   const onSelectCate = (categoryId: number) => {
     getProduct(categoryId);
   };
+
+
+  const NavigateDetail = (product: any) => {
+    navigate(RoutePath.productDetail(product.id));
+  };
+
+  useEffect(() => {
+    getProduct(0);
+    getCategory();
+  }, [getProduct, getCategory]);
+
+  if (!Array.isArray(product) || !Array.isArray(category)) {
+    return <Loading />;
+  }
+  
 
   return (
     <>
@@ -135,17 +151,16 @@ export default observer(function HomeScreen() {
               {product.map((product, i) => (
                 <Grid item key={i} xs={12} sm={6} md={4}>
                   <StyledCard>
-                    <NavLink
-                      to={RoutePath.productDetail}
-                      state={product.id}
-                      style={{ textDecoration: "none" }}
-                    >
-                      <StyledCardMedia
-                        component="img"
-                        alt={product.productGI.name}
-                        image={products[i % 2].imageUrl}
-                      />
-                    </NavLink>
+                  <a
+                        onClick={() => NavigateDetail(product)}
+                        style={{ textDecoration: "none" }}
+                      >
+                        <StyledCardMedia
+                          component="img"
+                          alt={product.productGI.name}
+                          image={products[i % 2].imageUrl}
+                        />
+                      </a>
                     <StyledCardContent>
                       <ProductTitle variant="h6" component="div">
                         {product.productGI.name}
@@ -154,7 +169,7 @@ export default observer(function HomeScreen() {
                         ฿ {product.price}
                       </ProductDescription>
                       <ButtonWrapper>
-                        <FullWidthButton variant="outlined">
+                        <FullWidthButton  variant="outlined">
                           เพิ่มสินค้า
                         </FullWidthButton>
                       </ButtonWrapper>

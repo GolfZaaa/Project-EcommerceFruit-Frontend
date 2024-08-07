@@ -1,6 +1,25 @@
-import React, { useState } from "react";
+import { observer } from "mobx-react-lite";
+import React, { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import { useStore } from "../../store/store";
 
-export default function ProductDetailScreen() {
+export default observer(function ProductDetailScreen() {
+  
+  const { getProductById, product} =
+    useStore().productStore;
+
+    const { id } = useParams<{id: any}>();
+    console.log("location",id)
+    
+    useEffect(() => {
+      getProductById(id)
+    }, []);
+
+    // const productGi = product?.productGI;
+    console.log("product",product)
+
+  
+
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
   return (
@@ -38,7 +57,7 @@ export default function ProductDetailScreen() {
       <div className="xl:w-2/5 md:w-1/2 lg:ml-8 md:ml-6 md:mt-0 mt-6">
         <div className="border-b border-gray-200 pb-6">
           <p className="text-sm leading-none text-gray-600">
-            ชื่อประเภทสินค้า : Test
+          {product && product?.productGI?.category.name}
           </p>
           <h1
             className="
@@ -51,7 +70,7 @@ export default function ProductDetailScreen() {
 							mt-2
 						"
           >
-            ชื่อสินค้า : Test
+            {product && product?.productGI?.name}
           </h1>
         </div>
         <div>
@@ -219,4 +238,4 @@ export default function ProductDetailScreen() {
       </div>
     </div>
   );
-}
+});

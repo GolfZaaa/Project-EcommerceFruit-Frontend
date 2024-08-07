@@ -7,6 +7,8 @@ export const Product = {
     requests.get(`Product/GetProductByStore?storeId=${storeId}`),
   createUpdateProduct: (values: any) =>
     requests.post(`Product/CreateUpdateProduct`, values),
+  getProductById: (productId: number) =>
+    requests.get(`Product/GetProductById?productId=${productId}`),
   removeProduct: (productId: number) =>
     requests.delete(`Product/RemoveProductById?productId=${productId}`),
 

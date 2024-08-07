@@ -8,7 +8,7 @@ import HomeScreen from "../Screen/HomeScreen";
 import NotFoundScreen from "../Screen/NotFoundScreen";
 import FirstScreen from "../Screen/FirstScreen";
 import FirstScreenNew from "../Screen/FirstScreenNew";
-import ProductDetailScreen from "../Screen/ProductDetailScreen";
+import ProductDetailScreen from "../Screen/product/ProductDetailScreen";
 import CartScreen from "../Screen/CartScreen";
 import CreateFruitGIScreen from "../Screen/Shopping/CreateFruitGIScreen";
 
@@ -70,7 +70,7 @@ export const PublicRoute: any = [
   },
   {
     id: 11,
-    path: "/productdetail-screen",
+    path: "/product-detail-screen/:id",
     element: <ProductDetailScreen />,
   },
   {

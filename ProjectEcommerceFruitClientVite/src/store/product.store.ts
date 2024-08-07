@@ -21,6 +21,15 @@ export default class ProductStore {
     }
   };
 
+  getProductById = async (productId: number) => {
+    try {
+      const result = await agent.Product.getProductById(productId);
+      this.product = result;
+    } catch (error) {
+      return error;
+    }
+  };
+
   getProductByStore = async (storeId: number) => {
     try {
       const result = await agent.Product.getProductByStore(storeId);
