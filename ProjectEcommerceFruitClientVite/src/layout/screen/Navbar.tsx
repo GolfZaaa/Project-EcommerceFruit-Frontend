@@ -1,9 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  Typography,
-  IconButton,
-  Badge,
-} from "@mui/material";
+import { Typography, IconButton, Badge } from "@mui/material";
 import { RoutePath } from "../../constants/RoutePath";
 import { NavLink, useNavigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
@@ -34,13 +30,11 @@ export default observer(function Navbar() {
   const resultCartItems = cartItems.length;
 
   useEffect(() => {
-      getUserDetailbyId();
-      GetCartItemByUser();
+    getUserDetailbyId();
+    GetCartItemByUser();
   }, []);
 
-  console.log("resultcartItemscartItemscartItemsCartItems",cartItems)
-
-
+  console.log("resultcartItemscartItemscartItemsCartItems", cartItems);
 
   return (
     <>
@@ -66,12 +60,16 @@ export default observer(function Navbar() {
               </svg>
             </button>
           </div>
-          <ul className="hidden absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 lg:flex lg:mx-auto lg:flex lg:items-center lg:w-auto lg:space-x-6">
+          <ul className="hidden absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 lg:flex lg:mx-auto lg:items-center lg:w-auto lg:space-x-6">
             <li>
               <NavLink
                 to={RoutePath.firstscreen}
                 className={({ isActive }) =>
-                  `text-sm ${isActive ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-gray-500'}`
+                  `text-sm ${
+                    isActive
+                      ? "text-blue-600 font-bold"
+                      : "text-gray-400 hover:text-gray-500"
+                  }`
                 }
               >
                 หน้าหลัก
@@ -97,7 +95,11 @@ export default observer(function Navbar() {
               <NavLink
                 to={RoutePath.homeScreen}
                 className={({ isActive }) =>
-                  `text-sm ${isActive ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-gray-500'}`
+                  `text-sm ${
+                    isActive
+                      ? "text-blue-600 font-bold"
+                      : "text-gray-400 hover:text-gray-500"
+                  }`
                 }
               >
                 สินค้า
@@ -120,98 +122,101 @@ export default observer(function Navbar() {
               </svg>
             </li>
             <li>
-              <NavLink to={"/Contact"} className={({ isActive }) =>
-                  `text-sm ${isActive ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-gray-500'}`
-                }>
+              <NavLink
+                to={"/Contact"}
+                className={({ isActive }) =>
+                  `text-sm ${
+                    isActive
+                      ? "text-blue-600 font-bold"
+                      : "text-gray-400 hover:text-gray-500"
+                  }`
+                }
+              >
                 ติดต่อ
               </NavLink>
             </li>
           </ul>
 
-          {token ?(
+          {token ? (
             <div>
-            <ButtonMui color="secondary" onClick={handleClick}>
-              <Typography variant="body1" color="black">
-                {user?.fullName}
-              </Typography>
-            </ButtonMui>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              <MenuItem onClick={handleClose}>ข้อมูลส่วนตัว</MenuItem>
-      
-              {user?.stores.length ? (
-                <MenuItem onClick={handleClose}>
-                  <NavLink
-                    to={RoutePath.dashboardShopScreen}
-                    style={{ textDecoration: "none", color: "#000" }}
-                  >
-                    ร้านค้า
-                  </NavLink>
-                </MenuItem>
-              ) : (
-                <MenuItem onClick={handleClose}>
-                  <NavLink
-                    to={RoutePath.createShopScreen}
-                    style={{ textDecoration: "none", color: "#000" }}
-                  >
-                    ลงทะเบียนร้านค้า
-                  </NavLink>
-                </MenuItem>
-              )}
-      
-              <Divider />
-              <MenuItem
-                style={{
-                  color: "red",
-                }}
-                onClick={() => {
-                  logout();
-                  navigate(RoutePath.homeScreen);
-                  handleClose();
+              <ButtonMui color="secondary" onClick={handleClick}>
+                <Typography variant="body1" color="black">
+                  {user?.fullName}
+                </Typography>
+              </ButtonMui>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
                 }}
               >
-                ออกจากระบบ
-              </MenuItem>
-            </Menu>
-      
-            <NavLink
-              to={RoutePath.cartScreen}
-              style={{ textDecoration: "none" }}
-            >
-              <IconButton color="inherit" aria-label="cart">
-              <Badge badgeContent={resultCartItems} color="error">
+                <MenuItem onClick={handleClose}>ข้อมูลส่วนตัว</MenuItem>
 
-                  <ShoppingCartIcon />
-                </Badge>
-              </IconButton>
-            </NavLink>
-          </div>
-          ):(
+                {user?.stores.length ? (
+                  <MenuItem onClick={handleClose}>
+                    <NavLink
+                      to={RoutePath.dashboardShopScreen}
+                      style={{ textDecoration: "none", color: "#000" }}
+                    >
+                      ร้านค้า
+                    </NavLink>
+                  </MenuItem>
+                ) : (
+                  <MenuItem onClick={handleClose}>
+                    <NavLink
+                      to={RoutePath.createShopScreen}
+                      style={{ textDecoration: "none", color: "#000" }}
+                    >
+                      ลงทะเบียนร้านค้า
+                    </NavLink>
+                  </MenuItem>
+                )}
+
+                <Divider />
+                <MenuItem
+                  style={{
+                    color: "red",
+                  }}
+                  onClick={() => {
+                    logout();
+                    navigate(RoutePath.homeScreen);
+                    handleClose();
+                  }}
+                >
+                  ออกจากระบบ
+                </MenuItem>
+              </Menu>
+
+              <NavLink
+                to={RoutePath.cartScreen}
+                style={{ textDecoration: "none" }}
+              >
+                <IconButton color="inherit" aria-label="cart">
+                  <Badge badgeContent={resultCartItems} color="error">
+                    <ShoppingCartIcon />
+                  </Badge>
+                </IconButton>
+              </NavLink>
+            </div>
+          ) : (
             <div>
               <NavLink
-            className="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-gray-100 hover:bg-gray-300 text-sm text-gray-900 font-bold  rounded-xl transition duration-200"
-            to={RoutePath.loginScreen}
-          >
-            เข้าสู่ระบบ
-          </NavLink>
-          <NavLink
-            className="hidden lg:inline-block py-2 px-6 bg-blue-500 hover:bg-blue-600 text-sm text-white font-bold rounded-xl transition duration-200"
-            to={RoutePath.registerScreen}
-          >
-            สมัครสมาชิก
-          </NavLink>
+                className="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-gray-100 hover:bg-gray-300 text-sm text-gray-900 font-bold  rounded-xl transition duration-200"
+                to={RoutePath.loginScreen}
+              >
+                เข้าสู่ระบบ
+              </NavLink>
+              <NavLink
+                className="hidden lg:inline-block py-2 px-6 bg-blue-500 hover:bg-blue-600 text-sm text-white font-bold rounded-xl transition duration-200"
+                to={RoutePath.registerScreen}
+              >
+                สมัครสมาชิก
+              </NavLink>
             </div>
-          )
-          
-        }
-          
+          )}
         </nav>
         <div className="navbar-menu relative z-50 hidden">
           <div className="navbar-backdrop fixed inset-0 bg-gray-800 opacity-25"></div>
@@ -289,7 +294,7 @@ export default observer(function Navbar() {
             <div className="mt-auto">
               <div className="pt-6">
                 <a
-                  className="block px-4 py-3 mb-3 leading-loose text-xs text-center font-semibold leading-none bg-gray-50 hover:bg-gray-100 rounded-xl"
+                  className="block px-4 py-3 mb-3 leading-loose text-xs text-center font-semibold  bg-gray-50 hover:bg-gray-100 rounded-xl"
                   href="#"
                 >
                   Sign in

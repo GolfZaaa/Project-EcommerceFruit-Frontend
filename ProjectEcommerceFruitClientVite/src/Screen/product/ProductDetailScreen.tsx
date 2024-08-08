@@ -2,65 +2,68 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useStore } from "../../store/store";
-import { Button, Typography, Box } from '@mui/material';
+import { Button, Typography, Box } from "@mui/material";
+import ToastAddToCart from "../../layout/component/ToastAddToCart";
 export default observer(function ProductDetailScreen() {
-  
-  const { getProductById, product} =
-    useStore().productStore;
+  const { getProductById, product } = useStore().productStore;
 
-    const {AddToCart, GetCartItemByUser } = useStore().cartStore;
+  const { AddToCart, GetCartItemByUser } = useStore().cartStore;
+  const [showToast, setShowToast] = useState(false);
 
-    const { id } = useParams<{id: any}>();
-    console.log("location",id)
-    
-    useEffect(() => {
-      getProductById(id)
-    }, []);
+  const { id } = useParams<{ id: any }>();
+  console.log("location", id);
 
-    console.log("product",product)
+  useEffect(() => {
+    getProductById(id);
+  }, []);
 
-    const [weight, setWeight] = useState(1);
+  console.log("product", product);
 
-    const increaseQuantity = () => {
-      setWeight(weight + 1);
-    };
-  
-    const decreaseQuantity = () => {
-      if (weight > 1) setWeight(weight - 1);
-    };
+  const [weight, setWeight] = useState(1);
 
-    const handleAddToCart = async () => {
-      try {
-        const ProductId = product.id;
-        const Weight = weight;
-        const result = await AddToCart({ ProductId, Weight });
-          if(result){
-            await GetCartItemByUser();
-            console.log("Successfully added to cart")
-          }else{
-            console.log("Failed to add to cart")
-          }
-        console.log(result);
-      } catch (error) {
-        alert('Failed to add product to cart.');
+  const increaseQuantity = () => {
+    setWeight(weight + 1);
+  };
+
+  const decreaseQuantity = () => {
+    if (weight > 1) setWeight(weight - 1);
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      const ProductId = product.id;
+      const Weight = weight;
+      const result = await AddToCart({ ProductId, Weight });
+      if (result) {
+        await GetCartItemByUser();
+        setShowToast(true);
+        setTimeout(() => {
+          setShowToast(false);
+        }, 3000);
+
+        console.log("Successfully added to cart");
+      } else {
+        console.log("Failed to add to cart");
       }
-    };
-
-  
-  
+      console.log(result);
+    } catch (error) {
+      alert("Failed to add product to cart.");
+    }
+  };
 
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
   return (
     <div className="md:flex items-start justify-center py-12 2xl:px-20 md:px-6 px-4">
+      {showToast && <ToastAddToCart/>}
       <div className="xl:w-2/6 lg:w-2/5 w-80 md:block hidden">
         <img
           className="w-full"
           alt="img of a girl posing"
           src="https://media.komchadluek.net/uploads/images/contents/w1024/2022/04/y6VZFGYAEI7QZPt9qIar.webp?x-image-process=style/lg-webp"
         />
-<div className="flex  justify-between mt-2 space-x-4">
-          <img  
+        <div className="flex  justify-between mt-2 space-x-4">
+          <img
             alt="img-tag-one"
             className="md:w-24 md:h-24 "
             src="https://media.komchadluek.net/uploads/images/contents/w1024/2022/04/y6VZFGYAEI7QZPt9qIar.webp?x-image-process=style/lg-webp"
@@ -86,7 +89,7 @@ export default observer(function ProductDetailScreen() {
       <div className="xl:w-2/5 md:w-1/2 lg:ml-8 md:ml-6 md:mt-0 mt-6">
         <div className="border-b border-gray-200 pb-6">
           <p className="text-sm leading-none text-gray-600">
-          {product && product?.productGI?.category.name}
+            {product && product?.productGI?.category.name}
           </p>
           <h1
             className="
@@ -117,23 +120,14 @@ export default observer(function ProductDetailScreen() {
           </p>
 
           <Box display="flex" alignItems="center" gap={2}>
-          <Button 
-            variant="outlined" 
-            onClick={decreaseQuantity} 
-            size="medium"
-          >
-            -
-          </Button>
-          <Typography variant="body1">{weight}</Typography>
-          <Button 
-            variant="outlined" 
-            onClick={increaseQuantity} 
-            size="medium"
-          >
-            +
-          </Button>
-        </Box>
-
+            <Button variant="outlined" onClick={decreaseQuantity} size="medium">
+              -
+            </Button>
+            <Typography variant="body1">{weight}</Typography>
+            <Button variant="outlined" onClick={increaseQuantity} size="medium">
+              +
+            </Button>
+          </Box>
         </div>
         <div>
           <div className="border-t border-b py-4 mt-7 border-gray-200">
@@ -177,7 +171,9 @@ export default observer(function ProductDetailScreen() {
               }
               id="sect"
             >
-              วัสดุ TPU ที่ใช้ในเคสนี้มีคุณสมบัติป้องกันการกระแทกที่ช่วยปกป้องโทรศัพท์ของคุณจากความเสียหายจากอุบัติเหตุที่เกิดจากการตกหล่นและการกระแทก นอกจากนี้ยัง
+              วัสดุ TPU
+              ที่ใช้ในเคสนี้มีคุณสมบัติป้องกันการกระแทกที่ช่วยปกป้องโทรศัพท์ของคุณจากความเสียหายจากอุบัติเหตุที่เกิดจากการตกหล่นและการกระแทก
+              นอกจากนี้ยัง
             </div>
           </div>
         </div>
@@ -221,7 +217,9 @@ export default observer(function ProductDetailScreen() {
               }
               id="sect"
             >
-              วัสดุ TPU ที่ใช้ในเคสนี้มีคุณสมบัติป้องกันการกระแทกที่ช่วยปกป้องโทรศัพท์ของคุณจากความเสียหายจากอุบัติเหตุที่เกิดจากการตกหล่นและการกระแทก นอกจากนี้ยัง
+              วัสดุ TPU
+              ที่ใช้ในเคสนี้มีคุณสมบัติป้องกันการกระแทกที่ช่วยปกป้องโทรศัพท์ของคุณจากความเสียหายจากอุบัติเหตุที่เกิดจากการตกหล่นและการกระแทก
+              นอกจากนี้ยัง
             </div>
           </div>
         </div>

@@ -10,6 +10,7 @@ interface Product {
 
 export default class CartStore {
     cartItems = [];
+    cartItemsStore = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -29,6 +30,15 @@ export default class CartStore {
     try {
        const result = await agent.Cart.GetCartItemByUser();
        this.cartItems = result;
+    }catch (error) {
+      return error;
+    }
+  }
+
+  GetCartItemByUserOrderStore = async() => {
+    try {
+       const result = await agent.Cart.GetCartItemByUserOrderStore();
+       this.cartItemsStore = result;
     }catch (error) {
       return error;
     }
