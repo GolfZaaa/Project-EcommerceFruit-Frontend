@@ -2,11 +2,13 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useStore } from "../../store/store";
-
+import { Button, Typography, Box } from '@mui/material';
 export default observer(function ProductDetailScreen() {
   
   const { getProductById, product} =
     useStore().productStore;
+
+    const {AddToCart, GetCartItemByUser } = useStore().cartStore;
 
     const { id } = useParams<{id: any}>();
     console.log("location",id)
@@ -15,9 +17,36 @@ export default observer(function ProductDetailScreen() {
       getProductById(id)
     }, []);
 
-    // const productGi = product?.productGI;
     console.log("product",product)
 
+    const [weight, setWeight] = useState(1);
+
+    const increaseQuantity = () => {
+      setWeight(weight + 1);
+    };
+  
+    const decreaseQuantity = () => {
+      if (weight > 1) setWeight(weight - 1);
+    };
+
+    const handleAddToCart = async () => {
+      try {
+        const ProductId = product.id;
+        const Weight = weight;
+        const result = await AddToCart({ ProductId, Weight });
+          if(result){
+            await GetCartItemByUser();
+            console.log("Successfully added to cart")
+          }else{
+            console.log("Failed to add to cart")
+          }
+        console.log(result);
+      } catch (error) {
+        alert('Failed to add product to cart.');
+      }
+    };
+
+  
   
 
   const [show, setShow] = useState(false);
@@ -31,7 +60,7 @@ export default observer(function ProductDetailScreen() {
           src="https://media.komchadluek.net/uploads/images/contents/w1024/2022/04/y6VZFGYAEI7QZPt9qIar.webp?x-image-process=style/lg-webp"
         />
 <div className="flex  justify-between mt-2 space-x-4">
-          <img
+          <img  
             alt="img-tag-one"
             className="md:w-24 md:h-24 "
             src="https://media.komchadluek.net/uploads/images/contents/w1024/2022/04/y6VZFGYAEI7QZPt9qIar.webp?x-image-process=style/lg-webp"
@@ -83,12 +112,28 @@ export default observer(function ProductDetailScreen() {
           <p className="text-base leading-4 mt-4 text-gray-600">
             ขายแล้ว : 100 ชิ้น
           </p>
-          <p className="text-base leading-4 mt-4 text-gray-600">
-            น้ำหนัก : Height: 10 inches
+          <p className="text-base leading-4 mt-4 text-gray-600 mb-5">
+            ราคาต่อกิโลกรัม : {product?.price} บาท
           </p>
-          <p className="text-base leading-4 mt-4 text-gray-600">
-            Depth: 5.1 inches
-          </p>
+
+          <Box display="flex" alignItems="center" gap={2}>
+          <Button 
+            variant="outlined" 
+            onClick={decreaseQuantity} 
+            size="medium"
+          >
+            -
+          </Button>
+          <Typography variant="body1">{weight}</Typography>
+          <Button 
+            variant="outlined" 
+            onClick={increaseQuantity} 
+            size="medium"
+          >
+            +
+          </Button>
+        </Box>
+
         </div>
         <div>
           <div className="border-t border-b py-4 mt-7 border-gray-200">
@@ -195,6 +240,7 @@ export default observer(function ProductDetailScreen() {
 						hover:bg-gray-700
                         mt-4 
 					"
+          onClick={handleAddToCart}
         >
           {/* <svg
             className="mr-3"

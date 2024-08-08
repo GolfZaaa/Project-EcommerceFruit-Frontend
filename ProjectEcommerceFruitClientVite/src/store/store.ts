@@ -4,6 +4,7 @@ import userStore from "./user.store";
 import shopUserStore from "./shopuser.store";
 import ProductStore from "./product.store";
 import OrderStore from "./order.store";
+import CartStore from "./cart.store";
 
 interface Store {
   commonStore: commonStore;
@@ -11,6 +12,7 @@ interface Store {
   shopuserStore: shopUserStore;
   productStore: ProductStore;
   orderStore: OrderStore;
+  cartStore: CartStore;
 }
 
 export const store: Store = {
@@ -19,6 +21,7 @@ export const store: Store = {
   shopuserStore: new shopUserStore(),
   productStore: new ProductStore(),
   orderStore: new OrderStore(),
+  cartStore: new CartStore(),
 };
 
 export const StoreContext = createContext(store);

@@ -170,7 +170,7 @@ export default observer(function HomeScreen() {
                       </ProductDescription>
                       <ButtonWrapper>
                         <FullWidthButton  variant="outlined">
-                          เพิ่มสินค้า
+                          เยี่ยมชมสินค้า
                         </FullWidthButton>
                       </ButtonWrapper>
                     </StyledCardContent>
