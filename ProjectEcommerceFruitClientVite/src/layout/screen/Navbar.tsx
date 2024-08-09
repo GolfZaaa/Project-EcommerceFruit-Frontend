@@ -34,8 +34,6 @@ export default observer(function Navbar() {
     GetCartItemByUser();
   }, []);
 
-  // console.log("resultcartItemscartItemscartItemsCartItems", cartItems);
-
   return (
     <>
       <div>
@@ -204,17 +202,17 @@ export default observer(function Navbar() {
           ) : (
             <div>
               <NavLink
-                className="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-gray-100 hover:bg-gray-300 text-sm text-gray-900 font-bold  rounded-xl transition duration-200"
+                className="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-green-500 hover:bg-green-700 text-sm text-white font-bold  rounded-xl transition duration-200"
                 to={RoutePath.loginScreen}
               >
                 เข้าสู่ระบบ
               </NavLink>
-              <NavLink
+              {/* <NavLink
                 className="hidden lg:inline-block py-2 px-6 bg-blue-500 hover:bg-blue-600 text-sm text-white font-bold rounded-xl transition duration-200"
                 to={RoutePath.registerScreen}
               >
                 สมัครสมาชิก
-              </NavLink>
+              </NavLink> */}
             </div>
           )}
         </nav>

@@ -19,13 +19,11 @@ export default class UserStore {
   }
 
   register = async ({
-    Username,
     Password,
     FullName,
     PhoneNumber,
   }: RegisterInterface) => {
     const data = {
-      username: Username,
       password: Password,
       fullName: FullName,
       phoneNumber: PhoneNumber,
@@ -38,8 +36,8 @@ export default class UserStore {
     }
   };
 
-  login = async ({ Username, Password }: RegisterInterface) => {
-    const data = { username: Username, password: Password };
+  login = async ({ PhoneNumber, Password }: RegisterInterface) => {
+    const data = { phoneNumber: PhoneNumber, password: Password };
     try {
       const user = await agent.User.Login(data);
       return user;
