@@ -53,7 +53,7 @@ export default observer(function CreateFruitGIScreen({
     const dataForm = {
       id: dataEdit?.id || 0,
       name: formData.name,
-      description: editorHtml,
+      description: editorHtml || "<p></p>",
       categoryId: selectCate,
     };
 

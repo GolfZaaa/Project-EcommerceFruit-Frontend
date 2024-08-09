@@ -31,10 +31,6 @@ export default observer(function Navbar() {
     setAnchorEl(null);
   };
 
-  useEffect(() => {
-    getUserDetailbyId();
-  }, []);
-
   return (
     <AppBar position="static" sx={{ backgroundColor: "#1976d2" }}>
       <Toolbar style={{ justifyContent: "space-between" }}>
@@ -54,7 +50,7 @@ export default observer(function Navbar() {
               </NavLink>
             </Typography>
           </div>
-          <div style={{ marginLeft: 50 }}>
+          <div style={{ marginLeft: 20 }}>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               <NavLink
                 to={RoutePath.homeScreen}
@@ -85,14 +81,12 @@ export default observer(function Navbar() {
               <MenuItem onClick={handleClose}>ข้อมูลส่วนตัว</MenuItem>
 
               {user?.stores.length ? (
-                <MenuItem onClick={handleClose}>
-                  <NavLink
-                    to={RoutePath.dashboardShopScreen}
-                    style={{ textDecoration: "none", color: "#000" }}
-                  >
-                    ร้านค้า
-                  </NavLink>
-                </MenuItem>
+                <NavLink
+                  to={RoutePath.dashboardShopScreen}
+                  style={{ textDecoration: "none", color: "#000" }}
+                >
+                  <MenuItem onClick={handleClose}>ร้านค้า</MenuItem>
+                </NavLink>
               ) : (
                 <MenuItem onClick={handleClose}>
                   <NavLink

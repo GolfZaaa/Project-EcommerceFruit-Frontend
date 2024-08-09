@@ -46,14 +46,21 @@ export default observer(function LoginScreen() {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const formData: any = Object.fromEntries(data.entries());
+    let formData: any = Object.fromEntries(data.entries());
+
+    // formData = {
+    //   phoneNumber: parseInt(formData.PhoneNumber),
+    //   password: formData.Password,
+    // };
+
+    console.log("formData", formData);
 
     const user = await login(formData);
     if (user) {
       if (user === "Password Wrong") {
         alert("Password Wrong");
-      } else if (user === "UserName Wrong") {
-        alert("UserName Wrong");
+      } else if (user === "PhoneNumber Wrong") {
+        alert("PhoneNumber Wrong");
       } else {
         setToken(user);
         navigate(RoutePath.homeScreen);
@@ -87,11 +94,12 @@ export default observer(function LoginScreen() {
             sx={{ mt: 1 }}
           >
             <TextField
+              inputProps={{ maxLength: 10 }}
               margin="normal"
               required
               fullWidth
               label="Username"
-              name="Username"
+              name="PhoneNumber"
               autoComplete="email"
               autoFocus
             />

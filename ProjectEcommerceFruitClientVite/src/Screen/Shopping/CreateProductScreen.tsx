@@ -57,6 +57,7 @@ export default observer(function CreateProductScreen({
       id: dataEdit?.id || 0,
       // images: null,
       weight: formData.weight,
+      quantity: formData.quantity,
       price: formData.price,
       detail: editorHtml,
       productGIId: selectGI,
@@ -135,10 +136,10 @@ export default observer(function CreateProductScreen({
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <FormControl fullWidth variant="outlined" margin="normal">
-                <InputLabel>ข้อมูลผลไม้ (IG)</InputLabel>
+                <InputLabel>ข้อมูลผลไม้ (GI)</InputLabel>
                 <Select
                   defaultValue={dataEdit?.productGIId}
-                  label="ข้อมูลผลไม้ (IG)"
+                  label="ข้อมูลผลไม้ (GI)"
                 >
                   {productGI.map((item) => (
                     <MenuItem
@@ -157,7 +158,7 @@ export default observer(function CreateProductScreen({
                 defaultValue={dataEdit?.weight}
                 type="number"
                 fullWidth
-                label="จำนวน"
+                label="น้ำหนัก"
                 variant="outlined"
                 margin="normal"
                 name="weight"
@@ -182,7 +183,17 @@ export default observer(function CreateProductScreen({
               />
             </Grid>
             <Grid item xs={6}>
-              ช่องใส่รูปภาพ
+              <TextField
+                defaultValue={dataEdit?.quantity}
+                type="number"
+                fullWidth
+                label="จำนวน"
+                variant="outlined"
+                margin="normal"
+                name="quantity"
+                autoFocus
+                required
+              />
             </Grid>
           </Grid>
 

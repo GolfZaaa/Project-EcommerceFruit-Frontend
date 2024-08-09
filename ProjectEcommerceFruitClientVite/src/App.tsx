@@ -8,6 +8,8 @@ import { useEffect } from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useStore } from "./store/store";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const { token } = useStore().commonStore;
@@ -30,6 +32,7 @@ function App() {
         ))}
       </Routes>
       {/* <Footer /> */}
+      <ToastContainer />
     </BrowserRouter>
   );
 }

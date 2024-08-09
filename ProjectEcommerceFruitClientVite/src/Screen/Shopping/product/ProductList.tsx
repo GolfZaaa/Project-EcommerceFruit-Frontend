@@ -154,7 +154,8 @@ const ProductList = () => {
     { id: "description", label: "ข้อมูลเพิ่มเติม" },
     { id: "category", label: "ประเภท" },
     { id: "price", label: "ราคา" },
-    { id: "weight", label: "จำนวน" },
+    { id: "weight", label: "น้ำหนัก (กิโลกรัม)" },
+    { id: "quantity", label: "จำนวน" },
     { id: "edit", label: "ตัวเลือก" },
     { id: "remove", label: "ตัวเลือก" },
   ];
@@ -233,14 +234,15 @@ const ProductList = () => {
                         {row.productGI.name}
                       </TableCell>
                       <TableCell
-                        // style={{ width: 160 }}
-                        //   align="right"
+                      // style={{ width: 160 }}
+                      //   align="right"
                       >
                         {HTMLReactParser(row.detail)}
                       </TableCell>
                       <TableCell>{row?.productGI?.category.name}</TableCell>
                       <TableCell>{row?.price}</TableCell>
                       <TableCell>{row?.weight}</TableCell>
+                      <TableCell>{row?.quantity}</TableCell>
                       <TableCell style={{ width: 100 }}>
                         <Button
                           variant="contained"
