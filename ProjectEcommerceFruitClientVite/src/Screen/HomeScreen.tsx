@@ -146,7 +146,7 @@ export default observer(function HomeScreen() {
           <ContentSection>
             <Typography variant="h4" gutterBottom align="left">
               สินค้าจำนวน ({products.length}) ชิ้น
-            </Typography>
+            </Typography> 
             <Grid container spacing={4} justifyContent="left">
               {product.map((product, i) => (
                 <Grid item key={i} xs={12} sm={6} md={4}>

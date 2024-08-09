@@ -6,6 +6,8 @@ import Navbar from "./layout/screen/Navbar";
 import Footer from "./layout/screen/Footer";
 import { useEffect, useState } from "react";
 import { useStore } from "./store/store";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
 
@@ -28,6 +30,7 @@ function App() {
         ))}
       </Routes>
       {/* <Footer /> */}
+      <ToastContainer />
     </BrowserRouter>
   );
 }
