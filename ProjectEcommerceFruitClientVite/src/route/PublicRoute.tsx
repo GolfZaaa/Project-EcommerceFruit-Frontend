@@ -9,8 +9,8 @@ import NotFoundScreen from "../Screen/NotFoundScreen";
 import FirstScreen from "../Screen/FirstScreen";
 import FirstScreenNew from "../Screen/FirstScreenNew";
 import ProductDetailScreen from "../Screen/product/ProductDetailScreen";
-import CartScreen from "../Screen/CartScreen";
 import CreateFruitGIScreen from "../Screen/Shopping/CreateFruitGIScreen";
+import CartScreen from "../Screen/CartScreen";
 
 export const PublicRoute: any = [
   {

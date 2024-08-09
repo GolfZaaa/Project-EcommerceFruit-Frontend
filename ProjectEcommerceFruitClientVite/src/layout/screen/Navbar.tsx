@@ -34,7 +34,7 @@ export default observer(function Navbar() {
     GetCartItemByUser();
   }, []);
 
-  console.log("resultcartItemscartItemscartItemsCartItems", cartItems);
+  // console.log("resultcartItemscartItemscartItemsCartItems", cartItems);
 
   return (
     <>
