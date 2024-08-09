@@ -28,12 +28,13 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
 import imageDashboard from "../../image/DashboardShop.png";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import CreateShopScreen from "../Shopping/CreateShopScreen";
 import ProductGIList from "../Shopping/GI/ProductGIList";
 import ProductList from "../Shopping/product/ProductList";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import OrderList from "../order/OrderList";
+import { RoutePath } from "../../constants/RoutePath";
 
 const drawerWidth = 240;
 
@@ -173,7 +174,7 @@ export default observer(function DashboardShopScreen() {
         </ListItem>
         <Collapse timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItem component={Link} to="/">
+            <ListItem component={Link} to={RoutePath.firstscreen}>
               <ListItemText primary="Dashboard Home" sx={{ pl: 4 }} />
             </ListItem>
           </List>
@@ -237,7 +238,21 @@ export default observer(function DashboardShopScreen() {
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
             ร้านค้า {usershop && usershop.name}
           </Typography>
-          <p>{usershop && usershop.user.fullName}</p>
+          <div>
+            <NavLink
+              to={RoutePath.homeScreen}
+              style={{ textDecoration: "none", color: "#fff" }}
+            >
+              กลับหน้าหลัก
+            </NavLink>
+          </div>
+          <div
+            style={{
+              marginLeft: 20,
+            }}
+          >
+            {usershop && usershop.user.fullName}
+          </div>
         </Toolbar>
       </AppBar>
       <Box

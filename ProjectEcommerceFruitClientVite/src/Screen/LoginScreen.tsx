@@ -18,7 +18,14 @@ export default observer(function LoginScreen() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const formData: any = Object.fromEntries(data.entries());
+    let formData: any = Object.fromEntries(data.entries());
+
+    // formData = {
+    //   phoneNumber: parseInt(formData.PhoneNumber),
+    //   password: formData.Password,
+    // };
+
+    console.log("formData", formData);
 
     const phoneNumber = formData.PhoneNumber;
     const password = formData.Password;

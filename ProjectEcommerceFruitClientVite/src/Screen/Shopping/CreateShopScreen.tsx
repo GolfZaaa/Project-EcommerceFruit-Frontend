@@ -13,6 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
 import { RoutePath } from "../../constants/RoutePath";
+import { myToast } from "../../helper/components";
 
 export default observer(function CreateShopScreen() {
   const navigate = useNavigate();
@@ -32,7 +33,8 @@ export default observer(function CreateShopScreen() {
 
     await createandupdate(formData).then((result) => {
       if (result) {
-        navigate(RoutePath.successShopScreen);
+        myToast("ลงทะเบียนร้านค้าสำเร็จ");
+        navigate(RoutePath.dashboardShopScreen);
       }
       console.log("res", result);
     });
