@@ -1,36 +1,48 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Checkbox,
-  Container,
-  createTheme,
-  CssBaseline,
-  FormControlLabel,
-  Grid,
-  TextField,
-  ThemeProvider,
-  Typography,
-} from "@mui/material";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useStore } from "../store/store";
 import { RoutePath } from "../constants/RoutePath";
-import ToastLogin from "../layout/component/ToastLogin";
+import ToastLoginRegister from "../layout/component/ToastLoginRegister";
 
 export default observer(function LoginScreen() {
   const navigate = useNavigate();
   const [showToast, setShowToast] = useState(false);
   const [checkToast, setCheckToast] = useState("");
+  const [phoneNumberError, setPhoneNumberError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const { login, getUserDetailbyId } = useStore().userStore;
   const { setToken, token } = useStore().commonStore;
 
-  const handleSubmit = async (event: any) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const formData: any = Object.fromEntries(data.entries());
+
+    const phoneNumber = formData.PhoneNumber;
+    const password = formData.Password;
+
+    let valid = true;
+
+    if (!/^\d{10}$/.test(phoneNumber)) {
+      setPhoneNumberError("เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลัก และเป็นตัวเลขเท่านั้น");
+      valid = false;
+    } else {
+      setPhoneNumberError("");
+    }
+
+    if (!password) {
+      setPasswordError("กรุณากรอกรหัสผ่าน");
+      valid = false;
+    } else {
+      setPasswordError("");
+    }
+
+    if (!valid) {
+      return;
+    }
+
     const user = await login(formData);
     if (user) {
       if (user === "PhoneNumber Wrong") {
@@ -63,7 +75,7 @@ export default observer(function LoginScreen() {
   return (
     <>
       <div className="py-16">
-        {showToast && <ToastLogin Check={checkToast} />}
+        {showToast && <ToastLoginRegister Check={checkToast} />}
         <form onSubmit={handleSubmit}>
           <div className="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
             <div
@@ -83,16 +95,13 @@ export default observer(function LoginScreen() {
               <h2 className="text-xl font-semibold text-gray-600 text-center">
                 มหาวิทยาลัยราชภัฏกาญจนบุรี
               </h2>
-              {/* <p className="text-xl text-gray-600 text-center">ยินดีต้อนรับ</p> */}
               <a
                 href="#"
                 className="flex items-center justify-center mt-4 text-white rounded-lg shadow-md hover:bg-gray-100"
               ></a>
               <div className="mt-4 flex items-center justify-between">
                 <span className="border-b w-1/5 lg:w-1/4"></span>
-                <p
-                  className="text-2xl text-center text-gray-700 uppercase"
-                >
+                <p className="text-2xl text-center text-gray-700 uppercase">
                   เข้าสู่ระบบ
                 </p>
                 <span className="border-b w-1/5 lg:w-1/4"></span>
@@ -104,9 +113,13 @@ export default observer(function LoginScreen() {
                 <input
                   id="PhoneNumber"
                   name="PhoneNumber"
+                  maxLength="10"
                   type="text"
                   className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
                 />
+                {phoneNumberError && (
+                  <p className="text-red-500 text-xs italic">{phoneNumberError}</p>
+                )}
               </div>
               <div className="mt-4">
                 <div className="flex justify-between">
@@ -117,17 +130,21 @@ export default observer(function LoginScreen() {
                 <input
                   id="Password"
                   name="Password"
+                  type="password"
                   className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
                 />
+                {passwordError && (
+                  <p className="text-red-500 text-xs italic">{passwordError}</p>
+                )}
               </div>
 
               <div className="mt-4 flex justify-end items-center">
                 <p className="text-sm text-gray-500 uppercase mr-2">
                   ไม่มีสมาชิก?
                 </p>
-                <a href="#" className="text-blue-500 hover:underline">
+                <NavLink to={RoutePath.registerScreen} className="text-blue-500 hover:underline">
                   สมัครเลย
-                </a>
+                </NavLink>
               </div>
 
               <div className="mt-5">

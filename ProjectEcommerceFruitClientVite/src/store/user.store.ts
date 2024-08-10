@@ -30,7 +30,8 @@ export default class UserStore {
       roleId: 1,
     };
     try {
-      await agent.User.Register(data);
+      const user = await agent.User.Register(data);
+      return user;
     } catch (error) {
       return error;
     }

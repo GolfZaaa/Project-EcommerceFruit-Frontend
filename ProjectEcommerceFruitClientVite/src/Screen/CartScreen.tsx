@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { BsShop } from "react-icons/bs";
 import Footer from "../layout/screen/Footer";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store/store";
