@@ -19,21 +19,23 @@ export default observer(function ProductDetailScreen() {
 
   console.log("product", product);
 
-  const [weight, setWeight] = useState(1);
+  const [quantity, setQuantity] = useState(1);
 
   const increaseQuantity = () => {
-    setWeight(weight + 1);
+    setQuantity(quantity + 1);
   };
 
   const decreaseQuantity = () => {
-    if (weight > 1) setWeight(weight - 1);
+    if (quantity > 1) setQuantity(quantity - 1);
   };
 
   const handleAddToCart = async () => {
     try {
       const ProductId = product.id;
-      const Weight = weight;
-      const result = await AddToCart({ ProductId, Weight });
+      const Quantity = quantity;
+      console.log("ProductId",ProductId,"Quantity",Quantity)
+      const result = await AddToCart({ ProductId, Quantity });
+      console.log("Reusult",result)
       if (result) {
         await GetCartItemByUser();
         setShowToast(true);
@@ -123,7 +125,7 @@ export default observer(function ProductDetailScreen() {
             <Button variant="outlined" onClick={decreaseQuantity} size="medium">
               -
             </Button>
-            <Typography variant="body1">{weight}</Typography>
+            <Typography variant="body1">{quantity}</Typography>
             <Button variant="outlined" onClick={increaseQuantity} size="medium">
               +
             </Button>

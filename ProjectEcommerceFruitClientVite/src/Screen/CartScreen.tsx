@@ -1,13 +1,21 @@
 import React, { useEffect } from "react";
+import { BsShop } from "react-icons/bs";
 import Footer from "../layout/screen/Footer";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store/store";
+
+const formatNumberWithCommas = (number: any) => {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
 export default observer(function CartScreen() {
   const {
     GetCartItemByUser,
     cartItems,
     GetCartItemByUserOrderStore,
     cartItemsStore,
+    RemoveToCart,
+    AddToCart,
   } = useStore().cartStore;
 
   useEffect(() => {
@@ -15,156 +23,73 @@ export default observer(function CartScreen() {
     GetCartItemByUserOrderStore();
   }, []);
 
-  return (
-    //   <div style={{ backgroundColor: "#fbfbfb", minHeight: "100vh", position: "relative" }}>
-    //     <div classNameName="cart-screen" style={{ padding: "20px" }}>
-    //       <div classNameName="cart-item-all">
-    //         <div style={{ marginBottom: 13, marginLeft: 15 }}>
-    //           <div style={{ display: "flex", alignItems: "center" }}>
-    //             <BsShop size={20} style={{ marginRight: "8px" }} />
-    //             <p style={{ marginTop: 5 }}>ชื่อร้านค้า</p>
-    //           </div>
-    //         </div>
-    //         <div
-    //           classNameName="fontcarth1"
-    //           style={{
-    //             borderBottom: "1px solid #000",
-    //             display: "flex",
-    //             marginBottom: 5,
-    //           }}
-    //         ></div>
-    //         <div classNameName="cart-item">
-    //           <img
-    //             src="https://img.wongnai.com/p/1920x0/2021/05/17/32ad7f16089441f78d0f14947563dc3d.jpg"
-    //             alt="OPPO Reno 11 case"
-    //             style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "8px" }}
-    //           />
-    // <div
-    //             classNameName="item-details"
-    //             style={{
-    //               display: "flex",
-    //               gap: "16px",
-    //             }}
-    //           >
-    //             <h2 style={{ flex: "1", textAlign: "left" }}>ทุเรียน</h2>
-    //             <div
-    //               style={{
-    //                 flex: "1",
-    //                 display: "flex",
-    //                 alignItems: "center",
-    //                 justifyContent: "center",
-    //               }}
-    //             >
-    //               <h2>น้ำหนัก</h2>
-    //             </div>
-    //             <div
-    //               style={{
-    //                 flex: "1",
-    //                 display: "flex",
-    //                 alignItems: "center",
-    //                 justifyContent: "center",
-    //               }}
-    //             >
-    //               <h2>฿68</h2>
-    //             </div>
-    //             <div
-    //               style={{
-    //                 flex: "1",
-    //                 display: "flex",
-    //                 alignItems: "center",
-    //                 justifyContent: "center",
-    //               }}
-    //             >
-    //               <button
-    //                 style={{
-    //                   fontSize: "20px",
-    //                   cursor: "pointer",
-    //                   height: 30,
-    //                   width: 30,
-    //                 }}
-    //               >
-    //                 -
-    //               </button>
-    //               <span
-    //                 style={{
-    //                   fontSize: "20px",
-    //                   marginLeft: 10,
-    //                   marginRight: 10,
-    //                 }}
-    //               >
-    //                 2
-    //               </span>
-    //               <button
-    //                 style={{
-    //                   fontSize: "20px",
-    //                   cursor: "pointer",
-    //                   height: 30,
-    //                   width: 30,
-    //                 }}
-    //               >
-    //                 +
-    //               </button>
-    //             </div>
-    //             <div
-    //               style={{
-    //                 flex: "1",
-    //                 display: "flex",
-    //                 alignItems: "center",
-    //                 justifyContent: "center",
-    //               }}
-    //             >
-    //               <h2>฿100</h2>
-    //             </div>
-    //             <div
-    //               style={{
-    //                 flex: "1",
-    //                 display: "flex",
-    //                 alignItems: "center",
-    //                 justifyContent: "center",
-    //               }}
-    //             >
-    //               <h2>ลบ</h2>
-    //             </div>
-    //           </div>
-    //         </div>
-    //       </div>
-    //       <div classNameName="checkout-card" style={checkoutCardStyle}>
-    //         <h3 style={{ marginBottom: "20px" }}>Checkout</h3>
-    //         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
-    //           <span>Total Items:</span>
-    //           <span>2</span>
-    //         </div>
-    //         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
-    //           <span>Total Price:</span>
-    //           <span>฿100</span>
-    //         </div>
-    //         <button style={checkoutButtonStyle}>Proceed to Checkout</button>
-    //       </div>
-    //     </div>
-    //   </div>
+  const calculateTotalPrice = () => {
+    return cartItemsStore.reduce((total, item: any) => {
+      const storeTotal = item.products.reduce((storeSum: any, product: any) => {
+        return storeSum + product.quantityInCartItem * product.price;
+      }, 0);
+      return total + storeTotal;
+    }, 0);
+  };
 
+  const totalPrice = calculateTotalPrice();
+  const formattedTotalPrice = formatNumberWithCommas(totalPrice);
+
+  const handleRemoveItem = async (item: any) => {
+    const CartItemId = item.cartItemId;
+    const Quantity: any = 1;
+
+    await RemoveToCart({ CartItemId, Quantity });
+    await GetCartItemByUser();
+    await GetCartItemByUserOrderStore();
+  };
+
+  const handleRemoveItemAll = async (item: any, product: any) => {
+    const CartItemId = item.cartItemId;
+    const Quantity: any = product.quantityInCartItem;
+
+    await RemoveToCart({ CartItemId, Quantity });
+    await GetCartItemByUser();
+    await GetCartItemByUserOrderStore();
+  };
+
+  const handleAddItem = async (product: any) => {
+    console.log("product", product.id);
+    const ProductId = product.id;
+    const Quantity: any = 1;
+
+    await AddToCart({ ProductId, Quantity });
+
+    await GetCartItemByUser();
+    await GetCartItemByUserOrderStore();
+  };
+
+  return (
     <div>
-      <section className="bg-white py-8 antialiased  md:py-16">
+      <section className="bg-white py-8 antialiased md:py-16">
         <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
-          <h2 className="text-xl font-semibold text-gray-900  sm:text-2xl">
+          <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">
             ตะกร้าสินค้า ({cartItems.length})
           </h2>
 
           <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
-          <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8 flex-col">
-
-            {cartItemsStore.map((item: any, _) => {
-              console.log("Item", item);
-              return (
-                
-                <div className="w-full flex-none lg:max-w-2xl xl:max-w-4xl  ">
-                  <div className="space-y-6 ">
+            <div className="w-8/12 flex flex-col space-y-6">
+              {cartItemsStore.map((item: any, _) => {
+                return (
+                  <div
+                    key={item.storeName}
+                    className="w-full flex flex-col space-y-6 lg:max-w-2xl xl:max-w-4xl"
+                  >
                     <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6">
                       <div className="space-y-4">
                         <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
                           ชื่อร้านค้า : {item.storeName}
                         </span>
                         {item.products.map((product: any) => {
+                          const TotalPriceForProduct =
+                            product.price * product.quantityInCartItem;
+                          const formatTotalPriceForProduct =
+                            formatNumberWithCommas(TotalPriceForProduct);
                           return (
                             <div key={product.id} className="space-y-6">
                               <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6">
@@ -182,6 +107,7 @@ export default observer(function CartScreen() {
                                   <div className="flex items-center justify-between md:order-3 md:justify-end">
                                     <div className="flex items-center">
                                       <button
+                                        onClick={() => handleRemoveItem(item)}
                                         type="button"
                                         id="decrement-button"
                                         data-input-counter-decrement="counter-input"
@@ -196,25 +122,20 @@ export default observer(function CartScreen() {
                                         >
                                           <path
                                             stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
                                             d="M1 1h16"
                                           />
                                         </svg>
                                       </button>
-                                      <input
-                                        type="text"
-                                        id="counter-input"
-                                        data-input-counter
-                                        className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-gray-800"
-                                        placeholder=""
-                                        value="2"
-                                        required
-                                      />
+                                      <p className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-gray-800">
+                                        {product.quantityInCartItem}
+                                      </p>
                                       <button
                                         type="button"
                                         id="increment-button"
+                                        onClick={() => handleAddItem(product)}
                                         data-input-counter-increment="counter-input"
                                         className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
                                       >
@@ -227,9 +148,9 @@ export default observer(function CartScreen() {
                                         >
                                           <path
                                             stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
                                             d="M9 1v16M1 9h16"
                                           />
                                         </svg>
@@ -237,7 +158,7 @@ export default observer(function CartScreen() {
                                     </div>
                                     <div className="text-end md:order-4 md:w-32">
                                       <p className="text-base font-bold text-gray-900 dark:text-gray-900">
-                                        $1,499
+                                        {formatTotalPriceForProduct} บาท
                                       </p>
                                     </div>
                                   </div>
@@ -250,11 +171,14 @@ export default observer(function CartScreen() {
                                       href="#"
                                       className="text-base font-medium text-gray-900 hover:underline dark:text-gray-800"
                                     >
-                                      {product.name}
+                                      {item.productName}
                                     </a>
                                     <div className="flex items-center gap-4">
                                       <button
                                         type="button"
+                                        onClick={() =>
+                                          handleRemoveItemAll(item, product)
+                                        }
                                         className="inline-flex items-center text-sm font-medium text-red-600 hover:underline dark:text-red-500"
                                       >
                                         <svg
@@ -268,9 +192,9 @@ export default observer(function CartScreen() {
                                         >
                                           <path
                                             stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
                                             d="M6 18 17.94 6M18 18 6.06 6"
                                           />
                                         </svg>
@@ -286,10 +210,8 @@ export default observer(function CartScreen() {
                       </div>
                     </div>
                   </div>
-                </div>
-
-              );
-            })}
+                );
+              })}
             </div>
 
             <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
@@ -300,30 +222,15 @@ export default observer(function CartScreen() {
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <dl className="flex items-center justify-between gap-4">
-                      <dt className="text-base font-normal text-gray-800 dark:text-gray-800">
-                        ราคาเดิม
+                      <dt className="text-base font-bold text-gray-800 dark:text-gray-800">
+                        ราคารวม
                       </dt>
-                      <dd className="text-base font-medium text-gray-800 dark:text-gray-800">
-                        $7,592.00
-                      </dd>
-                    </dl>
-                    <dl className="flex items-center justify-between gap-4">
-                      <dt className="text-base font-normal text-gray-800 dark:text-gray-800">
-                        ค่าจัดส่ง
-                      </dt>
-                      <dd className="text-base font-medium text-gray-800 dark:text-gray-800">
-                        - $99
+                      <dd className="text-base font-medium text-green-600">
+                        {formattedTotalPrice} บาท
                       </dd>
                     </dl>
                   </div>
-                  <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-800">
-                    <dt className="text-base font-bold text-gray-800 dark:text-gray-800">
-                      ราคารวม
-                    </dt>
-                    <dd className="text-base font-medium text-green-600">
-                      $7,493
-                    </dd>
-                  </dl>
+                  <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-800"></dl>
                 </div>
                 <a
                   href="#"
@@ -351,9 +258,9 @@ export default observer(function CartScreen() {
                     >
                       <path
                         stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="M19 12H5m14 0-4 4m4-4-4-4"
                       />
                     </svg>
@@ -361,14 +268,10 @@ export default observer(function CartScreen() {
                 </div>
               </div>
             </div>
-
           </div>
-
-          
         </div>
       </section>
       <Footer />
     </div>
-    
   );
 });

@@ -45,8 +45,8 @@ export default function ToastLoginRegister({ Check }: any) {
                       fill="none"
                       stroke="#ff0000"
                       stroke-width="3.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     >
                       <circle cx="12" cy="12" r="10"></circle>
                       <line x1="15" y1="9" x2="9" y2="15"></line>
@@ -79,8 +79,8 @@ export default function ToastLoginRegister({ Check }: any) {
                       fill="none"
                       stroke="#ff0000"
                       stroke-width="3.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     >
                       <circle cx="12" cy="12" r="10"></circle>
                       <line x1="15" y1="9" x2="9" y2="15"></line>
@@ -141,8 +141,8 @@ export default function ToastLoginRegister({ Check }: any) {
                       fill="none"
                       stroke="#ff0000"
                       stroke-width="3.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     >
                       <circle cx="12" cy="12" r="10"></circle>
                       <line x1="15" y1="9" x2="9" y2="15"></line>

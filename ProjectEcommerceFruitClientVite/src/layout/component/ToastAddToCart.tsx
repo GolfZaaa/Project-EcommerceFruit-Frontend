@@ -2,7 +2,7 @@ import React from "react";
 
 export default function ToastAddToCart() {
   return (
-    <div className="fixed top-4 right-4 z-50">
+    <div className="fixed top-7 right-4 z-50">
       <div className="m-auto">
         <div className="bg-white rounded-lg border-gray-300 border p-3 shadow-lg">
           <div className="flex flex-row">
@@ -20,7 +20,7 @@ export default function ToastAddToCart() {
             <div className="ml-2 mr-6">
               <span className="font-semibold">เพิ่มสินค้าลงในตะกร้าสำเร็จ</span>
               <span className="block text-gray-500 text-xs">
-              ตะกร้าของคุณมีการอัปเดต โปรดตรวจสอบตะกร้าของท่าน
+                ตะกร้าของคุณมีการอัปเดต โปรดตรวจสอบตะกร้าของท่าน
               </span>
             </div>
           </div>

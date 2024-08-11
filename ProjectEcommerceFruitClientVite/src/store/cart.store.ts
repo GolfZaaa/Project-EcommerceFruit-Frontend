@@ -4,8 +4,9 @@ import { User } from "../models/User";
 import { store } from "./store";
 
 interface Product {
-    Weight: any;
+    Quantity: any;
     ProductId: any;
+    CartItemId: any;
 }
 
 export default class CartStore {
@@ -16,10 +17,20 @@ export default class CartStore {
     makeAutoObservable(this);
   }
 
-  AddToCart = async ({ProductId,Weight }:Product) => {
-    const data = {weight:Weight, productId:ProductId}
+  AddToCart = async ({ProductId,Quantity }:Product) => {
+    const data = {quantity:Quantity, productId:ProductId}
     try {
       const result = await agent.Cart.AddtoCart(data);
+      return result;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  RemoveToCart = async ({CartItemId,Quantity }:Product) => {
+    const data = {quantity:Quantity, cartItemId:CartItemId}
+    try {
+      const result = await agent.Cart.RemoveToCart(data);
       return result;
     } catch (error) {
       return error;
@@ -43,6 +54,8 @@ export default class CartStore {
       return error;
     }
   }
+
+
 
 
 }
