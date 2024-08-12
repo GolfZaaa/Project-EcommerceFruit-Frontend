@@ -22,6 +22,7 @@ import {
   Container,
   Grid,
   Typography,
+  Fab,
 } from "@mui/material";
 import TableHead from "@mui/material/TableHead";
 import AddIcon from "@mui/icons-material/Add";
@@ -32,6 +33,9 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useStore } from "../../store/store";
 import { Order } from "../../models/Order";
+import EditOrderScreen from "./EditOrderScreen";
+import moment from "moment";
+import EditIcon from "@mui/icons-material/Edit";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -149,10 +153,10 @@ const OrderList = () => {
 
   const columns = [
     { id: "paymentImage", label: "รูปภาพสลิป" },
-    { id: "description", label: "tag ขนส่ง" },
+    { id: "description", label: "หมายเลขพัสดุ (tracking)" },
+    { id: "createdAt", label: "สร้างเมื่อวันที่" },
     { id: "status", label: "สถานะ" },
     { id: "edit", label: "ตัวเลือก" },
-    { id: "remove", label: "ตัวเลือก" },
   ];
 
   const onChangeCU = () => setOnCreate(!onCreate);
@@ -168,7 +172,7 @@ const OrderList = () => {
   return (
     <>
       {onCreate ? (
-        <></>
+        <EditOrderScreen onChangeCU={onChangeCU} dataEdit={dataEdit} />
       ) : (
         <Container maxWidth="lg">
           <Box
@@ -217,26 +221,28 @@ const OrderList = () => {
                       >
                         {row.tag}
                       </TableCell>
+                      <TableCell>{moment(row.createdAt).format("L")}</TableCell>
                       <TableCell>
                         {row.status === 0
                           ? "กำลังรออนุมัติ"
-                          : "ยืนยันคำสั่งซื้อแล้ว"}
+                          : row.status === 0
+                          ? "ยืนยันคำสั่งซื้อแล้ว"
+                          : "ยกเลิกคำสั่งซื้อแล้ว"}
                       </TableCell>
                       <TableCell style={{ width: 100 }}>
-                        <Button
-                          variant="contained"
+                        <Fab
+                          variant="extended"
                           color="primary"
-                          size="large"
-                          fullWidth
                           onClick={() => {
                             setDataEdit(row);
                             onChangeCU();
                           }}
                         >
+                          <EditIcon sx={{ mr: 1 }} />
                           แก้ไข
-                        </Button>
+                        </Fab>
                       </TableCell>
-                      <TableCell style={{ width: 100 }}>
+                      {/* <TableCell style={{ width: 100 }}>
                         <Button
                           variant="contained"
                           color="primary"
@@ -246,7 +252,7 @@ const OrderList = () => {
                         >
                           ลบ
                         </Button>
-                      </TableCell>
+                      </TableCell> */}
 
                       <Dialog
                         open={open}
@@ -284,6 +290,7 @@ const OrderList = () => {
                     </TableRow>
                   )}
                 </TableBody>
+
                 <TableFooter>
                   <TableRow>
                     <TablePagination

@@ -22,10 +22,13 @@ import {
   Container,
   Grid,
   Typography,
+  Fab,
 } from "@mui/material";
 import { useStore } from "../../../store/store";
 import TableHead from "@mui/material/TableHead";
 import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import RemoveIcon from "@mui/icons-material/Remove";
 import { NavLink } from "react-router-dom";
 import { RoutePath } from "../../../constants/RoutePath";
 import CreateFruitGIScreen from "../CreateFruitGIScreen";
@@ -186,21 +189,26 @@ const ProductGIList = () => {
             <Typography variant="h4" component="h1" gutterBottom align="center">
               เพิ่มข้อมูล (GI) สินค้า
             </Typography>
-            <Grid container spacing={2}>
+            <Grid
+              container
+              spacing={2}
+              style={{
+                marginBottom: 15,
+              }}
+            >
               <Grid item xs={11}></Grid>
               <Grid item xs={1}>
-                <Button
-                  variant="contained"
+                <Fab
+                  variant="extended"
                   color="primary"
-                  size="large"
-                  fullWidth
                   onClick={() => {
                     setDataEdit(null);
                     onChangeCU();
                   }}
                 >
-                  เพิ่ม <AddIcon />
-                </Button>
+                  <AddIcon sx={{ mr: 1 }} />
+                  เพิ่ม
+                </Fab>
               </Grid>
             </Grid>
 
@@ -241,21 +249,28 @@ const ProductGIList = () => {
                       </TableCell>
                       <TableCell>{row?.category?.name}</TableCell>
                       <TableCell style={{ width: 100 }}>
-                        <Button
-                          variant="contained"
+                        <Fab
+                          variant="extended"
                           color="primary"
-                          size="large"
-                          fullWidth
                           onClick={() => {
                             setDataEdit(row);
                             onChangeCU();
                           }}
                         >
+                          <EditIcon sx={{ mr: 1 }} />
                           แก้ไข
-                        </Button>
+                        </Fab>
                       </TableCell>
                       <TableCell style={{ width: 100 }}>
-                        <Button
+                        <Fab
+                          variant="extended"
+                          color="error"
+                          onClick={handleClickOpen}
+                        >
+                          <RemoveIcon sx={{ mr: 1 }} />
+                          ลบ
+                        </Fab>
+                        {/* <Button
                           variant="contained"
                           color="primary"
                           size="large"
@@ -263,7 +278,7 @@ const ProductGIList = () => {
                           onClick={handleClickOpen}
                         >
                           ลบ
-                        </Button>
+                        </Button> */}
                       </TableCell>
 
                       <Dialog

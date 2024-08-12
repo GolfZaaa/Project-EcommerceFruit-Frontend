@@ -87,7 +87,6 @@ export default observer(function HomeScreen() {
     getProduct(categoryId);
   };
 
-
   const NavigateDetail = (product: any) => {
     navigate(RoutePath.productDetail(product.id));
   };
@@ -100,7 +99,6 @@ export default observer(function HomeScreen() {
   if (!Array.isArray(product) || !Array.isArray(category)) {
     return <Loading />;
   }
-  
 
   return (
     <>
@@ -109,7 +107,7 @@ export default observer(function HomeScreen() {
           <FilterSection>
             <FormControl fullWidth>
               <InputLabel>ประเภท</InputLabel>
-              <Select defaultValue="0">
+              <Select defaultValue="0" label="ประเภท">
                 {categories.map((item) => (
                   <MenuItem
                     key={item.id}
@@ -146,21 +144,21 @@ export default observer(function HomeScreen() {
           <ContentSection>
             <Typography variant="h4" gutterBottom align="left">
               สินค้าจำนวน ({products.length}) ชิ้น
-            </Typography> 
+            </Typography>
             <Grid container spacing={4} justifyContent="left">
               {product.map((product, i) => (
                 <Grid item key={i} xs={12} sm={6} md={4}>
                   <StyledCard>
-                  <a
-                        onClick={() => NavigateDetail(product)}
-                        style={{ textDecoration: "none" }}
-                      >
-                        <StyledCardMedia
-                          component="img"
-                          alt={product.productGI.name}
-                          image={products[i % 2].imageUrl}
-                        />
-                      </a>
+                    <a
+                      onClick={() => NavigateDetail(product)}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <StyledCardMedia
+                        component="img"
+                        alt={product.productGI.name}
+                        image={products[i % 2].imageUrl}
+                      />
+                    </a>
                     <StyledCardContent>
                       <ProductTitle variant="h6" component="div">
                         {product.productGI.name}
@@ -169,7 +167,7 @@ export default observer(function HomeScreen() {
                         ฿ {product.price}
                       </ProductDescription>
                       <ButtonWrapper>
-                        <FullWidthButton  variant="outlined">
+                        <FullWidthButton variant="outlined">
                           เยี่ยมชมสินค้า
                         </FullWidthButton>
                       </ButtonWrapper>

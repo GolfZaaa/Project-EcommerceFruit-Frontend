@@ -5,6 +5,7 @@ import { Shop } from "./shop.api";
 import { Product } from "./product.api";
 import { Order } from "./order.api";
 import { Cart } from "./cart.api";
+import { Address } from "./address.api";
 
 // axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_API_URL;
 
@@ -58,5 +59,6 @@ export default {
   Shop,
   Product,
   Order,
-  Cart
+  Cart,
+  Address,
 };

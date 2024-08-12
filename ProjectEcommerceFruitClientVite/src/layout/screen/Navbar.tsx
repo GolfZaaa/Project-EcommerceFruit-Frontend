@@ -151,26 +151,27 @@ export default observer(function Navbar() {
                   "aria-labelledby": "basic-button",
                 }}
               >
-                <MenuItem onClick={handleClose}>ข้อมูลส่วนตัว</MenuItem>
+                <NavLink
+                  to={RoutePath.myaccountScreen}
+                  style={{ textDecoration: "none", color: "#000" }}
+                >
+                  <MenuItem onClick={handleClose}>ข้อมูลส่วนตัว</MenuItem>
+                </NavLink>
 
-                {user?.stores.length ? (
-                  <MenuItem onClick={handleClose}>
-                    <NavLink
-                      to={RoutePath.dashboardShopScreen}
-                      style={{ textDecoration: "none", color: "#000" }}
-                    >
-                      ร้านค้า
-                    </NavLink>
-                  </MenuItem>
+                {user?.stores?.length ? (
+                  <NavLink
+                    to={RoutePath.dashboardShopScreen}
+                    style={{ textDecoration: "none", color: "#000" }}
+                  >
+                    <MenuItem onClick={handleClose}>ร้านค้า</MenuItem>
+                  </NavLink>
                 ) : (
-                  <MenuItem onClick={handleClose}>
-                    <NavLink
-                      to={RoutePath.createShopScreen}
-                      style={{ textDecoration: "none", color: "#000" }}
-                    >
-                      ลงทะเบียนร้านค้า
-                    </NavLink>
-                  </MenuItem>
+                  <NavLink
+                    to={RoutePath.createShopScreen}
+                    style={{ textDecoration: "none", color: "#000" }}
+                  >
+                    <MenuItem onClick={handleClose}>ลงทะเบียนร้านค้า</MenuItem>
+                  </NavLink>
                 )}
 
                 <Divider />

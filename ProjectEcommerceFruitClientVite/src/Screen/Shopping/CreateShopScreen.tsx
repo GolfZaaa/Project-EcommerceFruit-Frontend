@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   TextField,
@@ -14,25 +14,79 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
 import { RoutePath } from "../../constants/RoutePath";
 import { myToast } from "../../helper/components";
+import { Address } from "../../models/Address";
+import { CreateInput } from "thai-address-autocomplete-react";
+
+const InputThaiAddress = CreateInput();
 
 export default observer(function CreateShopScreen() {
   const navigate = useNavigate();
   const { usershop, GetShopByUserId, createandupdate } =
     useStore().shopuserStore;
+  const { address: addressed, createUpdateAddress }: any =
+    useStore().addressStore;
 
   useEffect(() => {
     GetShopByUserId();
   }, []);
 
-  console.log("usershop", JSON.stringify(usershop));
+  const [address, setAddress] = useState<Address | any>(
+    addressed?.id !== 0 && addressed?.id !== undefined
+      ? {
+          district: addressed?.subDistrict, // ตำบล tambol
+          amphoe: addressed?.district, // อำเภอ amphoe
+          province: addressed?.province, // จังหวัด changwat
+          zipcode: addressed?.postCode, // รหัสไปรษณีย์ postal code
+          detail: addressed?.detail, // รหัสไปรษณีย์ postal code
+        }
+      : {
+          district: "", // ตำบล tambol
+          amphoe: "", // อำเภอ amphoe
+          province: "", // จังหวัด changwat
+          zipcode: "", // รหัสไปรษณีย์ postal code
+          detail: "", // รหัสไปรษณีย์ postal code
+        }
+  );
+
+  console.log("addressed", JSON.stringify(addressed));
+
+  const handleChange = (scope: string) => (value: string) => {
+    setAddress((oldAddr: Address) => ({
+      ...oldAddr,
+      [scope]: value,
+    }));
+  };
+
+  const handleSelect = (address: Address) => {
+    setAddress(address);
+  };
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const formData: any = Object.fromEntries(data.entries());
 
-    await createandupdate(formData).then((result) => {
+    const dataForm = {
+      id: usershop?.id || 0,
+      name: formData.name,
+      description: formData.description,
+    };
+
+    await createandupdate(dataForm).then(async (result) => {
       if (result) {
+        const dataAddress = {
+          id: addressed?.id || 0,
+          subDistrict: address.district,
+          district: address.amphoe,
+          province: address.province,
+          postCode: address.zipcode,
+          detail: formData.detail,
+          isUsed_Store: true,
+          isUsed: false,
+          gps: "",
+        };
+
+        await createUpdateAddress(dataAddress);
         myToast("ลงทะเบียนร้านค้าสำเร็จ");
         navigate(RoutePath.dashboardShopScreen);
       }
@@ -85,16 +139,45 @@ export default observer(function CreateShopScreen() {
                 name="description"
                 required
               />
+
               <TextField
-                value={usershop?.id || 0}
+                defaultValue={addressed?.detail}
                 fullWidth
-                label="Shop Id"
+                label="บ้านเลขที่, หมู่, ซอย, ถนน"
                 variant="outlined"
                 margin="normal"
-                name="id"
-                style={{ display: "none" }}
+                name="detail"
+                required
               />
+              <label>แขวง/ตำบล</label>
+              <InputThaiAddress.District
+                value={address["district"]}
+                onChange={handleChange("district")}
+                onSelect={(e: any) => handleSelect(e)}
+              />
+              <label>เขต/อำเภอ</label>
+              <InputThaiAddress.Amphoe
+                value={address["amphoe"]}
+                onChange={handleChange("amphoe")}
+                onSelect={(e: any) => handleSelect(e)}
+              />
+              <label>จังหวัด</label>
+              <InputThaiAddress.Province
+                value={address["province"]}
+                onChange={handleChange("province")}
+                onSelect={(e: any) => handleSelect(e)}
+              />
+              <label>รหัสไปรษณีย์</label>
+              <InputThaiAddress.Zipcode
+                value={address["zipcode"]}
+                onChange={handleChange("zipcode")}
+                onSelect={(e: any) => handleSelect(e)}
+              />
+
               <Button
+                style={{
+                  marginTop: 20,
+                }}
                 type="submit"
                 variant="contained"
                 color="primary"
@@ -105,6 +188,7 @@ export default observer(function CreateShopScreen() {
               </Button>
             </Box>
           </CardContent>
+
           {/* <CardActions sx={{ justifyContent: 'center', mt: 2 }}>
             <Link to={"/SuccessShopScreen"}>
             <Button 
