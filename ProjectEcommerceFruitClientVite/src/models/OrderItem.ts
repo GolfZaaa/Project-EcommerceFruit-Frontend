@@ -3,7 +3,7 @@ import { Product } from "./Product";
 
 export interface OrderItem {
   id: number;
-  weight: number;
+  quantity: number;
 
   productId: number;
   product: Product;

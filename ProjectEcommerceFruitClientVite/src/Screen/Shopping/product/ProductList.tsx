@@ -22,6 +22,7 @@ import {
   Container,
   Grid,
   Typography,
+  Fab,
 } from "@mui/material";
 import { useStore } from "../../../store/store";
 import TableHead from "@mui/material/TableHead";
@@ -34,6 +35,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import CreateProductScreen from "../CreateProductScreen";
 import { Product } from "../../../models/Product";
 import HTMLReactParser from "html-react-parser/lib/index";
+import EditIcon from "@mui/icons-material/Edit";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -186,21 +189,26 @@ const ProductList = () => {
             <Typography variant="h4" component="h1" gutterBottom align="center">
               เพิ่มสินค้า
             </Typography>
-            <Grid container spacing={2}>
+            <Grid
+              container
+              spacing={2}
+              style={{
+                marginBottom: 15,
+              }}
+            >
               <Grid item xs={11}></Grid>
               <Grid item xs={1}>
-                <Button
-                  variant="contained"
+                <Fab
+                  variant="extended"
                   color="primary"
-                  size="large"
-                  fullWidth
                   onClick={() => {
                     setDataEdit(null);
                     onChangeCU();
                   }}
                 >
-                  เพิ่ม <AddIcon />
-                </Button>
+                  <AddIcon sx={{ mr: 1 }} />
+                  เพิ่ม
+                </Fab>
               </Grid>
             </Grid>
 
@@ -244,21 +252,28 @@ const ProductList = () => {
                       <TableCell>{row?.weight}</TableCell>
                       <TableCell>{row?.quantity}</TableCell>
                       <TableCell style={{ width: 100 }}>
-                        <Button
-                          variant="contained"
+                        <Fab
+                          variant="extended"
                           color="primary"
-                          size="large"
-                          fullWidth
                           onClick={() => {
                             setDataEdit(row);
                             onChangeCU();
                           }}
                         >
+                          <EditIcon sx={{ mr: 1 }} />
                           แก้ไข
-                        </Button>
+                        </Fab>
                       </TableCell>
                       <TableCell style={{ width: 100 }}>
-                        <Button
+                        <Fab
+                          variant="extended"
+                          color="error"
+                          onClick={handleClickOpen}
+                        >
+                          <RemoveIcon sx={{ mr: 1 }} />
+                          ลบ
+                        </Fab>
+                        {/* <Button
                           variant="contained"
                           color="primary"
                           size="large"
@@ -266,7 +281,7 @@ const ProductList = () => {
                           onClick={handleClickOpen}
                         >
                           ลบ
-                        </Button>
+                        </Button> */}
                       </TableCell>
 
                       <Dialog

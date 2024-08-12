@@ -14,16 +14,14 @@ import {
   Select,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { RoutePath } from "../../constants/RoutePath";
 import { Product } from "../../models/Product";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
 
 interface props {
-  onChangeCU: any;
+  onChangeCU?: any | null;
   dataEdit?: Product | null;
 }
 
@@ -66,7 +64,7 @@ export default observer(function CreateProductScreen({
     console.log("dataForm", dataForm);
 
     await createUpdateProduct(dataForm).then((result) => {
-      if (result) {
+      if (!!result) {
         onChangeCU();
       }
       console.log("res", result);

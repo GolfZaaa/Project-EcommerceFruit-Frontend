@@ -50,6 +50,8 @@ export default class UserStore {
   logout = () => {
     this.user = null;
     store.commonStore.setToken(null);
+    store.shopuserStore.setUserShop(null);
+    store.addressStore.setAddress(null);
   };
 
   getUserDetailbyId = async () => {

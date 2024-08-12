@@ -17,4 +17,22 @@ export default class OrderStore {
       return error;
     }
   };
+
+  confirmOrder = async (values: any | undefined) => {
+    try {
+      const result = await agent.Order.confirmOrder(values);
+      return result;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  cancelOrder = async (values: any | undefined) => {
+    try {
+      const result = await agent.Order.cancelOrder(values);
+      return result;
+    } catch (error) {
+      return error;
+    }
+  };
 }

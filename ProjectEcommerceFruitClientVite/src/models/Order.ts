@@ -1,4 +1,4 @@
-import { Address } from "cluster";
+import { Address } from "./Address";
 import { OrderItem } from "./OrderItem";
 
 export interface Order {
@@ -6,7 +6,7 @@ export interface Order {
   paymentImage: string | null;
   createdAt: Date;
   status: number;
-  ShippingType: string;
+  shippingType: string;
   tag: string;
 
   addressId: number;

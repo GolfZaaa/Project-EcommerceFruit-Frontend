@@ -40,10 +40,12 @@ const drawerWidth = 240;
 
 export default observer(function DashboardShopScreen() {
   const { usershop, GetShopByUserId } = useStore().shopuserStore;
+  const { GetAddressByStore } = useStore().addressStore;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   useEffect(() => {
     GetShopByUserId();
+    GetAddressByStore();
   }, []);
 
   const handleDrawerToggle = () => {

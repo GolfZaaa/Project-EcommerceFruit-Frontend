@@ -4,9 +4,9 @@ import { Product } from "../models/Product";
 import { Store } from "../models/Store";
 
 interface CreateandUpdateInterface {
-  Id: number;
-  Name: string;
-  Description: string;
+  id: number;
+  name: string;
+  description: string;
 }
 
 interface User {
@@ -14,7 +14,7 @@ interface User {
   fullName: string;
   phoneNumber: number;
 }
- 
+
 export default class ShopUserStore {
   usershop: Store | null = null;
 
@@ -22,7 +22,9 @@ export default class ShopUserStore {
     makeAutoObservable(this);
   }
 
-  createandupdate = async (value: CreateandUpdateInterface) => { 
+  setUserShop = (state: any) => (this.usershop = state);
+
+  createandupdate = async (value: CreateandUpdateInterface) => {
     try {
       const func = await agent.Shop.CreateandUpdate(value);
       return func;

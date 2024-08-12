@@ -10,17 +10,24 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-
   const Routers = [...PublicRoute, ...PrivateRoute];
 
   const { token } = useStore().commonStore;
-  const { getUserDetailbyId } = useStore().userStore;
+  const { getUserDetailbyId, logout } = useStore().userStore;
+
   useEffect(() => {
     if (token) {
       getUserDetailbyId();
+      getUserDetailbyId().then((result) => {
+        if (result?.response?.request?.status !== undefined) {
+          if (result.response.request.status === 401) {
+            logout();
+          }
+        }
+      });
     }
   }, []);
-  
+
   return (
     <BrowserRouter>
       <Navbar />
@@ -30,7 +37,7 @@ function App() {
         ))}
       </Routes>
       {/* <Footer /> */}
-      <ToastContainer />
+      <ToastContainer position="bottom-right" />
     </BrowserRouter>
   );
 }
