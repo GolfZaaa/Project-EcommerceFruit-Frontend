@@ -7,26 +7,39 @@ import { RoutePath } from "../constants/RoutePath";
 export default observer(function AddressScreen() {
   const navigate = useNavigate();
   const { myAddress } = useStore().addressStore;
+import { Address } from "../models/Address";
+import {
+  Grid,
+  Card,
+  CardContent,
+  Switch,
+  Fab,
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+} from "@mui/material";
+import { CreateInput } from "thai-address-autocomplete-react";
+import { RoutePath } from "../constants/RoutePath";
+import { NavLink } from "react-router-dom";
+import { myToast } from "../helper/components";
 
-  const [dropdown1, setDropdown1] = useState(false);
-  const [dropdown2, setDropdown2] = useState(false);
-  const [dropdown3, setDropdown3] = useState(false);
-  const [changeText1, setChangeText1] = useState("City");
-  const [changeText2, setChangeText2] = useState("จังหวัด");
-  const [changeText3, setChangeText3] = useState("ตำบล");
-  const [changeText4, setChangeText4] = useState("อำเภอ");
+const InputThaiAddress = CreateInput();
 
-  const HandleText1 = (e: any) => {
-    setChangeText1(e);
-    setDropdown1(false);
-  };
+export default observer(function AddressScreen() {
+  const { createUpdateAddress, getAddressByUserId } = useStore().addressStore;
 
-  const {
-    GetCartItemByUser,
-    cartItems,
-    GetCartItemByUserOrderStore,
-    cartItemsStore,
-  } = useStore().cartStore;
+  const [createAddress, setCreateAddress] = useState<Address | any>({
+    district: "", // ตำบล tambol
+    amphoe: "", // อำเภอ amphoe
+    province: "", // จังหวัด changwat
+    zipcode: "", // รหัสไปรษณีย์ postal code
+    detail: "", // รหัสไปรษณีย์ postal code
+  });
+
+  const { GetCartItemByUser, cartItems, GetCartItemByUserOrderStore } =
+    useStore().cartStore;
 
   useEffect(() => {
     GetCartItemByUser();
@@ -37,6 +50,42 @@ export default observer(function AddressScreen() {
           navigate(RoutePath.summaryScreen);
   }
   console.log("cartItems", cartItems.length);
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const formData: any = Object.fromEntries(data.entries());
+
+    const dataAddress = {
+      id: 0,
+      subDistrict: createAddress.district,
+      district: createAddress.amphoe,
+      province: createAddress.province,
+      postCode: createAddress.zipcode,
+      detail: formData.detail,
+      isUsed_Store: false,
+      isUsed: false,
+      gps: "",
+    };
+
+    await createUpdateAddress(dataAddress).then((result) => {
+      if (!!result) {
+        myToast("เพิ่มที่อยู่สำเร็จ");
+        getAddressByUserId();
+        console.log("formData", formData);
+      }
+    });
+  };
+
+  const handleChange = (scope: string) => (value: string) => {
+    setCreateAddress((oldAddr: Address) => ({
+      ...oldAddr,
+      [scope]: value,
+    }));
+  };
+
+  const handleSelect = (address: Address) => {
+    setCreateAddress(address);
+  };
 
   return (
     <div className="overflow-y-hidden">
@@ -101,12 +150,12 @@ export default observer(function AddressScreen() {
               </p>
             </div>
             <div className="mt-2">
-              <a
-                href="javascript:void(0)"
+              <NavLink
+                to={RoutePath.cartScreen}
                 className="text-base leading-4 underline  hover:text-gray-800 text-gray-600"
               >
                 กลับไปยังหน้าตะกร้า
-              </a>
+              </NavLink>
             </div>
             <div className="mt-12">
               <p className="text-xl font-semibold leading-5 text-gray-800">
@@ -324,13 +373,53 @@ export default observer(function AddressScreen() {
             <button onClick={handleSummaryScreen}  className="focus:outline-none focus:ring-gray-500 focus:ring-offset-2 mt-8 text-base font-medium focus:ring-2 focus:ring-ocus:ring-gray-800 leading-4 hover:bg-black py-4 w-full md:w-4/12 lg:w-full text-white bg-gray-800">
               ดำเนินการชำระเงิน
             </button>
+            <Box mt={2} component="form" onSubmit={handleSubmit}>
+              <TextField
+                fullWidth
+                label="บ้านเลขที่, หมู่, ซอย, ถนน"
+                variant="outlined"
+                margin="normal"
+                name="detail"
+                required
+              />
+              <label>แขวง/ตำบล</label>
+              <InputThaiAddress.District
+                value={createAddress["district"]}
+                onChange={handleChange("district")}
+                onSelect={(e: any) => handleSelect(e)}
+              />
+              <label>เขต/อำเภอ</label>
+              <InputThaiAddress.Amphoe
+                value={createAddress["amphoe"]}
+                onChange={handleChange("amphoe")}
+                onSelect={(e: any) => handleSelect(e)}
+              />
+              <label>จังหวัด</label>
+              <InputThaiAddress.Province
+                value={createAddress["province"]}
+                onChange={handleChange("province")}
+                onSelect={(e: any) => handleSelect(e)}
+              />
+              <label>รหัสไปรษณีย์</label>
+              <InputThaiAddress.Zipcode
+                value={createAddress["zipcode"]}
+                onChange={handleChange("zipcode")}
+                onSelect={(e: any) => handleSelect(e)}
+              />
+              <button
+                type="submit"
+                className="focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mt-8 text-base font-medium focus:ring-2 focus:ring-ocus:ring-gray-800 leading-4 hover:bg-black py-4 w-full md:w-4/12 lg:w-full text-white bg-gray-800"
+              >
+                ดำเนินการชำระเงิน
+              </button>
+            </Box>
             <div className="mt-4 flex justify-start items-center w-full">
-              <a
-                href="javascript:void(0)"
+              <NavLink
+                to={RoutePath.cartScreen}
                 className="text-base leading-4 underline focus:outline-none focus:text-gray-500  hover:text-gray-800 text-gray-600"
               >
                 กลับไปยังหน้าตะกร้า
-              </a>
+              </NavLink>
             </div>
           </div>
           <div className="flex flex-col justify-start items-start bg-gray-50 w-full p-6 md:p-14">

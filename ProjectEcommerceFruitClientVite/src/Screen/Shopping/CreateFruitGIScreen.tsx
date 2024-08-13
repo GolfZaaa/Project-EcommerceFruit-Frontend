@@ -17,8 +17,9 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useStore } from "../../store/store";
 import { observer } from "mobx-react-lite";
-import { ProductGI } from "../../models/ProductGI";
+import { Images, ProductGI } from "../../models/ProductGI";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import { DropzoneArea } from "mui-file-dropzone";
 
 interface props {
   onChangeCU: any;
@@ -47,6 +48,21 @@ export default observer(function CreateFruitGIScreen({
     setEditorHtml(html);
   };
 
+  const [files, setFiles] = useState<File[] | string[] | null | any>(
+    dataEdit?.id !== undefined
+      ? dataEdit.images.map(
+          (item) => "https://localhost:7168/product-gi/" + item.imageName
+        )
+      : []
+  );
+
+  const [newFiles, setNewFiles] = useState<File[] | string[] | null | any>([]);
+
+  const handleChangeFile = (uploadedFiles: File[]) => {
+    setNewFiles(uploadedFiles);
+    console.log("Files:", uploadedFiles);
+  };
+
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -61,7 +77,7 @@ export default observer(function CreateFruitGIScreen({
 
     console.log("dataForm", dataForm);
 
-    await createUpdateProductGI(dataForm).then((result) => {
+    await createUpdateProductGI(dataForm, newFiles).then((result) => {
       if (result) {
         onChangeCU();
       }
@@ -94,6 +110,8 @@ export default observer(function CreateFruitGIScreen({
   const onSelectCate = (id: number) => {
     setSelectCate(id);
   };
+
+  console.log("newFiles", newFiles);
 
   return (
     // <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
@@ -158,10 +176,7 @@ export default observer(function CreateFruitGIScreen({
             </Grid>
           </div>
 
-          <div
-            style={{ height: 200, marginBottom: 60 }}
-            className="editor-container"
-          >
+          <div style={{ marginBottom: 30 }} className="editor-container">
             <ReactQuill
               value={editorHtml}
               onChange={handleChange}
@@ -170,7 +185,43 @@ export default observer(function CreateFruitGIScreen({
               className="vertical-text-editor"
             />
           </div>
+
+          <div>
+            <DropzoneArea
+              onChange={handleChangeFile}
+              fileObjects={newFiles?.map((file: any) => file)}
+              acceptedFiles={["image/jpeg", "image/png", "image/bmp"]}
+              maxFileSize={5000000}
+              previewText="รูปภาพ"
+              showPreviews
+              showPreviewsInDropzone={false}
+              dropzoneText="ลากและวางไฟล์ที่นี่หรือคลิก"
+            />
+          </div>
+
+          <div
+            style={{
+              marginTop: 30,
+            }}
+          >
+            <Grid container spacing={2}>
+              {files?.map((url: any, index: number) => (
+                <Grid item xs={2}>
+                  <img
+                    style={{}}
+                    key={index}
+                    src={url}
+                    alt={`Product image ${index + 1}`}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </div>
+
           <Button
+            style={{
+              marginTop: 20,
+            }}
             type="submit"
             variant="contained"
             color="primary"
