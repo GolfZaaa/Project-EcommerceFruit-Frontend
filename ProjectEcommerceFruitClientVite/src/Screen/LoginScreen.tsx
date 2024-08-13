@@ -33,7 +33,9 @@ export default observer(function LoginScreen() {
     let valid = true;
 
     if (!/^\d{10}$/.test(phoneNumber)) {
-      setPhoneNumberError("เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลัก และเป็นตัวเลขเท่านั้น");
+      setPhoneNumberError(
+        "เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลัก และเป็นตัวเลขเท่านั้น"
+      );
       valid = false;
     } else {
       setPhoneNumberError("");
@@ -57,13 +59,13 @@ export default observer(function LoginScreen() {
         setCheckToast("PhoneNumber Wrong");
         setTimeout(() => {
           setShowToast(false);
-        }, 3000);
+        }, 2000);
       } else if (user === "Password Wrong") {
         setShowToast(true);
         setCheckToast("Password Wrong");
         setTimeout(() => {
           setShowToast(false);
-        }, 3000);
+        }, 2000);
       } else {
         setToken(user);
         setShowToast(true);
@@ -71,8 +73,8 @@ export default observer(function LoginScreen() {
         setTimeout(() => {
           setShowToast(false);
           navigate(RoutePath.homeScreen);
-        }, 3000);
-        getUserDetailbyId();
+        }, 2000);
+        await getUserDetailbyId();
       }
     } else {
       alert("รหัสผ่านผิด");
@@ -120,12 +122,14 @@ export default observer(function LoginScreen() {
                 <input
                   id="PhoneNumber"
                   name="PhoneNumber"
-                  maxLength="10"
+                  maxLength={10}
                   type="text"
                   className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
                 />
                 {phoneNumberError && (
-                  <p className="text-red-500 text-xs italic">{phoneNumberError}</p>
+                  <p className="text-red-500 text-xs italic">
+                    {phoneNumberError}
+                  </p>
                 )}
               </div>
               <div className="mt-4">
@@ -149,7 +153,10 @@ export default observer(function LoginScreen() {
                 <p className="text-sm text-gray-500 uppercase mr-2">
                   ไม่มีสมาชิก?
                 </p>
-                <NavLink to={RoutePath.registerScreen} className="text-blue-500 hover:underline">
+                <NavLink
+                  to={RoutePath.registerScreen}
+                  className="text-blue-500 hover:underline"
+                >
                   สมัครเลย
                 </NavLink>
               </div>

@@ -5,19 +5,16 @@ import { useStore } from "../../store/store";
 import { Button, Typography, Box } from "@mui/material";
 import ToastAddToCart from "../../layout/component/ToastAddToCart";
 export default observer(function ProductDetailScreen() {
-  const { getProductById, product } = useStore().productStore;
+  const { getProductById, productDetail } = useStore().productStore;
 
   const { AddToCart, GetCartItemByUser } = useStore().cartStore;
   const [showToast, setShowToast] = useState(false);
 
   const { id } = useParams<{ id: any }>();
-  console.log("location", id);
 
   useEffect(() => {
     getProductById(id);
   }, []);
-
-  console.log("product", product);
 
   const [quantity, setQuantity] = useState(1);
 
@@ -31,11 +28,11 @@ export default observer(function ProductDetailScreen() {
 
   const handleAddToCart = async () => {
     try {
-      const ProductId = product.id;
+      const ProductId = productDetail?.id;
       const Quantity = quantity;
-      console.log("ProductId",ProductId,"Quantity",Quantity)
-      const result = await AddToCart({ ProductId, Quantity });
-      console.log("Reusult",result)
+      console.log("ProductId", ProductId, "Quantity", Quantity);
+      const result = await AddToCart({ ProductId, Quantity, CartItemId: 1 });
+      console.log("Reusult", result);
       if (result) {
         await GetCartItemByUser();
         setShowToast(true);
@@ -53,11 +50,14 @@ export default observer(function ProductDetailScreen() {
     }
   };
 
+  console.log("productDetail", productDetail);
+
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
+
   return (
     <div className="md:flex items-start justify-center py-12 2xl:px-20 md:px-6 px-4">
-      {showToast && <ToastAddToCart/>}
+      {showToast && <ToastAddToCart />}
       <div className="xl:w-2/6 lg:w-2/5 w-80 md:block hidden">
         <img
           className="w-full"
@@ -91,7 +91,7 @@ export default observer(function ProductDetailScreen() {
       <div className="xl:w-2/5 md:w-1/2 lg:ml-8 md:ml-6 md:mt-0 mt-6">
         <div className="border-b border-gray-200 pb-6">
           <p className="text-sm leading-none text-gray-600">
-            {product && product?.productGI?.category.name}
+            {productDetail && productDetail?.productGI?.category.name}
           </p>
           <h1
             className="
@@ -104,7 +104,7 @@ export default observer(function ProductDetailScreen() {
 							mt-2
 						"
           >
-            {product && product?.productGI?.name}
+            {productDetail && productDetail?.productGI?.name}
           </h1>
         </div>
         <div>
@@ -118,7 +118,7 @@ export default observer(function ProductDetailScreen() {
             ขายแล้ว : 100 ชิ้น
           </p>
           <p className="text-base leading-4 mt-4 text-gray-600 mb-5">
-            ราคาต่อกิโลกรัม : {product?.price} บาท
+            ราคาต่อกิโลกรัม : {productDetail?.price} บาท
           </p>
 
           <Box display="flex" alignItems="center" gap={2}>

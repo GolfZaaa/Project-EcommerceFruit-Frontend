@@ -143,7 +143,7 @@ export default observer(function HomeScreen() {
           </FilterSection>
           <ContentSection>
             <Typography variant="h4" gutterBottom align="left">
-              สินค้าจำนวน ({products.length}) ชิ้น
+              สินค้าจำนวน ({product.length}) ชิ้น
             </Typography>
             <Grid container spacing={4} justifyContent="left">
               {product.map((product, i) => (
@@ -166,7 +166,7 @@ export default observer(function HomeScreen() {
                       <ProductDescription variant="body2">
                         ฿ {product.price}
                       </ProductDescription>
-                      <ButtonWrapper>
+                      <ButtonWrapper onClick={() => NavigateDetail(product)}>
                         <FullWidthButton variant="outlined">
                           เยี่ยมชมสินค้า
                         </FullWidthButton>

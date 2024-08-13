@@ -12,6 +12,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Fab,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
@@ -19,6 +20,7 @@ import "react-quill/dist/quill.snow.css";
 import { Product } from "../../models/Product";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 interface props {
   onChangeCU?: any | null;
@@ -114,16 +116,10 @@ export default observer(function CreateProductScreen({
       >
         <Grid container spacing={2}>
           <Grid item xs={1}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              size="large"
-              fullWidth
-              onClick={onChangeCU}
-            >
+            <Fab variant="extended" color="primary" onClick={onChangeCU}>
+              <ArrowBackIosIcon sx={{ mr: 1 }} />
               กลับ
-            </Button>
+            </Fab>
           </Grid>
           <Grid item xs={11} />
         </Grid>

@@ -18,11 +18,7 @@ export default class UserStore {
     makeAutoObservable(this);
   }
 
-  register = async ({
-    Password,
-    FullName,
-    PhoneNumber,
-  }: RegisterInterface) => {
+  register = async ({ Password, FullName, PhoneNumber }: RegisterInterface) => {
     const data = {
       password: Password,
       fullName: FullName,
@@ -52,6 +48,7 @@ export default class UserStore {
     store.commonStore.setToken(null);
     store.shopuserStore.setUserShop(null);
     store.addressStore.setAddress(null);
+    store.orderStore.setOrder([]);
   };
 
   getUserDetailbyId = async () => {

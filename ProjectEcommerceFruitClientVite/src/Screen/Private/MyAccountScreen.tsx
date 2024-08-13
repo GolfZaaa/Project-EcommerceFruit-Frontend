@@ -2,41 +2,24 @@ import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Box,
-  CssBaseline,
   Divider,
-  Drawer,
-  IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   Toolbar,
-  Typography,
-  Button,
-  Grid,
-  Card,
-  CardContent,
-  CardActions,
-  CardMedia,
   Collapse,
-  Switch,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PeopleIcon from "@mui/icons-material/People";
-import BarChartIcon from "@mui/icons-material/BarChart";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
-import imageDashboard from "../../image/DashboardShop.png";
-import { Link, NavLink } from "react-router-dom";
-import CreateShopScreen from "../Shopping/CreateShopScreen";
+import { Link } from "react-router-dom";
 import ProductGIList from "../Shopping/GI/ProductGIList";
-import ProductList from "../Shopping/product/ProductList";
-import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
-import OrderList from "../order/OrderList";
 import { RoutePath } from "../../constants/RoutePath";
 import AddressList from "../address/AddressList";
+import MyOrderList from "../order/MyOrderList";
 
 const drawerWidth = 240;
 
@@ -54,7 +37,7 @@ const MyAccountScreen = () => {
       case "addressList":
         return <AddressList />;
       case "orderList":
-        return <ProductGIList />;
+        return <MyOrderList />;
       case "my-account":
         return <>dash</>;
       default:

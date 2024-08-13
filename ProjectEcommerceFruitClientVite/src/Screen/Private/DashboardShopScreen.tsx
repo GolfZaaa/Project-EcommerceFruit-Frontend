@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Box,
-  CssBaseline,
   Divider,
   Drawer,
   IconButton,
@@ -219,7 +218,6 @@ export default observer(function DashboardShopScreen() {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
       <AppBar
         position="fixed"
         sx={{
