@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { BsShop } from "react-icons/bs";
 import Footer from "../layout/screen/Footer";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store/store";
@@ -7,7 +6,22 @@ import { NavLink } from "react-router-dom";
 import { RoutePath } from "../constants/RoutePath";
 import BannerComponent from "../layout/component/BannerComponent";
 
-const formatNumberWithCommas = (number: any) => {
+// Define types for cart items and products
+interface Product {
+  id: string;
+  price: number;
+  quantityInCartItem: number;
+}
+
+interface CartItem {
+  id: string;
+  storeName: string;
+  productName: string;
+  products: Product[];
+  cartItemId:any;
+}
+
+const formatNumberWithCommas = (number: number) => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
@@ -27,8 +41,8 @@ export default observer(function CartScreen() {
   }, []);
 
   const calculateTotalPrice = () => {
-    return cartItemsStore.reduce((total, item: any) => {
-      const storeTotal = item.products.reduce((storeSum: any, product: any) => {
+    return cartItemsStore.reduce((total, item: CartItem) => {
+      const storeTotal = item.products.reduce((storeSum: number, product: Product) => {
         return storeSum + product.quantityInCartItem * product.price;
       }, 0);
       return total + storeTotal;
@@ -38,36 +52,37 @@ export default observer(function CartScreen() {
   const totalPrice = calculateTotalPrice();
   const formattedTotalPrice = formatNumberWithCommas(totalPrice);
 
-  const handleRemoveItem = async (item: any) => {
+  const handleRemoveItem = async (item: CartItem) => {
     const CartItemId = item.cartItemId;
-    const Quantity: any = 1;
-
+    const Quantity = 1;
     await RemoveToCart({ CartItemId, Quantity });
     await GetCartItemByUser();
     await GetCartItemByUserOrderStore();
   };
 
-  const handleRemoveItemAll = async (item: any, product: any) => {
+  const handleRemoveItemAll = async (item: CartItem, product: Product) => {
     const CartItemId = item.cartItemId;
-    const Quantity: any = product.quantityInCartItem;
-
+    const Quantity = product.quantityInCartItem;
     await RemoveToCart({ CartItemId, Quantity });
     await GetCartItemByUser();
     await GetCartItemByUserOrderStore();
   };
 
-  const handleAddItem = async (product: any) => {
-    console.log("product", product.id);
+  const handleAddItem = async (product: Product) => {
     const ProductId = product.id;
-    const Quantity: any = 1;
-
+    const Quantity = 1;
     await AddToCart({ ProductId, Quantity });
-
     await GetCartItemByUser();
     await GetCartItemByUserOrderStore();
   };
 
-  console.log("cartItems", cartItems.length);
+  const groupedCartItems: Record<string, CartItem[]> = cartItemsStore.reduce((acc: Record<string, CartItem[]>, item: CartItem) => {
+    if (!acc[item.storeName]) {
+      acc[item.storeName] = [];
+    }
+    acc[item.storeName].push(item);
+    return acc;
+  }, {});
 
   return (
     <div>
@@ -80,25 +95,22 @@ export default observer(function CartScreen() {
 
           <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
             <div className="w-8/12 flex flex-col space-y-6">
-              {cartItemsStore.map((item: any, _) => {
-                return (
-                  <div
-                    key={item.storeName}
-                    className="w-full flex flex-col space-y-6 lg:max-w-2xl xl:max-w-4xl"
-                  >
-                    <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6">
-                      <div className="space-y-4">
-                        <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
-                          ชื่อร้านค้า : {item.storeName}
-                        </span>
-                        {item.products.map((product: any) => {
-                          const TotalPriceForProduct =
-                            product.price * product.quantityInCartItem;
-                          const formatTotalPriceForProduct =
-                            formatNumberWithCommas(TotalPriceForProduct);
-                          return (
-                            <div key={product.id} className="space-y-6">
-                              <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6">
+              {Object.entries(groupedCartItems).map(([storeName, items]: [string, CartItem[]]) => (
+                <div key={storeName} className="w-full flex flex-col space-y-6 lg:max-w-2xl xl:max-w-4xl">
+                  <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6">
+                    <div className="space-y-4">
+                      <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
+                        ชื่อร้านค้า : {storeName}
+                      </span>
+                      {items.map((item: CartItem) => (
+                        <div key={item.id} className="space-y-6">
+                          {item.products.map((product: Product) => {
+                            const TotalPriceForProduct =
+                              product.price * product.quantityInCartItem;
+                            const formatTotalPriceForProduct =
+                              formatNumberWithCommas(TotalPriceForProduct);
+                            return (
+                              <div key={product.id} className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6">
                                 <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                                   <a href="#" className="shrink-0 md:order-1">
                                     <img
@@ -191,8 +203,6 @@ export default observer(function CartScreen() {
                                           className="me-1.5 h-5 w-5"
                                           aria-hidden="true"
                                           xmlns="http://www.w3.org/2000/svg"
-                                          width="24"
-                                          height="24"
                                           fill="none"
                                           viewBox="0 0 24 24"
                                         >
@@ -210,14 +220,14 @@ export default observer(function CartScreen() {
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          );
-                        })}
-                      </div>
+                            );
+                          })}
+                        </div>
+                      ))}
                     </div>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
 
             {cartItems && cartItems.length > 0 && (

@@ -1,8 +1,12 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { useStore } from "../store/store";
+import { useNavigate } from "react-router-dom";
+import { RoutePath } from "../constants/RoutePath";
 
 export default observer(function AddressScreen() {
+  const navigate = useNavigate();
+
   const [dropdown1, setDropdown1] = useState(false);
   const [dropdown2, setDropdown2] = useState(false);
   const [dropdown3, setDropdown3] = useState(false);
@@ -28,7 +32,9 @@ export default observer(function AddressScreen() {
     GetCartItemByUserOrderStore();
   }, []);
 
-  console.log("cartItems",cartItems.length)
+  const handleSummaryScreen = () => {
+          navigate(RoutePath.summaryScreen);
+  }
 
   return (
     <div className="overflow-y-hidden">
@@ -292,7 +298,7 @@ export default observer(function AddressScreen() {
                 </div>
               </div>
             </div>
-            <button className="focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mt-8 text-base font-medium focus:ring-2 focus:ring-ocus:ring-gray-800 leading-4 hover:bg-black py-4 w-full md:w-4/12 lg:w-full text-white bg-gray-800">
+            <button onClick={handleSummaryScreen}  className="focus:outline-none focus:ring-gray-500 focus:ring-offset-2 mt-8 text-base font-medium focus:ring-2 focus:ring-ocus:ring-gray-800 leading-4 hover:bg-black py-4 w-full md:w-4/12 lg:w-full text-white bg-gray-800">
               ดำเนินการชำระเงิน
             </button>
             <div className="mt-4 flex justify-start items-center w-full">
