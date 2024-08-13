@@ -20,16 +20,19 @@ import ProductGIList from "../Shopping/GI/ProductGIList";
 import { RoutePath } from "../../constants/RoutePath";
 import AddressList from "../address/AddressList";
 import MyOrderList from "../order/MyOrderList";
+import EditAccount from "../my/EditAccount";
 
 const drawerWidth = 240;
 
 const MyAccountScreen = () => {
   const { getAddressByUserId } = useStore().addressStore;
+  const { getUserDetailbyId } = useStore().userStore;
 
   const [screenComponent, setScreenComponent] = useState("my-account");
 
   useEffect(() => {
     getAddressByUserId();
+    getUserDetailbyId();
   }, []);
 
   const renderScreens = () => {
@@ -39,7 +42,7 @@ const MyAccountScreen = () => {
       case "orderList":
         return <MyOrderList />;
       case "my-account":
-        return <>dash</>;
+        return <EditAccount />;
       default:
     }
   };

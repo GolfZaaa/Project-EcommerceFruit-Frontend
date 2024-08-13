@@ -60,4 +60,15 @@ export default class UserStore {
       return error;
     }
   };
+
+  editUser = async (values: any) => {
+    try {
+      const user = await agent.User.editUser(values);
+      this.getUserDetailbyId();
+      this.user = user;
+      return user;
+    } catch (error) {
+      return error;
+    }
+  };
 }

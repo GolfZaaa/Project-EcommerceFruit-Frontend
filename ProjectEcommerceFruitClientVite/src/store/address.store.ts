@@ -42,7 +42,6 @@ export default class AddressStore {
   isUsedAddress = async (values: any) => {
     try {
       const result = await agent.Address.isUsedAddress(values);
-      this.getAddressByUserId();
       return result;
     } catch (error) {
       return error;

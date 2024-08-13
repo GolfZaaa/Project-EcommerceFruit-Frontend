@@ -6,6 +6,7 @@ import { RoutePath } from "../constants/RoutePath";
 
 export default observer(function AddressScreen() {
   const navigate = useNavigate();
+  const { myAddress } = useStore().addressStore;
 
   const [dropdown1, setDropdown1] = useState(false);
   const [dropdown2, setDropdown2] = useState(false);
@@ -35,39 +36,61 @@ export default observer(function AddressScreen() {
   const handleSummaryScreen = () => {
           navigate(RoutePath.summaryScreen);
   }
+  console.log("cartItems", cartItems.length);
 
   return (
     <div className="overflow-y-hidden">
-
-
-            <div className="flex items-center justify-center" >
-                <div className="xl:w-10/12 w-full px-8">
-                    <div className=" pt-10 flex flex-wrap items-center justify-center">
-                        <div className="w-52 h-16 relative md:mt-0 mt-4">
-                            <img src="https://i.ibb.co/DwNs7zG/Steps.png" alt="step1" className="w-full h-full" />
-                            <div className="absolute w-full flex flex-col px-6 items-center justify-center inset-0 m-0">
-                                <p className="w-full text-sm font-medium leading-4 text-white">ที่อยู่</p>
-                                <p className="w-full text-xs mt-1 leading-none text-white">เพิ่มที่อยู่ของผู้ใช้งาน</p>
-                            </div>
-                        </div>
-                        <div className="w-52 h-16 relative md:mt-0 mt-4">
-                            <img src="https://i.ibb.co/wNZ4nzy/Steps2.png" alt="step2" className="w-full h-full" />
-                            <div className="absolute w-full flex flex-col px-6 items-center justify-center inset-0 m-0">
-                                <p className="w-full text-sm font-medium leading-4 text-indigo-800">ชำระเงิน</p>
-                                <p className="w-full text-xs mt-1 leading-none text-indigo-800">ชำระสินค้าของผู้ใช้งาน</p>
-                            </div>
-                        </div>
-                        <div className="w-52 h-16 relative lg:mt-0 mt-4">
-                            <img src="https://i.ibb.co/XCdjrhm/Steps4.png" alt="step4" className="w-full h-full" />
-                            <div className="absolute w-full flex flex-col px-6 items-center justify-center inset-0 m-0">
-                                <p className="w-full text-sm font-medium leading-4 text-gray-700">สำเร็จ</p>
-                                <p className="w-full text-xs mt-1 leading-none text-gray-500">ทำรายการเสร็จสิ้น</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      <div className="flex items-center justify-center">
+        <div className="xl:w-10/12 w-full px-8">
+          <div className=" pt-10 flex flex-wrap items-center justify-center">
+            <div className="w-52 h-16 relative md:mt-0 mt-4">
+              <img
+                src="https://i.ibb.co/DwNs7zG/Steps.png"
+                alt="step1"
+                className="w-full h-full"
+              />
+              <div className="absolute w-full flex flex-col px-6 items-center justify-center inset-0 m-0">
+                <p className="w-full text-sm font-medium leading-4 text-white">
+                  ที่อยู่
+                </p>
+                <p className="w-full text-xs mt-1 leading-none text-white">
+                  เพิ่มที่อยู่ของผู้ใช้งาน
+                </p>
+              </div>
             </div>
-
+            <div className="w-52 h-16 relative md:mt-0 mt-4">
+              <img
+                src="https://i.ibb.co/wNZ4nzy/Steps2.png"
+                alt="step2"
+                className="w-full h-full"
+              />
+              <div className="absolute w-full flex flex-col px-6 items-center justify-center inset-0 m-0">
+                <p className="w-full text-sm font-medium leading-4 text-indigo-800">
+                  ชำระเงิน
+                </p>
+                <p className="w-full text-xs mt-1 leading-none text-indigo-800">
+                  ชำระสินค้าของผู้ใช้งาน
+                </p>
+              </div>
+            </div>
+            <div className="w-52 h-16 relative lg:mt-0 mt-4">
+              <img
+                src="https://i.ibb.co/XCdjrhm/Steps4.png"
+                alt="step4"
+                className="w-full h-full"
+              />
+              <div className="absolute w-full flex flex-col px-6 items-center justify-center inset-0 m-0">
+                <p className="w-full text-sm font-medium leading-4 text-gray-700">
+                  สำเร็จ
+                </p>
+                <p className="w-full text-xs mt-1 leading-none text-gray-500">
+                  ทำรายการเสร็จสิ้น
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="flex justify-center items-center 2xl:container 2xl:mx-auto lg:py-16 md:py-12 py-9 px-4 md:px-6 lg:px-20 xl:px-44 ">
         <div className="flex w-full sm:w-9/12 lg:w-full flex-col lg:flex-row justify-center items-center lg:space-x-10 2xl:space-x-36 space-y-12 lg:space-y-0">
@@ -324,17 +347,17 @@ export default observer(function AddressScreen() {
                 </p>
               </div>
               <div className="flex justify-between w-full items-center">
-                <p className="text-lg leading-4 text-gray-600">ค่าใช้จ่ายทั้งหมด</p>
+                <p className="text-lg leading-4 text-gray-600">
+                  ค่าใช้จ่ายทั้งหมด
+                </p>
                 <p className="text-lg font-semibold leading-4 text-gray-600">
                   $2790
                 </p>
               </div>
-              
-             
             </div>
             <div className="flex justify-between w-full items-center mt-32">
               <p className="text-xl font-semibold leading-4 text-gray-800">
-                ค่าใช้จ่ายทั้งหมด {" "}
+                ค่าใช้จ่ายทั้งหมด{" "}
               </p>
               <p className="text-lg font-semibold leading-4 text-gray-800">
                 $2900

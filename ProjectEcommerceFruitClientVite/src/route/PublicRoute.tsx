@@ -12,6 +12,8 @@ import ProductDetailScreen from "../Screen/product/ProductDetailScreen";
 import CreateFruitGIScreen from "../Screen/Shopping/CreateFruitGIScreen";
 import CartScreen from "../Screen/CartScreen";
 import AddressScreen from "../Screen/AddressScreen";
+import { RoutePath } from "../constants/RoutePath";
+import MyAccountScreen from "../Screen/Private/MyAccountScreen";
 import SummaryScreen from "../Screen/SummaryScreen";
 
 export const PublicRoute: any = [
@@ -87,6 +89,8 @@ export const PublicRoute: any = [
   },
   {
     id: 14,
+    path: RoutePath.myaccountScreen,
+    element: <MyAccountScreen />,
     path: "/summary-screen",
     element: <SummaryScreen />,
   },
