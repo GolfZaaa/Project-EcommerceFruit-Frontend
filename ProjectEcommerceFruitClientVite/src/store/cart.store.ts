@@ -3,10 +3,14 @@ import agent from "../api/agent";
 import { User } from "../models/User";
 import { store } from "./store";
 
-interface Product {
-  Quantity: any;
-  ProductId: any;
-  CartItemId: any;
+interface RemoveProduct {
+  Quantity: any | null;
+  CartItemId: any | null;
+}
+
+interface AddProduct {
+  Quantity: any | null;
+  ProductId: any | null;
 }
 
 export default class CartStore {
@@ -17,7 +21,7 @@ export default class CartStore {
     makeAutoObservable(this);
   }
 
-  AddToCart = async ({ ProductId, Quantity, CartItemId }: Product) => {
+  AddToCart = async ({ ProductId, Quantity }: AddProduct) => {
     const data = { quantity: Quantity, productId: ProductId };
     try {
       const result = await agent.Cart.AddtoCart(data);
@@ -27,7 +31,7 @@ export default class CartStore {
     }
   };
 
-  RemoveToCart = async ({ CartItemId, Quantity }: Product) => {
+  RemoveToCart = async ({ CartItemId, Quantity }: RemoveProduct) => {
     const data = { quantity: Quantity, cartItemId: CartItemId };
     try {
       const result = await agent.Cart.RemoveToCart(data);

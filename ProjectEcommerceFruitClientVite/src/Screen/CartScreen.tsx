@@ -67,8 +67,6 @@ export default observer(function CartScreen() {
     await GetCartItemByUserOrderStore();
   };
 
-  console.log("cartItems", cartItems.length);
-
   return (
     <div>
       <BannerComponent />
