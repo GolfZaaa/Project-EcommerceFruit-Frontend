@@ -9,6 +9,17 @@ export default class OrderStore {
     makeAutoObservable(this);
   }
 
+  setOrder = (state: any) => (this.order = state);
+
+  getOrdersByUser = async () => {
+    try {
+      const result = await agent.Order.getOrdersByUser();
+      this.order = result;
+    } catch (error) {
+      return error;
+    }
+  };
+
   getOrderByStore = async (storeId: number) => {
     try {
       const result = await agent.Order.getOrderByStore(storeId);

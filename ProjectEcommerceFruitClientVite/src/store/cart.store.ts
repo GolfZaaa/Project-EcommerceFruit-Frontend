@@ -4,21 +4,21 @@ import { User } from "../models/User";
 import { store } from "./store";
 
 interface Product {
-    Quantity: any;
-    ProductId: any;
-    CartItemId: any;
+  Quantity: any;
+  ProductId: any;
+  CartItemId: any;
 }
 
 export default class CartStore {
-    cartItems = [];
-    cartItemsStore = [];
+  cartItems = [];
+  cartItemsStore = [];
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  AddToCart = async ({ProductId,Quantity }:Product) => {
-    const data = {quantity:Quantity, productId:ProductId}
+  AddToCart = async ({ ProductId, Quantity, CartItemId }: Product) => {
+    const data = { quantity: Quantity, productId: ProductId };
     try {
       const result = await agent.Cart.AddtoCart(data);
       return result;
@@ -27,8 +27,8 @@ export default class CartStore {
     }
   };
 
-  RemoveToCart = async ({CartItemId,Quantity }:Product) => {
-    const data = {quantity:Quantity, cartItemId:CartItemId}
+  RemoveToCart = async ({ CartItemId, Quantity }: Product) => {
+    const data = { quantity: Quantity, cartItemId: CartItemId };
     try {
       const result = await agent.Cart.RemoveToCart(data);
       return result;
@@ -37,25 +37,21 @@ export default class CartStore {
     }
   };
 
-  GetCartItemByUser = async() => {
+  GetCartItemByUser = async () => {
     try {
-       const result = await agent.Cart.GetCartItemByUser();
-       this.cartItems = result;
-    }catch (error) {
+      const result = await agent.Cart.GetCartItemByUser();
+      this.cartItems = result;
+    } catch (error) {
       return error;
     }
-  }
+  };
 
-  GetCartItemByUserOrderStore = async() => {
+  GetCartItemByUserOrderStore = async () => {
     try {
-       const result = await agent.Cart.GetCartItemByUserOrderStore();
-       this.cartItemsStore = result;
-    }catch (error) {
+      const result = await agent.Cart.GetCartItemByUserOrderStore();
+      this.cartItemsStore = result;
+    } catch (error) {
       return error;
     }
-  }
-
-
-
-
+  };
 }

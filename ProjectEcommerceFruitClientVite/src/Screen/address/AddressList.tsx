@@ -19,12 +19,11 @@ import { CreateInput } from "thai-address-autocomplete-react";
 import { myToast } from "../../helper/components";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import EditIcon from "@mui/icons-material/Edit";
 
 const InputThaiAddress = CreateInput();
 
 const AddressList = () => {
-  const navigate = useNavigate();
-
   const { myAddress, isUsedAddress, createUpdateAddress, getAddressByUserId } =
     useStore().addressStore;
 
@@ -117,11 +116,12 @@ const AddressList = () => {
           </Fab>
         </Grid>
       </Grid>
+
       {myAddress?.map((item, i) => (
         <>
           <Card style={{ marginBottom: "20px" }} key={i}>
             <Grid container spacing={2}>
-              <Grid item xs={8}>
+              <Grid item xs={6}>
                 <CardContent>
                   {item?.detail}
                   <br />
@@ -150,6 +150,29 @@ const AddressList = () => {
                   defaultChecked={item.isUsed}
                   onClick={() => handleAddressUpdate(item.id, false)}
                 />
+              </Grid>
+              <Grid item xs={2}>
+                <Fab
+                  style={{
+                    margin: 15,
+                  }}
+                  variant="extended"
+                  color="primary"
+                  onClick={() => {
+                    setAddress({
+                      district: item?.subDistrict, // ตำบล tambol
+                      amphoe: item?.district, // อำเภอ amphoe
+                      province: item?.province, // จังหวัด changwat
+                      zipcode: item?.postCode, // รหัสไปรษณีย์ postal code
+                      detail: item?.detail, // รหัสไปรษณีย์ postal code
+                    });
+                    setDataEdit(item);
+                    onChangeCU();
+                  }}
+                >
+                  <EditIcon sx={{ mr: 1 }} />
+                  แก้ไข
+                </Fab>
               </Grid>
             </Grid>
           </Card>

@@ -11,12 +11,14 @@ import {
   Select,
   TextField,
   Typography,
+  Fab,
 } from "@mui/material";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useStore } from "../../store/store";
 import { observer } from "mobx-react-lite";
 import { ProductGI } from "../../models/ProductGI";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 interface props {
   onChangeCU: any;
@@ -111,15 +113,10 @@ export default observer(function CreateFruitGIScreen({
       >
         <Grid container spacing={2}>
           <Grid item xs={1}>
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              fullWidth
-              onClick={onChangeCU}
-            >
+            <Fab variant="extended" color="primary" onClick={onChangeCU}>
+              <ArrowBackIosIcon sx={{ mr: 1 }} />
               กลับ
-            </Button>
+            </Fab>
           </Grid>
           <Grid item xs={11} />
         </Grid>
