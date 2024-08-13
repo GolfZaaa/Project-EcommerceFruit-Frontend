@@ -15,8 +15,18 @@ export const Product = {
   //-------------------------------------------- product-GI ----------------------------------------------------//
 
   getProductGI: () => requests.get(`ProductGI/GetProductGI`),
-  createUpdateProductGI: (values: any) =>
-    requests.post(`ProductGI/CreateUpdateProductGI`, createFormData(values)),
+  createUpdateProductGI: (values: any, files: any) => {
+    const data = createFormData(values);
+
+    for (var formfile of files) {
+      data.append("formFiles", formfile);
+      console.log("sand formfile", formfile);
+    }
+
+    console.log("data", ...data);
+
+    return requests.post(`ProductGI/CreateUpdateProductGI`, data);
+  },
   removeProductGI: (id: number) =>
     requests.delete(`ProductGI/RemoveProductGI?productGIId=${id}`),
 

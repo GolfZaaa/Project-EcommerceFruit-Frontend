@@ -1,36 +1,81 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { useStore } from "../store/store";
+import { Address } from "../models/Address";
+import {
+  Grid,
+  Card,
+  CardContent,
+  Switch,
+  Fab,
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+} from "@mui/material";
+import { CreateInput } from "thai-address-autocomplete-react";
+import { RoutePath } from "../constants/RoutePath";
+import { NavLink } from "react-router-dom";
+import { myToast } from "../helper/components";
+
+const InputThaiAddress = CreateInput();
 
 export default observer(function AddressScreen() {
-  const { myAddress } = useStore().addressStore;
+  const { createUpdateAddress, getAddressByUserId } = useStore().addressStore;
 
-  const [dropdown1, setDropdown1] = useState(false);
-  const [dropdown2, setDropdown2] = useState(false);
-  const [dropdown3, setDropdown3] = useState(false);
-  const [changeText1, setChangeText1] = useState("City");
-  const [changeText2, setChangeText2] = useState("จังหวัด");
-  const [changeText3, setChangeText3] = useState("ตำบล");
-  const [changeText4, setChangeText4] = useState("อำเภอ");
+  const [createAddress, setCreateAddress] = useState<Address | any>({
+    district: "", // ตำบล tambol
+    amphoe: "", // อำเภอ amphoe
+    province: "", // จังหวัด changwat
+    zipcode: "", // รหัสไปรษณีย์ postal code
+    detail: "", // รหัสไปรษณีย์ postal code
+  });
 
-  const HandleText1 = (e: any) => {
-    setChangeText1(e);
-    setDropdown1(false);
-  };
-
-  const {
-    GetCartItemByUser,
-    cartItems,
-    GetCartItemByUserOrderStore,
-    cartItemsStore,
-  } = useStore().cartStore;
+  const { GetCartItemByUser, cartItems, GetCartItemByUserOrderStore } =
+    useStore().cartStore;
 
   useEffect(() => {
     GetCartItemByUser();
     GetCartItemByUserOrderStore();
   }, []);
 
-  console.log("cartItems", cartItems.length);
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const formData: any = Object.fromEntries(data.entries());
+
+    const dataAddress = {
+      id: 0,
+      subDistrict: createAddress.district,
+      district: createAddress.amphoe,
+      province: createAddress.province,
+      postCode: createAddress.zipcode,
+      detail: formData.detail,
+      isUsed_Store: false,
+      isUsed: false,
+      gps: "",
+    };
+
+    await createUpdateAddress(dataAddress).then((result) => {
+      if (!!result) {
+        myToast("เพิ่มที่อยู่สำเร็จ");
+        getAddressByUserId();
+        console.log("formData", formData);
+      }
+    });
+  };
+
+  const handleChange = (scope: string) => (value: string) => {
+    setCreateAddress((oldAddr: Address) => ({
+      ...oldAddr,
+      [scope]: value,
+    }));
+  };
+
+  const handleSelect = (address: Address) => {
+    setCreateAddress(address);
+  };
 
   return (
     <div className="overflow-y-hidden">
@@ -95,236 +140,65 @@ export default observer(function AddressScreen() {
               </p>
             </div>
             <div className="mt-2">
-              <a
-                href="javascript:void(0)"
+              <NavLink
+                to={RoutePath.cartScreen}
                 className="text-base leading-4 underline  hover:text-gray-800 text-gray-600"
               >
                 กลับไปยังหน้าตะกร้า
-              </a>
+              </NavLink>
             </div>
             <div className="mt-12">
               <p className="text-xl font-semibold leading-5 text-gray-800">
                 รายละเอียดที่อยู่การจัดส่ง
               </p>
             </div>
-            <div className="mt-8 flex flex-col justify-start items-start w-full space-y-8 ">
-              <div className="relative w-full">
-                <p
-                  id="button1"
-                  className=" px-2 border-b border-gray-200 text-left leading-4 text-base text-gray-600 py-4 w-full"
-                >
-                  {changeText2}
-                </p>
-                <button
-                  onClick={() => setDropdown1(!dropdown1)}
-                  className="focus:outline-none focus:ring-2 focus:ring-gray-500 rounded-full cursor-pointer absolute bottom-4 right-0"
-                >
-                  <svg
-                    id="close"
-                    className={` transform ${dropdown1 ? "rotate-180" : ""}  `}
-                    width={16}
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M12 6L8 10L4 6"
-                      stroke="#4B5563"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-                <div
-                  className={`shadow absolute z-10 bg-white top-10  w-full mt-3 ${
-                    dropdown1 ? "" : "hidden"
-                  }`}
-                >
-                  <div className="flex flex-col  w-full">
-                    <p
-                      tabIndex={0}
-                      onClick={() => HandleText1("London")}
-                      className="focus:outline-none cursor-pointer px-3 hover:text-white hover:bg-gray-800 focus:bg-gray-800 focus:text-white text-left  text-base text-gray-600 py-2 w-full"
-                    >
-                      London
-                    </p>
-                    <p
-                      tabIndex={0}
-                      onClick={() => HandleText1("New York")}
-                      className="focus:outline-none cursor-pointer px-3 hover:text-white hover:bg-gray-800 focus:bg-gray-800 focus:text-white text-left  text-base text-gray-600 py-2 w-full"
-                    >
-                      New York
-                    </p>
-                    <p
-                      tabIndex={0}
-                      onClick={() => HandleText1("Dubai")}
-                      className="focus:outline-none cursor-pointer px-3 hover:text-white hover:bg-gray-800 focus:bg-gray-800 focus:text-white text-left  text-base text-gray-600 py-2 w-full"
-                    >
-                      Dubai
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="relative w-full">
-                <p
-                  id="button1"
-                  className=" px-2 border-b border-gray-200 text-left leading-4 text-base text-gray-600 py-4 w-full"
-                >
-                  {changeText3}
-                </p>
-                <button
-                  onClick={() => setDropdown1(!dropdown1)}
-                  className="focus:outline-none focus:ring-2 focus:ring-gray-500 rounded-full cursor-pointer absolute bottom-4 right-0"
-                >
-                  <svg
-                    id="close"
-                    className={` transform ${dropdown1 ? "rotate-180" : ""}  `}
-                    width={16}
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M12 6L8 10L4 6"
-                      stroke="#4B5563"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-                <div
-                  className={`shadow absolute z-10 bg-white top-10  w-full mt-3 ${
-                    dropdown1 ? "" : "hidden"
-                  }`}
-                >
-                  <div className="flex flex-col  w-full">
-                    <p
-                      tabIndex={0}
-                      onClick={() => HandleText1("London")}
-                      className="focus:outline-none cursor-pointer px-3 hover:text-white hover:bg-gray-800 focus:bg-gray-800 focus:text-white text-left  text-base text-gray-600 py-2 w-full"
-                    >
-                      London
-                    </p>
-                    <p
-                      tabIndex={0}
-                      onClick={() => HandleText1("New York")}
-                      className="focus:outline-none cursor-pointer px-3 hover:text-white hover:bg-gray-800 focus:bg-gray-800 focus:text-white text-left  text-base text-gray-600 py-2 w-full"
-                    >
-                      New York
-                    </p>
-                    <p
-                      tabIndex={0}
-                      onClick={() => HandleText1("Dubai")}
-                      className="focus:outline-none cursor-pointer px-3 hover:text-white hover:bg-gray-800 focus:bg-gray-800 focus:text-white text-left  text-base text-gray-600 py-2 w-full"
-                    >
-                      Dubai
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="relative w-full">
-                <p
-                  id="button1"
-                  className=" px-2 border-b border-gray-200 text-left leading-4 text-base text-gray-600 py-4 w-full"
-                >
-                  {changeText4}
-                </p>
-                <button
-                  onClick={() => setDropdown1(!dropdown1)}
-                  className="focus:outline-none focus:ring-2 focus:ring-gray-500 rounded-full cursor-pointer absolute bottom-4 right-0"
-                >
-                  <svg
-                    id="close"
-                    className={` transform ${dropdown1 ? "rotate-180" : ""}  `}
-                    width={16}
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M12 6L8 10L4 6"
-                      stroke="#4B5563"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-                <div
-                  className={`shadow absolute z-10 bg-white top-10  w-full mt-3 ${
-                    dropdown1 ? "" : "hidden"
-                  }`}
-                >
-                  <div className="flex flex-col  w-full">
-                    <p
-                      tabIndex={0}
-                      onClick={() => HandleText1("London")}
-                      className="focus:outline-none cursor-pointer px-3 hover:text-white hover:bg-gray-800 focus:bg-gray-800 focus:text-white text-left  text-base text-gray-600 py-2 w-full"
-                    >
-                      London
-                    </p>
-                    <p
-                      tabIndex={0}
-                      onClick={() => HandleText1("New York")}
-                      className="focus:outline-none cursor-pointer px-3 hover:text-white hover:bg-gray-800 focus:bg-gray-800 focus:text-white text-left  text-base text-gray-600 py-2 w-full"
-                    >
-                      New York
-                    </p>
-                    <p
-                      tabIndex={0}
-                      onClick={() => HandleText1("Dubai")}
-                      className="focus:outline-none cursor-pointer px-3 hover:text-white hover:bg-gray-800 focus:bg-gray-800 focus:text-white text-left  text-base text-gray-600 py-2 w-full"
-                    >
-                      Dubai
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-between flex-col sm:flex-row w-full items-start space-y-8 sm:space-y-0 sm:space-x-8">
-                <div className="relative w-full">
-                  <input
-                    className="px-2 focus:outline-none focus:ring-2 focus:ring-gray-500 border-b border-gray-200 leading-4 text-base placeholder-gray-600 py-3 w-full"
-                    type="text"
-                    placeholder="บ้านเลขที่"
-                  />
-                </div>
-                <div className="relative w-full">
-                  <input
-                    className="px-2 focus:outline-none focus:ring-2 focus:ring-gray-500 border-b border-gray-200 leading-4 text-base placeholder-gray-600 py-3 w-full"
-                    type="text"
-                    placeholder="หมู่"
-                  />
-                </div>
-              </div>
-              <div className="flex justify-between flex-col sm:flex-row w-full items-start space-y-8 sm:space-y-0 sm:space-x-8">
-                <div className="relative w-full">
-                  <input
-                    className="px-2 focus:outline-none focus:ring-2 focus:ring-gray-500 border-b border-gray-200 leading-4 text-base placeholder-gray-600 py-3 w-full"
-                    type="text"
-                    placeholder="ซอย"
-                  />
-                </div>
-                <div className="w-full">
-                  <input
-                    className="focus:outline-none focus:ring-2 focus:ring-gray-500 px-2 border-b border-gray-200 leading-4 text-base placeholder-gray-600 pt-4 pb-3   w-full"
-                    type="text"
-                    placeholder="รหัสไปรษณีย์"
-                  />
-                </div>
-              </div>
-            </div>
-            <button className="focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mt-8 text-base font-medium focus:ring-2 focus:ring-ocus:ring-gray-800 leading-4 hover:bg-black py-4 w-full md:w-4/12 lg:w-full text-white bg-gray-800">
-              ดำเนินการชำระเงิน
-            </button>
+            <Box mt={2} component="form" onSubmit={handleSubmit}>
+              <TextField
+                fullWidth
+                label="บ้านเลขที่, หมู่, ซอย, ถนน"
+                variant="outlined"
+                margin="normal"
+                name="detail"
+                required
+              />
+              <label>แขวง/ตำบล</label>
+              <InputThaiAddress.District
+                value={createAddress["district"]}
+                onChange={handleChange("district")}
+                onSelect={(e: any) => handleSelect(e)}
+              />
+              <label>เขต/อำเภอ</label>
+              <InputThaiAddress.Amphoe
+                value={createAddress["amphoe"]}
+                onChange={handleChange("amphoe")}
+                onSelect={(e: any) => handleSelect(e)}
+              />
+              <label>จังหวัด</label>
+              <InputThaiAddress.Province
+                value={createAddress["province"]}
+                onChange={handleChange("province")}
+                onSelect={(e: any) => handleSelect(e)}
+              />
+              <label>รหัสไปรษณีย์</label>
+              <InputThaiAddress.Zipcode
+                value={createAddress["zipcode"]}
+                onChange={handleChange("zipcode")}
+                onSelect={(e: any) => handleSelect(e)}
+              />
+              <button
+                type="submit"
+                className="focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mt-8 text-base font-medium focus:ring-2 focus:ring-ocus:ring-gray-800 leading-4 hover:bg-black py-4 w-full md:w-4/12 lg:w-full text-white bg-gray-800"
+              >
+                ดำเนินการชำระเงิน
+              </button>
+            </Box>
             <div className="mt-4 flex justify-start items-center w-full">
-              <a
-                href="javascript:void(0)"
+              <NavLink
+                to={RoutePath.cartScreen}
                 className="text-base leading-4 underline focus:outline-none focus:text-gray-500  hover:text-gray-800 text-gray-600"
               >
                 กลับไปยังหน้าตะกร้า
-              </a>
+              </NavLink>
             </div>
           </div>
           <div className="flex flex-col justify-start items-start bg-gray-50 w-full p-6 md:p-14">

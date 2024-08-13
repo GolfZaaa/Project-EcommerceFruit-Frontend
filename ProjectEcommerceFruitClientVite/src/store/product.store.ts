@@ -71,9 +71,9 @@ export default class ProductStore {
     }
   };
 
-  createUpdateProductGI = async (values: any) => {
+  createUpdateProductGI = async (values: any, files: any) => {
     try {
-      const result = await agent.Product.createUpdateProductGI(values);
+      const result = await agent.Product.createUpdateProductGI(values, files);
       this.getProductGI();
       return result;
     } catch (error) {
