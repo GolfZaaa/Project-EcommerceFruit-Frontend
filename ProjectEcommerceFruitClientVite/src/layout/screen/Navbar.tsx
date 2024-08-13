@@ -32,11 +32,11 @@ export default observer(function Navbar() {
   useEffect(() => {
     getUserDetailbyId();
     GetCartItemByUser();
-  }, []);
+  }, [token]);
 
   return (
     <>
-      <div>
+      <div className="">
         <nav className="relative px-4 py-4 flex justify-between items-center bg-white">
           <a className="text-3xl font-bold leading-none" href="#">
             <svg className="h-10" viewBox="0 0 10240 10240">
