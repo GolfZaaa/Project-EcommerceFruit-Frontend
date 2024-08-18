@@ -14,8 +14,8 @@ import CartScreen from "../Screen/CartScreen";
 import AddressScreen from "../Screen/AddressScreen";
 import { RoutePath } from "../constants/RoutePath";
 import MyAccountScreen from "../Screen/Private/MyAccountScreen";
-import TestOrderSummary from "../Screen/test/TestOrderSummary";
 import SummaryScreen from "../Screen/SummaryScreen";
+import OrderSummary from "../Screen/order/OrderSummary";
 
 export const PublicRoute: any = [
   {
@@ -92,12 +92,15 @@ export const PublicRoute: any = [
     id: 14,
     path: RoutePath.myaccountScreen,
     element: <MyAccountScreen />,
-    path: "/summary-screen",
-    element: <SummaryScreen />,
   },
   {
     id: 14,
-    path: RoutePath.testOrderSummary,
-    element: <TestOrderSummary />,
+    path: RoutePath.OrderSummary,
+    element: <OrderSummary />,
+  },
+  {
+    id: 14,
+    path: "/summary-screen",
+    element: <SummaryScreen />,
   },
 ];

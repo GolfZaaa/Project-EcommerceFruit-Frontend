@@ -5,6 +5,7 @@ import { Address } from "../models/Address";
 export default class AddressStore {
   address: Address | null = null;
   myAddress: Address[] | null = null;
+  myAddressgotoOrder: Address | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -16,6 +17,15 @@ export default class AddressStore {
     try {
       const result = await agent.Address.GetAddressByUserId();
       this.myAddress = result;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getAddressgotoOrderByUserId = async () => {
+    try {
+      const result = await agent.Address.getAddressgotoOrderByUserId();
+      this.myAddressgotoOrder = result;
     } catch (error) {
       throw error;
     }

@@ -1,9 +1,28 @@
 import { observer } from "mobx-react-lite";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddressScreen from "../AddressScreen";
+import SummaryScreen from "../SummaryScreen";
+import { useStore } from "../../store/store";
 
-const TestOrderSummary = () => {
+const OrderSummary = () => {
+  const { myAddressgotoOrder, getAddressgotoOrderByUserId } =
+    useStore().addressStore;
+
   const [paging, setPaging] = useState<number>(1);
+
+  console.log("myAddressgotoOrder", JSON.stringify(myAddressgotoOrder));
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    await getAddressgotoOrderByUserId().then(() => {
+      if (myAddressgotoOrder !== null) {
+        setPaging(2);
+      }
+    });
+  };
 
   const data = [
     {
@@ -33,7 +52,10 @@ const TestOrderSummary = () => {
     setPaging(pageNumber);
   };
 
-  const test = [<AddressScreen />];
+  const screens = [
+    <AddressScreen onChangePaging={onChangePaging} />,
+    <SummaryScreen />,
+  ];
 
   return (
     <>
@@ -43,7 +65,7 @@ const TestOrderSummary = () => {
             {data.map((item) => (
               <div
                 className="w-52 h-16 relative lg:mt-0 mt-4"
-                onClick={() => onChangePaging(item.id)}
+                // onClick={() => onChangePaging(item.id)}
               >
                 <img
                   src={
@@ -91,9 +113,9 @@ const TestOrderSummary = () => {
         </div>
       </div>
 
-      {test[0]}
+      {screens[paging - 1]}
     </>
   );
 };
 
-export default observer(TestOrderSummary);
+export default observer(OrderSummary);

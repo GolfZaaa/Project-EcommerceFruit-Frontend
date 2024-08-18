@@ -16,10 +16,13 @@ interface AddProduct {
 export default class CartStore {
   cartItems = [];
   cartItemsStore = [];
+  myCartItems = [];
 
   constructor() {
     makeAutoObservable(this);
   }
+
+  setMyCartItems = (state: any) => (this.myCartItems = state);
 
   AddToCart = async ({ ProductId, Quantity }: AddProduct) => {
     const data = { quantity: Quantity, productId: ProductId };

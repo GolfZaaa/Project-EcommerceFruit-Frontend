@@ -23,9 +23,14 @@ import EditIcon from "@mui/icons-material/Edit";
 
 const InputThaiAddress = CreateInput();
 
-const AddressList = () => {
-  const { myAddress, isUsedAddress, createUpdateAddress, getAddressByUserId } =
-    useStore().addressStore;
+const AddressList = ({ confirmChangeAddress }: any) => {
+  const {
+    myAddress,
+    isUsedAddress,
+    createUpdateAddress,
+    getAddressByUserId,
+    getAddressgotoOrderByUserId,
+  } = useStore().addressStore;
 
   const [form, setForm] = useState(false);
   const [dataEdit, setDataEdit] = useState<Address | null>(null);
@@ -55,6 +60,8 @@ const AddressList = () => {
     storeormine: boolean
   ) => {
     await isUsedAddress({ addressId, storeormine });
+    getAddressByUserId();
+    getAddressgotoOrderByUserId();
   };
 
   const handleSubmit = async (event: any) => {
@@ -70,12 +77,12 @@ const AddressList = () => {
       postCode: address.zipcode,
       detail: formData.detail,
       isUsed_Store: false,
-      isUsed: false,
+      isUsed: true,
       gps: "",
     };
 
     await createUpdateAddress(dataAddress);
-    myToast("ลงทะเบียนร้านค้าสำเร็จ");
+    myToast((dataEdit?.id ? "แก้ไข" : "เพิ่ม") + "ที่อยู่สำเร็จ");
     onChangeCU();
     getAddressByUserId();
     console.log("formData", formData);
@@ -109,6 +116,13 @@ const AddressList = () => {
             onClick={() => {
               setDataEdit(null);
               onChangeCU();
+              setAddress({
+                district: "", // ตำบล tambol
+                amphoe: "", // อำเภอ amphoe
+                province: "", // จังหวัด changwat
+                zipcode: "", // รหัสไปรษณีย์ postal code
+                detail: "", // รหัสไปรษณีย์ postal code
+              });
             }}
           >
             <AddIcon sx={{ mr: 1 }} />
@@ -118,7 +132,7 @@ const AddressList = () => {
       </Grid>
 
       {myAddress?.map((item, i) => (
-        <>
+        <div key={i}>
           <Card style={{ marginBottom: "20px" }} key={i}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -148,7 +162,11 @@ const AddressList = () => {
                 ตั้งเป็นที่อยู่สั่งซื้อ
                 <Switch
                   defaultChecked={item.isUsed}
-                  onClick={() => handleAddressUpdate(item.id, false)}
+                  onClick={() => {
+                    handleAddressUpdate(item.id, false);
+                    getAddressgotoOrderByUserId();
+                    confirmChangeAddress();
+                  }}
                 />
               </Grid>
               <Grid item xs={2}>
@@ -176,7 +194,7 @@ const AddressList = () => {
               </Grid>
             </Grid>
           </Card>
-        </>
+        </div>
       ))}
     </>
   ) : (

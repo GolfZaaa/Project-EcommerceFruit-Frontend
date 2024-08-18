@@ -1,68 +1,35 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useStore } from "../store/store";
+import { observer } from "mobx-react-lite";
+import AddressList from "./address/AddressList";
 
-export default function SummaryScreen() {
+export default observer(function SummaryScreen() {
+  const {
+    myAddressgotoOrder,
+    getAddressgotoOrderByUserId,
+    getAddressByUserId,
+  } = useStore().addressStore;
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("slip");
+
+  const [onChangeAddress, setOnChangeAddress] = useState(false);
+
+  useEffect(() => {
+    getAddressgotoOrderByUserId();
+  }, []);
 
   const handleChange = (e: any) => {
     setSelectedPaymentMethod(e.target.value);
   };
 
+  const confirmChangeAddress = () => {
+    setOnChangeAddress(false);
+  };
+
+  console.log("myAddressgotoOrder", JSON.stringify(myAddressgotoOrder));
+
   return (
     <div className="bg-gray-50">
       <div className="ml-10 mr-10">
-        <div className="flex items-center justify-center">
-          <div className="xl:w-10/12 w-full px-8">
-            <div className=" pt-10 flex flex-wrap items-center justify-center">
-              <div className="w-52 h-16 relative md:mt-0 mt-4">
-                <img
-                  src="https://i.ibb.co/DwNs7zG/Steps.png"
-                  alt="step1"
-                  className="w-full h-full"
-                />
-                <div className="absolute w-full flex flex-col px-6 items-center justify-center inset-0 m-0">
-                  <p className="w-full text-sm font-medium leading-4 text-white">
-                    ที่อยู่
-                  </p>
-                  <p className="w-full text-xs mt-1 leading-none text-white">
-                    เพิ่มที่อยู่ของผู้ใช้งาน
-                  </p>
-                </div>
-              </div>
-              <div className="w-52 h-16 relative md:mt-0 mt-4">
-                <img
-                  src="https://i.ibb.co/DwNs7zG/Steps.png"
-                  alt="step2"
-                  className="w-full h-full"
-                />
-                <div className="absolute w-full flex flex-col px-6 items-center justify-center inset-0 m-0">
-                  <p className="w-full text-sm font-medium leading-4 text-white">
-                    ชำระเงิน
-                  </p>
-                  <p className="w-full text-xs mt-1 leading-none text-white">
-                    ชำระสินค้าของผู้ใช้งาน
-                  </p>
-                </div>
-              </div>
-              <div className="w-52 h-16 relative lg:mt-0 mt-4">
-                <img
-                  src="https://i.ibb.co/wNZ4nzy/Steps2.png"
-                  alt="step4"
-                  className="w-full h-full"
-                />
-                <div className="absolute w-full flex flex-col px-6 items-center justify-center inset-0 m-0">
-                  <p className="w-full text-sm font-medium leading-4 text-indigo-800">
-                    สำเร็จ
-                  </p>
-                  <p className="w-full text-xs mt-1 leading-none text-indigo-800">
-                    ทำรายการเสร็จสิ้น
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div className="mt-8 flex justify-center md:flex-row flex-col items-stretch w-full space-y-4 md:space-y-0 md:space-x-6 xl:space-x-8">
           <div className="flex flex-col px-4 py-6 md:p-6 xl:p-8 w-full bg-white space-y-6 shadow-md rounded-sm">
             <div className="flex">
@@ -86,24 +53,41 @@ export default function SummaryScreen() {
               </h3>
             </div>
 
-            <div className="flex flex-col md:flex-row md:justify-between items-center w-full space-y-4 md:space-y-0">
-              <div className="flex-1">
-                <p className="text-lg leading-4 text-gray-800 font-semibold">
-                  นายอวิรุทธ์ ไชยสงคราม (+66) 925721318
-                </p>
+            {!onChangeAddress ? (
+              <div className="flex flex-col md:flex-row md:justify-between items-center w-full space-y-4 md:space-y-0">
+                <div className="flex-1">
+                  <p className="text-lg leading-4 text-gray-800 font-semibold">
+                    {myAddressgotoOrder?.user?.fullName} เบอร์ :
+                    {myAddressgotoOrder?.user?.phoneNumber}
+                    {/* นายอวิรุทธ์ ไชยสงคราม (+66) 925721318 */}
+                  </p>
+                </div>
+                <div className="flex-1 -ml-24">
+                  <p className="text-lg leading-4 text-gray-800 font-medium">
+                    {myAddressgotoOrder?.detail} แขวง/ตำบล
+                    {myAddressgotoOrder?.subDistrict} เขต/อำเภอ
+                    {myAddressgotoOrder?.district} จังหวัด
+                    {myAddressgotoOrder?.province} รหัสไปรษณีย์{" "}
+                    {myAddressgotoOrder?.postCode}
+                    {/* ร้านก๊อตไดนาโม, เลขที่ 11/3, หมู่ที่ 2, ตำบล ท่าล้อ,
+                  อำเภอท่าม่วง */}
+                  </p>
+                </div>
+                <div className="flex items-center justify-center md:justify-end">
+                  <button
+                    onClick={() => {
+                      getAddressByUserId();
+                      setOnChangeAddress(true);
+                    }}
+                    className="text-lg leading-4 text-blue-700 font-medium"
+                  >
+                    เปลี่ยน
+                  </button>
+                </div>
               </div>
-              <div className="flex-1 -ml-24">
-                <p className="text-lg leading-4 text-gray-800 font-medium">
-                  ร้านก๊อตไดนาโม, เลขที่ 11/3, หมู่ที่ 2, ตำบล ท่าล้อ,
-                  อำเภอท่าม่วง
-                </p>
-              </div>
-              <div className="flex items-center justify-center md:justify-end">
-                <button className="text-lg leading-4 text-blue-700 font-medium">
-                  เปลี่ยน
-                </button>
-              </div>
-            </div>
+            ) : (
+              <AddressList confirmChangeAddress={confirmChangeAddress} />
+            )}
           </div>
         </div>
 
@@ -288,4 +272,4 @@ export default function SummaryScreen() {
       </div>
     </div>
   );
-}
+});
