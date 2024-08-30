@@ -36,6 +36,7 @@ import { Order } from "../../models/Order";
 import EditOrderScreen from "./EditOrderScreen";
 import moment from "moment";
 import EditIcon from "@mui/icons-material/Edit";
+import { pathImages } from "../../constants/RoutePath";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -152,6 +153,7 @@ const OrderList = () => {
   };
 
   const columns = [
+    { id: "orderId", label: "รหัสคำสั่งซื้อ" },
     { id: "paymentImage", label: "รูปภาพสลิป" },
     { id: "description", label: "หมายเลขพัสดุ (tracking)" },
     { id: "createdAt", label: "สร้างเมื่อวันที่" },
@@ -213,7 +215,20 @@ const OrderList = () => {
                   ).map((row) => (
                     <TableRow key={row.id}>
                       <TableCell component="th" scope="row">
-                        paymentImage
+                        {row.orderId}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {row.paymentImage ? (
+                          <img
+                            src={pathImages.paymentImage + row.paymentImage}
+                            alt={
+                              pathImages.paymentImage + dataEdit?.paymentImage
+                            }
+                            width={100}
+                          />
+                        ) : (
+                          "ไม่มีรูปภาพ"
+                        )}
                       </TableCell>
                       <TableCell
                       // style={{ width: 160 }}
@@ -225,9 +240,11 @@ const OrderList = () => {
                       <TableCell>
                         {row.status === 0
                           ? "กำลังรออนุมัติ"
-                          : row.status === 0
+                          : row.status === 1
                           ? "ยืนยันคำสั่งซื้อแล้ว"
-                          : "ยกเลิกคำสั่งซื้อแล้ว"}
+                          : row.status === 2
+                          ? "ยกเลิกคำสั่งซื้อแล้ว"
+                          : "เพิ่มสถานะด้วย"}
                       </TableCell>
                       <TableCell style={{ width: 100 }}>
                         <Fab

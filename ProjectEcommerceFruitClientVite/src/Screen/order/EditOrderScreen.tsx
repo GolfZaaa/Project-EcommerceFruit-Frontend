@@ -16,6 +16,7 @@ import { observer } from "mobx-react-lite";
 import { Order } from "../../models/Order";
 import { useState } from "react";
 import { useStore } from "../../store/store";
+import { pathImages } from "../../constants/RoutePath";
 
 interface props {
   onChangeCU?: any | null;
@@ -91,7 +92,15 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
           </Typography>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              รูปภาพ
+              {dataEdit?.paymentImage ? (
+                <img
+                  src={pathImages.paymentImage + dataEdit?.paymentImage}
+                  alt={pathImages.paymentImage + dataEdit?.paymentImage}
+                  width={100}
+                />
+              ) : (
+                "ไม่มีรูปภาพ"
+              )}
             </Grid>
             <Grid item xs={6}>
               <Grid container spacing={2}>

@@ -33,3 +33,10 @@ export const RoutePath = {
   dashboardAdminHomePageScreen: `${HOST}dashboard-admin-homePage-screen`,
 
 };
+
+const path = config.baseURL ?? "https://localhost:7168/";
+
+export const pathImages = {
+  paymentImage: `${path}paymentImage/`,
+  product_GI: `${path}product-gi/`,
+};
