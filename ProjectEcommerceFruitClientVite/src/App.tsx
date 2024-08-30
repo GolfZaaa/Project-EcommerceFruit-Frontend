@@ -16,7 +16,7 @@ function App() {
   const { getUserDetailbyId, logout } = useStore().userStore;
 
   useEffect(() => {
-    if (token) {
+    if (token !== null) {
       getUserDetailbyId();
       getUserDetailbyId().then((result) => {
         if (result?.response?.request?.status !== undefined) {

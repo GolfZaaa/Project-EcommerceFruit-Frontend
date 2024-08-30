@@ -20,7 +20,7 @@ import { styled } from "@mui/material/styles";
 import { useStore } from "../store/store";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { RoutePath } from "../constants/RoutePath";
+import { pathImages, RoutePath } from "../constants/RoutePath";
 import Loading from "../layout/component/LoadingComponent";
 
 export default observer(function HomeScreen() {
@@ -53,7 +53,8 @@ export default observer(function HomeScreen() {
       id: 3,
       name: "Orange",
       description: "Juicy oranges",
-      imageUrl: "https://via.placeholder.com/300",
+      imageUrl:
+        "https://s.isanook.com/ca/0/ud/274/1373165/14089600051408960032l.jpg?ip/crop/w670h402/q80/jpg",
     },
     {
       id: 4,
@@ -156,7 +157,8 @@ export default observer(function HomeScreen() {
                       <StyledCardMedia
                         component="img"
                         alt={product.productGI.name}
-                        image={products[i % 2].imageUrl}
+                        image={products[i % 3].imageUrl}
+                        // image={pathImages.product_GI + product.image}
                       />
                     </a>
                     <StyledCardContent>

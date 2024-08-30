@@ -13,7 +13,7 @@ import Divider from "@mui/material/Divider";
 export default observer(function Navbar() {
   const navigate = useNavigate();
 
-  const { getUserDetailbyId, logout, user } = useStore().userStore;
+  const { logout, user } = useStore().userStore;
   const { GetCartItemByUser, cartItems } = useStore().cartStore;
   const { token } = useStore().commonStore;
 
@@ -30,7 +30,6 @@ export default observer(function Navbar() {
   const resultCartItems = cartItems.length;
 
   useEffect(() => {
-    getUserDetailbyId();
     GetCartItemByUser();
   }, [token]);
 
