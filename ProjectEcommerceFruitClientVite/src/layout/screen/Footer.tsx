@@ -1,4 +1,4 @@
-import logo from '../../image/Logo.png'
+import logo from '../../image/krulogo.png'
 
 export default function Footer() {
   return (
@@ -13,13 +13,13 @@ export default function Footer() {
       <div className="flex items-center text-teal-600">
         <img src={logo} className="w-20" alt="Logo" />
         <div className='ml-4 flex flex-col'>
-        <p className="ml-4 text-base font-bold">สำนักงานเกษตรอำเภอทองผาภูมิ</p>
-        <p className="ml-4 text-sm font-semibold">Thongphaphum District Agricultural Extension Office</p>
+        <p className="ml-4 text-base font-bold text-gray-700">มหาวิทยาลัยราชภัฏกาญจนบุรี</p>
+        <p className="ml-4 text-sm font-semibold text-gray-700">Kanchanaburi Rajabhat University</p>
         </div>
       </div>
 
         <p className="mt-4 max-w-xs text-gray-500 text-sm">
-        สำนักงานเกษตรอำเภอทองผาภูมิ ต.ท่าขนุน อ.ทองผาภูมิ จ.กาญจนบุรี 71180 โทร 034-599482
+        มหาวิทยาลัยราชภัฏกาญจนบุรี 70 ม.4 ต.หนองบัว อ.เมือง จ.กาญจนบุรี 71190 โทรสาร : 034-534057 
         </p>
 
         <ul className="mt-8 flex gap-6">
@@ -41,7 +41,6 @@ export default function Footer() {
               </svg>
             </a>
           </li>
-
           <li>
             <a
               href="#"
@@ -99,90 +98,72 @@ export default function Footer() {
         </ul>
       </div>
 
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:col-span-2 lg:grid-cols-4">
-        <div>
-          {/* <p className="font-medium text-gray-900">Services</p> */}
-
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:col-span-2 lg:grid-cols-4 gap-96">
+        <div className='w-64'>
           <ul className="mt-6 space-y-4 text-sm">
             <li>
-              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักงานเกษตรอำเภอท่ามะกา </a>
+              <a href="#" className="text-gray-700 transition hover:opacity-75 text-2xl"> คณะ/โรงเรียน </a>
             </li>
 
             <li>
-              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักงานเกษตรอำเภอเมืองกาญจนบุรี </a>
+              <a href="#" className="text-gray-700 transition hover:opacity-75"> คณะครุศาสตร์ </a>
             </li>
 
             <li>
-              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักงานเกษตรอำเภอไทรโยค </a>
+              <a href="#" className="text-gray-700 transition hover:opacity-75"> คณะมนุษยศาสตร์และสังคมศาสตร์ </a>
             </li>
 
             <li>
-              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักงานเกษตรอำเภอห้วยกระเจา </a>
+              <a href="#" className="text-gray-700 transition hover:opacity-75"> คณะวิทยาการจัดการ </a>
             </li>
 
             <li>
-              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักงานเกษตรจังหวัดกาญจนบุรี </a>
+              <a href="#" className="text-gray-700 transition hover:opacity-75"> คณะวิทยาศาสตร์และเทคโนโลยี </a>
+            </li>
+
+            <li>
+              <a href="#" className="text-gray-700 transition hover:opacity-75"> คณะเทคโนโลยีอุตสาหกรรม </a>
+            </li>
+
+            <li>
+              <a href="#" className="text-gray-700 transition hover:opacity-75"> โรงเรียนสาธิตมหาวิทยาลัยราชภัฏกาญจนบุรี </a>
+            </li>
+
+          </ul>
+        </div>
+
+        <div className='w-64'>
+          <ul className="mt-6 space-y-4 text-sm">
+            <li>
+              <a href="#" className="text-gray-700 transition hover:opacity-75 text-2xl"> สำนัก/ศูนย์/กอง </a>
+            </li>
+
+            <li>
+              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักส่งเสริมวิชาการและงานทะเบียน </a>
+            </li>
+
+            <li>
+              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักวิทยบริการและเทคโนโลยีสารสนเทศ </a>
+            </li>
+
+            <li>
+              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักศิลปะและวัฒนธรรม </a>
+            </li>
+
+            <li>
+              <a href="#" className="text-gray-700 transition hover:opacity-75"> สถาบันวิจัยและพัฒนา </a>
+            </li>
+
+            <li>
+              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักงานอธิการบดี </a>
+            </li>
+
+            <li>
+              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักงานสภามหาวิทยาลัย </a>
             </li>
           </ul>
         </div>
 
-        <div>
-          {/* <p className="font-medium text-gray-900">Company</p> */}
-
-          <ul className="mt-6 space-y-4 text-sm">
-            <li>
-              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักงานเกษตรอำเภอบ่อพลอย </a>
-            </li>
-
-            <li>
-              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักงานเกษตรอำเภอท่าม่วง </a>
-            </li>
-
-            <li>
-              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักงานเกษตรอำเภอด่านมะขามเตี้ย </a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          {/* <p className="font-medium text-gray-900">Helpful Links</p> */}
-
-          <ul className="mt-6 space-y-4 text-sm">
-            <li>
-              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักงานเกษตรอำเภอศรีสวัสดิ์ </a>
-            </li>
-
-            <li>
-              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักงานเกษตรอำเภอเลาขวัญ </a>
-            </li>
-
-            <li>
-              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักงานเกษตรอำเภอพนมทวน </a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          {/* <p className="font-medium text-gray-900">Legal</p> */}
-
-          <ul className="mt-6 space-y-4 text-sm">
-            <li>
-              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักงานเกษตรอำเภอสังขละบุรี </a>
-            </li>
-
-            <li>
-              <a href="#" className="text-gray-700 transition hover:opacity-75"> สำนักงานเกษตรอำเภอหนองปรือ </a>
-            </li>
-
-            {/* <li>
-              <a href="#" className="text-gray-700 transition hover:opacity-75"> Refund Policy </a>
-            </li>
-
-            <li>
-              <a href="#" className="text-gray-700 transition hover:opacity-75"> Hiring Statistics </a>
-            </li> */}
-          </ul>
-        </div>
       </div>
     </div>
   </div>

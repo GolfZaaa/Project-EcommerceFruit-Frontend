@@ -2,6 +2,14 @@ import { makeAutoObservable, reaction } from "mobx";
 import { Order } from "../models/Order";
 import agent from "../api/agent";
 
+
+interface CreateOrder {
+  PaymentImage: any;
+  ShippingType: string;
+  Tag: string;
+  StoreId: number;
+}
+
 export default class OrderStore {
   order: Order[] = [];
 
@@ -41,6 +49,15 @@ export default class OrderStore {
   cancelOrder = async (values: any | undefined) => {
     try {
       const result = await agent.Order.cancelOrder(values);
+      return result;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  CreateUpdateOrderById = async (values: any) => {
+    try {
+      const result = await agent.Order.CreateUpdateOrderById(values);
       return result;
     } catch (error) {
       return error;

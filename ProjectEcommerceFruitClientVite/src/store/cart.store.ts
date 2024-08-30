@@ -17,12 +17,14 @@ export default class CartStore {
   cartItems = [];
   cartItemsStore = [];
   myCartItems = [];
+  selectMyCart = [];
 
   constructor() {
     makeAutoObservable(this);
   }
 
   setMyCartItems = (state: any) => (this.myCartItems = state);
+  setselectMyCart = (state: any) => (this.selectMyCart = state);
 
   AddToCart = async ({ ProductId, Quantity }: AddProduct) => {
     const data = { quantity: Quantity, productId: ProductId };

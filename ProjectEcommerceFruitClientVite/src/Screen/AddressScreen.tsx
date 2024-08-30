@@ -1,19 +1,10 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { useStore } from "../store/store";
-import { useNavigate } from "react-router-dom";
 import { RoutePath } from "../constants/RoutePath";
 import { Address } from "../models/Address";
 import {
-  Grid,
-  Card,
-  CardContent,
-  Switch,
-  Fab,
-  Container,
   TextField,
-  Button,
-  Typography,
   Box,
 } from "@mui/material";
 import { CreateInput } from "thai-address-autocomplete-react";
@@ -23,15 +14,14 @@ import { myToast } from "../helper/components";
 const InputThaiAddress = CreateInput();
 
 export default observer(function AddressScreen({ onChangePaging }: any) {
-  const navigate = useNavigate();
   const { createUpdateAddress, getAddressByUserId } = useStore().addressStore;
 
   const [createAddress, setCreateAddress] = useState<Address | any>({
-    district: "", // ตำบล tambol
-    amphoe: "", // อำเภอ amphoe
-    province: "", // จังหวัด changwat
-    zipcode: "", // รหัสไปรษณีย์ postal code
-    detail: "", // รหัสไปรษณีย์ postal code
+    district: "", 
+    amphoe: "", 
+    province: "", 
+    zipcode: "", 
+    detail: "", 
   });
 
   const { GetCartItemByUser, cartItems, GetCartItemByUserOrderStore } =
@@ -42,9 +32,6 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
     GetCartItemByUserOrderStore();
   }, []);
 
-  // const handleSummaryScreen = () => {
-  //   navigate(RoutePath.summaryScreen);
-  // };
 
   console.log("cartItems", cartItems.length);
   const handleSubmit = async (event: any) => {
@@ -70,6 +57,8 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
         getAddressByUserId();
         onChangePaging(2);
         console.log("formData", formData);
+        window.scrollTo(0, 0);
+
       }
     });
   };
@@ -139,7 +128,7 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
               />
               <button
                 type="submit"
-                className="focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 mt-8 text-base font-medium focus:ring-2 focus:ring-ocus:ring-gray-800 leading-4 hover:bg-black py-4 w-full md:w-4/12 lg:w-full text-white bg-gray-800"
+                className="focus:outline-none focus:ring-gray-500 focus:ring-offset-2 mt-8 text-base font-medium focus:ring-2 focus:ring-ocus:ring-gray-800 leading-4 hover:bg-black py-4 w-full md:w-4/12 lg:w-full text-white bg-gray-800"
               >
                 ดำเนินการชำระเงิน
               </button>

@@ -16,6 +16,7 @@ export const RoutePath = {
   myaccountScreen: `${HOST}my-account-screen`,
   OrderSummary: `${HOST}order-summary`,
   test: `${HOST}test`,
+  successScreen: `${HOST}order-success-screen`,
 
   addressScreen: `${HOST}Address-screen`,
   summaryScreen: `${HOST}summary-screen`,
@@ -25,6 +26,10 @@ export const RoutePath = {
   createshop: `${HOST}create-shop`,
   cartScreen: `${HOST}cart-screen`,
 
-  // private routes
+  // private routes Dashboard ShopUser
   dashboardShopScreen: `${HOST}dashboard-shop-screen`,
+
+  // private routes Dashboard Admin
+  dashboardAdminHomePageScreen: `${HOST}dashboard-admin-homePage-screen`,
+
 };

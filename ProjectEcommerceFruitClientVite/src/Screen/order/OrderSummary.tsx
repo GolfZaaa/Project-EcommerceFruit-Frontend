@@ -11,6 +11,7 @@ const OrderSummary = () => {
   const [paging, setPaging] = useState<number>(1);
 
   console.log("myAddressgotoOrder", JSON.stringify(myAddressgotoOrder));
+  console.log("myAddressgotoOrder2", myAddressgotoOrder);
 
   useEffect(() => {
     getData();
@@ -18,8 +19,10 @@ const OrderSummary = () => {
 
   const getData = async () => {
     await getAddressgotoOrderByUserId().then(() => {
-      if (myAddressgotoOrder !== null) {
+      if (myAddressgotoOrder) {
         setPaging(2);
+      } else {
+        setPaging(1);
       }
     });
   };
@@ -59,22 +62,22 @@ const OrderSummary = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center bg-gray-50 ">
         <div className="xl:w-10/12 w-full px-8">
           <div className="pt-10 flex flex-wrap items-center justify-center">
             {data.map((item) => (
               <div
-                className="w-52 h-16 relative lg:mt-0 mt-4"
+                className="w-52 h-16 relative lg:mt-0 mt-4 mb-8"
                 // onClick={() => onChangePaging(item.id)}
               >
                 <img
                   src={
                     item.image +
                     (item.id === paging
-                      ? "DwNs7zG/Steps.png"
-                      : item.id === paging + 1
                       ? "wNZ4nzy/Steps2.png"
-                      : "XCdjrhm/Steps4.png")
+                      : item.id === paging + 1
+                      ? "XCdjrhm/Steps4.png"
+                      : "DwNs7zG/Steps.png")
                   }
                   alt={"step" + item.id}
                   className="w-full h-full"
@@ -85,10 +88,10 @@ const OrderSummary = () => {
                       "w-full text-sm font-medium leading-4" +
                       " " +
                       (item.id === paging
-                        ? "text-white"
+                        ? "text-gray-500"
                         : item.id === paging + 1
                         ? "text-indigo-800"
-                        : "text-gray-700")
+                        : "text-white")
                     }
                   >
                     {item.name}
@@ -98,10 +101,10 @@ const OrderSummary = () => {
                       "w-full text-xs mt-1 leading-none" +
                       " " +
                       (item.id === paging
-                        ? "text-white"
+                        ? "text-gray-500"
                         : item.id === paging + 1
                         ? "text-indigo-800"
-                        : "text-gray-500")
+                        : "text-white")
                     }
                   >
                     {item.description}

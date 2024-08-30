@@ -16,6 +16,7 @@ import { RoutePath } from "../constants/RoutePath";
 import MyAccountScreen from "../Screen/Private/MyAccountScreen";
 import SummaryScreen from "../Screen/SummaryScreen";
 import OrderSummary from "../Screen/order/OrderSummary";
+import SuccessComponent from "../layout/component/SuccessComponent";
 
 export const PublicRoute: any = [
   {
@@ -94,13 +95,18 @@ export const PublicRoute: any = [
     element: <MyAccountScreen />,
   },
   {
-    id: 14,
+    id: 15,
     path: RoutePath.OrderSummary,
     element: <OrderSummary />,
   },
   {
-    id: 14,
+    id: 16,
     path: "/summary-screen",
     element: <SummaryScreen />,
+  },
+  {
+    id: 17,
+    path: "/order-success-screen",
+    element: <SuccessComponent />,
   },
 ];

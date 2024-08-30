@@ -2,19 +2,60 @@ import React, { useEffect, useState } from "react";
 import { useStore } from "../store/store";
 import { observer } from "mobx-react-lite";
 import AddressList from "./address/AddressList";
+import { useNavigate } from "react-router-dom";
+import { RoutePath } from "../constants/RoutePath";
+import DropZoneImageComponent from "../layout/component/DropZoneImageComponent";
+
+interface CartItem {
+  id: string;
+  storeName: string;
+  productName: string;
+  products: Product[];
+  cartItemId: any;
+}
+
+interface Product {
+  id: string;
+  price: number;
+  quantityInCartItem: number;
+  images: string;
+}
+
+const formatNumberWithCommas = (number: number) => {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
 
 export default observer(function SummaryScreen() {
+  const navigate = useNavigate();
+  const [dropZoneImage, setDropZoneImage] = useState(null);
+  const [shippingType, setShippingType] = useState("asd");
+  const [tag, setTag] = useState("xzc");
+
+
   const {
     myAddressgotoOrder,
     getAddressgotoOrderByUserId,
     getAddressByUserId,
   } = useStore().addressStore;
+
+  const {
+    GetCartItemByUser,
+    cartItems,
+    GetCartItemByUserOrderStore,
+    cartItemsStore,
+    selectMyCart
+  } = useStore().cartStore;
+
+  const { CreateUpdateOrderById } = useStore().orderStore;
+
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("slip");
 
   const [onChangeAddress, setOnChangeAddress] = useState(false);
 
   useEffect(() => {
+    GetCartItemByUser();
     getAddressgotoOrderByUserId();
+    GetCartItemByUserOrderStore();
   }, []);
 
   const handleChange = (e: any) => {
@@ -25,10 +66,50 @@ export default observer(function SummaryScreen() {
     setOnChangeAddress(false);
   };
 
-  console.log("myAddressgotoOrder", JSON.stringify(myAddressgotoOrder));
+  const calculateTotalPrice = () => {
+    return cartItemsStore.reduce((total, item: CartItem) => {
+      const storeTotal = item.products.reduce(
+        (storeSum: number, product: Product) => {
+          return storeSum + product.quantityInCartItem * product.price;
+        },
+        0
+      );
+      return total + storeTotal;
+    }, 0);
+  };
+
+  const totalPrice = calculateTotalPrice();
+  const formattedTotalPrice = formatNumberWithCommas(totalPrice);
+
+
+
+  const handleImageUpload = (file: any) => {
+    setDropZoneImage(file);
+  };
+
+
+  const handleSubmit = async (value:any) => {
+    const Data = {
+      PaymentImage: dropZoneImage,
+      ShippingType: shippingType,
+      Tag: tag,
+      StoreId: value[0].storeId,
+    }
+    console.log("data",Data)
+    const test = await CreateUpdateOrderById(Data)
+    if(test === true){
+      navigate(RoutePath.successScreen)
+    }else{
+      alert("error")
+    }
+    console.log("test", test)
+  }
+
+
+
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50 -mt-8">
       <div className="ml-10 mr-10">
         <div className="mt-8 flex justify-center md:flex-row flex-col items-stretch w-full space-y-4 md:space-y-0 md:space-x-6 xl:space-x-8">
           <div className="flex flex-col px-4 py-6 md:p-6 xl:p-8 w-full bg-white space-y-6 shadow-md rounded-sm">
@@ -59,18 +140,15 @@ export default observer(function SummaryScreen() {
                   <p className="text-lg leading-4 text-gray-800 font-semibold">
                     {myAddressgotoOrder?.user?.fullName} เบอร์ :
                     {myAddressgotoOrder?.user?.phoneNumber}
-                    {/* นายอวิรุทธ์ ไชยสงคราม (+66) 925721318 */}
                   </p>
                 </div>
-                <div className="flex-1 -ml-24">
+                <div className="flex-1 -ml-96">
                   <p className="text-lg leading-4 text-gray-800 font-medium">
                     {myAddressgotoOrder?.detail} แขวง/ตำบล
                     {myAddressgotoOrder?.subDistrict} เขต/อำเภอ
                     {myAddressgotoOrder?.district} จังหวัด
                     {myAddressgotoOrder?.province} รหัสไปรษณีย์{" "}
                     {myAddressgotoOrder?.postCode}
-                    {/* ร้านก๊อตไดนาโม, เลขที่ 11/3, หมู่ที่ 2, ตำบล ท่าล้อ,
-                  อำเภอท่าม่วง */}
                   </p>
                 </div>
                 <div className="flex items-center justify-center md:justify-end">
@@ -96,9 +174,9 @@ export default observer(function SummaryScreen() {
             <div className="flex flex-col justify-start items-start w-full space-y-4 md:space-y-6 xl:space-y-8">
               <div className=" shadow-md rounded-smflex flex-col justify-start items-start bg-white px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full">
                 <div className="flex justify-start item-start space-y-2 flex-col mb-6">
-                  <h1 className="text-3xl lg:text-4xl font-semibold leading-7 lg:leading-9  text-gray-800">
+                  <a className="text-3xl lg:text-4xl font-semibold leading-7 lg:leading-9  text-gray-800">
                     การชำระเงิน
-                  </h1>
+                  </a>
                   <p className="text-base font-medium leading-6 text-gray-600">
                     13/8/2567
                   </p>
@@ -107,69 +185,53 @@ export default observer(function SummaryScreen() {
                 <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800">
                   ตะกร้าสินค้า
                 </p>
-                <div className="mt-4 md:mt-6 flex  flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full ">
-                  <div className="pb-4 md:pb-8 w-full md:w-40">
-                    <img
-                      className="w-full hidden md:block"
-                      src="https://rukminim2.flixcart.com/image/850/1000/l0jwbrk0/plant-seed/f/p/z/10-mm-03-paudha-original-imagcbe2unguekkc.jpeg?q=90&crop=false"
-                      alt="dress"
-                    />
-                    <img
-                      className="w-full md:hidden"
-                      src="https://i.ibb.co/L039qbN/Rectangle-10.png"
-                      alt="dress"
-                    />
-                  </div>
-                  <div className="border-b border-gray-200 md:flex-row flex-col flex justify-between items-start w-full  pb-8 space-y-4 md:space-y-0">
-                    <div className="w-full flex flex-col justify-start items-start space-y-8">
-                      <h3 className="text-xl xl:text-2xl font-semibold leading-6 text-gray-800">
-                        ผลมุ้ย
-                      </h3>
+                {selectMyCart &&
+                  selectMyCart.map((items: CartItem, index) => (
+                    <div>
+                      {items.products.map((item, index) => {
+                        const TotalPriceForProduct =
+                          item.price * item.quantityInCartItem;
+                        const formatTotalPriceForProduct =
+                          formatNumberWithCommas(TotalPriceForProduct);
+
+                        console.log("product", item);
+                        return (
+                          <div>
+                            <div className="mt-4 md:mt-6 flex  flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full ">
+                              <div className="pb-4 md:pb-8 w-full md:w-40">
+                                <img
+                                  className="w-full md:hidden"
+                                  src={item.images}
+                                  alt="dress"
+                                />
+                              </div>
+                              <div className="border-b border-gray-200 md:flex-row flex-col flex justify-between items-start w-full  pb-8 space-y-4 md:space-y-0">
+                                <div className="w-full flex flex-col justify-start items-start space-y-8">
+                                  <h3 className="text-xl xl:text-2xl font-semibold leading-6 text-gray-800">
+                                    {items.productName}
+                                  </h3>
+                                </div>
+                                <div className="flex justify-between space-x-8 items-start w-full">
+                                  <p className="text-base xl:text-lg leading-6">
+                                    ราคา {item.price} บาท
+                                  </p>
+                                  <p className="text-base xl:text-lg leading-6 text-gray-800">
+                                    {item.quantityInCartItem} จำนวน
+                                  </p>
+                                  <p className="text-base xl:text-lg font-semibold leading-6 text-gray-800">
+                                    {formatTotalPriceForProduct} บาท
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
-                    <div className="flex justify-between space-x-8 items-start w-full">
-                      <p className="text-base xl:text-lg leading-6">$36.00 </p>
-                      <p className="text-base xl:text-lg leading-6 text-gray-800">
-                        01
-                      </p>
-                      <p className="text-base xl:text-lg font-semibold leading-6 text-gray-800">
-                        $36.00
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-6 md:mt-0 flex justify-start flex-col md:flex-row  items-start md:items-center space-y-4  md:space-x-6 xl:space-x-8 w-full ">
-                  <div className="w-full md:w-40">
-                    <img
-                      className="w-full hidden md:block"
-                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXgCIuAJeV3avZiSnIR4aw3Wr9nxKf64uvrg&s"
-                      alt="dress"
-                    />
-                    <img
-                      className="w-full md:hidden"
-                      src="https://i.ibb.co/BwYWJbJ/Rectangle-10.png"
-                      alt="dress"
-                    />
-                  </div>
-                  <div className="  flex justify-between items-start w-full flex-col md:flex-row space-y-4 md:space-y-0  ">
-                    <div className="w-full flex flex-col justify-start items-start space-y-8">
-                      <h3 className="text-xl xl:text-2xl font-semibold leading-6 text-gray-800">
-                        ผลใช่
-                      </h3>
-                    </div>
-                    <div className="flex justify-between space-x-8 items-start w-full">
-                      <p className="text-base xl:text-lg leading-6">$20.00 </p>
-                      <p className="text-base xl:text-lg leading-6 text-gray-800">
-                        01
-                      </p>
-                      <p className="text-base xl:text-lg font-semibold leading-6 text-gray-800">
-                        $20.00
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                  ))}
               </div>
 
-              <div className="flex justify-center md:flex-row flex-col items-stretch w-full space-y-4 md:space-y-0 md:space-x-6 xl:space-x-8">
+              <div className="flex justify-center md:flex-row flex-col items-start w-full space-y-4 md:space-y-0 md:space-x-6 xl:space-x-8">
                 <div className="flex flex-col px-4 py-6 md:p-6 xl:p-8 w-full bg-white space-y-6 shadow-lg rounded-lg relative">
                   <h3 className="text-xl font-semibold leading-5 text-gray-800">
                     วิธีการชำระเงิน
@@ -231,6 +293,30 @@ export default observer(function SummaryScreen() {
                       </span>
                     </label>
                   </div>
+                  {selectedPaymentMethod === "slip" ? (
+                    <div>
+                      <div
+                        style={{ paddingLeft: "80px", marginTop: "20px" }}
+                        className="payment-form-container"
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            marginTop: "5px",
+                          }}
+                        >
+                          <DropZoneImageComponent
+                            onImageUpload={handleImageUpload}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <p>กรอกบัตรเครดิต</p>
+                    </div>
+                  )}
                 </div>
 
                 <div className=" shadow-md rounded-sm  flex flex-col px-4 py-6 md:p-6 xl:p-8 w-full bg-white space-y-6   ">
@@ -243,7 +329,7 @@ export default observer(function SummaryScreen() {
                         รายการทั้งหมด
                       </p>
                       <p className="text-base leading-4 text-gray-600">
-                        2 รายการ
+                        {cartItems.length} รายการ
                       </p>
                     </div>
                   </div>
@@ -252,20 +338,23 @@ export default observer(function SummaryScreen() {
                       ราคารวมทั้งหมด
                     </p>
                     <p className="text-base font-semibold leading-4 text-gray-600">
-                      $36.00
+                      {formattedTotalPrice} บาท
                     </p>
                   </div>
 
                   <div className="text-end">
                     <button
                       type="button"
+                      onClick={() => handleSubmit(selectMyCart)}
                       className="px-8 py-3 font-semibold rounded dark:bg-gray-800 dark:text-gray-100"
                     >
                       ชำระเงิน
                     </button>
                   </div>
                 </div>
+                
               </div>
+              
             </div>
           </div>
         </div>

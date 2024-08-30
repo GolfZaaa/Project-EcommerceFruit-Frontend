@@ -8,4 +8,6 @@ export const Order = {
     requests.post(`Order/ConfirmOrder`, createFormData(values)),
   cancelOrder: (values: any | undefined) =>
     requests.post(`Order/CancelOrder`, createFormData(values)),
+  CreateUpdateOrderById: (values: any | undefined) =>
+    requests.post(`Order/CreateUpdateOrderById`, createFormData(values)),
 };

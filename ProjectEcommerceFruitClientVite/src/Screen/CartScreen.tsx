@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Footer from "../layout/screen/Footer";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store/store";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { RoutePath } from "../constants/RoutePath";
 import BannerComponent from "../layout/component/BannerComponent";
 
@@ -26,6 +26,8 @@ const formatNumberWithCommas = (number: number) => {
 };
 
 export default observer(function CartScreen() {
+  const navigate = useNavigate();
+
   const {
     GetCartItemByUser,
     cartItems,
@@ -33,7 +35,10 @@ export default observer(function CartScreen() {
     cartItemsStore,
     RemoveToCart,
     AddToCart,
+    selectMyCart,
+    setselectMyCart,
   } = useStore().cartStore;
+
   const { getAddressgotoOrderByUserId } = useStore().addressStore;
 
   useEffect(() => {
@@ -43,7 +48,7 @@ export default observer(function CartScreen() {
   }, []);
 
   const calculateTotalPrice = () => {
-    return cartItemsStore.reduce((total, item: CartItem) => {
+    return selectMyCart.reduce((total, item: CartItem) => {
       const storeTotal = item.products.reduce(
         (storeSum: number, product: Product) => {
           return storeSum + product.quantityInCartItem * product.price;
@@ -92,6 +97,22 @@ export default observer(function CartScreen() {
     {}
   );
 
+  const [checkedItem, setCheckedItem] = useState<string | null>(null);
+
+  const handleCheckboxChange = (items: any, storeName: string) => {
+    console.log("items", items);
+    setCheckedItem((prevCheckedItem) =>
+      prevCheckedItem === storeName ? null : storeName
+    );
+    setselectMyCart(items);
+  };
+
+  const handleToOrderSummary = () => {
+    navigate(RoutePath.OrderSummary);
+  };
+
+  console.log("selectMyCart", selectMyCart);
+
   return (
     <div>
       <BannerComponent />
@@ -111,6 +132,15 @@ export default observer(function CartScreen() {
                   >
                     <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6">
                       <div className="space-y-4">
+                        <input
+                          type="checkbox"
+                          className="mr-2"
+                          checked={checkedItem === storeName}
+                          onChange={() =>
+                            handleCheckboxChange(items, storeName)
+                          }
+                        />
+
                         <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
                           ชื่อร้านค้า : {storeName}
                         </span>
@@ -127,20 +157,27 @@ export default observer(function CartScreen() {
                                   className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6"
                                 >
                                   <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
-                                    <a href="#" className="shrink-0 md:order-1">
-                                      <img
-                                        className="hidden h-20 w-20 dark:block"
-                                        src="https://shopee.co.th/blog/wp-content/uploads/2022/02/mango.jpg"
-                                        alt="product image"
-                                      />
-                                    </a>
+                                    <div className="flex items-center">
+                                      <a
+                                        href="#"
+                                        className="shrink-0 md:order-1"
+                                      >
+                                        <img
+                                          className="hidden h-20 w-20 dark:block"
+                                          src="https://shopee.co.th/blog/wp-content/uploads/2022/02/mango.jpg"
+                                          alt="product image"
+                                        />
+                                      </a>
+                                    </div>
                                     <label className="sr-only">
                                       Choose quantity:
                                     </label>
                                     <div className="flex items-center justify-between md:order-3 md:justify-end">
                                       <div className="flex items-center">
                                         <button
-                                          onClick={() => handleRemoveItem(item)}
+                                          onClick={() =>
+                                            handleRemoveItem(product)
+                                          }
                                           type="button"
                                           id="decrement-button"
                                           data-input-counter-decrement="counter-input"
@@ -265,12 +302,17 @@ export default observer(function CartScreen() {
                     </div>
                     <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-800"></dl>
                   </div>
-                  <NavLink
-                    to={RoutePath.OrderSummary}
-                    className="flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-green-500 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  <button
+                    onClick={handleToOrderSummary}
+                    disabled={!checkedItem}
+                    className={`flex w-full items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium text-white focus:outline-none focus:ring-4 ${
+                      !checkedItem
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 dark:bg-green-500 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                    }`}
                   >
                     ดำเนินการชำระเงิน
-                  </NavLink>
+                  </button>
                   <div className="flex items-center justify-center gap-2">
                     <span className="text-sm font-normal text-gray-800 dark:text-gray-800">
                       {" "}
