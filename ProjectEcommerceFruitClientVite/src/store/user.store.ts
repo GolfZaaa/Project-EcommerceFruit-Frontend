@@ -13,6 +13,7 @@ interface RegisterInterface {
 
 export default class UserStore {
   user: User | null = null;
+  userAll: User[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -66,6 +67,16 @@ export default class UserStore {
       const user = await agent.User.editUser(values);
       this.getUserDetailbyId();
       this.user = user;
+      return user;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  getUserAll = async () => {
+    try {
+      const user = await agent.User.getUserAll();
+      this.userAll = user;
       return user;
     } catch (error) {
       return error;

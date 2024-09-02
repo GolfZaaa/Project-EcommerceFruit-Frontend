@@ -21,6 +21,9 @@ export const RoutePath = {
   addressScreen: `${HOST}Address-screen`,
   summaryScreen: `${HOST}summary-screen`,
 
+  dashboardforuser: `${HOST}dashboard-for-user`,
+
+
   productDetail: (id: string) => `${HOST}product-detail-screen/${id}`,
 
   createshop: `${HOST}create-shop`,

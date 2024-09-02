@@ -17,6 +17,8 @@ interface User {
 
 export default class ShopUserStore {
   usershop: Store | null = null;
+  shopAll: Store[] = [];
+
 
   constructor() {
     makeAutoObservable(this);
@@ -37,6 +39,16 @@ export default class ShopUserStore {
     try {
       const func = await agent.Shop.GetShopByUserId();
       this.usershop = func;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  getStoreAll = async () => {
+    try {
+      const result = await agent.Shop.GetStoreAll();
+      this.shopAll = result;
+      return result;
     } catch (error) {
       return error;
     }

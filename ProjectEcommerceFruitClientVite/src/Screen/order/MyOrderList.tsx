@@ -194,7 +194,8 @@ const MyOrderList = () => {
   ];
 
   return (
-    <Box
+    <div className="-mt-12">
+      <Box
       display="flex"
       flexDirection="column"
       alignItems="center"
@@ -256,6 +257,7 @@ const MyOrderList = () => {
         <MyOrderCard order={order.filter((item) => item.status === 2)} />
       </CustomTabPanel>
     </Box>
+    </div>
   );
 };
 

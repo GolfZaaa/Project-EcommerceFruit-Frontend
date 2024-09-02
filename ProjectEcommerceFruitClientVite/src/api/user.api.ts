@@ -5,4 +5,5 @@ export const User = {
   editUser: (values: any) => requests.post("Auth/EditUser", values),
   Login: (value: any) => requests.post("Auth/Login", value),
   Register: (value: any) => requests.post("Auth/Register", value),
+  getUserAll: () => requests.get("Auth/UserAll"),
 };

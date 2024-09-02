@@ -7,17 +7,45 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { observer } from "mobx-react-lite";
-import { useStore } from "../../../store/store";
 import { NavLink } from "react-router-dom";
 import { RoutePath } from "../../../constants/RoutePath";
+import DashboardAdminShowUser from "./DashboardAdminShowUser";
+import DashboardAdminShowStore from "./DashboardAdminShowStore";
+import { useStore } from "../../../store/store";
+import DashboardAdminShowProduct from "./DashboardAdminShowProduct";
 
 export default observer(function DashboardAdminHomePageScreen() {
   const [show, setShow] = useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const { getStoreAll, shopAll } = useStore().shopuserStore;
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  const [screenComponent, setScreenComponent] = useState("DashboardAdminShowUser");
+
+  const renderScreens = () => {
+    switch (screenComponent) {
+      case "DashboardAdminShowUser":
+        return <DashboardAdminShowUser />;
+        case "DashboardAdminShowStore":
+          return <DashboardAdminShowStore />;
+          case "DashboardAdminShowProduct":
+            return <DashboardAdminShowProduct />;
+      default:
+    }
+  };
+
+  const handleDashboardAdminShowStore = () => {
+    getStoreAll()
+    setScreenComponent("DashboardAdminShowStore")
+  }
+
+  const handleDashboardAdminShowProduct = () => {
+    setScreenComponent("DashboardAdminShowProduct")
+  }
+  
 
   return (
     <div className="flex">
@@ -155,7 +183,7 @@ export default observer(function DashboardAdminHomePageScreen() {
             } bg-white transform  xl:translate-x-0 ease-in-out transition duration-500 flex justify-start items-start w-full sm:w-72   flex-col h-full`}
           >
             <div className="xl:mt-6 flex flex-col justify-start items-start  px-4 w-full space-y-3 pb-5 ">
-              <button className="focus:outline-none flex jusitfy-start hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4 items-center space-x-6 w-full ">
+              <button onClick={() => setScreenComponent("DashboardAdminShowUser")}  className="focus:outline-none flex jusitfy-start hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4 items-center space-x-6 w-full ">
                 <svg
                   className="fill-stroke "
                   width={24}
@@ -195,7 +223,7 @@ export default observer(function DashboardAdminHomePageScreen() {
                 </svg>
                 <p className="text-base leading-4 ">ข้อมูลผู้ใช้งาน</p>
               </button>
-              <button className="focus:outline-none flex jusitfy-start hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4  items-center w-full  space-x-6">
+              <button onClick={handleDashboardAdminShowStore} className="focus:outline-none flex jusitfy-start hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4  items-center w-full  space-x-6">
                 <svg
                   width={24}
                   height={24}
@@ -218,7 +246,46 @@ export default observer(function DashboardAdminHomePageScreen() {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <p className="text-base leading-4 ">ข้อมูลร้านค้าทั้งหมด</p>
+                <p  className="text-base leading-4 ">ข้อมูลร้านค้าทั้งหมด</p>
+              </button>
+              <button onClick={handleDashboardAdminShowProduct} className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full ">
+                <svg
+                  width={24}
+                  height={24}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 19C10.2091 19 12 17.2091 12 15C12 12.7909 10.2091 11 8 11C5.79086 11 4 12.7909 4 15C4 17.2091 5.79086 19 8 19Z"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M10.85 12.15L19 4"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M18 5L20 7"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M15 8L17 10"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <p className="text-base leading-4  ">ข้อมูลสินค้าทั้งหมด</p>
               </button>
               <button className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full ">
                 <svg
@@ -257,7 +324,7 @@ export default observer(function DashboardAdminHomePageScreen() {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <p className="text-base leading-4  ">ข้อมูลสินค้าทั้งหมด</p>
+                <p className="text-base leading-4  ">ข้อมูล GI ทั้งหมด</p>
               </button>
               <button className="flex justify-start items-center space-x-6 hover:text-white focus:outline-none focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4  w-full ">
                 <svg
@@ -403,7 +470,9 @@ export default observer(function DashboardAdminHomePageScreen() {
           </div>
         </div>
       </div>
-      <div className="flex-1 bg-gray-50"></div>
+      <div className="flex-1 bg-gray-50">
+      {renderScreens()}
+      </div>
     </div>
   );
 });

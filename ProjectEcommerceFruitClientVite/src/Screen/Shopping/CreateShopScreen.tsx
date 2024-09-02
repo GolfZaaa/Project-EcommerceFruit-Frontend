@@ -96,7 +96,8 @@ export default observer(function CreateShopScreen() {
   };
 
   return (
-    <Container maxWidth="md">
+   <div className="-mt-16">
+     <Container maxWidth="md">
       <Box
         display="flex"
         flexDirection="column"
@@ -204,5 +205,6 @@ export default observer(function CreateShopScreen() {
         </Card>
       </Box>
     </Container>
+   </div>
   );
 });

@@ -173,7 +173,7 @@ const ProductGIList = () => {
   };
 
   return (
-    <>
+    <div className="-mt-16">
       {onCreate ? (
         <CreateFruitGIScreen onChangeCU={onChangeCU} dataEdit={dataEdit} />
       ) : (
@@ -341,7 +341,7 @@ const ProductGIList = () => {
           </Box>
         </Container>
       )}
-    </>
+    </div>
   );
 };
 

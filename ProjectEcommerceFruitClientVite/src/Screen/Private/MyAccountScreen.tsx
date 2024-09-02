@@ -21,6 +21,7 @@ import { RoutePath } from "../../constants/RoutePath";
 import AddressList from "../address/AddressList";
 import MyOrderList from "../order/MyOrderList";
 import EditAccount from "../my/EditAccount";
+import DashboardForUser from "../my/DashboardForUser";
 
 const drawerWidth = 240;
 
@@ -28,7 +29,7 @@ const MyAccountScreen = () => {
   const { getAddressByUserId } = useStore().addressStore;
   const { getUserDetailbyId } = useStore().userStore;
 
-  const [screenComponent, setScreenComponent] = useState("my-account");
+  const [screenComponent, setScreenComponent] = useState("my-dashboard");
 
   useEffect(() => {
     getAddressByUserId();
@@ -43,49 +44,64 @@ const MyAccountScreen = () => {
         return <MyOrderList />;
       case "my-account":
         return <EditAccount />;
+        case "my-dashboard":
+          return <DashboardForUser />;
       default:
     }
   };
 
   const drawer = (
-    <>
-      <div>
-        {/* <Toolbar /> */}
-        {/* <Divider /> */}
-        <List
-          style={{
-            cursor: "pointer",
-          }}
-        >
-          <ListItem onClick={() => setScreenComponent("my-account")}>
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="ข้อมูลส่วนตัว" />
-          </ListItem>
-          <Collapse timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem component={Link} to={RoutePath.firstscreen}>
-                <ListItemText primary="my account Home" sx={{ pl: 4 }} />
-              </ListItem>
-            </List>
-          </Collapse>
-          <ListItem onClick={() => setScreenComponent("addressList")}>
-            <ListItemIcon>
-              <ShoppingCartIcon />
-            </ListItemIcon>
-            <ListItemText primary="ที่อยู่" />
-          </ListItem>
-          <ListItem onClick={() => setScreenComponent("orderList")}>
-            <ListItemIcon>
-              <PeopleIcon />
-            </ListItemIcon>
-            <ListItemText primary="คำสั่งซื้อ" />
-          </ListItem>
-        </List>
-      </div>
-      <Divider orientation="vertical" />
-    </>
+    <Box sx={{ display: "flex" }}>
+      <List
+      >
+
+<ListItem  style={{
+          cursor: "pointer",
+        }} onClick={() => setScreenComponent("my-dashboard")}>
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="แดชบอร์ด" />
+        </ListItem>
+
+
+        <ListItem  style={{
+          cursor: "pointer",
+        }} onClick={() => setScreenComponent("my-account")}>
+          <ListItemIcon>
+            <DashboardIcon />
+          </ListItemIcon>
+          <ListItemText primary="ข้อมูลส่วนตัว" />
+        </ListItem>
+        <Collapse timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItem  component={Link} to={RoutePath.firstscreen}>
+              <ListItemText primary="my account Home" sx={{ pl: 4 }} />
+            </ListItem>
+          </List>
+        </Collapse>
+        <ListItem  style={{
+          cursor: "pointer",
+        }} onClick={() => setScreenComponent("addressList")}>
+          <ListItemIcon>
+            <ShoppingCartIcon />
+          </ListItemIcon>
+          <ListItemText primary="ที่อยู่" />
+        </ListItem>
+        <ListItem  style={{
+          cursor: "pointer",
+        }} onClick={() => setScreenComponent("orderList")}>
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="คำสั่งซื้อ" />
+        </ListItem>
+
+     
+
+      </List>
+      <Divider orientation="vertical" flexItem sx={{ height: "100vh" }} />
+    </Box>
   );
 
   return (

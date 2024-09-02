@@ -17,6 +17,7 @@ import MyAccountScreen from "../Screen/Private/MyAccountScreen";
 import SummaryScreen from "../Screen/SummaryScreen";
 import OrderSummary from "../Screen/order/OrderSummary";
 import SuccessComponent from "../layout/component/SuccessComponent";
+import DashboardForUser from "../Screen/my/DashboardForUser";
 
 export const PublicRoute: any = [
   {
@@ -108,5 +109,10 @@ export const PublicRoute: any = [
     id: 17,
     path: "/order-success-screen",
     element: <SuccessComponent />,
+  },
+  {
+    id: 18,
+    path: "/dashboard-for-user",
+    element: <DashboardForUser />,
   },
 ];

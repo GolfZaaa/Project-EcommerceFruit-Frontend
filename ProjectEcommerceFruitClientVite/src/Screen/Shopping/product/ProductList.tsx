@@ -134,8 +134,6 @@ const ProductList = () => {
   useEffect(() => {
     getProductByStore(user?.stores[0].id || 0);
   }, [open, onCreate]);
-
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - product.length) : 0;
 
@@ -174,8 +172,9 @@ const ProductList = () => {
     setOpen(false);
   };
 
+
   return (
-    <>
+    <div className="-mt-16">
       {onCreate ? (
         <CreateProductScreen onChangeCU={onChangeCU} dataEdit={dataEdit} />
       ) : (
@@ -366,7 +365,7 @@ const ProductList = () => {
           </Box>
         </Container>
       )}
-    </>
+    </div>
   );
 };
 
