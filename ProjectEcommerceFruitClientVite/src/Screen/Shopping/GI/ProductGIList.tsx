@@ -157,7 +157,6 @@ const ProductGIList = () => {
 
   const columns = [
     { id: "name", label: "ชื่อ" },
-    { id: "description", label: "ข้อมูลเพิ่มเติม" },
     { id: "category", label: "ประเภท" },
     { id: "edit", label: "ตัวเลือก" },
     { id: "remove", label: "ตัวเลือก" },
@@ -240,12 +239,6 @@ const ProductGIList = () => {
                     <TableRow key={row.name}>
                       <TableCell component="th" scope="row">
                         {row.name}
-                      </TableCell>
-                      <TableCell
-                      // style={{ width: 160 }}
-                      //   align="right"
-                      >
-                        {HTMLReactParser(row.description)}
                       </TableCell>
                       <TableCell>{row?.category?.name}</TableCell>
                       <TableCell style={{ width: 100 }}>

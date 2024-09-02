@@ -20,6 +20,13 @@ import { observer } from "mobx-react-lite";
 import { Images, ProductGI } from "../../models/ProductGI";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { DropzoneArea } from "mui-file-dropzone";
+import { pathImages } from "../../constants/RoutePath";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 interface props {
   onChangeCU: any;
@@ -30,7 +37,7 @@ export default observer(function CreateFruitGIScreen({
   onChangeCU,
   dataEdit,
 }: props) {
-  const { category, getCategory, createUpdateProductGI } =
+  const { category, getCategory, createUpdateProductGI, removeImage } =
     useStore().productStore;
 
   const [editorHtml, setEditorHtml] = React.useState(
@@ -50,13 +57,16 @@ export default observer(function CreateFruitGIScreen({
 
   const [files, setFiles] = useState<File[] | string[] | null | any>(
     dataEdit?.id !== undefined
-      ? dataEdit.images.map(
-          (item) => "https://localhost:7168/product-gi/" + item.imageName
-        )
+      ? dataEdit.images.map((item) => ({
+          id: item.id,
+          name: pathImages.product_GI + item.imageName,
+        }))
       : []
   );
 
   const [newFiles, setNewFiles] = useState<File[] | string[] | null | any>([]);
+
+  const [open, setOpen] = React.useState(false);
 
   const handleChangeFile = (uploadedFiles: File[]) => {
     setNewFiles(uploadedFiles);
@@ -111,7 +121,7 @@ export default observer(function CreateFruitGIScreen({
     setSelectCate(id);
   };
 
-  console.log("newFiles", newFiles);
+  const handleOpenClose = (state: boolean) => setOpen(state);
 
   return (
     // <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
@@ -206,13 +216,56 @@ export default observer(function CreateFruitGIScreen({
           >
             <Grid container spacing={2}>
               {files?.map((url: any, index: number) => (
-                <Grid item xs={2}>
+                <Grid item xs={2} className="product-image-container">
+                  <div className="delete-icon">
+                    <DeleteIcon
+                      style={{
+                        position: "relative",
+                      }}
+                      onClick={() => handleOpenClose(true)}
+                      color="action"
+                    />
+                  </div>
+
                   <img
-                    style={{}}
+                    className="product-image"
                     key={index}
-                    src={url}
+                    src={url.name}
                     alt={`Product image ${index + 1}`}
                   />
+                  <Dialog
+                    open={open}
+                    onClose={() => handleOpenClose(false)}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      {"ลบข้อมูลนี้ออกจากฐานข้อมูล"}
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                        ลบข้อมูลนี้ออกจากฐานข้อมูล ยืนยันเพื่อลบ
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={() => handleOpenClose(false)}>
+                        ยกเลิก
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          removeImage(url.id).then(() => {
+                            setFiles(
+                              files.filter((file: any) => file.id !== url.id)
+                            );
+                          });
+                          handleOpenClose(false);
+                        }}
+                        autoFocus
+                      >
+                        ยืนยัน
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
                 </Grid>
               ))}
             </Grid>

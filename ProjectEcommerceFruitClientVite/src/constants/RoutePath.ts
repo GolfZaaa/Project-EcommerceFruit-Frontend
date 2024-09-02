@@ -31,7 +31,6 @@ export const RoutePath = {
 
   // private routes Dashboard Admin
   dashboardAdminHomePageScreen: `${HOST}dashboard-admin-homePage-screen`,
-
 };
 
 const path = config.baseURL ?? "https://localhost:7168/";
@@ -39,4 +38,5 @@ const path = config.baseURL ?? "https://localhost:7168/";
 export const pathImages = {
   paymentImage: `${path}paymentImage/`,
   product_GI: `${path}product-gi/`,
+  product: `${path}product/`,
 };

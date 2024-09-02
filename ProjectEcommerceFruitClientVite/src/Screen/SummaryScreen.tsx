@@ -31,7 +31,6 @@ export default observer(function SummaryScreen() {
   const [shippingType, setShippingType] = useState("asd");
   const [tag, setTag] = useState("xzc");
 
-
   const {
     myAddressgotoOrder,
     getAddressgotoOrderByUserId,
@@ -43,7 +42,7 @@ export default observer(function SummaryScreen() {
     cartItems,
     GetCartItemByUserOrderStore,
     cartItemsStore,
-    selectMyCart
+    selectMyCart,
   } = useStore().cartStore;
 
   const { CreateUpdateOrderById } = useStore().orderStore;
@@ -81,32 +80,26 @@ export default observer(function SummaryScreen() {
   const totalPrice = calculateTotalPrice();
   const formattedTotalPrice = formatNumberWithCommas(totalPrice);
 
-
-
   const handleImageUpload = (file: any) => {
     setDropZoneImage(file);
   };
 
-
-  const handleSubmit = async (value:any) => {
+  const handleSubmit = async (value: any) => {
     const Data = {
       PaymentImage: dropZoneImage,
       ShippingType: shippingType,
       Tag: tag,
       StoreId: value[0].storeId,
+    };
+    console.log("data", Data);
+    const test = await CreateUpdateOrderById(Data);
+    if (test === true) {
+      navigate(RoutePath.successScreen);
+    } else {
+      alert("error");
     }
-    console.log("data",Data)
-    const test = await CreateUpdateOrderById(Data)
-    if(test === true){
-      navigate(RoutePath.successScreen)
-    }else{
-      alert("error")
-    }
-    console.log("test", test)
-  }
-
-
-
+    console.log("test", test);
+  };
 
   return (
     <div className="bg-gray-50 -mt-8">
@@ -186,9 +179,9 @@ export default observer(function SummaryScreen() {
                   ตะกร้าสินค้า
                 </p>
                 {selectMyCart &&
-                  selectMyCart.map((items: CartItem, index) => (
+                  selectMyCart.map((items: CartItem) => (
                     <div>
-                      {items.products.map((item, index) => {
+                      {items.products.map((item) => {
                         const TotalPriceForProduct =
                           item.price * item.quantityInCartItem;
                         const formatTotalPriceForProduct =
@@ -352,9 +345,7 @@ export default observer(function SummaryScreen() {
                     </button>
                   </div>
                 </div>
-                
               </div>
-              
             </div>
           </div>
         </div>

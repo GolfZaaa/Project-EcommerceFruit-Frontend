@@ -157,8 +157,8 @@ export default observer(function HomeScreen() {
                       <StyledCardMedia
                         component="img"
                         alt={product.productGI.name}
-                        image={products[i % 3].imageUrl}
-                        // image={pathImages.product_GI + product.image}
+                        // image={products[i % 3].imageUrl}
+                        image={pathImages.product + product.images}
                       />
                     </a>
                     <StyledCardContent>

@@ -72,8 +72,9 @@ export default observer(function LoginScreen() {
         setCheckToast("Login Success");
         setTimeout(() => {
           setShowToast(false);
-          navigate(RoutePath.homeScreen);
         }, 2000);
+
+        navigate(RoutePath.homeScreen);
         await getUserDetailbyId();
       }
     } else {

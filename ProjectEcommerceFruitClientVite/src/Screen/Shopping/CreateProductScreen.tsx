@@ -21,6 +21,7 @@ import { Product } from "../../models/Product";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import DropZoneImageComponent from "../../layout/component/DropZoneImageComponent";
 
 interface props {
   onChangeCU?: any | null;
@@ -40,6 +41,8 @@ export default observer(function CreateProductScreen({
     dataEdit?.productGIId || null
   );
 
+  const [dropZoneImage, setDropZoneImage] = useState(null);
+
   useEffect(() => {
     getProductGI();
   }, []);
@@ -55,14 +58,15 @@ export default observer(function CreateProductScreen({
 
     const dataForm = {
       id: dataEdit?.id || 0,
-      // images: null,
-      weight: formData.weight,
-      quantity: formData.quantity,
-      price: formData.price,
-      detail: editorHtml,
+      images: dropZoneImage || null,
+      weight: parseFloat(formData.weight),
+      quantity: parseInt(formData.quantity),
+      price: parseFloat(formData.price),
+      detail: editorHtml || "<p></p>",
       productGIId: selectGI,
     };
 
+    console.log("formData", formData);
     console.log("dataForm", dataForm);
 
     await createUpdateProduct(dataForm).then((result) => {
@@ -99,6 +103,10 @@ export default observer(function CreateProductScreen({
     setSelectGI(id);
   };
 
+  const handleImageUpload = (file: any) => {
+    setDropZoneImage(file);
+  };
+
   return (
     <Box
       display="flex"
@@ -123,71 +131,91 @@ export default observer(function CreateProductScreen({
           </Grid>
           <Grid item xs={11} />
         </Grid>
+
         <CardContent>
           <Typography variant="h4" component="h1" gutterBottom align="center">
             สร้างสินค้า
           </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <FormControl fullWidth variant="outlined" margin="normal">
-                <InputLabel>ข้อมูลผลไม้ (GI)</InputLabel>
-                <Select
-                  defaultValue={dataEdit?.productGIId}
-                  label="ข้อมูลผลไม้ (GI)"
-                >
-                  {productGI.map((item) => (
-                    <MenuItem
-                      key={item.id}
-                      value={item.id}
-                      onClick={() => onSelectGI(item.id)}
-                    >
-                      {item.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                defaultValue={dataEdit?.weight}
-                type="number"
-                fullWidth
-                label="น้ำหนัก"
-                variant="outlined"
-                margin="normal"
-                name="weight"
-                autoFocus
-                required
-              />
-            </Grid>
-          </Grid>
 
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <TextField
-                defaultValue={dataEdit?.price}
-                type="number"
-                fullWidth
-                label="ราคา"
-                variant="outlined"
-                margin="normal"
-                name="price"
-                autoFocus
-                required
-              />
+              <div
+                style={{ paddingLeft: "80px", marginTop: "20px" }}
+                className="payment-form-container"
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "5px",
+                  }}
+                >
+                  <DropZoneImageComponent
+                    image={dataEdit?.images}
+                    onImageUpload={handleImageUpload}
+                  />
+                </div>
+              </div>
             </Grid>
             <Grid item xs={6}>
-              <TextField
-                defaultValue={dataEdit?.quantity}
-                type="number"
-                fullWidth
-                label="จำนวน"
-                variant="outlined"
-                margin="normal"
-                name="quantity"
-                autoFocus
-                required
-              />
+              <Grid>
+                <FormControl fullWidth variant="outlined" margin="normal">
+                  <InputLabel>ข้อมูลผลไม้ (GI)</InputLabel>
+                  <Select
+                    defaultValue={dataEdit?.productGIId}
+                    label="ข้อมูลผลไม้ (GI)"
+                  >
+                    {productGI.map((item) => (
+                      <MenuItem
+                        key={item.id}
+                        value={item.id}
+                        onClick={() => onSelectGI(item.id)}
+                      >
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid>
+                <TextField
+                  defaultValue={dataEdit?.weight}
+                  type="number"
+                  fullWidth
+                  label="น้ำหนัก"
+                  variant="outlined"
+                  margin="normal"
+                  name="weight"
+                  autoFocus
+                  required
+                />
+              </Grid>
+              <Grid>
+                <TextField
+                  defaultValue={dataEdit?.price}
+                  type="number"
+                  fullWidth
+                  label="ราคา"
+                  variant="outlined"
+                  margin="normal"
+                  name="price"
+                  autoFocus
+                  required
+                />
+              </Grid>
+              <Grid>
+                <TextField
+                  defaultValue={dataEdit?.quantity}
+                  type="number"
+                  fullWidth
+                  label="จำนวน"
+                  variant="outlined"
+                  margin="normal"
+                  name="quantity"
+                  autoFocus
+                  required
+                />
+              </Grid>
             </Grid>
           </Grid>
 

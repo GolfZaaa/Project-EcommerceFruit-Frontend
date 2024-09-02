@@ -37,6 +37,7 @@ import { Product } from "../../../models/Product";
 import HTMLReactParser from "html-react-parser/lib/index";
 import EditIcon from "@mui/icons-material/Edit";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { pathImages } from "../../../constants/RoutePath";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -154,7 +155,7 @@ const ProductList = () => {
 
   const columns = [
     { id: "name", label: "ชื่อ" },
-    { id: "description", label: "ข้อมูลเพิ่มเติม" },
+    { id: "description", label: "รูปภาพ" },
     { id: "category", label: "ประเภท" },
     { id: "price", label: "ราคา" },
     { id: "weight", label: "น้ำหนัก (กิโลกรัม)" },
@@ -242,10 +243,22 @@ const ProductList = () => {
                         {row.productGI.name}
                       </TableCell>
                       <TableCell
-                      // style={{ width: 160 }}
-                      //   align="right"
+                        style={{ color: "red" }}
+                        //   align="right"
                       >
-                        {HTMLReactParser(row.detail)}
+                        {row.images ? (
+                          <img
+                            src={pathImages.product + row.images}
+                            alt="product-image"
+                            style={{
+                              width: "250px",
+                              height: "200px",
+                              objectFit: "contain",
+                            }}
+                          />
+                        ) : (
+                          "ไม่มีรูปภาพ"
+                        )}
                       </TableCell>
                       <TableCell>{row?.productGI?.category.name}</TableCell>
                       <TableCell>{row?.price}</TableCell>
@@ -301,10 +314,11 @@ const ProductList = () => {
                         <DialogActions>
                           <Button onClick={handleClose}>ยกเลิก</Button>
                           <Button
-                            onClick={() => {
-                              removeProduct(row.id);
-                              getProductByStore(user?.stores[0].id || 0);
-                              handleClose();
+                            onClick={async () => {
+                              await removeProduct(row.id).then(() => {
+                                getProductByStore(user?.stores[0].id || 0);
+                                handleClose();
+                              });
                             }}
                             autoFocus
                           >

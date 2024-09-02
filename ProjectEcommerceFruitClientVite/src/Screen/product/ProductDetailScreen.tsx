@@ -4,19 +4,32 @@ import { useLocation, useParams } from "react-router-dom";
 import { useStore } from "../../store/store";
 import { Button, Typography, Box } from "@mui/material";
 import ToastAddToCart from "../../layout/component/ToastAddToCart";
+import { pathImages } from "../../constants/RoutePath";
+
 export default observer(function ProductDetailScreen() {
   const { getProductById, productDetail } = useStore().productStore;
 
   const { AddToCart, GetCartItemByUser } = useStore().cartStore;
   const [showToast, setShowToast] = useState(false);
 
+  const [preViewImage, setPreViewImage] = useState(
+    productDetail && pathImages.product + productDetail?.images
+  );
+
   const { id } = useParams<{ id: any }>();
 
   useEffect(() => {
-    getProductById(id);
-  }, []);
+    const getProduct = async () => {
+      await getProductById(id);
+    };
 
-  const [quantity, setQuantity] = useState(1);
+    getProduct();
+    setPreViewImage(
+      productDetail && pathImages.product + productDetail?.images
+    );
+  }, [id]);
+
+  const [quantity, setQuantity] = useState<number>(1);
 
   const increaseQuantity = () => {
     setQuantity(quantity + 1);
@@ -31,7 +44,7 @@ export default observer(function ProductDetailScreen() {
       const ProductId = productDetail?.id;
       const Quantity = quantity;
       console.log("ProductId", ProductId, "Quantity", Quantity);
-      const result = await AddToCart({ ProductId, Quantity, CartItemId: 1 });
+      const result = await AddToCart({ ProductId, Quantity });
       console.log("Reusult", result);
       if (result) {
         await GetCartItemByUser();
@@ -61,25 +74,25 @@ export default observer(function ProductDetailScreen() {
       <div className="xl:w-2/6 lg:w-2/5 w-80 md:block hidden">
         <img
           className="w-full"
-          alt="img of a girl posing"
-          src="https://media.komchadluek.net/uploads/images/contents/w1024/2022/04/y6VZFGYAEI7QZPt9qIar.webp?x-image-process=style/lg-webp"
+          alt="image main"
+          src={pathImages.product + productDetail?.images}
         />
-        <div className="flex  justify-between mt-2 space-x-4">
-          <img
-            alt="img-tag-one"
-            className="md:w-24 md:h-24 "
-            src="https://media.komchadluek.net/uploads/images/contents/w1024/2022/04/y6VZFGYAEI7QZPt9qIar.webp?x-image-process=style/lg-webp"
-          />
-          <img
-            alt="img-tag-one"
-            className="md:w-24 md:h-24 "
-            src="https://media.komchadluek.net/uploads/images/contents/w1024/2022/04/y6VZFGYAEI7QZPt9qIar.webp?x-image-process=style/lg-webp"
-          />
-          <img
-            alt="img-tag-one"
-            className="md:w-24 md:h-24 "
-            src="https://media.komchadluek.net/uploads/images/contents/w1024/2022/04/y6VZFGYAEI7QZPt9qIar.webp?x-image-process=style/lg-webp"
-          />
+        <div className="flex mt-2 space-x-4">
+          {productDetail?.productGI.images.map((item) => (
+            <img
+              alt="img-tag-one"
+              className="md:w-24 md:h-24 "
+              onClick={() =>
+                setPreViewImage(
+                  preViewImage === pathImages.product_GI + item.imageName
+                    ? pathImages.product + productDetail?.images
+                    : pathImages.product_GI + item.imageName
+                )
+              }
+              src={pathImages.product_GI + item.imageName}
+            />
+          ))}
+
           {/* <img
             alt="img-tag-one"
             className="md:w-24 md:h-24 "

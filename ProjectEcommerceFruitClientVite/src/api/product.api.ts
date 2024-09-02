@@ -6,7 +6,7 @@ export const Product = {
   getProductByStore: (storeId: number) =>
     requests.get(`Product/GetProductByStore?storeId=${storeId}`),
   createUpdateProduct: (values: any) =>
-    requests.post(`Product/CreateUpdateProduct`, values),
+    requests.post(`Product/CreateUpdateProduct`, createFormData(values)),
   getProductById: (productId: number) =>
     requests.get(`Product/GetProductById?productId=${productId}`),
   removeProduct: (productId: number) =>
@@ -29,6 +29,8 @@ export const Product = {
   },
   removeProductGI: (id: number) =>
     requests.delete(`ProductGI/RemoveProductGI?productGIId=${id}`),
+  removeImage: (id: number) =>
+    requests.delete(`ProductGI/RemoveImage?productGiId=${id}`),
 
   //-------------------------------------------- category ----------------------------------------------------//
 

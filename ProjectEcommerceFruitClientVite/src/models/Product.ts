@@ -4,7 +4,7 @@ import { ProductGI } from "./ProductGI";
 
 export interface Product {
   id: number;
-  image: string | null;
+  images: string | null;
   weight: number;
   quantity: number;
   price: number;
