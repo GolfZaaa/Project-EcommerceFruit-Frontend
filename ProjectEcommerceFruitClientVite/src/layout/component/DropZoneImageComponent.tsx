@@ -39,13 +39,13 @@ function DropZoneImageComponent({ image = null, onImageUpload }: any) {
             <img
               src={pathImages.product + image}
               alt="product-image"
-              style={{ width: "250px", height: "200px", objectFit: "contain" }}
+              style={{ objectFit: "contain" }}
             />
           ) : imageUri ? (
             <img
               src={imageUri.uri}
               alt="Selected"
-              style={{ width: "250px", height: "200px", objectFit: "contain" }}
+              style={{ objectFit: "contain" }}
             />
           ) : (
             <div

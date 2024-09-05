@@ -13,6 +13,15 @@ export default class ProductStore {
     makeAutoObservable(this);
   }
 
+  searchProduct = async (productName: string) => {
+    try {
+      const result = await agent.Product.searchProduct(productName);
+      this.product = result;
+    } catch (error) {
+      return error;
+    }
+  };
+
   getProduct = async (categoryId: number) => {
     try {
       const result = await agent.Product.getProduct(categoryId);

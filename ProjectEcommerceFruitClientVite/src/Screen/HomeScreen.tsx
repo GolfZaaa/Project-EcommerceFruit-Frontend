@@ -15,6 +15,7 @@ import {
   Checkbox,
   FormGroup,
   FormControlLabel,
+  TextField,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useStore } from "../store/store";
@@ -26,8 +27,10 @@ import Loading from "../layout/component/LoadingComponent";
 export default observer(function HomeScreen() {
   const navigate = useNavigate();
 
-  const { product, getProduct, category, getCategory } =
+  const { product, getProduct, category, getCategory, searchProduct } =
     useStore().productStore;
+
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     getProduct(0);
@@ -101,6 +104,14 @@ export default observer(function HomeScreen() {
     return <Loading />;
   }
 
+  const onChangeSearch = (event: string) => {
+    setSearch(event);
+  };
+
+  const onSearch = () => {
+    searchProduct(search);
+  };
+
   return (
     <>
       <Container maxWidth="xl">
@@ -142,7 +153,34 @@ export default observer(function HomeScreen() {
               />
             </FormGroup>
           </FilterSection>
+
           <ContentSection>
+            <Grid container spacing={2}>
+              <Grid item xs={10}>
+                <TextField
+                  fullWidth
+                  label="ค้นหา"
+                  variant="outlined"
+                  margin="normal"
+                  onChange={(e) => onChangeSearch(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={2} sx={{ justifyContent: "center" }}>
+                <Button
+                  type="button"
+                  onClick={onSearch}
+                  style={{
+                    marginTop: 16,
+                    padding: "16px",
+                  }}
+                  variant="contained"
+                  fullWidth
+                >
+                  ค้นหา
+                </Button>
+              </Grid>
+            </Grid>
+
             <Typography variant="h4" gutterBottom align="left">
               สินค้าจำนวน ({product.length}) ชิ้น
             </Typography>
@@ -152,7 +190,9 @@ export default observer(function HomeScreen() {
                   <StyledCard>
                     <a
                       onClick={() => NavigateDetail(product)}
-                      style={{ textDecoration: "none" }}
+                      style={{
+                        cursor: "pointer",
+                      }}
                     >
                       <StyledCardMedia
                         component="img"

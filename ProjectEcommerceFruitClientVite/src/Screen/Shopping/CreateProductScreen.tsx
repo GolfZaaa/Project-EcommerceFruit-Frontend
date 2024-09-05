@@ -22,6 +22,8 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import DropZoneImageComponent from "../../layout/component/DropZoneImageComponent";
+// import { makeStyles } from "@material-ui/core/styles";
+import dayjs from "dayjs";
 
 interface props {
   onChangeCU?: any | null;
@@ -62,6 +64,7 @@ export default observer(function CreateProductScreen({
       weight: parseFloat(formData.weight),
       quantity: parseInt(formData.quantity),
       price: parseFloat(formData.price),
+      expire: formData.dateTime,
       detail: editorHtml || "<p></p>",
       productGIId: selectGI,
     };
@@ -186,7 +189,6 @@ export default observer(function CreateProductScreen({
                   variant="outlined"
                   margin="normal"
                   name="weight"
-                  autoFocus
                   required
                 />
               </Grid>
@@ -199,7 +201,6 @@ export default observer(function CreateProductScreen({
                   variant="outlined"
                   margin="normal"
                   name="price"
-                  autoFocus
                   required
                 />
               </Grid>
@@ -212,8 +213,23 @@ export default observer(function CreateProductScreen({
                   variant="outlined"
                   margin="normal"
                   name="quantity"
-                  autoFocus
                   required
+                />
+              </Grid>
+              <Grid>
+                <TextField
+                  name="dateTime"
+                  id="date"
+                  label="วันที่คาดว่าจะหมดอายุ"
+                  type="date"
+                  value={new Date("2023-01-01")}
+                  variant="outlined"
+                  margin="normal"
+                  defaultValue={new Date("2023-01-01")}
+                  fullWidth={true}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                 />
               </Grid>
             </Grid>

@@ -1,6 +1,8 @@
 import { createFormData, requests } from "./agent";
 
 export const Product = {
+  searchProduct: (productName: string) =>
+    requests.get(`Product/SearchProduct?productName=${productName}`),
   getProduct: (categoryId: number) =>
     requests.get(`Product/GetProduct?categoryId=${categoryId}`),
   getProductByStore: (storeId: number) =>

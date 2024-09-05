@@ -10,10 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^5.16.6",
     "@mui/lab": "^5.0.0-alpha.173",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@mui/x-data-grid": "^7.11.1",
+    "@mui/x-date-pickers": "^7.15.0",
     "@react-google-maps/api": "^2.19.3",
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",

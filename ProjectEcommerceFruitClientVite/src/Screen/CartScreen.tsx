@@ -3,11 +3,11 @@ import Footer from "../layout/screen/Footer";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store/store";
 import { NavLink, useNavigate } from "react-router-dom";
-import { RoutePath } from "../constants/RoutePath";
+import { pathImages, RoutePath } from "../constants/RoutePath";
 import BannerComponent from "../layout/component/BannerComponent";
 
 // Define types for cart items and products
-interface Product {
+interface ProductinCart {
   id: string;
   price: number;
   quantityInCartItem: number;
@@ -17,7 +17,7 @@ interface CartItem {
   id: string;
   storeName: string;
   productName: string;
-  products: Product[];
+  products: ProductinCart[];
   cartItemId: any;
 }
 
@@ -50,7 +50,7 @@ export default observer(function CartScreen() {
   const calculateTotalPrice = () => {
     return selectMyCart.reduce((total, item: CartItem) => {
       const storeTotal = item.products.reduce(
-        (storeSum: number, product: Product) => {
+        (storeSum: number, product: ProductinCart) => {
           return storeSum + product.quantityInCartItem * product.price;
         },
         0
@@ -63,6 +63,8 @@ export default observer(function CartScreen() {
   const formattedTotalPrice = formatNumberWithCommas(totalPrice);
 
   const handleRemoveItem = async (item: CartItem) => {
+    console.log("item", JSON.stringify(item));
+
     const CartItemId = item.cartItemId;
     const Quantity = 1;
     await RemoveToCart({ CartItemId, Quantity });
@@ -70,7 +72,10 @@ export default observer(function CartScreen() {
     await GetCartItemByUserOrderStore();
   };
 
-  const handleRemoveItemAll = async (item: CartItem, product: Product) => {
+  const handleRemoveItemAll = async (
+    item: CartItem,
+    product: ProductinCart
+  ) => {
     const CartItemId = item.cartItemId;
     const Quantity = product.quantityInCartItem;
     await RemoveToCart({ CartItemId, Quantity });
@@ -78,7 +83,7 @@ export default observer(function CartScreen() {
     await GetCartItemByUserOrderStore();
   };
 
-  const handleAddItem = async (product: Product) => {
+  const handleAddItem = async (product: ProductinCart) => {
     const ProductId = product.id;
     const Quantity = 1;
     await AddToCart({ ProductId, Quantity });
@@ -111,8 +116,6 @@ export default observer(function CartScreen() {
     navigate(RoutePath.OrderSummary);
   };
 
-  console.log("selectMyCart", selectMyCart);
-
   return (
     <div>
       <BannerComponent />
@@ -144,9 +147,9 @@ export default observer(function CartScreen() {
                         <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
                           ชื่อร้านค้า : {storeName}
                         </span>
-                        {items.map((item: CartItem) => (
-                          <div key={item.id} className="space-y-6">
-                            {item.products.map((product: Product) => {
+                        {items.map((item: CartItem, i) => (
+                          <div key={i} className="space-y-6">
+                            {item.products.map((product: any) => {
                               const TotalPriceForProduct =
                                 product.price * product.quantityInCartItem;
                               const formatTotalPriceForProduct =
@@ -159,12 +162,18 @@ export default observer(function CartScreen() {
                                   <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                                     <div className="flex items-center">
                                       <a
-                                        href="#"
-                                        className="shrink-0 md:order-1"
+                                        onClick={() =>
+                                          navigate(
+                                            RoutePath.productDetail(product.id)
+                                          )
+                                        }
+                                        className="shrink-0 md:order-1 cursor-pointer"
                                       >
                                         <img
                                           className="hidden h-20 w-20 dark:block"
-                                          src="https://shopee.co.th/blog/wp-content/uploads/2022/02/mango.jpg"
+                                          src={
+                                            pathImages.product + product?.images
+                                          }
                                           alt="product image"
                                         />
                                       </a>
@@ -175,9 +184,7 @@ export default observer(function CartScreen() {
                                     <div className="flex items-center justify-between md:order-3 md:justify-end">
                                       <div className="flex items-center">
                                         <button
-                                          onClick={() =>
-                                            handleRemoveItem(product)
-                                          }
+                                          onClick={() => handleRemoveItem(item)}
                                           type="button"
                                           id="decrement-button"
                                           data-input-counter-decrement="counter-input"
