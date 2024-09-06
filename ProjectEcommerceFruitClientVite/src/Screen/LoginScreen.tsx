@@ -74,8 +74,8 @@ export default observer(function LoginScreen() {
           setShowToast(false);
         }, 2000);
 
-        navigate(RoutePath.homeScreen);
         await getUserDetailbyId();
+        navigate(RoutePath.homeScreen);
       }
     } else {
       alert("รหัสผ่านผิด");

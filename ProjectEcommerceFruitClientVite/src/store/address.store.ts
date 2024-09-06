@@ -13,6 +13,10 @@ export default class AddressStore {
 
   setAddress = (state: any) => (this.myAddress = state);
 
+  setMyAddressgotoOrder = (state: any) => (this.myAddressgotoOrder = state);
+
+  setAddresses = (state: any) => (this.address = state);
+
   getAddressByUserId = async () => {
     try {
       const result = await agent.Address.GetAddressByUserId();

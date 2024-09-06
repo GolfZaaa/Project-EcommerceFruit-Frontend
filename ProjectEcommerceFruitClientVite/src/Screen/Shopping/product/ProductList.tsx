@@ -123,6 +123,8 @@ const ProductList = () => {
   const { product, getProductByStore, removeProduct } = useStore().productStore;
   const { user } = useStore().userStore;
 
+  console.log("user", JSON.stringify(user));
+
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [onCreate, setOnCreate] = useState(false);
@@ -132,7 +134,7 @@ const ProductList = () => {
   const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
-    getProductByStore(user?.stores[0].id || 0);
+    getProductByStore(user?.stores[0]?.id || 0);
   }, [open, onCreate]);
 
   // Avoid a layout jump when reaching the last page with empty rows.

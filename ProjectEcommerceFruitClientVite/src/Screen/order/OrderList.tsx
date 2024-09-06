@@ -131,7 +131,7 @@ const OrderList = () => {
   const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
-    getOrderByStore(user?.stores[0].id || 0);
+    getOrderByStore(user?.stores[0]?.id || 0);
   }, [open, onCreate]);
 
   // Avoid a layout jump when reaching the last page with empty rows.

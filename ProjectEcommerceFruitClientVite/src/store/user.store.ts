@@ -48,6 +48,8 @@ export default class UserStore {
     store.commonStore.setToken(null);
     store.shopuserStore.setUserShop(null);
     store.addressStore.setAddress(null);
+    store.addressStore.setMyAddressgotoOrder(null);
+    store.addressStore.setAddresses(null);
     store.orderStore.setOrder([]);
   };
 
