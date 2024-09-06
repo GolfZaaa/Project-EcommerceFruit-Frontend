@@ -1,36 +1,36 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { useStore } from "../../../store/store";
-import { pathImageProduct } from "../../../api/agent";
 import { AiFillFileExcel } from "react-icons/ai";
 import ExcelJS from 'exceljs';
 
-export default observer(function DashboardAdminShowProduct() {
-  const { getProduct, product } = useStore().productStore;
+export default observer(function DashboardAdminShowProductGI() {
+  const { productGI, getProductGIAll } = useStore().productStore;
   const [searchUser, setSearchUser] = useState<any>('');
   const [filterUser, setfilterUser] = useState<any>([]);
 
 
 
   useEffect(() => {
-    getProduct(0);
+    getProductGIAll();
   }, []);
 
-  console.log("product",product)
+  console.log("productGI",productGI)
+
 
   useEffect(() => {
     if (searchUser === '') {
-        setfilterUser(product);
+        setfilterUser(productGI);
     } else {
       const lowercasedSearchTerm = searchUser.toLowerCase();
-      const filtered = product.filter((user:any) =>
-        user.productGI.name.toLowerCase().includes(lowercasedSearchTerm) 
+      const filtered = productGI.filter((user:any) =>
+        user.name.toLowerCase().includes(lowercasedSearchTerm) ||
+        user.categoryName.toLowerCase().includes(lowercasedSearchTerm) ||
+        user.storeName.toLowerCase().includes(lowercasedSearchTerm)
       );
-      console.log("filtered",filtered)
-
       setfilterUser(filtered);
     }
-  }, [searchUser, product]);
+  }, [searchUser, productGI]);
   
 
   const formatDateToThai = (dateString: string) => {
@@ -46,21 +46,20 @@ export default observer(function DashboardAdminShowProduct() {
 
   const generateExcel = async () => {
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Product");
+    const worksheet = workbook.addWorksheet("ProductGI");
   
     worksheet.columns = [
       { header: "ลำดับ", key: "index", width: 10 },
       { header: "ชื่อผลไม้", key: "name", width: 30 },
-      { header: "ราคาขาย", key: "price", width: 20 },
-      { header: "วันที่สร้าง", key: "createdAt", width: 20 },
+      { header: "ประเภท", key: "categoryName", width: 20 },
+      { header: "ชื่อร้าน", key: "storeName", width: 20 },
     ];
-    filterUser.forEach((product: any, index: number) => {
-      console.log("product",product)
+    filterUser.forEach((productgi: any, index: number) => {
       const row = worksheet.addRow({
         index: index + 1,
-        name: product.productGI.name,
-        price: product.price,
-        createdAt: formatDateToThai(product.createdAt),
+        name: productgi.name,
+        categoryName: productgi.categoryName,
+        storeName: productgi.storeName,
       });
       row.eachCell((cell) => {
         cell.alignment = { vertical: 'middle', horizontal: 'center' };
@@ -73,7 +72,7 @@ export default observer(function DashboardAdminShowProduct() {
   const day = date.getDate().toString().padStart(2, '0');
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const year = date.getFullYear();
-  const fileName = `product_${day}-${month}-${year}`;
+  const fileName = `productgi_${day}-${month}-${year}`;
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -193,7 +192,6 @@ export default observer(function DashboardAdminShowProduct() {
                   )}
                 </div>
               </div>
-              
             </div>
             <div className="overflow-hidden ">
               <table className="min-w-full border border-gray-300 rounded-tl-lg rounded-tr-lg overflow-hidden">
@@ -209,25 +207,20 @@ export default observer(function DashboardAdminShowProduct() {
                       scope="col"
                       className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                     >
-                      รูปภาพ
-                    </th>
-                    <th
-                      scope="col"
-                      className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
-                    >
                       ชื่อผลไม้
                     </th>
                     <th
                       scope="col"
                       className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                     >
-                      ราคา
+                      ประเภท
                     </th>
+                    
                     <th
                       scope="col"
                       className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                     >
-                      วันที่สร้าง
+                      ชื่อร้าน
                     </th>
                     <th
                       scope="col"
@@ -254,20 +247,17 @@ export default observer(function DashboardAdminShowProduct() {
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               {" "}
-                              <img src={pathImageProduct + userItem.images} className="w-20"/>
+                              {userItem.name}
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               {" "}
-                              {userItem.productGI.name}
+                              {userItem.categoryName}
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               {" "}
-                              {userItem.price}
+                              {userItem.storeName}
                             </td>
-                            <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                              {" "}
-                              {formatDateToThai(userItem.createdAt)}
-                            </td>
+                          
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               {" "}
                             </td>

@@ -13,11 +13,16 @@ import DashboardAdminShowUser from "./DashboardAdminShowUser";
 import DashboardAdminShowStore from "./DashboardAdminShowStore";
 import { useStore } from "../../../store/store";
 import DashboardAdminShowProduct from "./DashboardAdminShowProduct";
+import DashboardAdminShowProductGI from "./DashboardAdminShowProductGI";
+import DashboardAdminShowOrder from "./DashboardAdminShowOrder";
 
 export default observer(function DashboardAdminHomePageScreen() {
   const [show, setShow] = useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const { getStoreAll, shopAll } = useStore().shopuserStore;
+  const { getProduct, product } = useStore().productStore;
+  const { getOrdersAll, order } = useStore().orderStore;
+
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -33,6 +38,10 @@ export default observer(function DashboardAdminHomePageScreen() {
           return <DashboardAdminShowStore />;
           case "DashboardAdminShowProduct":
             return <DashboardAdminShowProduct />;
+            case "DashboardAdminShowProductGI":
+              return <DashboardAdminShowProductGI />;
+              case "DashboardAdminShowOrder":
+                return <DashboardAdminShowOrder />;
       default:
     }
   };
@@ -43,9 +52,19 @@ export default observer(function DashboardAdminHomePageScreen() {
   }
 
   const handleDashboardAdminShowProduct = () => {
+    getProduct(0)
     setScreenComponent("DashboardAdminShowProduct")
   }
   
+  const handleDashboardAdminShowProductGI = () => {
+    setScreenComponent("DashboardAdminShowProductGI")
+  }
+
+  const handleDashboardAdminShowOrder = () => {
+    getOrdersAll()
+    setScreenComponent("DashboardAdminShowOrder")
+  }
+
 
   return (
     <div className="flex">
@@ -287,7 +306,7 @@ export default observer(function DashboardAdminHomePageScreen() {
                 </svg>
                 <p className="text-base leading-4  ">ข้อมูลสินค้าทั้งหมด</p>
               </button>
-              <button className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full ">
+              <button onClick={handleDashboardAdminShowProductGI} className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full ">
                 <svg
                   width={24}
                   height={24}
@@ -326,7 +345,7 @@ export default observer(function DashboardAdminHomePageScreen() {
                 </svg>
                 <p className="text-base leading-4  ">ข้อมูล GI ทั้งหมด</p>
               </button>
-              <button className="flex justify-start items-center space-x-6 hover:text-white focus:outline-none focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4  w-full ">
+              <button onClick={handleDashboardAdminShowOrder} className="flex justify-start items-center space-x-6 hover:text-white focus:outline-none focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4  w-full ">
                 <svg
                   width={24}
                   height={24}
@@ -381,9 +400,8 @@ export default observer(function DashboardAdminHomePageScreen() {
                         strokeLinejoin="round"
                       />
                     </svg>
-                    <p className="text-base leading-4  ml-6">ประเภท</p>
+                    <p className="text-base leading-4  ml-6">ตั้งค่าโลโก้</p>
                   </div>
-                  <div className="ml-28 p-1 bg-indigo-700 rounded-full"></div>
                 </div>
               </button>
               <button className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full ">
@@ -458,7 +476,7 @@ export default observer(function DashboardAdminHomePageScreen() {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <p className="text-base leading-4  ">Settings</p>
+                <p className="text-base leading-4  ">ตั้งค่าเว็บไซต์</p>
               </button>
             </div>
             <div className="w-full px-4">

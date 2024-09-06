@@ -11,6 +11,10 @@ import { Address } from "./address.api";
 
 axios.defaults.baseURL = "https://localhost:7168/api/";
 
+export const pathImageProduct = "https://localhost:7168/product/"; 
+
+export const pathImagepayment = "https://localhost:7168/paymentImage/"; 
+
 const responseBody = <T>(res: AxiosResponse<T>) => res.data;
 
 axios.interceptors.request.use(async (config: any) => {

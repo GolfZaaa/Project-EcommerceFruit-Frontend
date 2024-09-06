@@ -35,4 +35,5 @@ export const Product = {
   //-------------------------------------------- category ----------------------------------------------------//
 
   getCategory: () => requests.get("ProductGI/GetCategories"),
+  getProductGIAll: () => requests.get("ProductGI/ProductGIAll"),
 };

@@ -53,4 +53,13 @@ export default class ShopUserStore {
       return error;
     }
   };
+
+  DeleteStore = async (id: number) => {
+    try {
+      await agent.Shop.deleteStore(id);
+      this.getStoreAll();
+    } catch (error) {
+      return error;
+    }
+  };
 }

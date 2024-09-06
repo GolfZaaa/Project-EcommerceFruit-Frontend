@@ -99,6 +99,15 @@ export default class ProductStore {
     }
   };
 
+  getProductGIAll = async () => {
+    try {
+      const result = await agent.Product.getProductGIAll();
+      this.productGI = result;
+    } catch (error) {
+      return error;
+    }
+  };
+
   //-------------------------------------------- category ----------------------------------------------------//
 
   getCategory = async () => {

@@ -1,30 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { useStore } from "../../../store/store";
-import ExcelJS from 'exceljs';
-import { AiFillFileExcel } from "react-icons/ai";
+import { pathImagepayment } from "../../../api/agent";
 
-export default function DashboardAdminShowStore() {
-  const { getStoreAll, shopAll, DeleteStore} = useStore().shopuserStore;
+export default function DashboardAdminShowOrder() {
   const [searchUser, setSearchUser] = useState<any>("");
   const [filterUser, setfilterUser] = useState<any>([]);
 
+  const { getOrdersAll, order } = useStore().orderStore;
   useEffect(() => {
-    getStoreAll();
+    getOrdersAll();
   }, []);
+
+  console.log("order",order)
+
 
   useEffect(() => {
     if (searchUser === "") {
-      setfilterUser(shopAll);
+      setfilterUser(order);
     } else {
       const lowercasedSearchTerm = searchUser.toLowerCase();
-      const filtered = shopAll.filter(
+      const filtered = order.filter(
         (user: any) =>
-          user.name.toLowerCase().includes(lowercasedSearchTerm) ||
-          user.user.fullName.toLowerCase().includes(lowercasedSearchTerm)
+          user.orderId.toLowerCase().includes(lowercasedSearchTerm) 
       );
       setfilterUser(filtered);
     }
-  }, [searchUser, shopAll]);
+  }, [searchUser, order]);
 
   const formatDateToThai = (dateString: string) => {
     const date = new Date(dateString);
@@ -36,54 +37,6 @@ export default function DashboardAdminShowStore() {
     };
     return new Intl.DateTimeFormat('th-TH', options).format(date);
   };
-
-  const generateExcel = async () => {
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Store");
-  
-    worksheet.columns = [
-      { header: "ลำดับ", key: "index", width: 10 },
-      { header: "ชื่อร้าน", key: "name", width: 30 },
-      { header: "ชื่อผู้สร้างร้าน", key: "username", width: 20 },
-      { header: "วันที่สร้าง", key: "createdAt", width: 20 },
-    ];
-    filterUser.forEach((store: any, index: number) => {
-      const row = worksheet.addRow({
-        index: index + 1,
-        name: store.name,
-        username: store.user.fullName,             
-        createdAt: formatDateToThai(store.createdAt),
-      });
-      row.eachCell((cell) => {
-        cell.alignment = { vertical: 'middle', horizontal: 'center' };
-      });
-    });
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-  const date = new Date();
-  const day = date.getDate().toString().padStart(2, '0');
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const year = date.getFullYear();
-  const fileName = `shop_${day}-${month}-${year}`;
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download =  fileName + ".xlsx";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
-
-  const [dropdown, setDropdown] = useState(false);
-
-  const handleDropdown = () => {
-    setDropdown(!dropdown);
-  };
-
-  const handleDeleteStore = (id:number) => {
-    console.log("id",id)
-    DeleteStore(id)
-  }
 
   return (
     <div>
@@ -130,70 +83,10 @@ export default function DashboardAdminShowStore() {
                   value={searchUser}
                   onChange={(e) => setSearchUser(e.target.value)}
                 />
-
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                <div className="relative inline-block text-left">
-                  <div>
-                    <button
-                      onClick={handleDropdown}
-                      type="button"
-                      className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                      id="menu-button"
-                      aria-expanded="true"
-                      aria-haspopup="true"
-                    >
-                      ดาวน์โหลดข้อมูล
-                      <svg
-                        className="-mr-1 h-5 w-5 text-gray-400"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-
-                  {dropdown && (
-                    <div
-                      className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                      role="menu"
-                      aria-orientation="vertical"
-                      aria-labelledby="menu-button"
-                    >
-                      <div className="py-1 cursor-pointer" role="none">
-                        <a
-                          href="#"
-                          className="block px-4 py-2 text-sm text-gray-700"
-                          role="menuitem"
-                          id="menu-item-0"
-                        >
-                          PDF
-                        </a>
-                        <div className="">
-                        <button
-                          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:bg-gray-200 hover:font-bold w-full"
-                          onClick={generateExcel}
-                          role="menuitem"
-                          id="menu-item-1"
-                        >
-                          <AiFillFileExcel className="mr-2 text-green-600" size={25} />
-                          EXCEL
-                        </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
               </div>
               <div className="overflow-hidden ">
-                <table className="min-w-full border border-gray-300 rounded-tl-lg rounded-tr-lg overflow-hidden">
-                  <thead className="bg-slate-200">
+              <table className="min-w-full border border-gray-300 rounded-tl-lg rounded-tr-lg overflow-hidden">
+              <thead className="bg-slate-200">
                     <tr>
                       <th
                         scope="col"
@@ -205,13 +98,19 @@ export default function DashboardAdminShowStore() {
                         scope="col"
                         className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                       >
-                        ชื่อร้าน
+                        รูปภาพชำระเงิน
                       </th>
                       <th
                         scope="col"
                         className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                       >
-                        ชื่อผู้สร้าง
+                        ชื่อผู้ชำระเงิน
+                      </th>
+                      <th
+                        scope="col"
+                        className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
+                      >
+                        สถานะ
                       </th>
                       <th
                         scope="col"
@@ -223,8 +122,11 @@ export default function DashboardAdminShowStore() {
                         scope="col"
                         className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                       >
-                        สถานะการใช้งาน
                       </th>
+                      <th
+                        scope="col"
+                        className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
+                      ></th>
                       <th
                         scope="col"
                         className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
@@ -240,6 +142,7 @@ export default function DashboardAdminShowStore() {
 
                   <tbody className="divide-y divide-gray-300">
                     {filterUser.map((userItem:any, index:any) => {
+
                       return (
                         <tr className="bg-white transition-all duration-500 hover:bg-gray-50">
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
@@ -248,30 +151,28 @@ export default function DashboardAdminShowStore() {
                           </td>
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                             {" "}
-                            {userItem.name}
+                            <img className="w-20" src={pathImagepayment + userItem.paymentImage} />
                           </td>
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                             {" "}
-                            {userItem.user.fullName}
+                            ชื่อผู้ใช้
                           </td>
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                            {" "}
+                            {userItem.status}
+                          </td>
+                          <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                            {" "}
                             {formatDateToThai(userItem.createdAt)}
                           </td>
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                            {userItem.hidden ? 
-                             <div className=" flex justify-start items-start">
-                             <div className="ml-3 py-1 px-3 border border-red-700 text-red-700 font-semibold rounded-lg bg-red-100">
-                               ถูกระงับการใช้งาน
-                             </div>
-                           </div>
-                            : 
-                            <div className=" flex justify-start items-start ">
-                        <div className="ml-3 py-1 px-3 border border-green-700 text-green-700 font-semibold rounded-lg bg-green-100">
-                          ใช้งานได้ปกติ
-                        </div>
-                      </div>
-                          }
+                            {" "}
                           </td>
+                        
+                          <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                            {" "}
+                          </td>
+
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           </td>
 
@@ -293,7 +194,7 @@ export default function DashboardAdminShowStore() {
                                   ></path>
                                 </svg>
                               </button>
-                              <button onClick={() => handleDeleteStore(userItem.id)} className="p-2 rounded-full  group transition-all duration-500  flex item-center">
+                              <button className="p-2 rounded-full  group transition-all duration-500  flex item-center">
                                 <svg
                                   className=""
                                   width="20"
@@ -329,6 +230,7 @@ export default function DashboardAdminShowStore() {
                             </div>
                           </td>
                         </tr>
+
                       );
                     })}
                   </tbody>

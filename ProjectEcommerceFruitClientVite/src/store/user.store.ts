@@ -82,4 +82,14 @@ export default class UserStore {
       return error;
     }
   };
+
+  DeleteUser = async (id: number) => {
+    try {
+      await agent.User.deleteUser(id);
+      this.getUserAll();
+    } catch (error) {
+      return error;
+    }
+  };
+
 }

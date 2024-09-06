@@ -34,48 +34,6 @@ export default observer(function HomeScreen() {
     getCategory();
   }, []);
 
-  const products = [
-    {
-      id: 1,
-      name: "Apple",
-      description: "Fresh red apples",
-      imageUrl:
-        "https://shopee.co.th/blog/wp-content/uploads/2022/02/durian.jpg",
-    },
-    {
-      id: 2,
-      name: "Banana",
-      description: "Sweet bananas",
-      imageUrl:
-        "https://spfresh.co.th/wp-content/uploads/2022/12/%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%A7%E0%B8%A2-1-1064x1200.jpg",
-    },
-    {
-      id: 3,
-      name: "Orange",
-      description: "Juicy oranges",
-      imageUrl:
-        "https://s.isanook.com/ca/0/ud/274/1373165/14089600051408960032l.jpg?ip/crop/w670h402/q80/jpg",
-    },
-    {
-      id: 4,
-      name: "Grape",
-      description: "Tasty grapes",
-      imageUrl: "https://via.placeholder.com/300",
-    },
-    {
-      id: 5,
-      name: "Grape",
-      description: "Tasty grapes",
-      imageUrl: "https://via.placeholder.com/300",
-    },
-    {
-      id: 6,
-      name: "Grape",
-      description: "Tasty grapes",
-      imageUrl: "https://via.placeholder.com/300",
-    },
-  ];
-
   const categories = [
     {
       id: 0,

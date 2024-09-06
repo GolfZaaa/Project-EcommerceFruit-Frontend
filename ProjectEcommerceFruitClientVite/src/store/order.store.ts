@@ -63,4 +63,13 @@ export default class OrderStore {
       return error;
     }
   };
+
+  getOrdersAll = async () => {
+    try {
+      const result = await agent.Order.getOrdersAll();
+      this.order = result;
+    } catch (error) {
+      return error;
+    }
+  };
 }
