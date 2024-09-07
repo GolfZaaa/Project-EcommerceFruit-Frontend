@@ -5,7 +5,7 @@ import { AiFillFileExcel } from "react-icons/ai";
 import ExcelJS from 'exceljs';
 
 export default observer(function DashboardAdminShowProductGI() {
-  const { productGI, getProductGIAll } = useStore().productStore;
+  const { productGI, getProductGIAll, HiddenProductGI } = useStore().productStore;
   const [searchUser, setSearchUser] = useState<any>('');
   const [filterUser, setfilterUser] = useState<any>([]);
 
@@ -14,9 +14,6 @@ export default observer(function DashboardAdminShowProductGI() {
   useEffect(() => {
     getProductGIAll();
   }, []);
-
-  console.log("productGI",productGI)
-
 
   useEffect(() => {
     if (searchUser === '') {
@@ -33,16 +30,6 @@ export default observer(function DashboardAdminShowProductGI() {
   }, [searchUser, productGI]);
   
 
-  const formatDateToThai = (dateString: string) => {
-    const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      weekday: 'long'
-    };
-    return new Intl.DateTimeFormat('th-TH', options).format(date);
-  };
 
   const generateExcel = async () => {
     const workbook = new ExcelJS.Workbook();
@@ -53,6 +40,7 @@ export default observer(function DashboardAdminShowProductGI() {
       { header: "ชื่อผลไม้", key: "name", width: 30 },
       { header: "ประเภท", key: "categoryName", width: 20 },
       { header: "ชื่อร้าน", key: "storeName", width: 20 },
+      { header: "สถานะ", key: "status", width: 20 },
     ];
     filterUser.forEach((productgi: any, index: number) => {
       const row = worksheet.addRow({
@@ -60,6 +48,7 @@ export default observer(function DashboardAdminShowProductGI() {
         name: productgi.name,
         categoryName: productgi.categoryName,
         storeName: productgi.storeName,
+        status: productgi.status ? 'ใช้งานได้ปกติ' : 'ปิดการใช้งาน',
       });
       row.eachCell((cell) => {
         cell.alignment = { vertical: 'middle', horizontal: 'center' };
@@ -87,6 +76,10 @@ export default observer(function DashboardAdminShowProductGI() {
   const handleDropdown = () => {
     setDropdown(!dropdown);
   };
+
+  const handleHiddenProductGI = (productGI:any) => {
+    HiddenProductGI(productGI.id)
+  }
 
   return (
     <div className="p-4">
@@ -226,6 +219,12 @@ export default observer(function DashboardAdminShowProductGI() {
                       scope="col"
                       className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                     >
+                      สถานะ
+                    </th>
+                    <th
+                      scope="col"
+                      className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
+                    >
                      
                     </th>
                     <th
@@ -239,6 +238,7 @@ export default observer(function DashboardAdminShowProductGI() {
 
                 <tbody className="divide-y divide-gray-300">
                   {filterUser.map((userItem:any, index:any) => {
+                    console.log("userItem",userItem)
                       return (
                           <tr className="bg-white transition-all duration-500 hover:bg-gray-50">
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
@@ -257,7 +257,18 @@ export default observer(function DashboardAdminShowProductGI() {
                               {" "}
                               {userItem.storeName}
                             </td>
-                          
+                            <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                      <div className={`
+                          py-1 px-3 border font-semibold rounded-full 
+                          ${userItem.status 
+                            ? 'text-green-500 bg-green-100 border-green-500 w-28' 
+                            : 'text-red-500 bg-red-100 border-red-500 w-28'}
+                        `}>
+                          {userItem.status ? 'ใช้งานได้ปกติ' : 'ปิดการใช้งาน'}
+                        </div>
+
+
+                            </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               {" "}
                             </td>
@@ -279,7 +290,7 @@ export default observer(function DashboardAdminShowProductGI() {
                                     ></path>
                                   </svg>
                                 </button>
-                                <button className="p-2 rounded-full  group transition-all duration-500  flex item-center">
+                                <button onClick={() => handleHiddenProductGI(userItem)} className="p-2 rounded-full  group transition-all duration-500  flex item-center">
                                   <svg
                                     className=""
                                     width="20"

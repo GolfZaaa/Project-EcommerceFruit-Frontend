@@ -11,6 +11,7 @@ export const Product = {
     requests.get(`Product/GetProductById?productId=${productId}`),
   removeProduct: (productId: number) =>
     requests.delete(`Product/RemoveProductById?productId=${productId}`),
+  deleteProduct: (id: any) => requests.delete(`Product/RemoveProductById?productId=${id}`),
 
   //-------------------------------------------- product-GI ----------------------------------------------------//
 
@@ -32,6 +33,7 @@ export const Product = {
   removeImage: (id: number) =>
     requests.delete(`ProductGI/RemoveImage?productGiId=${id}`),
 
+  hiddenProductGi: (id: any) => requests.delete(`ProductGI/HiddenProductGI?productGIId=${id}`),
   //-------------------------------------------- category ----------------------------------------------------//
 
   getCategory: () => requests.get("ProductGI/GetCategories"),

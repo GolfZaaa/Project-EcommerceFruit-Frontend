@@ -46,6 +46,7 @@ export default function DashboardAdminShowStore() {
       { header: "ชื่อร้าน", key: "name", width: 30 },
       { header: "ชื่อผู้สร้างร้าน", key: "username", width: 20 },
       { header: "วันที่สร้าง", key: "createdAt", width: 20 },
+      { header: "สถานะ", key: "status", width: 20 },
     ];
     filterUser.forEach((store: any, index: number) => {
       const row = worksheet.addRow({
@@ -53,6 +54,7 @@ export default function DashboardAdminShowStore() {
         name: store.name,
         username: store.user.fullName,             
         createdAt: formatDateToThai(store.createdAt),
+        status: store.hidden ? "ถูกระงับการใช้งาน" : "ใช้งานได้ปกติ",
       });
       row.eachCell((cell) => {
         cell.alignment = { vertical: 'middle', horizontal: 'center' };
@@ -258,19 +260,16 @@ export default function DashboardAdminShowStore() {
                             {formatDateToThai(userItem.createdAt)}
                           </td>
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                            {userItem.hidden ? 
-                             <div className=" flex justify-start items-start">
-                             <div className="ml-3 py-1 px-3 border border-red-700 text-red-700 font-semibold rounded-lg bg-red-100">
-                               ถูกระงับการใช้งาน
-                             </div>
-                           </div>
-                            : 
-                            <div className=" flex justify-start items-start ">
-                        <div className="ml-3 py-1 px-3 border border-green-700 text-green-700 font-semibold rounded-lg bg-green-100">
-                          ใช้งานได้ปกติ
+                        <div className={`
+                          py-1 px-3 border font-semibold rounded-full 
+                          ${userItem.hidden 
+                            ? 'text-green-500 bg-green-100 border-green-500 w-36' 
+                            : 'text-red-500 bg-red-100 border-red-500 w-28'}
+                        `}>
+                          {userItem.hidden ? 'ถูกระงับการใช้งาน' : 'ใช้งานได้ปกติ'}
                         </div>
-                      </div>
-                          }
+
+
                           </td>
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           </td>

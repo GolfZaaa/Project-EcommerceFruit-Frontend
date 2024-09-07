@@ -242,23 +242,19 @@ export default observer(function DashboardAdminShowUser() {
                           {userItem.phoneNumber}
                         </td>
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                        {userItem.hidden === true ? 
-                        <div className=" flex justify-start items-start">
-                        <div className="ml-3 py-1 px-3 border border-red-700 text-red-700 font-semibold rounded-lg bg-red-100">
-                          ถูกระงับการใช้งาน
+                        <div className={`
+                          py-1 px-3 border font-semibold rounded-full 
+                          ${userItem.hidden 
+                            ? 'text-green-500 bg-green-100 border-green-500 w-28' 
+                            : 'text-red-500 bg-red-100 border-red-500 w-36'}
+                        `}>
+                          {userItem.hidden ? 'ใช้งานได้ปกติ' : 'ถูกระงับการใช้งาน'}
                         </div>
-                      </div>
-                        : 
-                        <div className=" flex justify-start items-start ">
-                        <div className="ml-3 py-1 px-3 border border-green-700 text-green-700 font-semibold rounded-lg bg-green-100">
-                          ใช้งานได้ปกติ
-                        </div>
-                      </div>
-                      }
                         </td>
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           {" "}
                         </td>
+                        
                         <td className=" p-5 ">
                           <div className="flex items-center gap-1">
                             <button className="p-2  rounded-full  group transition-all duration-500  flex item-center">

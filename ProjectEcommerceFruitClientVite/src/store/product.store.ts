@@ -57,6 +57,15 @@ export default class ProductStore {
     }
   };
 
+  DeleteProduct = async (productId: number) => {
+    try {
+      await agent.Product.deleteProduct(productId);
+      this.getProduct(0);
+    } catch (error) {
+      return error;
+    }
+  };
+
   //-------------------------------------------- product-GI ----------------------------------------------------//
 
   getProductGI = async () => {
@@ -103,6 +112,15 @@ export default class ProductStore {
     try {
       const result = await agent.Product.getProductGIAll();
       this.productGI = result;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  HiddenProductGI = async (productGIId: number) => {
+    try {
+      await agent.Product.hiddenProductGi(productGIId);
+      this.getProductGIAll();
     } catch (error) {
       return error;
     }

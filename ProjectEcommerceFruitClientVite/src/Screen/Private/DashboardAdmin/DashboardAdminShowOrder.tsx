@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useStore } from "../../../store/store";
 import { pathImagepayment } from "../../../api/agent";
+import ExcelJS from "exceljs";
+import { AiFillFileExcel } from "react-icons/ai";
 
 export default function DashboardAdminShowOrder() {
   const [searchUser, setSearchUser] = useState<any>("");
@@ -11,17 +13,16 @@ export default function DashboardAdminShowOrder() {
     getOrdersAll();
   }, []);
 
-  console.log("order",order)
-
+  console.log("order", order);
 
   useEffect(() => {
     if (searchUser === "") {
       setfilterUser(order);
     } else {
       const lowercasedSearchTerm = searchUser.toLowerCase();
-      const filtered = order.filter(
-        (user: any) =>
-          user.orderId.toLowerCase().includes(lowercasedSearchTerm) 
+      const filtered = order.filter((user: any) =>
+        user.orderId.toLowerCase().includes(lowercasedSearchTerm) ||
+        user.address.user.fullName.toLowerCase().includes(lowercasedSearchTerm)
       );
       setfilterUser(filtered);
     }
@@ -30,13 +31,64 @@ export default function DashboardAdminShowOrder() {
   const formatDateToThai = (dateString: string) => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      weekday: 'long'
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      weekday: "long",
     };
-    return new Intl.DateTimeFormat('th-TH', options).format(date);
+    return new Intl.DateTimeFormat("th-TH", options).format(date);
   };
+
+  const [dropdown, setDropdown] = useState(false);
+
+  const handleDropdown = () => {
+    setDropdown(!dropdown);
+  };
+
+  const generateExcel = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Product");
+
+    worksheet.columns = [
+      { header: "ลำดับ", key: "index", width: 10 },
+      { header: "ชื่อผู้ชำระเงิน", key: "name", width: 30 },
+      { header: "วันที่สร้าง", key: "createdAt", width: 20 },
+      { header: "สถานะ", key: "status", width: 20 },
+    ];
+    filterUser.forEach((orders: any, index: number) => {
+      console.log("orders", orders);
+      const row = worksheet.addRow({
+        index: index + 1,
+        name: orders.address.user.fullName,
+        createdAt: formatDateToThai(orders.createdAt),
+        status: orders.status === 0 ? 'กำลังรออนุมัติ' : orders.status === 1 ? 'ยืนยันคำสั่งซื้อ' : 'ยกเลิกคำสั่งซื้อ',
+        // price: orders.price,
+        // createdAt: formatDateToThai(orders.createdAt),
+        // status: orders.status ? "ใช้งานได้ปกติ" : "ปิดการใช้งาน",
+      });
+      row.eachCell((cell) => {
+        cell.alignment = { vertical: "middle", horizontal: "center" };
+      });
+    });
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const date = new Date();
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    const fileName = `orders_${day}-${month}-${year}`;
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName + ".xlsx";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
 
   return (
     <div>
@@ -83,10 +135,74 @@ export default function DashboardAdminShowOrder() {
                   value={searchUser}
                   onChange={(e) => setSearchUser(e.target.value)}
                 />
+
+<div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                <div className="relative inline-block text-left">
+                  <div>
+                    <button
+                      onClick={handleDropdown}
+                      type="button"
+                      className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                      id="menu-button"
+                      aria-expanded="true"
+                      aria-haspopup="true"
+                    >
+                      ดาวน์โหลดข้อมูล
+                      <svg
+                        className="-mr-1 h-5 w-5 text-gray-400"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+
+                  {dropdown && (
+                    <div
+                      className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="menu-button"
+                    >
+                      <div className="py-1 cursor-pointer" role="none">
+                        <a
+                          href="#"
+                          className="block px-4 py-2 text-sm text-gray-700"
+                          role="menuitem"
+                          id="menu-item-0"
+                        >
+                          PDF
+                        </a>
+                        <div className="">
+                          <button
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:bg-gray-200 hover:font-bold w-full"
+                            onClick={generateExcel}
+                            role="menuitem"
+                            id="menu-item-1"
+                          >
+                            <AiFillFileExcel
+                              className="mr-2 text-green-600"
+                              size={25}
+                            />
+                            EXCEL
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               </div>
               <div className="overflow-hidden ">
-              <table className="min-w-full border border-gray-300 rounded-tl-lg rounded-tr-lg overflow-hidden">
-              <thead className="bg-slate-200">
+                <table className="min-w-full border border-gray-300 rounded-tl-lg rounded-tr-lg overflow-hidden">
+                  <thead className="bg-slate-200">
                     <tr>
                       <th
                         scope="col"
@@ -106,12 +222,7 @@ export default function DashboardAdminShowOrder() {
                       >
                         ชื่อผู้ชำระเงิน
                       </th>
-                      <th
-                        scope="col"
-                        className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
-                      >
-                        สถานะ
-                      </th>
+                     
                       <th
                         scope="col"
                         className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
@@ -122,6 +233,7 @@ export default function DashboardAdminShowOrder() {
                         scope="col"
                         className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                       >
+                        สถานะ
                       </th>
                       <th
                         scope="col"
@@ -131,6 +243,7 @@ export default function DashboardAdminShowOrder() {
                         scope="col"
                         className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                       ></th>
+
                       <th
                         scope="col"
                         className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tr-lg"
@@ -141,8 +254,8 @@ export default function DashboardAdminShowOrder() {
                   </thead>
 
                   <tbody className="divide-y divide-gray-300">
-                    {filterUser.map((userItem:any, index:any) => {
-
+                    {filterUser.map((userItem: any, index: any) => {
+                      console.log("userItem", userItem);
                       return (
                         <tr className="bg-white transition-all duration-500 hover:bg-gray-50">
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
@@ -151,30 +264,47 @@ export default function DashboardAdminShowOrder() {
                           </td>
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                             {" "}
-                            <img className="w-20" src={pathImagepayment + userItem.paymentImage} />
+                            <img
+                              className="w-20 h-24"
+                              src={pathImagepayment + userItem.paymentImage}
+                            />
                           </td>
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                             {" "}
-                            ชื่อผู้ใช้
+                            {userItem.address.user.fullName}
                           </td>
-                          <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                            {" "}
-                            {userItem.status}
-                          </td>
+
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                             {" "}
                             {formatDateToThai(userItem.createdAt)}
                           </td>
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                             {" "}
+                            <span
+                              className={`
+  ${
+    userItem.status === 0
+      ? "text-yellow-500 bg-yellow-100 border border-yellow-500"
+      : userItem.status === 1
+      ? "text-green-500 bg-green-100 border border-green-500"
+      : "text-red-500 bg-red-100 border border-red-500"
+  }
+  px-3 py-1 rounded-full font-semibold
+`}
+                            >
+                              {userItem.status === 0
+                                ? "กำลังรออนุมัติ"
+                                : userItem.status === 1
+                                ? "ยืนยันคำสั่งซื้อแล้ว"
+                                : "ยกเลิกคำสั่งซื้อแล้ว"}
+                            </span>
                           </td>
-                        
+
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                             {" "}
                           </td>
 
-                          <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                          </td>
+                          <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"></td>
 
                           <td className=" p-5 ">
                             <div className="flex items-center gap-1">
@@ -230,7 +360,6 @@ export default function DashboardAdminShowOrder() {
                             </div>
                           </td>
                         </tr>
-
                       );
                     })}
                   </tbody>
