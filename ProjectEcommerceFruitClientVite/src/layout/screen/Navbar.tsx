@@ -182,6 +182,8 @@ export default observer(function Navbar() {
                     logout();
                     navigate(RoutePath.homeScreen);
                     handleClose();
+                    window.location.reload();
+
                   }}
                 >
                   ออกจากระบบ
@@ -207,12 +209,6 @@ export default observer(function Navbar() {
               >
                 เข้าสู่ระบบ
               </NavLink>
-              {/* <NavLink
-                className="hidden lg:inline-block py-2 px-6 bg-blue-500 hover:bg-blue-600 text-sm text-white font-bold rounded-xl transition duration-200"
-                to={RoutePath.registerScreen}
-              >
-                สมัครสมาชิก
-              </NavLink> */}
             </div>
           )}
         </nav>

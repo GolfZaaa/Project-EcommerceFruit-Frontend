@@ -66,14 +66,10 @@ export default observer(function CreateProductScreen({
       productGIId: selectGI,
     };
 
-    console.log("formData", formData);
-    console.log("dataForm", dataForm);
-
     await createUpdateProduct(dataForm).then((result) => {
       if (!!result) {
         onChangeCU();
       }
-      console.log("res", result);
     });
   };
 

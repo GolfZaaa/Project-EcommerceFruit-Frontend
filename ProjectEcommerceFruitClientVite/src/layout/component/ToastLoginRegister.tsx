@@ -1,7 +1,6 @@
 import React from "react";
 
 export default function ToastLoginRegister({ Check }: any) {
-  console.log("Check", Check);
   return (
     <div>
       {Check === "Login Success" ? (

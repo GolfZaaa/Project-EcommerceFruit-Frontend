@@ -7,7 +7,9 @@ import ToastAddToCart from "../../layout/component/ToastAddToCart";
 import { pathImages } from "../../constants/RoutePath";
 
 export default observer(function ProductDetailScreen() {
-  const { getProductById, productDetail } = useStore().productStore;
+  const { getProductById, productDetail, DeleteProduct, getProduct } =
+    useStore().productStore;
+  const { user } = useStore().userStore;
 
   const { AddToCart, GetCartItemByUser } = useStore().cartStore;
   const [showToast, setShowToast] = useState(false);
@@ -43,21 +45,18 @@ export default observer(function ProductDetailScreen() {
     try {
       const ProductId = productDetail?.id;
       const Quantity = quantity;
-      console.log("ProductId", ProductId, "Quantity", Quantity);
       const result = await AddToCart({ ProductId, Quantity });
-      console.log("Reusult", result);
       if (result) {
         await GetCartItemByUser();
         setShowToast(true);
         setTimeout(() => {
           setShowToast(false);
         }, 3000);
-
-        console.log("Successfully added to cart");
+        // console.log("Successfully added to cart");
       } else {
-        console.log("Failed to add to cart");
+        // console.log("Failed to add to cart");
       }
-      console.log(result);
+      // console.log(result);
     } catch (error) {
       alert("Failed to add product to cart.");
     }
@@ -67,6 +66,11 @@ export default observer(function ProductDetailScreen() {
 
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
+
+  const hanldleDelete = async (productid: any) => {
+    await DeleteProduct(productid);
+    await getProductById(productid);
+  };
 
   return (
     <div className="md:flex items-start justify-center py-12 2xl:px-20 md:px-6 px-4">
@@ -92,22 +96,17 @@ export default observer(function ProductDetailScreen() {
               src={pathImages.product_GI + item.imageName}
             />
           ))}
-
-          {/* <img
-            alt="img-tag-one"
-            className="md:w-24 md:h-24 "
-            src="https://i.ibb.co/f17NXrW/Rectangle-244.png"
-          /> */}
         </div>
       </div>
 
       <div className="xl:w-2/5 md:w-1/2 lg:ml-8 md:ml-6 md:mt-0 mt-6">
-        <div className="border-b border-gray-200 pb-6">
-          <p className="text-sm leading-none text-gray-600">
-            {productDetail && productDetail?.productGI?.category.name}
-          </p>
-          <h1
-            className="
+        <div className="border-b border-gray-200 pb-6 flex justify-between">
+          <div>
+            <p className="text-sm leading-none text-gray-600">
+              {productDetail && productDetail?.productGI?.category.name}
+            </p>
+            <h1
+              className="
 							lg:text-2xl
 							text-xl
 							font-semibold
@@ -116,9 +115,25 @@ export default observer(function ProductDetailScreen() {
 							text-gray-800
 							mt-2
 						"
-          >
-            {productDetail && productDetail?.productGI?.name}
-          </h1>
+            >
+              {productDetail && productDetail?.productGI?.name}
+            </h1>
+          </div>
+
+          {user && user?.id == productDetail?.productGI?.store?.userId && (
+            <div>
+              <button
+                onClick={() => hanldleDelete(productDetail.id)}
+                className={`p-2 ${
+                  productDetail?.status
+                    ? "bg-red-500 text-gray-700"
+                    : "bg-green-400"
+                } font-semibold rounded-2xl pl-5 pr-5`}
+              >
+                {productDetail?.status ? "ปิดการขาย" : "เปิดการขาย"}
+              </button>
+            </div>
+          )}
         </div>
         <div>
           <p className="xl:pr-48 text-base lg:leading-tight leading-normal text-gray-600 mt-7">
@@ -255,43 +270,20 @@ export default observer(function ProductDetailScreen() {
 					"
           onClick={handleAddToCart}
         >
-          {/* <svg
-            className="mr-3"
-            width="16"
-            height="17"
-            viewBox="0 0 16 17"
-            fill="none"
+          <svg
             xmlns="http://www.w3.org/2000/svg"
+            className="mr-2 h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
           >
             <path
-              d="M7.02301 7.18999C7.48929 6.72386 7.80685 6.12992 7.93555 5.48329C8.06425 4.83666 7.9983 4.16638 7.74604 3.55724C7.49377 2.94809 7.06653 2.42744 6.51835 2.06112C5.97016 1.6948 5.32566 1.49928 4.66634 1.49928C4.00703 1.49928 3.36252 1.6948 2.81434 2.06112C2.26615 2.42744 1.83891 2.94809 1.58665 3.55724C1.33439 4.16638 1.26843 4.83666 1.39713 5.48329C1.52583 6.12992 1.8434 6.72386 2.30968 7.18999L4.66634 9.54749L7.02301 7.18999Z"
-              stroke="white"
-              strokeWidth="1.25"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
             />
-            <path
-              d="M4.66699 4.83333V4.84166"
-              stroke="white"
-              strokeWidth="1.25"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M13.69 13.8567C14.1563 13.3905 14.4738 12.7966 14.6025 12.15C14.7312 11.5033 14.6653 10.8331 14.413 10.2239C14.1608 9.61476 13.7335 9.09411 13.1853 8.72779C12.6372 8.36148 11.9926 8.16595 11.3333 8.16595C10.674 8.16595 10.0295 8.36148 9.48133 8.72779C8.93314 9.09411 8.5059 9.61476 8.25364 10.2239C8.00138 10.8331 7.93543 11.5033 8.06412 12.15C8.19282 12.7966 8.51039 13.3905 8.97667 13.8567L11.3333 16.2142L13.69 13.8567Z"
-              stroke="white"
-              strokeWidth="1.25"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M11.333 11.5V11.5083"
-              stroke="white"
-              strokeWidth="1.25"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg> */}
+          </svg>
           เพิ่มลงตะกร้า
         </button>
       </div>

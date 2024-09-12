@@ -20,8 +20,6 @@ const responseBody = <T>(res: AxiosResponse<T>) => res.data;
 axios.interceptors.request.use(async (config: any) => {
   const token = await store.commonStore.token;
 
-  // console.log("token", token);
-
   if (token) config.headers!.Authorization = `Bearer ${token}`;
   return config;
 });

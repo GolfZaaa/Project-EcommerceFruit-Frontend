@@ -13,7 +13,6 @@ export default function DashboardAdminShowOrder() {
     getOrdersAll();
   }, []);
 
-  console.log("order", order);
 
   useEffect(() => {
     if (searchUser === "") {
@@ -56,7 +55,6 @@ export default function DashboardAdminShowOrder() {
       { header: "สถานะ", key: "status", width: 20 },
     ];
     filterUser.forEach((orders: any, index: number) => {
-      console.log("orders", orders);
       const row = worksheet.addRow({
         index: index + 1,
         name: orders.address.user.fullName,
@@ -255,7 +253,6 @@ export default function DashboardAdminShowOrder() {
 
                   <tbody className="divide-y divide-gray-300">
                     {filterUser.map((userItem: any, index: any) => {
-                      console.log("userItem", userItem);
                       return (
                         <tr className="bg-white transition-all duration-500 hover:bg-gray-50">
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">

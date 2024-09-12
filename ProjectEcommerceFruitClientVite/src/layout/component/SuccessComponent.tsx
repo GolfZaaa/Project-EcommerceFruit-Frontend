@@ -34,9 +34,6 @@ export default observer(function SuccessComponent() {
     GetCartItemByUserOrderStore();
   }, []);
 
-  console.log("myAddressgotoOrder",myAddressgotoOrder)
-  console.log("selectMyCart",selectMyCart)
-
   return (
     <div>
       <section className="bg-white py-8 antialiased dark:bg-white md:py-16">

@@ -37,14 +37,10 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
       orderId: dataEdit?.id || 0,
       trackingId: formData.tag,
     };
-
-    console.log("dataForm", dataForm);
-
     await confirmOrder(dataForm).then((result) => {
       if (result) {
         onChangeCU();
       }
-      console.log("res", result);
     });
   };
 

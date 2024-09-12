@@ -16,8 +16,6 @@ const EditAccount = () => {
       fullName: formData?.fullName,
     };
 
-    console.log("dataForm", dataForm);
-
     await editUser(dataForm).then((result) => {
       if (!!result) {
         myToast("แก้ไขเสร็จสิ้น");

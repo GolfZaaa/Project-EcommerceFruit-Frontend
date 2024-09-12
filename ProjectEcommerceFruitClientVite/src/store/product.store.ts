@@ -71,9 +71,6 @@ export default class ProductStore {
   getProductGI = async () => {
     try {
       const result = await agent.Product.getProductGI();
-
-      console.log("result", result);
-
       this.productGI = result;
     } catch (error) {
       return error;

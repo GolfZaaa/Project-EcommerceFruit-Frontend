@@ -83,7 +83,6 @@ export default function DashboardAdminShowStore() {
   };
 
   const handleDeleteStore = (id:number) => {
-    console.log("id",id)
     DeleteStore(id)
   }
 
@@ -263,8 +262,8 @@ export default function DashboardAdminShowStore() {
                         <div className={`
                           py-1 px-3 border font-semibold rounded-full 
                           ${userItem.hidden 
-                            ? 'text-green-500 bg-green-100 border-green-500 w-36' 
-                            : 'text-red-500 bg-red-100 border-red-500 w-28'}
+                            ? ' text-red-500 bg-red-100 border-red-500 w-36' 
+                            : 'text-green-500 bg-green-100 border-green-500 w-28'}
                         `}>
                           {userItem.hidden ? 'ถูกระงับการใช้งาน' : 'ใช้งานได้ปกติ'}
                         </div>

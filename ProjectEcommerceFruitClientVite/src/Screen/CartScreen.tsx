@@ -100,7 +100,6 @@ export default observer(function CartScreen() {
   const [checkedItem, setCheckedItem] = useState<string | null>(null);
 
   const handleCheckboxChange = (items: any, storeName: string) => {
-    console.log("items", items);
     setCheckedItem((prevCheckedItem) =>
       prevCheckedItem === storeName ? null : storeName
     );
@@ -110,8 +109,6 @@ export default observer(function CartScreen() {
   const handleToOrderSummary = () => {
     navigate(RoutePath.OrderSummary);
   };
-
-  console.log("selectMyCart", selectMyCart);
 
   return (
     <div>

@@ -32,8 +32,6 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
     GetCartItemByUserOrderStore();
   }, []);
 
-
-  console.log("cartItems", cartItems.length);
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -56,7 +54,6 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
         myToast("เพิ่มที่อยู่สำเร็จ");
         getAddressByUserId();
         onChangePaging(2);
-        console.log("formData", formData);
         window.scrollTo(0, 0);
 
       }

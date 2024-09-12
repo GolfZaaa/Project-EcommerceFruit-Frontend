@@ -21,10 +21,7 @@ export const Product = {
 
     for (var formfile of files) {
       data.append("formFiles", formfile);
-      console.log("sand formfile", formfile);
     }
-
-    console.log("data", ...data);
 
     return requests.post(`ProductGI/CreateUpdateProductGI`, data);
   },

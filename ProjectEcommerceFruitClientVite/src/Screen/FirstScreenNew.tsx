@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import image1 from "../image/FirstScreen1.jpg";
 import image2 from "../image/FirstScreen2.jpg";
 import image3 from "../image/FirstScreen3.png";
@@ -12,6 +12,10 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Navbar from "../layout/screen/Navbar";
 import Footer from "../layout/screen/Footer";
+
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { useStore } from "../store/store";
 
 const images = [
     image1,
@@ -31,6 +35,24 @@ const settingsImageSlide = {
 };
 
 export default function FirstScreenNew() {
+
+
+  const { product, getProduct, category, getCategory } =
+  useStore().productStore;
+
+  useEffect(() => {
+    getProduct(0);
+  }, [getProduct, getCategory]);
+
+  console.log("product",product)
+
+  useEffect(() => {
+    AOS.init({
+      duration: 500, 
+      once: true,  
+    });
+  }, []);
+
   return (
     <div>
       {/* รูปสไลด์ Start */}
@@ -47,12 +69,14 @@ export default function FirstScreenNew() {
       </div>
       {/* รูปสไลด์ End */}
 
+
+
       {/* ข้อมูลหลัก Start */}
-      <div >
-            <div className="flex flex-col lg:flex-row items-stretch justify-between lg:px-0 px-6 lg:py-20 py-8 2xl:mx-auto 2xl:container">
-                <div className="z-30 relative lg:w-1/2">
-                    <div className="hidden  bg-gray-100 w-full lg:w-10/12 lg:h-full lg:flex justify-end items-center">
-                        <div className="w-full lg:w-auto lg:-mr-32">
+      <div data-aos="fade-up" >
+            <div data-aos="fade-up" className="flex flex-col lg:flex-row items-stretch justify-between lg:px-0 px-6 lg:py-20 py-8 2xl:mx-auto 2xl:container">
+                <div data-aos="fade-up" className="z-30 relative lg:w-1/2">
+                    <div data-aos="fade-up" className="hidden  bg-gray-100 w-full lg:w-10/12 lg:h-full lg:flex justify-end items-center">
+                        <div data-aos="fade-up" className="w-full lg:w-auto lg:-mr-32">
                             <img src="https://www.tot.co.th/images/default-source/default-album/digital-tips/63/farmer-online/mobile.jpg?sfvrsn=28ade211_4" alt="image with decent chairs" className="w-full relative z-30 lg:pl-20 px-6 py-14" />
                         </div>
                     </div>
@@ -78,33 +102,35 @@ export default function FirstScreenNew() {
                     </div>
                 </div>
             </div>
-        </div>
+      </div>
       {/* ข้อมูลรอง End */}
 
+
+
       {/* สินค้าล่าสุด Start */}
-      <div className="xl:mx-auto xl:container">
-        <div className="lg:px-20 md:px-6 px-4 md:py-12 py-8">
-          <div className="flex flex-col-reverse lg:flex-row items-center">
-            <div className="w-full lg:w-1/2 md:py-9 py-6">
+      <div  data-aos="fade-up" className="xl:mx-auto xl:container">
+        <div data-aos="fade-up" className="lg:px-20 md:px-6 px-4 md:py-12 py-8">
+          <div data-aos="fade-up" className="flex flex-col-reverse lg:flex-row items-center">
+            <div data-aos="fade-up" className="w-full lg:w-1/2 md:py-9 py-6">
               <img
                 src="https://shopee.co.th/blog/wp-content/uploads/2022/02/marian-plum.jpg"
                 alt="bag"
                 className="lg:w-full h-full object-cover object-center w-full"
               />
             </div>
-            <div className="lg:w-1/2 lg:pl-12 lg:pr-24">
-              <p className="text-sm leading-none text-gray-600 pb-2">ผลไม้สด</p>
-              <p className="md:text-3xl lg:text-4xl text-2xl font-semibold lg:leading-9 text-gray-800 lg:pb-6 md:pb-4 pb-2">
+            <div data-aos="fade-up" className="lg:w-1/2 lg:pl-12 lg:pr-24">
+              <p data-aos="fade-up" className="text-sm leading-none text-gray-600 pb-2">ผลไม้สด</p>
+              <p data-aos="fade-up" className="md:text-3xl lg:text-4xl text-2xl font-semibold lg:leading-9 text-gray-800 lg:pb-6 md:pb-4 pb-2">
                 มะยงชิด
               </p>
-              <p className="text-sm leading-5 text-gray-600 md:pb-10 pb-8">
+              <p data-aos="fade-up" className="text-sm leading-5 text-gray-600 md:pb-10 pb-8">
                 อีกหนึ่งผลไม้หน้าร้อนที่หลายคนโปรดปราน
                 เป็นผลไม้ฤดูร้อนในตระกูลเดียวกับมะปราง ลักษณะผลเหมือนไข่ไก่
                 สีเหลืองนวลๆ ผลมีทั้งขนาดเล็ก ปานกลาง และใหญ่ ขึ้นอยู่สายพันธุ์
                 ส่วนรสชาติมะยงชิดถ้าแบบดิบรสชาติจะออกเปรี้ยว
                 แต่ถ้าสุกมีรสหวานอมเปรี้ยวนิดๆ หรือบางสายพันธุ์รสหวานเจี๊ยบ
               </p>
-              <div className="md:block flex items-center justify-center">
+              <div data-aos="fade-up" className="md:block flex items-center justify-center">
                 <button className="lg:w-auto w-full border border-gray-800 hover:text-gray-50 hover:bg-gray-800 focus:outline-none lg:px-10 px-7 lg:py-4 py-3 text-sm leading-none text-gray-800">
                   ดูรายละเอียดเพิ่มเติม
                 </button>
@@ -118,12 +144,16 @@ export default function FirstScreenNew() {
       {/* สินค้าขายดี Start */}
       <div className="2xl:mx-auto 2xl:container px-4 md:px-6 2xl:px-0 py-16 flex justify-center">
         <div className="fle flex-col justify-center items-center">
-          <div className="flex justify-start items-start">
-            <p className="text-3xl lg:text-4xl font-semibold leading-9 text-gray-800">
+          <div  className="flex justify-start items-start">
+            <p data-aos="fade-up" className="text-3xl lg:text-4xl font-semibold leading-9 text-gray-800">
               สินค้าที่โดดเด่น
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 justify-items-between mt-8 gap-y-8 lg:gap-y-0 gap-x-8">
+
+
+
+
             <div className="flex items-start flex-col">
               <div className="relative flex justify-center items-center bg-white py-12 px-16">
                 <img
@@ -166,6 +196,8 @@ export default function FirstScreenNew() {
                 </div>
               </div>
             </div>
+
+
 
             <div className="flex items-start flex-col">
               <div className="relative flex justify-center items-center  bg-white py-12 px-16">

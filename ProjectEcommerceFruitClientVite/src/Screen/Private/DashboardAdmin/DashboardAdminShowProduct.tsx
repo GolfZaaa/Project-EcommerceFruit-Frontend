@@ -14,7 +14,6 @@ export default observer(function DashboardAdminShowProduct() {
     getProduct(0);
   }, []);
 
-  console.log("product", product);
 
   useEffect(() => {
     if (searchUser === "") {
@@ -24,7 +23,6 @@ export default observer(function DashboardAdminShowProduct() {
       const filtered = product.filter((user: any) =>
         user.productGI.name.toLowerCase().includes(lowercasedSearchTerm)
       );
-      console.log("filtered", filtered);
 
       setfilterUser(filtered);
     }
@@ -53,7 +51,6 @@ export default observer(function DashboardAdminShowProduct() {
       { header: "สถานะ", key: "status", width: 20 },
     ];
     filterUser.forEach((product: any, index: number) => {
-      console.log("product", product);
       const row = worksheet.addRow({
         index: index + 1,
         name: product.productGI.name,
@@ -257,7 +254,6 @@ export default observer(function DashboardAdminShowProduct() {
 
                 <tbody className="divide-y divide-gray-300">
                   {filterUser.map((userItem: any, index: any) => {
-                    console.log("userItem", userItem);
                     return (
                       <tr className="bg-white transition-all duration-500 hover:bg-gray-50">
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
@@ -286,13 +282,13 @@ export default observer(function DashboardAdminShowProduct() {
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                           <div
                             className={`
-   py-1 px-3 border font-semibold rounded-full
-  ${
-    userItem.status
-      ? "text-green-500 bg-green-100 border-green-500"
-      : "text-red-500 bg-red-100 border-red-500"
-  }
-`}
+                                py-1 px-3 border font-semibold rounded-full
+                                ${
+                                  userItem.status
+                                    ? "text-green-500 bg-green-100 border-green-500"
+                                    : "text-red-500 bg-red-100 border-red-500"
+                                }
+                              `}
                           >
                             {userItem.status ? "ใช้งานได้ปกติ" : "ปิดการใช้งาน"}
                           </div>

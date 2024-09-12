@@ -238,7 +238,6 @@ export default observer(function DashboardAdminShowProductGI() {
 
                 <tbody className="divide-y divide-gray-300">
                   {filterUser.map((userItem:any, index:any) => {
-                    console.log("userItem",userItem)
                       return (
                           <tr className="bg-white transition-all duration-500 hover:bg-gray-50">
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">

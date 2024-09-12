@@ -91,14 +91,12 @@ export default observer(function SummaryScreen() {
       Tag: tag,
       StoreId: value[0].storeId,
     };
-    console.log("data", Data);
     const test = await CreateUpdateOrderById(Data);
-    if (test === true) {
+    if (test) {
       navigate(RoutePath.successScreen);
     } else {
       alert("error");
     }
-    console.log("test", test);
   };
 
   return (
@@ -186,8 +184,6 @@ export default observer(function SummaryScreen() {
                           item.price * item.quantityInCartItem;
                         const formatTotalPriceForProduct =
                           formatNumberWithCommas(TotalPriceForProduct);
-
-                        console.log("product", item);
                         return (
                           <div>
                             <div className="mt-4 md:mt-6 flex  flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full ">

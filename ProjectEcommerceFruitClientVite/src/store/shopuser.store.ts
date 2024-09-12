@@ -9,15 +9,11 @@ interface CreateandUpdateInterface {
   description: string;
 }
 
-interface User {
-  username: string;
-  fullName: string;
-  phoneNumber: number;
-}
 
 export default class ShopUserStore {
   usershop: Store | null = null;
   shopAll: Store[] = [];
+  shopProductUser: Product[] = [];
 
 
   constructor() {
@@ -62,4 +58,15 @@ export default class ShopUserStore {
       return error;
     }
   };
+
+  GetStoreProductUser = async (id: number) => {
+    try {
+      const result = await agent.Shop.GetStoreProductUser(id);
+      this.shopProductUser = result;
+      this.getStoreAll();
+    } catch (error) {
+      return error;
+    }
+  };
+
 }

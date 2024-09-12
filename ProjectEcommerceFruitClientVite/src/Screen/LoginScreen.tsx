@@ -25,8 +25,6 @@ export default observer(function LoginScreen() {
     //   password: formData.Password,
     // };
 
-    console.log("formData", formData);
-
     const phoneNumber = formData.PhoneNumber;
     const password = formData.Password;
 

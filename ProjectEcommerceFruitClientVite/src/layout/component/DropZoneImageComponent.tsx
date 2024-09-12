@@ -7,7 +7,6 @@ function DropZoneImageComponent({ image = null, onImageUpload }: any) {
   const [imageUri, setImageUri] = useState<any>(null);
 
   const onDrop: any = (acceptedFiles: any) => {
-    console.log("Files dropped:", acceptedFiles);
     const file = acceptedFiles[0];
     if (file) {
       const fileInfo: any = {
@@ -23,9 +22,6 @@ function DropZoneImageComponent({ image = null, onImageUpload }: any) {
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
   });
-
-  console.log("imageUri", imageUri);
-
   return (
     <div>
       <div>

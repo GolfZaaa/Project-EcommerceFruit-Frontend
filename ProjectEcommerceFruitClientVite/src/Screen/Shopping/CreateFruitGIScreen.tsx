@@ -70,7 +70,6 @@ export default observer(function CreateFruitGIScreen({
 
   const handleChangeFile = (uploadedFiles: File[]) => {
     setNewFiles(uploadedFiles);
-    console.log("Files:", uploadedFiles);
   };
 
   const handleSubmit = async (event: any) => {
@@ -85,13 +84,11 @@ export default observer(function CreateFruitGIScreen({
       categoryId: selectCate,
     };
 
-    console.log("dataForm", dataForm);
 
     await createUpdateProductGI(dataForm, newFiles).then((result) => {
       if (result) {
         onChangeCU();
       }
-      console.log("res", result);
     });
   };
 

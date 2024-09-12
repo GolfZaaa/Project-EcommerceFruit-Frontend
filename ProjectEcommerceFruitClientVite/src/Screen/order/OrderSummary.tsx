@@ -9,10 +9,6 @@ const OrderSummary = () => {
     useStore().addressStore;
 
   const [paging, setPaging] = useState<number>(1);
-
-  console.log("myAddressgotoOrder", JSON.stringify(myAddressgotoOrder));
-  console.log("myAddressgotoOrder2", myAddressgotoOrder);
-
   useEffect(() => {
     getData();
   }, []);

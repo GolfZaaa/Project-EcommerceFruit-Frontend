@@ -48,8 +48,6 @@ export default observer(function CreateShopScreen() {
         }
   );
 
-  console.log("addressed", JSON.stringify(addressed));
-
   const handleChange = (scope: string) => (value: string) => {
     setAddress((oldAddr: Address) => ({
       ...oldAddr,
@@ -90,9 +88,7 @@ export default observer(function CreateShopScreen() {
         myToast("ลงทะเบียนร้านค้าสำเร็จ");
         navigate(RoutePath.dashboardShopScreen);
       }
-      console.log("res", result);
     });
-    console.log("formData", formData);
   };
 
   return (

@@ -44,30 +44,33 @@ const MyAccountScreen = () => {
         return <MyOrderList />;
       case "my-account":
         return <EditAccount />;
-        case "my-dashboard":
-          return <DashboardForUser />;
+      case "my-dashboard":
+        return <DashboardForUser />;
       default:
     }
   };
 
   const drawer = (
     <Box sx={{ display: "flex" }}>
-      <List
-      >
-
-<ListItem  style={{
-          cursor: "pointer",
-        }} onClick={() => setScreenComponent("my-dashboard")}>
+      <List>
+        <ListItem
+          style={{
+            cursor: "pointer",
+          }}
+          onClick={() => setScreenComponent("my-dashboard")}
+        >
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
           <ListItemText primary="แดชบอร์ด" />
         </ListItem>
 
-
-        <ListItem  style={{
-          cursor: "pointer",
-        }} onClick={() => setScreenComponent("my-account")}>
+        <ListItem
+          style={{
+            cursor: "pointer",
+          }}
+          onClick={() => setScreenComponent("my-account")}
+        >
           <ListItemIcon>
             <DashboardIcon />
           </ListItemIcon>
@@ -75,30 +78,33 @@ const MyAccountScreen = () => {
         </ListItem>
         <Collapse timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItem  component={Link} to={RoutePath.firstscreen}>
+            <ListItem component={Link} to={RoutePath.firstscreen}>
               <ListItemText primary="my account Home" sx={{ pl: 4 }} />
             </ListItem>
           </List>
         </Collapse>
-        <ListItem  style={{
-          cursor: "pointer",
-        }} onClick={() => setScreenComponent("addressList")}>
+        <ListItem
+          style={{
+            cursor: "pointer",
+          }}
+          onClick={() => setScreenComponent("addressList")}
+        >
           <ListItemIcon>
             <ShoppingCartIcon />
           </ListItemIcon>
           <ListItemText primary="ที่อยู่" />
         </ListItem>
-        <ListItem  style={{
-          cursor: "pointer",
-        }} onClick={() => setScreenComponent("orderList")}>
+        <ListItem
+          style={{
+            cursor: "pointer",
+          }}
+          onClick={() => setScreenComponent("orderList")}
+        >
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
           <ListItemText primary="คำสั่งซื้อ" />
         </ListItem>
-
-     
-
       </List>
       <Divider orientation="vertical" flexItem sx={{ height: "100vh" }} />
     </Box>

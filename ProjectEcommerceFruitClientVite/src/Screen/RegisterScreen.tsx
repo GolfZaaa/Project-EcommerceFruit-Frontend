@@ -53,9 +53,6 @@ export default observer(function RegisterScreen() {
     if (!valid) {
       return;
     }
-
-    console.log("formData", formData);
-
     const response: any = await register(formData);
     if (response && response.response && response.response.status === 400) {
       setShowToast(true);

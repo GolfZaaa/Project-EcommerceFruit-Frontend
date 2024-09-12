@@ -85,7 +85,6 @@ const AddressList = ({ confirmChangeAddress }: any) => {
     myToast((dataEdit?.id ? "แก้ไข" : "เพิ่ม") + "ที่อยู่สำเร็จ");
     onChangeCU();
     getAddressByUserId();
-    console.log("formData", formData);
   };
 
   const handleChange = (scope: string) => (value: string) => {

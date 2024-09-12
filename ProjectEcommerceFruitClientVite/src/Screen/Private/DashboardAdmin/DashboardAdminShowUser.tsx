@@ -27,7 +27,6 @@ export default observer(function DashboardAdminShowUser() {
     }
   }, [searchUser, userAll]);
 
-  console.log("user", userAll);
 
   const [dropdown, setDropdown] = useState(false);
 
@@ -80,7 +79,6 @@ export default observer(function DashboardAdminShowUser() {
   
 
   const handleDeleteUser = (id:number) => {
-    console.log("id",id)
     DeleteUser(id)
   }
   
@@ -245,10 +243,10 @@ export default observer(function DashboardAdminShowUser() {
                         <div className={`
                           py-1 px-3 border font-semibold rounded-full 
                           ${userItem.hidden 
-                            ? 'text-green-500 bg-green-100 border-green-500 w-28' 
-                            : 'text-red-500 bg-red-100 border-red-500 w-36'}
+                            ?   'text-red-500 bg-red-100 border-red-500 w-36'
+                            : 'text-green-500 bg-green-100 border-green-500 w-28 '}
                         `}>
-                          {userItem.hidden ? 'ใช้งานได้ปกติ' : 'ถูกระงับการใช้งาน'}
+                          {userItem.hidden ? 'ถูกระงับการใช้งาน' : 'ใช้งานได้ปกติ'}
                         </div>
                         </td>
                         <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
