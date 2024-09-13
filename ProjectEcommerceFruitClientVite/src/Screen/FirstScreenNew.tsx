@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import image1 from "../image/FirstScreen1.jpg";
 import image2 from "../image/FirstScreen2.jpg";
 import image3 from "../image/FirstScreen3.png";
@@ -16,6 +16,10 @@ import Footer from "../layout/screen/Footer";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { useStore } from "../store/store";
+import { observer } from "mobx-react-lite";
+import { useNavigate } from "react-router-dom";
+import { pathImages, RoutePath } from "../constants/RoutePath";
+import { Product } from "../models/Product";
 
 const images = [
     image1,
@@ -34,17 +38,47 @@ const settingsImageSlide = {
   autoplaySpeed: 3000,
 };
 
-export default function FirstScreenNew() {
+export default observer(function FirstScreenNew() {
+  const navigate = useNavigate();
 
 
   const { product, getProduct, category, getCategory } =
   useStore().productStore;
 
+  const { getOrdersAll, order } = useStore().orderStore;
+
+  const { getUserAll, userAll } = useStore().userStore;
+
+  
+
+  const [randomProduct, setRandomProduct] = useState<Product>()
+  const [topProducts, setTopProducts] = useState<Product[]>([]);
+
   useEffect(() => {
-    getProduct(0);
+    const fetchData = async () => {
+      await getProduct(0);  
+      await getOrdersAll()
+      await getUserAll();
+    };
+    fetchData();
   }, [getProduct, getCategory]);
 
-  console.log("product",product)
+
+  useEffect(() => {
+    if (product.length > 0) {
+      const funcrandom = Math.floor(Math.random() * product.length);
+      const result:any = product[funcrandom];
+      setRandomProduct(result);
+
+
+      const sortedProducts = [...product].sort((a, b) => b.sold - a.sold);
+      const topFour = sortedProducts.slice(0, 4); 
+      setTopProducts(topFour);
+
+    }
+  }, [product]);
+
+
 
   useEffect(() => {
     AOS.init({
@@ -52,6 +86,28 @@ export default function FirstScreenNew() {
       once: true,  
     });
   }, []);
+
+
+  const removeHTMLTags = (string:any) => {
+    return string.replace(/<\/?[^>]+(>|$)/g, "");
+  };
+
+  const NavigateDetail = (product: any) => {
+    navigate(RoutePath.productDetail(product.id));
+  };
+
+  const OrderDay = () => {
+    const today = new Date();
+
+    return order.filter(x=>{
+      const createDate = new Date(x.createdAt);
+
+      return createDate.getFullYear() === today.getFullYear() &&
+      createDate.getMonth() === today.getMonth() &&
+      createDate.getDate() === today.getDate();
+    })
+  }
+  
 
   return (
     <div>
@@ -112,26 +168,27 @@ export default function FirstScreenNew() {
         <div data-aos="fade-up" className="lg:px-20 md:px-6 px-4 md:py-12 py-8">
           <div data-aos="fade-up" className="flex flex-col-reverse lg:flex-row items-center">
             <div data-aos="fade-up" className="w-full lg:w-1/2 md:py-9 py-6">
-              <img
+            {/* <img
                 src="https://shopee.co.th/blog/wp-content/uploads/2022/02/marian-plum.jpg"
                 alt="bag"
                 className="lg:w-full h-full object-cover object-center w-full"
-              />
+              /> */}
+              <img
+              src={randomProduct && pathImages.product + randomProduct.images}
+              alt="bag"
+              className="lg:w-96 h-96 object-cover object-center w-full"
+            />
             </div>
             <div data-aos="fade-up" className="lg:w-1/2 lg:pl-12 lg:pr-24">
-              <p data-aos="fade-up" className="text-sm leading-none text-gray-600 pb-2">ผลไม้สด</p>
+              <p data-aos="fade-up" className="text-sm leading-none text-gray-600 pb-2">{randomProduct && randomProduct.productGI.category.name}</p>
               <p data-aos="fade-up" className="md:text-3xl lg:text-4xl text-2xl font-semibold lg:leading-9 text-gray-800 lg:pb-6 md:pb-4 pb-2">
-                มะยงชิด
+                {randomProduct && randomProduct.productGI.name}
               </p>
               <p data-aos="fade-up" className="text-sm leading-5 text-gray-600 md:pb-10 pb-8">
-                อีกหนึ่งผลไม้หน้าร้อนที่หลายคนโปรดปราน
-                เป็นผลไม้ฤดูร้อนในตระกูลเดียวกับมะปราง ลักษณะผลเหมือนไข่ไก่
-                สีเหลืองนวลๆ ผลมีทั้งขนาดเล็ก ปานกลาง และใหญ่ ขึ้นอยู่สายพันธุ์
-                ส่วนรสชาติมะยงชิดถ้าแบบดิบรสชาติจะออกเปรี้ยว
-                แต่ถ้าสุกมีรสหวานอมเปรี้ยวนิดๆ หรือบางสายพันธุ์รสหวานเจี๊ยบ
+              {randomProduct && removeHTMLTags(randomProduct && randomProduct.productGI.description)}
               </p>
               <div data-aos="fade-up" className="md:block flex items-center justify-center">
-                <button className="lg:w-auto w-full border border-gray-800 hover:text-gray-50 hover:bg-gray-800 focus:outline-none lg:px-10 px-7 lg:py-4 py-3 text-sm leading-none text-gray-800">
+                <button  onClick={() => NavigateDetail(randomProduct)} className="lg:w-auto w-full border border-gray-800 hover:text-gray-50 hover:bg-gray-800 focus:outline-none lg:px-10 px-7 lg:py-4 py-3 text-sm leading-none text-gray-800">
                   ดูรายละเอียดเพิ่มเติม
                 </button>
               </div>
@@ -150,183 +207,53 @@ export default function FirstScreenNew() {
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 justify-items-between mt-8 gap-y-8 lg:gap-y-0 gap-x-8">
-
-
-
-
-            <div className="flex items-start flex-col">
-              <div className="relative flex justify-center items-center bg-white py-12 px-16">
-                <img
-                  className="w-96 h-24"
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEM6pPxcrip42iEt0Da-dumgQwQ_TZYip4sA&s"
-                  alt="mobile"
-                />
-                <button className="absolute top-4 right-4 flex justify-center items-center p-3.5 bg-white rounded-full">
-                  <svg
-                    className="fill-stroke text-gray-600 hover:text-gray-500"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M6.00002 6.59999V5.39999C6.00002 4.44521 6.37931 3.52953 7.05444 2.8544C7.72957 2.17927 8.64525 1.79999 9.60003 1.79999V1.79999C10.5548 1.79999 11.4705 2.17927 12.1456 2.8544C12.8207 3.52953 13.2 4.44521 13.2 5.39999V6.59999M3.00002 6.59999C2.84089 6.59999 2.68828 6.6632 2.57576 6.77572C2.46324 6.88825 2.40002 7.04086 2.40002 7.19999V15.3C2.40002 16.434 3.36602 17.4 4.50002 17.4H14.7C15.834 17.4 16.8 16.4809 16.8 15.3469V7.19999C16.8 7.04086 16.7368 6.88825 16.6243 6.77572C16.5118 6.6632 16.3592 6.59999 16.2 6.59999H3.00002Z"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+              {topProducts.map((productItem, _) => {
+                console.log("product1",productItem)
+                return (
+                  <div onClick={() => NavigateDetail(productItem)} className="flex items-start flex-col">
+                  <div data-aos="fade-up" className="relative flex justify-center items-center bg-white py-12 px-16">
+                    <img
+                      className="w-96 h-44 object-cover"
+                      src={pathImages.product + productItem.images}
+                      alt="mobile"
                     />
-                    <path
-                      d="M6 8.40002V9.00002C6 9.9548 6.37928 10.8705 7.05442 11.5456C7.72955 12.2207 8.64522 12.6 9.6 12.6C10.5548 12.6 11.4705 12.2207 12.1456 11.5456C12.8207 10.8705 13.2 9.9548 13.2 9.00002V8.40002"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div className="flex flex-col items-start jusitfy-start mt-3 space-y-3">
-                <div>
-                  <p className="text-lg font-medium leading-4 text-gray-800">
-                    ส้ม
-                  </p>
+                    <button className="absolute top-4 right-4 flex justify-center items-center p-3.5 bg-white rounded-full">
+                      <svg
+                        className="fill-stroke text-gray-600 hover:text-gray-500"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M6.00002 6.59999V5.39999C6.00002 4.44521 6.37931 3.52953 7.05444 2.8544C7.72957 2.17927 8.64525 1.79999 9.60003 1.79999V1.79999C10.5548 1.79999 11.4705 2.17927 12.1456 2.8544C12.8207 3.52953 13.2 4.44521 13.2 5.39999V6.59999M3.00002 6.59999C2.84089 6.59999 2.68828 6.6632 2.57576 6.77572C2.46324 6.88825 2.40002 7.04086 2.40002 7.19999V15.3C2.40002 16.434 3.36602 17.4 4.50002 17.4H14.7C15.834 17.4 16.8 16.4809 16.8 15.3469V7.19999C16.8 7.04086 16.7368 6.88825 16.6243 6.77572C16.5118 6.6632 16.3592 6.59999 16.2 6.59999H3.00002Z"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M6 8.40002V9.00002C6 9.9548 6.37928 10.8705 7.05442 11.5456C7.72955 12.2207 8.64522 12.6 9.6 12.6C10.5548 12.6 11.4705 12.2207 12.1456 11.5456C12.8207 10.8705 13.2 9.9548 13.2 9.00002V8.40002"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="flex flex-col items-start jusitfy-start mt-3 space-y-3">
+                    <div data-aos="fade-up" >
+                      <p className="text-lg font-medium leading-4 text-gray-800">
+                        {productItem.productGI.name}
+                      </p>
+                    </div>
+                    <div data-aos="fade-up" >
+                      <p className="text-lg leading-4 text-gray-600">{productItem.price.toLocaleString()} บาท</p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-lg leading-4 text-gray-600">฿ 790</p>
-                </div>
-              </div>
-            </div>
-
-
-
-            <div className="flex items-start flex-col">
-              <div className="relative flex justify-center items-center  bg-white py-12 px-16">
-                <img
-                  className="w-96 h-24"
-                  src="https://st3.depositphotos.com/1005787/14426/i/450/depositphotos_144268053-stock-photo-one-fresh-red-tomato-isolated.jpg"
-                  alt="headphones"
-                />
-                <button className="absolute top-4 right-4 flex justify-center items-center p-3.5 bg-white rounded-full">
-                  <svg
-                    className="fill-stroke text-gray-600 hover:text-gray-500"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M6.00002 6.59999V5.39999C6.00002 4.44521 6.37931 3.52953 7.05444 2.8544C7.72957 2.17927 8.64525 1.79999 9.60003 1.79999V1.79999C10.5548 1.79999 11.4705 2.17927 12.1456 2.8544C12.8207 3.52953 13.2 4.44521 13.2 5.39999V6.59999M3.00002 6.59999C2.84089 6.59999 2.68828 6.6632 2.57576 6.77572C2.46324 6.88825 2.40002 7.04086 2.40002 7.19999V15.3C2.40002 16.434 3.36602 17.4 4.50002 17.4H14.7C15.834 17.4 16.8 16.4809 16.8 15.3469V7.19999C16.8 7.04086 16.7368 6.88825 16.6243 6.77572C16.5118 6.6632 16.3592 6.59999 16.2 6.59999H3.00002Z"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M6 8.40002V9.00002C6 9.9548 6.37928 10.8705 7.05442 11.5456C7.72955 12.2207 8.64522 12.6 9.6 12.6C10.5548 12.6 11.4705 12.2207 12.1456 11.5456C12.8207 10.8705 13.2 9.9548 13.2 9.00002V8.40002"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div className="flex flex-col items-start jusitfy-start mt-3 space-y-3">
-                <div>
-                  <p className="text-lg font-medium leading-4 text-gray-800">
-                    มะเขือเทศ
-                  </p>
-                </div>
-                <div>
-                  <p className="text-lg leading-4 text-gray-600">฿ 245</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-start flex-col">
-              <div className="relative flex justify-center items-center  bg-white py-12 px-16">
-                <img
-                  className="w-96 h-24"
-                  src="https://st4.depositphotos.com/1364311/31366/i/450/depositphotos_313660590-stock-photo-strawberry.jpg"
-                  alt="camera"
-                />
-                <button className="absolute top-4 right-4 flex justify-center items-center p-3.5 bg-white rounded-full">
-                  <svg
-                    className="fill-stroke text-gray-600 hover:text-gray-500"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M6.00002 6.59999V5.39999C6.00002 4.44521 6.37931 3.52953 7.05444 2.8544C7.72957 2.17927 8.64525 1.79999 9.60003 1.79999V1.79999C10.5548 1.79999 11.4705 2.17927 12.1456 2.8544C12.8207 3.52953 13.2 4.44521 13.2 5.39999V6.59999M3.00002 6.59999C2.84089 6.59999 2.68828 6.6632 2.57576 6.77572C2.46324 6.88825 2.40002 7.04086 2.40002 7.19999V15.3C2.40002 16.434 3.36602 17.4 4.50002 17.4H14.7C15.834 17.4 16.8 16.4809 16.8 15.3469V7.19999C16.8 7.04086 16.7368 6.88825 16.6243 6.77572C16.5118 6.6632 16.3592 6.59999 16.2 6.59999H3.00002Z"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M6 8.40002V9.00002C6 9.9548 6.37928 10.8705 7.05442 11.5456C7.72955 12.2207 8.64522 12.6 9.6 12.6C10.5548 12.6 11.4705 12.2207 12.1456 11.5456C12.8207 10.8705 13.2 9.9548 13.2 9.00002V8.40002"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div className="flex flex-col items-start jusitfy-start mt-3 space-y-3">
-                <div>
-                  <p className="text-lg font-medium leading-4 text-gray-800">
-                    สตอเบอรี่
-                  </p>
-                </div>
-                <div>
-                  <p className="text-lg leading-4 text-gray-600">฿ 330</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-start flex-col">
-              <div className="relative flex justify-center items-center  bg-white py-12 px-16">
-                <img
-                  className="w-96 h-24"
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQ1-ID6tAX5gdwNZu6DftaLSCT5_eCS_K36g&s"
-                  alt="speaker"
-                />
-                <button className="absolute top-4 right-4 flex justify-center items-center p-3.5 bg-white rounded-full">
-                  <svg
-                    className="fill-stroke text-gray-600 hover:text-gray-500"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M6.00002 6.59999V5.39999C6.00002 4.44521 6.37931 3.52953 7.05444 2.8544C7.72957 2.17927 8.64525 1.79999 9.60003 1.79999V1.79999C10.5548 1.79999 11.4705 2.17927 12.1456 2.8544C12.8207 3.52953 13.2 4.44521 13.2 5.39999V6.59999M3.00002 6.59999C2.84089 6.59999 2.68828 6.6632 2.57576 6.77572C2.46324 6.88825 2.40002 7.04086 2.40002 7.19999V15.3C2.40002 16.434 3.36602 17.4 4.50002 17.4H14.7C15.834 17.4 16.8 16.4809 16.8 15.3469V7.19999C16.8 7.04086 16.7368 6.88825 16.6243 6.77572C16.5118 6.6632 16.3592 6.59999 16.2 6.59999H3.00002Z"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M6 8.40002V9.00002C6 9.9548 6.37928 10.8705 7.05442 11.5456C7.72955 12.2207 8.64522 12.6 9.6 12.6C10.5548 12.6 11.4705 12.2207 12.1456 11.5456C12.8207 10.8705 13.2 9.9548 13.2 9.00002V8.40002"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div className="flex flex-col items-start jusitfy-start mt-3 space-y-3">
-                <div>
-                  <p className="text-lg font-medium leading-4 text-gray-800">
-                    แอปเปิ้ล
-                  </p>
-                </div>
-                <div>
-                  <p className="text-lg leading-4 text-gray-600">฿ 140</p>
-                </div>
-              </div>
-            </div>
+                )
+              })}
           </div>
         </div>
       </div>
@@ -408,13 +335,13 @@ export default function FirstScreenNew() {
                 strokeLinejoin="round"
               />
             </svg>
-            <p className=" text-xl text-gray-800 font-semibold leading-5 mt-6">
+            <p data-aos="fade-up" className=" text-xl text-gray-800 font-semibold leading-5 mt-6">
               การซื้อสินค้าอย่างปลอดภัย
             </p>
-            <p className=" font-normal text-base leading-6 text-gray-600 my-4">
+            <p data-aos="fade-up" className=" font-normal text-base leading-6 text-gray-600 my-4">
               ร้านค้าทุกสาขาของเรามีมาตรการด้านสุขอนามัยที่เป็นผู้นำในอุตสาหกรรม
             </p>
-            <a className=" cursor-pointer text-base leading-4 font-medium text-gray-800 border-b-2 border-gray-800 hover:text-gray-600 ">
+            <a data-aos="fade-up" className=" cursor-pointer text-base leading-4 font-medium text-gray-800 border-b-2 border-gray-800 hover:text-gray-600 ">
               เรียนรู้เพิ่มเติม
             </a>
           </div>
@@ -463,14 +390,14 @@ export default function FirstScreenNew() {
                 strokeLinejoin="round"
               />
             </svg>
-            <p className=" text-xl text-gray-800 font-semibold leading-5 mt-6">
+            <p data-aos="fade-up" className=" text-xl text-gray-800 font-semibold leading-5 mt-6">
               การช็อปปิ้งส่วนตัว
             </p>
-            <p className=" font-normal text-base leading-6 text-gray-600 my-4">
+            <p data-aos="fade-up" className=" font-normal text-base leading-6 text-gray-600 my-4">
               ธุรกิจจำหน่ายผลไม้ออนไลน์เป็นช่องทางที่เพิ่มความสะดวกสบายให้แก่ผู้บริโภค
               โดยนำเสนอผลิตภัณฑ์สดใหม่จากสวนสู่หน้าจอ พร้อมบริการจัดส่งถึงบ้าน
             </p>
-            <a className=" cursor-pointer text-base leading-4 font-medium text-gray-800 border-b-2 border-gray-800 hover:text-gray-600 ">
+            <a data-aos="fade-up" className=" cursor-pointer text-base leading-4 font-medium text-gray-800 border-b-2 border-gray-800 hover:text-gray-600 ">
               เรียนรู้เพิ่มเติม
             </a>
           </div>
@@ -493,16 +420,16 @@ export default function FirstScreenNew() {
                 />
               </g>
             </svg>
-            <p className=" text-xl text-gray-800 font-semibold leading-5 mt-6">
+            <p data-aos="fade-up" className=" text-xl text-gray-800 font-semibold leading-5 mt-6">
               จัดส่งฟรี
             </p>
-            <p className=" font-normal text-base leading-6 text-gray-600 my-4">
+            <p data-aos="fade-up" className=" font-normal text-base leading-6 text-gray-600 my-4">
               จัดส่งฟรีเมื่อช็อปปิ้งเมื่อสั่งซื้อเกิน ฿ 100
               สำหรับทุกรายการสินค้าในร้าน ไม่มีข้อยกเว้น
               ประหยัดค่าส่งและรับสินค้าถึงบ้านอย่างรวดเร็วภายใน 3-5 วันทำการ
               โปรโมชั่นพิเศษนี้มีระยะเวลาจำกัด
             </p>
-            <a className=" cursor-pointer text-base leading-4 font-medium text-gray-800 border-b-2 border-gray-800 hover:text-gray-600 ">
+            <a data-aos="fade-up" className=" cursor-pointer text-base leading-4 font-medium text-gray-800 border-b-2 border-gray-800 hover:text-gray-600 ">
               เรียนรู้เพิ่มเติม
             </a>
           </div>
@@ -535,7 +462,7 @@ export default function FirstScreenNew() {
             <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-2 gap-x-2 gap-y-2 lg:gap-x-6 md:gap-x-6 md:gap-y-6">
               <div className="flex justify-center flex-col items-center w-36 h-36 md:w-44 md:h-48 lg:w-56 lg:h-56 bg-white shadow rounded-2xl">
                 <h2 className="lg:text-5xl md:text-4xl text-2xl font-extrabold leading-10 text-center text-gray-800">
-                  402
+                  {order.length}
                 </h2>
                 <p className="mt-4 text-sm md:text-base lg:text-lg leading-none text-center text-gray-600">
                   จำนวนคำสั่งซื้อทั้งหมด
@@ -543,7 +470,7 @@ export default function FirstScreenNew() {
               </div>
               <div className="flex justify-center flex-col items-center w-36 h-36 md:w-44 md:h-48 lg:w-56 lg:h-56 bg-white shadow rounded-2xl">
                 <h2 className="lg:text-5xl md:text-4xl text-2xl font-extrabold leading-10 text-center text-gray-800">
-                  540
+                  {product.length}
                 </h2>
                 <p className="mt-4 text-sm md:text-base lg:text-lg leading-none text-center text-gray-600">
                   รายการผลไม้ทั้งหมด
@@ -551,7 +478,7 @@ export default function FirstScreenNew() {
               </div>
               <div className="flex justify-center flex-col items-center w-36 h-36 md:w-44 md:h-48 lg:w-56 lg:h-56 bg-white shadow rounded-2xl">
                 <h2 className="lg:text-5xl md:text-4xl text-2xl font-extrabold leading-10 text-center text-gray-800">
-                  30
+                  {userAll.length}
                 </h2>
                 <p className="mt-4 text-sm md:text-base lg:text-lg leading-none text-center text-gray-600">
                   ผู้ใช้ทั้งหมด
@@ -559,7 +486,7 @@ export default function FirstScreenNew() {
               </div>
               <div className="flex justify-center flex-col items-center w-36 h-36 md:w-44 md:h-48 lg:w-56 lg:h-56 bg-white shadow rounded-2xl">
                 <h2 className="lg:text-5xl md:text-4xl text-2xl font-extrabold leading-10 text-center text-gray-800">
-                  25
+                  {OrderDay.length}
                 </h2>
                 <p className="mt-4 text-sm md:text-base lg:text-lg leading-none text-center text-gray-600">
                   ยอดขายของวันนี้
@@ -674,4 +601,4 @@ export default function FirstScreenNew() {
       <Footer/>
     </div>
   );
-}
+});
