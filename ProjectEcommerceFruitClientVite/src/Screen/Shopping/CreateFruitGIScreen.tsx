@@ -57,7 +57,7 @@ export default observer(function CreateFruitGIScreen({
 
   const [files, setFiles] = useState<File[] | string[] | null | any>(
     dataEdit?.id !== undefined
-      ? dataEdit.images.map((item) => ({
+      ? dataEdit?.images?.map((item) => ({
           id: item.id,
           name: pathImages.product_GI + item.imageName,
         }))
@@ -83,7 +83,6 @@ export default observer(function CreateFruitGIScreen({
       description: editorHtml || "<p></p>",
       categoryId: selectCate,
     };
-
 
     await createUpdateProductGI(dataForm, newFiles).then((result) => {
       if (result) {
@@ -252,7 +251,7 @@ export default observer(function CreateFruitGIScreen({
                         onClick={() => {
                           removeImage(url.id).then(() => {
                             setFiles(
-                              files.filter((file: any) => file.id !== url.id)
+                              files?.filter((file: any) => file.id !== url.id)
                             );
                           });
                           handleOpenClose(false);

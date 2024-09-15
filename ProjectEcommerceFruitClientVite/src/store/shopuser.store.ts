@@ -9,12 +9,10 @@ interface CreateandUpdateInterface {
   description: string;
 }
 
-
 export default class ShopUserStore {
   usershop: Store | null = null;
   shopAll: Store[] = [];
   shopProductUser: Product[] = [];
-
 
   constructor() {
     makeAutoObservable(this);
@@ -59,7 +57,7 @@ export default class ShopUserStore {
     }
   };
 
-  GetStoreProductUser = async (id: number) => {
+  GetStoreProductUser = async (id: number | undefined) => {
     try {
       const result = await agent.Shop.GetStoreProductUser(id);
       this.shopProductUser = result;
@@ -68,5 +66,4 @@ export default class ShopUserStore {
       return error;
     }
   };
-
 }

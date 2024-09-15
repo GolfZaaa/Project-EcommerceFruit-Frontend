@@ -4,16 +4,11 @@ import { useStore } from "../../store/store";
 import { useEffect } from "react";
 
 export default observer(function DashboardForUser() {
-
-  
   const { getOrdersByUser, order } = useStore().orderStore;
 
-  useEffect(()  =>  {
-    getOrdersByUser()
-  }, [])
-
-  console.log("order",order)
-  
+  useEffect(() => {
+    getOrdersByUser();
+  }, []);
 
   const lineChartDataFiltered = [
     { date: "January", price: 120000 },

@@ -26,11 +26,13 @@ import DropZoneImageComponent from "../../layout/component/DropZoneImageComponen
 interface props {
   onChangeCU?: any | null;
   dataEdit?: Product | null;
+  id?: any | null;
 }
 
 export default observer(function CreateProductScreen({
   onChangeCU,
   dataEdit,
+  id = 1,
 }: props) {
   const { productGI, getProductGI, createUpdateProduct } =
     useStore().productStore;
@@ -44,7 +46,7 @@ export default observer(function CreateProductScreen({
   const [dropZoneImage, setDropZoneImage] = useState(null);
 
   useEffect(() => {
-    getProductGI();
+    getProductGI(id);
   }, []);
 
   const handleChange = (html: any) => {
@@ -155,7 +157,12 @@ export default observer(function CreateProductScreen({
             </Grid>
             <Grid item xs={6}>
               <Grid>
-                <FormControl fullWidth variant="outlined" margin="normal">
+                <FormControl
+                  fullWidth
+                  variant="outlined"
+                  margin="normal"
+                  disabled={!id}
+                >
                   <InputLabel>ข้อมูลผลไม้ (GI)</InputLabel>
                   <Select
                     defaultValue={dataEdit?.productGIId}

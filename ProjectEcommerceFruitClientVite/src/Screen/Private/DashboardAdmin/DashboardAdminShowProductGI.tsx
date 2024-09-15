@@ -2,39 +2,45 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { useStore } from "../../../store/store";
 import { AiFillFileExcel } from "react-icons/ai";
-import ExcelJS from 'exceljs';
+import ExcelJS from "exceljs";
+import { ProductGI } from "../../../models/ProductGI";
+import CreateFruitGIScreen from "../../Shopping/CreateFruitGIScreen";
+import Switch from "@mui/joy/Switch";
+import Typography from "@mui/joy/Typography";
+import { MySwitch } from "../../../helper/components/MySwitch";
 
 export default observer(function DashboardAdminShowProductGI() {
-  const { productGI, getProductGIAll, HiddenProductGI } = useStore().productStore;
-  const [searchUser, setSearchUser] = useState<any>('');
+  const { productGI, getProductGIAll, HiddenProductGI } =
+    useStore().productStore;
+  const [searchUser, setSearchUser] = useState<any>("");
   const [filterUser, setfilterUser] = useState<any>([]);
 
-
+  const [editMode, setEditMode] = useState(false);
+  const [dataEdit, setDataEdit] = useState<ProductGI | null>();
 
   useEffect(() => {
     getProductGIAll();
   }, []);
 
   useEffect(() => {
-    if (searchUser === '') {
-        setfilterUser(productGI);
+    if (searchUser === "") {
+      setfilterUser(productGI);
     } else {
       const lowercasedSearchTerm = searchUser.toLowerCase();
-      const filtered = productGI.filter((user:any) =>
-        user.name.toLowerCase().includes(lowercasedSearchTerm) ||
-        user.categoryName.toLowerCase().includes(lowercasedSearchTerm) ||
-        user.storeName.toLowerCase().includes(lowercasedSearchTerm)
+      const filtered = productGI.filter(
+        (user: any) =>
+          user.name.toLowerCase().includes(lowercasedSearchTerm) ||
+          user.categoryName.toLowerCase().includes(lowercasedSearchTerm) ||
+          user.storeName.toLowerCase().includes(lowercasedSearchTerm)
       );
       setfilterUser(filtered);
     }
   }, [searchUser, productGI]);
-  
-
 
   const generateExcel = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("ProductGI");
-  
+
     worksheet.columns = [
       { header: "ลำดับ", key: "index", width: 10 },
       { header: "ชื่อผลไม้", key: "name", width: 30 },
@@ -48,24 +54,26 @@ export default observer(function DashboardAdminShowProductGI() {
         name: productgi.name,
         categoryName: productgi.categoryName,
         storeName: productgi.storeName,
-        status: productgi.status ? 'ใช้งานได้ปกติ' : 'ปิดการใช้งาน',
+        status: productgi.status ? "ใช้งานได้ปกติ" : "ปิดการใช้งาน",
       });
       row.eachCell((cell) => {
-        cell.alignment = { vertical: 'middle', horizontal: 'center' };
+        cell.alignment = { vertical: "middle", horizontal: "center" };
       });
     });
-    
+
     const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-  const date = new Date();
-  const day = date.getDate().toString().padStart(2, '0');
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const year = date.getFullYear();
-  const fileName = `productgi_${day}-${month}-${year}`;
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const date = new Date();
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    const fileName = `productgi_${day}-${month}-${year}`;
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download =  fileName + ".xlsx";
+    a.download = fileName + ".xlsx";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -77,169 +85,182 @@ export default observer(function DashboardAdminShowProductGI() {
     setDropdown(!dropdown);
   };
 
-  const handleHiddenProductGI = (productGI:any) => {
-    HiddenProductGI(productGI.id)
-  }
+  const handleHiddenProductGI = (productGI: any) => {
+    HiddenProductGI(productGI.id);
+  };
+
+  const onChangeCU = () => {
+    getProductGIAll();
+    setEditMode(!editMode);
+  };
 
   return (
-    <div className="p-4">
-      <div className="flex flex-col">
-        <div className=" overflow-x-auto">
-          <div className="min-w-full inline-block align-middle">
-            <div className="relative  text-gray-500 focus-within:text-gray-900 mb-4">
-              <div className="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none ">
-                <svg
-                  className="w-5 h-5"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M17.5 17.5L15.4167 15.4167M15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333C11.0005 15.8333 12.6614 15.0929 13.8667 13.8947C15.0814 12.6872 15.8333 11.0147 15.8333 9.16667Z"
-                    stroke="#9CA3AF"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M17.5 17.5L15.4167 15.4167M15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333C11.0005 15.8333 12.6614 15.0929 13.8667 13.8947C15.0814 12.6872 15.8333 11.0147 15.8333 9.16667Z"
-                    stroke="black"
-                    stroke-opacity="0.2"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M17.5 17.5L15.4167 15.4167M15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333C11.0005 15.8333 12.6614 15.0929 13.8667 13.8947C15.0814 12.6872 15.8333 11.0147 15.8333 9.16667Z"
-                    stroke="black"
-                    stroke-opacity="0.2"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              </div>
-
-              <input
-                type="text"
-                id="default-search"
-                className="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none bg-white"
-                placeholder="ค้นหาข้อมูล"
-                value={searchUser}
-                onChange={(e) => setSearchUser(e.target.value)}
-              />
-
-<div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                <div className="relative inline-block text-left">
-                  <div>
-                    <button
-                      onClick={handleDropdown}
-                      type="button"
-                      className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                      id="menu-button"
-                      aria-expanded="true"
-                      aria-haspopup="true"
+    <>
+      {editMode ? (
+        <CreateFruitGIScreen onChangeCU={onChangeCU} dataEdit={dataEdit} />
+      ) : (
+        <div className="p-4">
+          <div className="flex flex-col">
+            <div className=" overflow-x-auto">
+              <div className="min-w-full inline-block align-middle">
+                <div className="relative  text-gray-500 focus-within:text-gray-900 mb-4">
+                  <div className="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none ">
+                    <svg
+                      className="w-5 h-5"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      ดาวน์โหลดข้อมูล
-                      <svg
-                        className="-mr-1 h-5 w-5 text-gray-400"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </button>
+                      <path
+                        d="M17.5 17.5L15.4167 15.4167M15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333C11.0005 15.8333 12.6614 15.0929 13.8667 13.8947C15.0814 12.6872 15.8333 11.0147 15.8333 9.16667Z"
+                        stroke="#9CA3AF"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M17.5 17.5L15.4167 15.4167M15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333C11.0005 15.8333 12.6614 15.0929 13.8667 13.8947C15.0814 12.6872 15.8333 11.0147 15.8333 9.16667Z"
+                        stroke="black"
+                        stroke-opacity="0.2"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M17.5 17.5L15.4167 15.4167M15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333C11.0005 15.8333 12.6614 15.0929 13.8667 13.8947C15.0814 12.6872 15.8333 11.0147 15.8333 9.16667Z"
+                        stroke="black"
+                        stroke-opacity="0.2"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                    </svg>
                   </div>
 
-                  {dropdown && (
-                    <div
-                      className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                      role="menu"
-                      aria-orientation="vertical"
-                      aria-labelledby="menu-button"
-                    >
-                      <div className="py-1 cursor-pointer" role="none">
-                        <a
-                          href="#"
-                          className="block px-4 py-2 text-sm text-gray-700"
-                          role="menuitem"
-                          id="menu-item-0"
-                        >
-                          PDF
-                        </a>
-                        <div className="">
-                        <button
-                          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:bg-gray-200 hover:font-bold w-full"
-                          onClick={generateExcel}
-                          role="menuitem"
-                          id="menu-item-1"
-                        >
-                          <AiFillFileExcel className="mr-2 text-green-600" size={25} />
-                          EXCEL
-                        </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className="overflow-hidden ">
-              <table className="min-w-full border border-gray-300 rounded-tl-lg rounded-tr-lg overflow-hidden">
-                <thead className="bg-slate-200">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tl-lg"
-                    >
-                      ลำดับ
-                    </th>
-                    <th
-                      scope="col"
-                      className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
-                    >
-                      ชื่อผลไม้
-                    </th>
-                    <th
-                      scope="col"
-                      className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
-                    >
-                      ประเภท
-                    </th>
-                    
-                    <th
-                      scope="col"
-                      className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
-                    >
-                      ชื่อร้าน
-                    </th>
-                    <th
-                      scope="col"
-                      className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
-                    >
-                      สถานะ
-                    </th>
-                    <th
-                      scope="col"
-                      className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
-                    >
-                     
-                    </th>
-                    <th
-                      scope="col"
-                      className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tr-lg"
-                    >
-                      ตั้งค่า
-                    </th>
-                  </tr>
-                </thead>
+                  <input
+                    type="text"
+                    id="default-search"
+                    className="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none bg-white"
+                    placeholder="ค้นหาข้อมูล"
+                    value={searchUser}
+                    onChange={(e) => setSearchUser(e.target.value)}
+                  />
 
-                <tbody className="divide-y divide-gray-300">
-                  {filterUser.map((userItem:any, index:any) => {
-                      return (
-                          <tr className="bg-white transition-all duration-500 hover:bg-gray-50">
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                    <div className="relative inline-block text-left">
+                      <div>
+                        <button
+                          onClick={handleDropdown}
+                          type="button"
+                          className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                          id="menu-button"
+                          aria-expanded="true"
+                          aria-haspopup="true"
+                        >
+                          ดาวน์โหลดข้อมูล
+                          <svg
+                            className="-mr-1 h-5 w-5 text-gray-400"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            aria-hidden="true"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                              clip-rule="evenodd"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+
+                      {dropdown && (
+                        <div
+                          className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                          role="menu"
+                          aria-orientation="vertical"
+                          aria-labelledby="menu-button"
+                        >
+                          <div className="py-1 cursor-pointer" role="none">
+                            <a
+                              href="#"
+                              className="block px-4 py-2 text-sm text-gray-700"
+                              role="menuitem"
+                              id="menu-item-0"
+                            >
+                              PDF
+                            </a>
+                            <div className="">
+                              <button
+                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:bg-gray-200 hover:font-bold w-full"
+                                onClick={generateExcel}
+                                role="menuitem"
+                                id="menu-item-1"
+                              >
+                                <AiFillFileExcel
+                                  className="mr-2 text-green-600"
+                                  size={25}
+                                />
+                                EXCEL
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="overflow-hidden ">
+                  <table className="min-w-full border border-gray-300 rounded-tl-lg rounded-tr-lg overflow-hidden">
+                    <thead className="bg-slate-200">
+                      <tr>
+                        <th
+                          scope="col"
+                          className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tl-lg"
+                        >
+                          ลำดับ
+                        </th>
+                        <th
+                          scope="col"
+                          className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
+                        >
+                          ชื่อผลไม้
+                        </th>
+                        <th
+                          scope="col"
+                          className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
+                        >
+                          ประเภท
+                        </th>
+
+                        <th
+                          scope="col"
+                          className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
+                        >
+                          ชื่อร้าน
+                        </th>
+                        <th
+                          scope="col"
+                          className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
+                        >
+                          สถานะ
+                        </th>
+                        <th
+                          scope="col"
+                          className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
+                        ></th>
+                        <th
+                          scope="col"
+                          className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tr-lg"
+                        >
+                          ตั้งค่า
+                        </th>
+                      </tr>
+                    </thead>
+
+                    <tbody className="divide-y divide-gray-300">
+                      {filterUser?.map((userItem: any, index: any) => {
+                        return (
+                          <tr
+                            key={index}
+                            className="bg-white transition-all duration-500 hover:bg-gray-50"
+                          >
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
                               {" "}
                               {index + 1}
@@ -257,23 +278,72 @@ export default observer(function DashboardAdminShowProductGI() {
                               {userItem.storeName}
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                      <div className={`
-                          py-1 px-3 border font-semibold rounded-full 
-                          ${userItem.status 
-                            ? 'text-green-500 bg-green-100 border-green-500 w-28' 
-                            : 'text-red-500 bg-red-100 border-red-500 w-28'}
-                        `}>
-                          {userItem.status ? 'ใช้งานได้ปกติ' : 'ปิดการใช้งาน'}
-                        </div>
-
-
+                              <div
+                              //         className={`
+                              //   py-1 px-3 border font-semibold rounded-full
+                              //   ${
+                              //     userItem.status
+                              //       ? "text-green-500 bg-green-100 border-green-500 w-28"
+                              //       : "text-red-500 bg-red-100 border-red-500 w-28"
+                              //   }
+                              // `}
+                              >
+                                <MySwitch
+                                  handleChange={() =>
+                                    handleHiddenProductGI(userItem)
+                                  }
+                                  checked={userItem.status}
+                                />
+                                {/* <Switch
+                                  onClick={() =>
+                                    handleHiddenProductGI(userItem)
+                                  }
+                                  defaultChecked={userItem.status}
+                                  slotProps={{
+                                    track: {
+                                      children: (
+                                        <React.Fragment>
+                                          <Typography
+                                            component="span"
+                                            level="inherit"
+                                            sx={{ ml: "5px" }}
+                                          >
+                                            เปิด
+                                          </Typography>
+                                          <Typography
+                                            component="span"
+                                            level="inherit"
+                                            sx={{ mr: "8px" }}
+                                          >
+                                            ปิด
+                                          </Typography>
+                                        </React.Fragment>
+                                      ),
+                                    },
+                                  }}
+                                  sx={{
+                                    "--Switch-thumbSize": "27px",
+                                    "--Switch-trackWidth": "74px",
+                                    "--Switch-trackHeight": "31px",
+                                  }}
+                                /> */}
+                                {/* {userItem.status
+                                  ? "ใช้งานได้ปกติ"
+                                  : "ปิดการใช้งาน"} */}
+                              </div>
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               {" "}
                             </td>
                             <td className=" p-5 ">
                               <div className="flex items-center gap-1">
-                                <button className="p-2  rounded-full  group transition-all duration-500  flex item-center">
+                                <button
+                                  onClick={() => {
+                                    setDataEdit(userItem);
+                                    onChangeCU();
+                                  }}
+                                  className="p-2  rounded-full  group transition-all duration-500  flex item-center"
+                                >
                                   <svg
                                     className="cursor-pointer"
                                     width="20"
@@ -289,7 +359,12 @@ export default observer(function DashboardAdminShowProductGI() {
                                     ></path>
                                   </svg>
                                 </button>
-                                <button onClick={() => handleHiddenProductGI(userItem)} className="p-2 rounded-full  group transition-all duration-500  flex item-center">
+                                {/* <button
+                                  onClick={() =>
+                                    handleHiddenProductGI(userItem)
+                                  }
+                                  className="p-2 rounded-full  group transition-all duration-500  flex item-center"
+                                >
                                   <svg
                                     className=""
                                     width="20"
@@ -304,7 +379,7 @@ export default observer(function DashboardAdminShowProductGI() {
                                       fill="#F87171"
                                     ></path>
                                   </svg>
-                                </button>
+                                </button> */}
                                 <button className="p-2 rounded-full  group transition-all duration-500  flex item-center">
                                   <svg
                                     width="20"
@@ -325,14 +400,16 @@ export default observer(function DashboardAdminShowProductGI() {
                               </div>
                             </td>
                           </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 });

@@ -1,7 +1,6 @@
 import { Address } from "./Address";
 import { Store } from "./Store";
 import { CartItem } from "./CartItem";
-import { Address } from "./Address";
 
 export interface User {
   id: number;

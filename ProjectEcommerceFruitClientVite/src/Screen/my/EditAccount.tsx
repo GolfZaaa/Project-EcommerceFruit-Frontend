@@ -4,8 +4,16 @@ import { TextField, Box, CardActions, Button, Card } from "@mui/material";
 import { useStore } from "../../store/store";
 import { myToast } from "../../helper/components";
 
-const EditAccount = () => {
+interface props {
+  onChangeCU?: any;
+  userEdit?: any;
+}
+
+const EditAccount = ({ onChangeCU, userEdit }: props) => {
   const { user, editUser } = useStore().userStore;
+
+  console.log("userEdit", JSON.stringify(userEdit));
+  console.log("userEdit - 1111", !!userEdit ? userEdit.id : 0);
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -13,16 +21,22 @@ const EditAccount = () => {
     const formData: any = Object.fromEntries(data.entries());
 
     const dataForm = {
+      id: !!userEdit ? userEdit.id : 0,
       fullName: formData?.fullName,
     };
 
     await editUser(dataForm).then((result) => {
       if (!!result) {
         myToast("แก้ไขเสร็จสิ้น");
+        if (userEdit) {
+          onChangeCU();
+        }
       }
       myToast(result);
     });
   };
+
+  const data = userEdit ? userEdit : user;
 
   return (
     <Box
@@ -40,7 +54,7 @@ const EditAccount = () => {
         }}
       >
         <TextField
-          defaultValue={user?.fullName}
+          defaultValue={data?.fullName}
           fullWidth
           label="ชื่อ-นามสกุล"
           variant="outlined"

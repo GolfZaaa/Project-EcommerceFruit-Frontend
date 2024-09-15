@@ -172,11 +172,14 @@ const ProductList = () => {
     setOpen(false);
   };
 
-
   return (
     <div className="-mt-16">
       {onCreate ? (
-        <CreateProductScreen onChangeCU={onChangeCU} dataEdit={dataEdit} />
+        <CreateProductScreen
+          onChangeCU={onChangeCU}
+          dataEdit={dataEdit}
+          id={undefined}
+        />
       ) : (
         <Container maxWidth="lg">
           <Box

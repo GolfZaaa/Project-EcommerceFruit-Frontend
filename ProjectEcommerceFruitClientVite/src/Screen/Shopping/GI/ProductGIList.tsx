@@ -133,7 +133,7 @@ const ProductGIList = () => {
   const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
-    getProductGI();
+    getProductGI(0);
     getCategory();
   }, []);
 

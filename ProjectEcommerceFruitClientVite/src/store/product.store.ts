@@ -68,9 +68,9 @@ export default class ProductStore {
 
   //-------------------------------------------- product-GI ----------------------------------------------------//
 
-  getProductGI = async () => {
+  getProductGI = async (id?: any | null) => {
     try {
-      const result = await agent.Product.getProductGI();
+      const result = await agent.Product.getProductGI(id);
       this.productGI = result;
     } catch (error) {
       return error;
@@ -80,7 +80,7 @@ export default class ProductStore {
   createUpdateProductGI = async (values: any, files: any) => {
     try {
       const result = await agent.Product.createUpdateProductGI(values, files);
-      this.getProductGI();
+      this.getProductGI(0);
       return result;
     } catch (error) {
       return error;
@@ -90,7 +90,7 @@ export default class ProductStore {
   removeProductGI = async (id: number) => {
     try {
       await agent.Product.removeProductGI(id);
-      this.getProductGI();
+      this.getProductGI(0);
     } catch (error) {
       return error;
     }
@@ -99,7 +99,7 @@ export default class ProductStore {
   removeImage = async (id: number) => {
     try {
       await agent.Product.removeImage(id);
-      this.getProductGI();
+      this.getProductGI(0);
     } catch (error) {
       return error;
     }

@@ -350,6 +350,7 @@ export default observer(function HomeScreen() {
                       รายการผลไม้ทั้งหมด
                     </div>
                   </div>
+
                   {user && user.id && (
                     <div
                       onClick={handletaps2}

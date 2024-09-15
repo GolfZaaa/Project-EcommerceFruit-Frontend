@@ -11,11 +11,13 @@ export const Product = {
     requests.get(`Product/GetProductById?productId=${productId}`),
   removeProduct: (productId: number) =>
     requests.delete(`Product/RemoveProductById?productId=${productId}`),
-  deleteProduct: (id: any) => requests.delete(`Product/RemoveProductById?productId=${id}`),
+  deleteProduct: (id: any) =>
+    requests.delete(`Product/RemoveProductById?productId=${id}`),
 
   //-------------------------------------------- product-GI ----------------------------------------------------//
 
-  getProductGI: () => requests.get(`ProductGI/GetProductGI`),
+  getProductGI: (id?: any | null) =>
+    requests.get(`ProductGI/GetProductGI?id=${id}`),
   createUpdateProductGI: (values: any, files: any) => {
     const data = createFormData(values);
 
@@ -30,7 +32,8 @@ export const Product = {
   removeImage: (id: number) =>
     requests.delete(`ProductGI/RemoveImage?productGiId=${id}`),
 
-  hiddenProductGi: (id: any) => requests.delete(`ProductGI/HiddenProductGI?productGIId=${id}`),
+  hiddenProductGi: (id: any) =>
+    requests.delete(`ProductGI/HiddenProductGI?productGIId=${id}`),
   //-------------------------------------------- category ----------------------------------------------------//
 
   getCategory: () => requests.get("ProductGI/GetCategories"),

@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  AppBar,
-  IconButton,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { observer } from "mobx-react-lite";
 import { NavLink } from "react-router-dom";
@@ -15,6 +10,7 @@ import { useStore } from "../../../store/store";
 import DashboardAdminShowProduct from "./DashboardAdminShowProduct";
 import DashboardAdminShowProductGI from "./DashboardAdminShowProductGI";
 import DashboardAdminShowOrder from "./DashboardAdminShowOrder";
+import DashboardAdminShowSystemSetting from "./DashboardAdminShowSystemSetting";
 
 export default observer(function DashboardAdminHomePageScreen() {
   const [show, setShow] = useState(false);
@@ -23,48 +19,55 @@ export default observer(function DashboardAdminHomePageScreen() {
   const { getProduct, product } = useStore().productStore;
   const { getOrdersAll, order } = useStore().orderStore;
 
-
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const [screenComponent, setScreenComponent] = useState("DashboardAdminShowUser");
+  const [screenComponent, setScreenComponent] = useState(
+    "DashboardAdminShowUser"
+  );
 
   const renderScreens = () => {
     switch (screenComponent) {
       case "DashboardAdminShowUser":
         return <DashboardAdminShowUser />;
-        case "DashboardAdminShowStore":
-          return <DashboardAdminShowStore />;
-          case "DashboardAdminShowProduct":
-            return <DashboardAdminShowProduct />;
-            case "DashboardAdminShowProductGI":
-              return <DashboardAdminShowProductGI />;
-              case "DashboardAdminShowOrder":
-                return <DashboardAdminShowOrder />;
+      case "DashboardAdminShowStore":
+        return <DashboardAdminShowStore />;
+      case "DashboardAdminShowProduct":
+        return <DashboardAdminShowProduct />;
+      case "DashboardAdminShowProductGI":
+        return <DashboardAdminShowProductGI />;
+      case "DashboardAdminShowOrder":
+        return <DashboardAdminShowOrder />;
+      case "DashboardAdminShowSystemSetting":
+        return <DashboardAdminShowSystemSetting />;
       default:
     }
   };
 
   const handleDashboardAdminShowStore = () => {
-    getStoreAll()
-    setScreenComponent("DashboardAdminShowStore")
-  }
+    getStoreAll();
+    setScreenComponent("DashboardAdminShowStore");
+  };
 
   const handleDashboardAdminShowProduct = () => {
-    getProduct(0)
-    setScreenComponent("DashboardAdminShowProduct")
-  }
-  
+    getProduct(0);
+    setScreenComponent("DashboardAdminShowProduct");
+  };
+
   const handleDashboardAdminShowProductGI = () => {
-    setScreenComponent("DashboardAdminShowProductGI")
-  }
+    setScreenComponent("DashboardAdminShowProductGI");
+  };
 
   const handleDashboardAdminShowOrder = () => {
-    getOrdersAll()
-    setScreenComponent("DashboardAdminShowOrder")
-  }
+    getOrdersAll();
+    setScreenComponent("DashboardAdminShowOrder");
+  };
 
+  const handleDashboardAdminShowSystemSetting = () => {
+    getOrdersAll();
+    setScreenComponent("DashboardAdminShowSystemSetting");
+  };
 
   return (
     <div className="flex">
@@ -202,7 +205,10 @@ export default observer(function DashboardAdminHomePageScreen() {
             } bg-white transform  xl:translate-x-0 ease-in-out transition duration-500 flex justify-start items-start w-full sm:w-72   flex-col h-full`}
           >
             <div className="xl:mt-6 flex flex-col justify-start items-start  px-4 w-full space-y-3 pb-5 ">
-              <button onClick={() => setScreenComponent("DashboardAdminShowUser")}  className="focus:outline-none flex jusitfy-start hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4 items-center space-x-6 w-full ">
+              <button
+                onClick={() => setScreenComponent("DashboardAdminShowUser")}
+                className="focus:outline-none flex jusitfy-start hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4 items-center space-x-6 w-full "
+              >
                 <svg
                   className="fill-stroke "
                   width={24}
@@ -242,7 +248,10 @@ export default observer(function DashboardAdminHomePageScreen() {
                 </svg>
                 <p className="text-base leading-4 ">ข้อมูลผู้ใช้งาน</p>
               </button>
-              <button onClick={handleDashboardAdminShowStore} className="focus:outline-none flex jusitfy-start hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4  items-center w-full  space-x-6">
+              <button
+                onClick={handleDashboardAdminShowStore}
+                className="focus:outline-none flex jusitfy-start hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4  items-center w-full  space-x-6"
+              >
                 <svg
                   width={24}
                   height={24}
@@ -265,9 +274,12 @@ export default observer(function DashboardAdminHomePageScreen() {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <p  className="text-base leading-4 ">ข้อมูลร้านค้าทั้งหมด</p>
+                <p className="text-base leading-4 ">ข้อมูลร้านค้าทั้งหมด</p>
               </button>
-              <button onClick={handleDashboardAdminShowProduct} className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full ">
+              <button
+                onClick={handleDashboardAdminShowProduct}
+                className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full "
+              >
                 <svg
                   width={24}
                   height={24}
@@ -306,7 +318,10 @@ export default observer(function DashboardAdminHomePageScreen() {
                 </svg>
                 <p className="text-base leading-4  ">ข้อมูลสินค้าทั้งหมด</p>
               </button>
-              <button onClick={handleDashboardAdminShowProductGI} className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full ">
+              <button
+                onClick={handleDashboardAdminShowProductGI}
+                className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full "
+              >
                 <svg
                   width={24}
                   height={24}
@@ -345,7 +360,10 @@ export default observer(function DashboardAdminHomePageScreen() {
                 </svg>
                 <p className="text-base leading-4  ">ข้อมูล GI ทั้งหมด</p>
               </button>
-              <button onClick={handleDashboardAdminShowOrder} className="flex justify-start items-center space-x-6 hover:text-white focus:outline-none focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4  w-full ">
+              <button
+                onClick={handleDashboardAdminShowOrder}
+                className="flex justify-start items-center space-x-6 hover:text-white focus:outline-none focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4  w-full "
+              >
                 <svg
                   width={24}
                   height={24}
@@ -382,7 +400,7 @@ export default observer(function DashboardAdminHomePageScreen() {
               <hr className=" border-gray-100 w-full" />
             </div>
             <div className="mt-6 flex flex-col justify-start items-start  px-4 w-full space-y-3 pb-5 ">
-              <button className="focus:outline-none flex justify-start items-center  hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4  w-full ">
+              {/* <button className="focus:outline-none flex justify-start items-center  hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4  w-full ">
                 <div className="flex justify-between items-center  w-full">
                   <div className="flex justify-start items-center">
                     <svg
@@ -403,8 +421,11 @@ export default observer(function DashboardAdminHomePageScreen() {
                     <p className="text-base leading-4  ml-6">ตั้งค่าโลโก้</p>
                   </div>
                 </div>
-              </button>
-              <button className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full ">
+              </button> */}
+              <button
+                onClick={handleDashboardAdminShowSystemSetting}
+                className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full "
+              >
                 <svg
                   width={24}
                   height={24}
@@ -476,21 +497,19 @@ export default observer(function DashboardAdminHomePageScreen() {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <p className="text-base leading-4  ">ตั้งค่าเว็บไซต์</p>
+                <p className="text-base leading-4">ตั้งค่าเว็บไซต์</p>
               </button>
             </div>
             <div className="w-full px-4">
               <hr className=" border-gray-100 w-full" />
             </div>
             <div className="mt-6 flex flex-col justify-start items-start  px-4 w-full space-y-3 pb-5 ">
-                <div className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full "></div>
+              <div className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full "></div>
             </div>
           </div>
         </div>
       </div>
-      <div className="flex-1 bg-gray-50">
-      {renderScreens()}
-      </div>
+      <div className="flex-1 bg-gray-50">{renderScreens()}</div>
     </div>
   );
 });
