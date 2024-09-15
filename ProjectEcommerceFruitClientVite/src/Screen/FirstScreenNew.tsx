@@ -736,12 +736,12 @@ export default observer(function FirstScreenNew() {
       {/* สเตตัส End */}
 
       {/* ข่าวสาร Start */}
-      <div className="container mx-auto px-4 mb-5">
+      <div className="container mx-auto px-4 mb-5 ">
         <h1 className="text-5xl text-center f-m-w text-green-500 font-bold pt-0">
           ข่าวประชาสัมพันธ์
         </h1>
         <div className="pt-14 xl:px-0 px-4">
-          <div className="w-full lg:flex">
+          <div className="w-full lg:flex overflow-x-hidden">
             <div className="lg:w-1/2">
               <img  data-aos="fade-right"
      data-aos-offset="300"
@@ -776,7 +776,7 @@ export default observer(function FirstScreenNew() {
                 </div>
               </div>
             </div>
-            <div className="lg:w-1/2 lg:ml-8">
+            <div className="lg:w-1/2 lg:ml-8 ">
               <div className="lg:flex items-start mb-8">
                 <img data-aos="fade-left"
      data-aos-offset="300"
