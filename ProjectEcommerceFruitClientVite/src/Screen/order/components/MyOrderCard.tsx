@@ -3,6 +3,7 @@ import { Order } from "../../../models/Order";
 import { OrderItem } from "../../../models/OrderItem";
 import { formatNumberWithCommas } from "../../../helper/components";
 import { Typography } from "@mui/material";
+import { pathImages } from "../../../constants/RoutePath";
 
 interface props {
   order: Order[];
@@ -44,10 +45,10 @@ const MyOrderCard = ({ order }: props) => {
             </div>
 
             {item.orderItems.map((item: OrderItem) => {
-              const TotalPriceForProduct =
-                item.product.price * item.product.quantity;
+              const TotalPriceForProduct = item.product.price * item.quantity;
               const formatTotalPriceForProduct =
                 formatNumberWithCommas(TotalPriceForProduct);
+
               return (
                 <div
                   key={item.product.id}
@@ -57,8 +58,8 @@ const MyOrderCard = ({ order }: props) => {
                     <a href="#" className="shrink-0 md:order-1">
                       <img
                         className="hidden h-20 w-20 dark:block"
-                        src="https://shopee.co.th/blog/wp-content/uploads/2022/02/mango.jpg"
-                        alt="product image"
+                        src={pathImages.product + item.product.images}
+                        alt={item.product.images || "product image"}
                       />
                     </a>
                     <label className="sr-only">Choose quantity:</label>

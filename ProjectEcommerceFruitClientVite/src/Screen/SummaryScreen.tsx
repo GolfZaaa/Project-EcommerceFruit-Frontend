@@ -30,7 +30,7 @@ export default observer(function SummaryScreen() {
   const navigate = useNavigate();
   const [dropZoneImage, setDropZoneImage] = useState(null);
   const [shippingType, setShippingType] = useState("asd");
-  const [tag, setTag] = useState("xzc");
+  const [tag, setTag] = useState("");
 
   const {
     myAddressgotoOrder,

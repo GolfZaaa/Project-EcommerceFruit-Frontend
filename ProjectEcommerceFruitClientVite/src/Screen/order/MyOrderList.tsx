@@ -196,67 +196,80 @@ const MyOrderList = () => {
   return (
     <div className="-mt-12">
       <Box
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      mt={4}
-    >
-      <Typography variant="h4" component="h1" gutterBottom align="center">
-        คำสั่งซื้อ
-      </Typography>
-      <Tabs
-        value={value}
-        onChange={(_, v) => handleChange(v)}
-        variant="scrollable"
-        scrollButtons
-        allowScrollButtonsMobile
-        aria-label="scrollable force tabs example"
-        style={{
-          width: "100%",
-        }}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        mt={4}
       >
-        <Tab
-          label="ทั้งหมด"
+        <Typography variant="h4" component="h1" gutterBottom align="center">
+          คำสั่งซื้อ
+        </Typography>
+        <Tabs
+          value={value}
+          onChange={(_, v) => handleChange(v)}
+          variant="scrollable"
+          scrollButtons
+          allowScrollButtonsMobile
+          aria-label="scrollable force tabs example"
           style={{
-            width: "20%",
+            width: "100%",
           }}
-        />
-        <Tab
-          label="ที่ต้องชำระ"
-          style={{
-            width: "20%",
-          }}
-        />
-        <Tab
-          label="สำเร็จแล้ว"
-          style={{
-            width: "20%",
-          }}
-        />
-        <Tab
-          label="ยกเลิก"
-          style={{
-            width: "20%",
-          }}
-        />
-      </Tabs>
+        >
+          <Tab
+            label="ทั้งหมด"
+            style={{
+              width: "20%",
+            }}
+          />
+          <Tab
+            label="ที่ต้องชำระ"
+            style={{
+              width: "20%",
+            }}
+          />
+          <Tab
+            label="กำลังรออนุมัติ"
+            style={{
+              width: "20%",
+            }}
+          />
+          <Tab
+            label="สำเร็จแล้ว"
+            style={{
+              width: "20%",
+            }}
+          />
+          <Tab
+            label="ยกเลิก"
+            style={{
+              width: "20%",
+            }}
+          />
+        </Tabs>
 
-      <CustomTabPanel value={value} index={0}>
-        <MyOrderCard order={order} />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        <MyOrderCard
-          order={order.filter((item) => item.paymentImage === null)}
-        />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        <MyOrderCard order={order.filter((item) => item.status === 1)} />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={3}>
-        <MyOrderCard order={order.filter((item) => item.status === 2)} />
-      </CustomTabPanel>
-    </Box>
+        <CustomTabPanel value={value} index={0}>
+          <MyOrderCard order={order} />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={1}>
+          <MyOrderCard
+            order={order.filter((item) => item.paymentImage === null)}
+          />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+          <MyOrderCard
+            order={order.filter(
+              (item) => item.paymentImage !== null && item.status === 0
+            )}
+          />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={3}>
+          <MyOrderCard order={order.filter((item) => item.status === 1)} />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={4}>
+          <MyOrderCard order={order.filter((item) => item.status === 2)} />
+        </CustomTabPanel>
+      </Box>
     </div>
   );
 };
