@@ -9,25 +9,45 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
+import { useStore } from "../../../store/store";
+import { toast } from "react-toastify";
 
 const DashboardAdminShowSystemSetting = () => {
+  const { systemSetting, createUpdateSystemSetting } =
+    useStore().systemSettingStore;
+
+  const data = systemSetting[0];
+
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const formData: any = Object.fromEntries(data.entries());
+    const dataform = new FormData(event.currentTarget);
+    const formData: any = Object.fromEntries(dataform.entries());
 
     const dataForm = {
-      id: 0,
-      name: formData.name,
+      id: data.id || 0,
+      webName: formData.webName,
       description: formData.description,
     };
+
+    createUpdateSystemSetting(dataForm).then((result) => {
+      if (!!result) {
+        toast("บันทึกข้อมูลเสร็จสิ้น");
+      } else {
+        toast("บันทึกข้อมูลไม่สำเร็จ");
+      }
+    });
   };
 
   return (
     <div className="-mt-16">
-      <Container maxWidth="md">
+      <Container
+        maxWidth="md"
+        style={{
+          marginTop: 110,
+        }}
+      >
         <Typography variant="h4" component="h1" gutterBottom align="center">
-          <p>แก้ไขรายละเอียด</p>
+          <p>ตั้งค่าระบบ</p>
         </Typography>
         <Box
           mt={2}
@@ -35,16 +55,26 @@ const DashboardAdminShowSystemSetting = () => {
           onSubmit={handleSubmit}
           style={{
             backgroundColor: "white",
+            padding: 20,
           }}
         >
           <TextField
-            //   defaultValue={data?.fullName}
+            defaultValue={data?.webName}
             fullWidth
-            label="ชื่อ-นามสกุล"
+            label="ชื่อเว็บไซต์"
             variant="outlined"
             margin="normal"
-            name="fullName"
+            name="webName"
             autoFocus
+            required
+          />
+          <TextField
+            defaultValue={data?.description}
+            fullWidth
+            label="รายละเอียดเพิ่มเติม"
+            variant="outlined"
+            margin="normal"
+            name="description"
             required
           />
           <CardActions sx={{ justifyContent: "center", mt: 2 }}>

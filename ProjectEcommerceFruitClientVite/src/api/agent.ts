@@ -6,14 +6,15 @@ import { Product } from "./product.api";
 import { Order } from "./order.api";
 import { Cart } from "./cart.api";
 import { Address } from "./address.api";
+import { SystemSetting } from "./systemsetting.api";
 
 // axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_API_URL;
 
 axios.defaults.baseURL = "https://localhost:7168/api/";
 
-export const pathImageProduct = "https://localhost:7168/product/"; 
+export const pathImageProduct = "https://localhost:7168/product/";
 
-export const pathImagepayment = "https://localhost:7168/paymentImage/"; 
+export const pathImagepayment = "https://localhost:7168/paymentImage/";
 
 const responseBody = <T>(res: AxiosResponse<T>) => res.data;
 
@@ -63,4 +64,5 @@ export default {
   Order,
   Cart,
   Address,
+  SystemSetting,
 };
