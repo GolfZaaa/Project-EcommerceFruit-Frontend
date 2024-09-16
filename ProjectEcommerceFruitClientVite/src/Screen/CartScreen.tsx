@@ -3,7 +3,7 @@ import Footer from "../layout/screen/Footer";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store/store";
 import { NavLink, useNavigate } from "react-router-dom";
-import { RoutePath } from "../constants/RoutePath";
+import { pathImages, RoutePath } from "../constants/RoutePath";
 import BannerComponent from "../layout/component/BannerComponent";
 
 // Define types for cart items and products
@@ -11,6 +11,7 @@ interface Product {
   id: string;
   price: number;
   quantityInCartItem: number;
+  images: string | null;
 }
 
 interface CartItem {
@@ -192,6 +193,7 @@ export default observer(function CartScreen() {
                                 product.price * product.quantityInCartItem;
                               const formatTotalPriceForProduct =
                                 formatNumberWithCommas(TotalPriceForProduct);
+
                               return (
                                 <div
                                   key={product.id}
@@ -205,8 +207,13 @@ export default observer(function CartScreen() {
                                       >
                                         <img
                                           className="hidden h-20 w-20 dark:block"
-                                          src="https://shopee.co.th/blog/wp-content/uploads/2022/02/mango.jpg"
-                                          alt="product image"
+                                          src={
+                                            pathImages.product +
+                                              product.images || ""
+                                          }
+                                          alt={
+                                            product.images || "product image"
+                                          }
                                         />
                                       </a>
                                     </div>
@@ -216,9 +223,7 @@ export default observer(function CartScreen() {
                                     <div className="flex items-center justify-between md:order-3 md:justify-end">
                                       <div className="flex items-center">
                                         <button
-                                          onClick={() =>
-                                            handleRemoveItem(item)
-                                          }
+                                          onClick={() => handleRemoveItem(item)}
                                           type="button"
                                           id="decrement-button"
                                           data-input-counter-decrement="counter-input"

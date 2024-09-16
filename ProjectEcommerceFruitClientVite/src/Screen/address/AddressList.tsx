@@ -107,7 +107,17 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           marginBottom: 15,
         }}
       >
-        <Grid item xs={11}></Grid>
+        <Grid item xs={10}></Grid>
+        <Grid item xs={1}>
+          <Fab
+            variant="extended"
+            color="primary"
+            onClick={confirmChangeAddress}
+          >
+            <ArrowBackIosIcon sx={{ mr: 1 }} />
+            กลับ
+          </Fab>
+        </Grid>
         <Grid item xs={1}>
           <Fab
             variant="extended"
@@ -198,14 +208,11 @@ const AddressList = ({ confirmChangeAddress }: any) => {
     </>
   ) : (
     <>
-      <Grid container spacing={2}>
-        <Grid item xs={1}>
-          <Fab variant="extended" color="primary" onClick={onChangeCU}>
-            <ArrowBackIosIcon sx={{ mr: 1 }} />
-            กลับ
-          </Fab>
-        </Grid>
-        <Grid item xs={11} />
+      <Grid item xs={1}>
+        <Fab variant="extended" color="primary" onClick={onChangeCU}>
+          <ArrowBackIosIcon sx={{ mr: 1 }} />
+          กลับ
+        </Fab>
       </Grid>
       <Box mt={2} component="form" onSubmit={handleSubmit}>
         <TextField

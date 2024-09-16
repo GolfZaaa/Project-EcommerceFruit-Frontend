@@ -3,10 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useStore } from "../store/store";
 import { RoutePath } from "../constants/RoutePath";
 import { Address } from "../models/Address";
-import {
-  TextField,
-  Box,
-} from "@mui/material";
+import { TextField, Box } from "@mui/material";
 import { CreateInput } from "thai-address-autocomplete-react";
 import { NavLink } from "react-router-dom";
 import { myToast } from "../helper/components";
@@ -14,22 +11,31 @@ import { myToast } from "../helper/components";
 const InputThaiAddress = CreateInput();
 
 export default observer(function AddressScreen({ onChangePaging }: any) {
-  const { createUpdateAddress, getAddressByUserId } = useStore().addressStore;
+  const {
+    createUpdateAddress,
+    getAddressByUserId,
+    getAddressgotoOrderByUserId,
+  } = useStore().addressStore;
 
   const [createAddress, setCreateAddress] = useState<Address | any>({
-    district: "", 
-    amphoe: "", 
-    province: "", 
-    zipcode: "", 
-    detail: "", 
+    district: "",
+    amphoe: "",
+    province: "",
+    zipcode: "",
+    detail: "",
   });
 
   const { GetCartItemByUser, cartItems, GetCartItemByUserOrderStore } =
     useStore().cartStore;
 
+  const getData = async () => {
+    await GetCartItemByUser();
+    await GetCartItemByUserOrderStore();
+    await getAddressgotoOrderByUserId();
+  };
+
   useEffect(() => {
-    GetCartItemByUser();
-    GetCartItemByUserOrderStore();
+    getData();
   }, []);
 
   const handleSubmit = async (event: any) => {
@@ -55,7 +61,6 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
         getAddressByUserId();
         onChangePaging(2);
         window.scrollTo(0, 0);
-
       }
     });
   };
