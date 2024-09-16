@@ -301,7 +301,7 @@ export default observer(function DashboardAdminShowStore() {
                                     handleChange={() =>
                                       handleDeleteStore(userItem.id)
                                     }
-                                    checked={userItem.hidden}
+                                    checked={!userItem.hidden}
                                   />
                                   {/* <Switch
                                 onClick={() => handleDeleteStore(userItem.id)}
