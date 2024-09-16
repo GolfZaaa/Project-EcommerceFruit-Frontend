@@ -28,6 +28,8 @@ const formatNumberWithCommas = (number: number) => {
 export default observer(function CartScreen() {
   const navigate = useNavigate();
 
+  const [formattedTotalPrice, setFormattedTotalPrice] = useState<string>('');
+
   const {
     GetCartItemByUser,
     cartItems,
@@ -47,22 +49,34 @@ export default observer(function CartScreen() {
     getAddressgotoOrderByUserId();
   }, []);
 
-  const calculateTotalPrice = () => {
-    return selectMyCart.reduce((total, item: CartItem) => {
-      const storeTotal = item.products.reduce(
-        (storeSum: number, product: Product) => {
-          return storeSum + product.quantityInCartItem * product.price;
-        },
-        0
-      );
-      return total + storeTotal;
-    }, 0);
-  };
+  useEffect(() => {
+    const fetchDataAndCalculatePrice = async () => {
+      try {
+        const calculateTotalPrice = () => {
+          return selectMyCart.reduce((total, item: CartItem) => {
+            const storeTotal = item.products.reduce(
+              (storeSum: number, product: Product) => {
+                return storeSum + product.quantityInCartItem * product.price;
+              },
+              0
+            );
+            return total + storeTotal;
+          }, 0);
+        };
 
-  const totalPrice = calculateTotalPrice();
-  const formattedTotalPrice = formatNumberWithCommas(totalPrice);
+        const totalPrice = calculateTotalPrice();
+        setFormattedTotalPrice(formatNumberWithCommas(totalPrice));
+      } catch (error) {
+        console.error("Error fetching data or calculating price:", error);
+      }
+    };
+    fetchDataAndCalculatePrice();
+  }, [selectMyCart]); 
+  
+  
 
   const handleRemoveItem = async (item: CartItem) => {
+    console.log("item",item)
     const CartItemId = item.cartItemId;
     const Quantity = 1;
     await RemoveToCart({ CartItemId, Quantity });
@@ -79,12 +93,42 @@ export default observer(function CartScreen() {
   };
 
   const handleAddItem = async (product: Product) => {
+    // Add the item to the cart
     const ProductId = product.id;
     const Quantity = 1;
     await AddToCart({ ProductId, Quantity });
+    if (checkedItem) {
+      const updatedCart = selectMyCart.map((cartItem:any) => {
+        if (cartItem.storeName === checkedItem) {
+          const updatedProducts = cartItem.products.map((prod:any) =>
+            prod.id === ProductId
+              ? { ...prod, quantityInCartItem: prod.quantityInCartItem + 1 }
+              : prod
+          );
+          return { ...cartItem, products: updatedProducts };
+        }
+        return cartItem;
+      });
+      const productInExistingCart = updatedCart.find((item) =>
+        item.products.some((prod:any) => prod.id === ProductId)
+      );
+      if (!productInExistingCart) {
+        updatedCart.push({
+          id: `${Date.now()}`,
+          storeName: checkedItem, 
+          productName: product.id, 
+          products: [{ ...product, quantityInCartItem: 1 }],
+          cartItemId: null,
+        });
+      }
+  
+      setselectMyCart(updatedCart);
+    }
+  
     await GetCartItemByUser();
     await GetCartItemByUserOrderStore();
   };
+  
 
   const groupedCartItems: Record<string, CartItem[]> = cartItemsStore.reduce(
     (acc: Record<string, CartItem[]>, item: CartItem) => {
@@ -173,7 +217,7 @@ export default observer(function CartScreen() {
                                       <div className="flex items-center">
                                         <button
                                           onClick={() =>
-                                            handleRemoveItem(product)
+                                            handleRemoveItem(item)
                                           }
                                           type="button"
                                           id="decrement-button"
@@ -293,7 +337,7 @@ export default observer(function CartScreen() {
                           ราคารวม
                         </dt>
                         <dd className="text-base font-medium text-green-600">
-                          {formattedTotalPrice} บาท
+                          {!checkedItem ? 0 : formattedTotalPrice} บาท
                         </dd>
                       </dl>
                     </div>

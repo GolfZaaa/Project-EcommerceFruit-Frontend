@@ -51,6 +51,8 @@ export default observer(function SummaryScreen() {
 
   const [onChangeAddress, setOnChangeAddress] = useState(false);
 
+  const [isImageValid, setIsImageValid] = useState(true);
+
   useEffect(() => {
     GetCartItemByUser();
     getAddressgotoOrderByUserId();
@@ -59,6 +61,11 @@ export default observer(function SummaryScreen() {
 
   const handleChange = (e: any) => {
     setSelectedPaymentMethod(e.target.value);
+
+    if (e.target.value !== 'slip') {
+      setIsImageValid(true);
+    }
+
   };
 
   const confirmChangeAddress = () => {
@@ -82,9 +89,14 @@ export default observer(function SummaryScreen() {
 
   const handleImageUpload = (file: any) => {
     setDropZoneImage(file);
+    setIsImageValid(!!file);
   };
 
   const handleSubmit = async (value: any) => {
+    if (selectedPaymentMethod === "slip" && !dropZoneImage) {
+      setIsImageValid(false);
+      return
+    }
     const Data = {
       PaymentImage: dropZoneImage,
       ShippingType: shippingType,
@@ -282,24 +294,17 @@ export default observer(function SummaryScreen() {
                       </span>
                     </label>
                   </div>
+                  
                   {selectedPaymentMethod === "slip" ? (
                     <div>
-                      <div
-                        style={{ paddingLeft: "80px", marginTop: "20px" }}
-                        className="payment-form-container"
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            marginTop: "5px",
-                          }}
-                        >
-                          <DropZoneImageComponent
-                            onImageUpload={handleImageUpload}
-                          />
-                        </div>
-                      </div>
+                      <div style={{ paddingLeft: "80px", marginTop: "20px" }} className="payment-form-container">
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "5px" }}>
+            <DropZoneImageComponent onImageUpload={handleImageUpload} />
+          </div>
+          {!isImageValid && (
+            <p className="text-red-500 text-sm mt-2 ml-16">กรุณาอัปโหลดรูปภาพสลีปการโอน</p>
+          )}
+        </div>
                     </div>
                   ) : (
                     <div>

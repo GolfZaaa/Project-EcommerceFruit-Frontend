@@ -522,7 +522,7 @@ export default observer(function HomeScreen() {
                               </div>
                             )}
 
-                            {myProduct.status == false && (
+                            {myProduct.status == false && myProduct.quantity == 0 && (
                               <div className="absolute inset-0 bg-gray-800 bg-opacity-75 flex flex-col justify-center items-center text-white">
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -547,7 +547,7 @@ export default observer(function HomeScreen() {
                               </div>
                             )}
 
-                            {myProduct.quantity == 0 && (
+                            {myProduct.quantity == 0 && myProduct.status == true && (
                               <div className="absolute inset-0 bg-gray-500 bg-opacity-75 flex flex-col justify-center items-center text-white">
                                 <svg
                                   viewBox="0 0 512 512"
@@ -646,6 +646,8 @@ export default observer(function HomeScreen() {
             </section>
           </main>
         </div>
+
+        
       </>
     </>
   );

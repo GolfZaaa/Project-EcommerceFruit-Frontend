@@ -13,6 +13,7 @@ export const Product = {
     requests.delete(`Product/RemoveProductById?productId=${productId}`),
   deleteProduct: (id: any) =>
     requests.delete(`Product/RemoveProductById?productId=${id}`),
+  addStockProduct: (value: any) => requests.post("Product/AddStockProduct", value),
 
   //-------------------------------------------- product-GI ----------------------------------------------------//
 

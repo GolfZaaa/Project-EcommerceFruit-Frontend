@@ -66,6 +66,17 @@ export default class ProductStore {
     }
   };
 
+  addStockProduct = async ({productId,quantity}: {productId: number; quantity:number}) => {
+    const data = { productId, quantity };
+    try {
+      const result = await agent.Product.addStockProduct(data);
+      console.log("result,",result);
+      return result;
+    } catch (error) {
+      return error;
+    }
+  };
+
   //-------------------------------------------- product-GI ----------------------------------------------------//
 
   getProductGI = async (id?: any | null) => {

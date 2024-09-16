@@ -866,6 +866,7 @@ export default observer(function FirstScreenNew() {
         </div>
         <div />
       </div>
+      
       {/* ข่าวสาร End */}
       <Footer />
     </div>
