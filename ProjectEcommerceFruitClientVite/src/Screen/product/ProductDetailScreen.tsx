@@ -5,6 +5,7 @@ import { useStore } from "../../store/store";
 import { Button, Typography, Box } from "@mui/material";
 import ToastAddToCart from "../../layout/component/ToastAddToCart";
 import { pathImages } from "../../constants/RoutePath";
+import { FaPlus } from "react-icons/fa6";
 
 export default observer(function ProductDetailScreen() {
   const { getProductById, productDetail, DeleteProduct, getProduct } =
@@ -72,6 +73,10 @@ export default observer(function ProductDetailScreen() {
     await getProductById(productid);
   };
 
+  const handleAddStockProduct = () => {
+    console.log("sadadasd")
+  }
+
   return (
     <div className="md:flex items-start justify-center py-12 2xl:px-20 md:px-6 px-4">
       {showToast && <ToastAddToCart />}
@@ -121,17 +126,36 @@ export default observer(function ProductDetailScreen() {
           </div>
 
           {user && user?.id == productDetail?.productGI?.store?.userId && (
-            <div>
+            <div className="flex items-center">
+
+              <div>
+                <button
+                  onClick={handleAddStockProduct}
+                  className={"bg-green-400 font-semibold rounded-2xl pl-5 pr-5 p-2 mr-6 flex items-center"}
+                >
+                 <FaPlus className="mr-3"/> เพิ่มสินค้า
+                </button>
+              </div>
+
+
               <button
-                onClick={() => hanldleDelete(productDetail.id)}
-                className={`p-2 ${
-                  productDetail?.status
-                    ? "bg-red-500 text-gray-700"
-                    : "bg-green-400"
-                } font-semibold rounded-2xl pl-5 pr-5`}
-              >
-                {productDetail?.status ? "ปิดการขาย" : "เปิดการขาย"}
-              </button>
+                  onClick={() => hanldleDelete(productDetail.id)}
+                  className={`p-2 ${
+                    productDetail?.quantity === 0
+                      ? "bg-gray-400 text-gray-700" 
+                      : productDetail?.status
+                      ? "bg-red-500 text-gray-700"
+                      : "bg-green-400"
+                  } font-semibold rounded-2xl pl-5 pr-5`}
+                  disabled={productDetail?.quantity === 0} 
+                >
+                  {productDetail?.quantity === 0
+                    ? "สินค้าหมด"
+                    : productDetail?.status
+                    ? "ปิดการขาย"
+                    : "เปิดการขาย"}
+                </button>
+
             </div>
           )}
         </div>
