@@ -92,7 +92,7 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                 <img
                   src={pathImages.paymentImage + dataEdit?.paymentImage}
                   alt={pathImages.paymentImage + dataEdit?.paymentImage}
-                  width={100}
+                  height={100}
                 />
               ) : (
                 "ไม่มีรูปภาพ"
@@ -127,7 +127,7 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                     name="tag"
                     autoFocus
                     required
-                    disabled={dataEdit?.status == 1}
+                    disabled={dataEdit?.status == 1 || dataEdit?.status == 2}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -153,23 +153,13 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                   <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                     <img
                       className="hidden h-20 w-20 dark:block"
-                      src="https://shopee.co.th/blog/wp-content/uploads/2022/02/mango.jpg"
-                      alt="product image"
+                      src={pathImages.product + item.product.images || ""}
+                      alt={item.product.images || "product image"}
                     />
                     <label className="sr-only">Choose quantity:</label>
                     <div className="flex items-center justify-between md:order-3 md:justify-end">
                       <div className="flex items-center">
-                        จำนวน
-                        <input
-                          type="text"
-                          id="counter-input"
-                          data-input-counter
-                          className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-gray-800"
-                          placeholder=""
-                          defaultValue={item.quantity}
-                          required
-                        />
-                        ชิ้น
+                        จำนวน {item.quantity} ชิ้น
                       </div>
                       <div className="text-end md:order-4 md:w-32">
                         <p className="text-base font-bold text-gray-900 dark:text-gray-900">
@@ -188,31 +178,6 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                       >
                         ชื่อ : {item.product.productGI.name}
                       </a>
-                      <div className="flex items-center gap-4">
-                        <button
-                          type="button"
-                          className="inline-flex items-center text-sm font-medium text-red-600 hover:underline dark:text-red-500"
-                        >
-                          <svg
-                            className="me-1.5 h-5 w-5"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              stroke="currentColor"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M6 18 17.94 6M18 18 6.06 6"
-                            />
-                          </svg>
-                          ลบสินค้า
-                        </button>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -232,7 +197,9 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
               color="success"
               size="large"
               fullWidth
-              disabled={!trackingId || dataEdit?.status == 1}
+              disabled={
+                !trackingId || dataEdit?.status == 1 || dataEdit?.status == 2
+              }
             >
               ยืนยันคำสั่งซื้อ
             </Button>
@@ -245,9 +212,9 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                 color="error"
                 size="large"
                 fullWidth
-                disabled={dataEdit?.status == 1}
+                disabled={dataEdit?.status == 2}
               >
-                ยกเลิก
+                ยกเลิกคำสั่งซื้อ
               </Button>
             </CardActions>
           </Grid>
