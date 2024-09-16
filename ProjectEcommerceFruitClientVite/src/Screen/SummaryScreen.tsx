@@ -3,8 +3,9 @@ import { useStore } from "../store/store";
 import { observer } from "mobx-react-lite";
 import AddressList from "./address/AddressList";
 import { useNavigate } from "react-router-dom";
-import { RoutePath } from "../constants/RoutePath";
+import { pathImages, RoutePath } from "../constants/RoutePath";
 import DropZoneImageComponent from "../layout/component/DropZoneImageComponent";
+import dayjs from "dayjs";
 
 interface CartItem {
   id: string;
@@ -51,12 +52,14 @@ export default observer(function SummaryScreen() {
 
   const [onChangeAddress, setOnChangeAddress] = useState(false);
 
-  const [isImageValid, setIsImageValid] = useState(true);
+  const getData = async () => {
+    await GetCartItemByUser();
+    await getAddressgotoOrderByUserId();
+    await GetCartItemByUserOrderStore();
+  };
 
   useEffect(() => {
-    GetCartItemByUser();
-    getAddressgotoOrderByUserId();
-    GetCartItemByUserOrderStore();
+    getData();
   }, []);
 
   const handleChange = (e: any) => {
@@ -73,7 +76,7 @@ export default observer(function SummaryScreen() {
   };
 
   const calculateTotalPrice = () => {
-    return cartItemsStore.reduce((total, item: CartItem) => {
+    return selectMyCart.reduce((total, item: CartItem) => {
       const storeTotal = item.products.reduce(
         (storeSum: number, product: Product) => {
           return storeSum + product.quantityInCartItem * product.price;
@@ -110,6 +113,10 @@ export default observer(function SummaryScreen() {
       alert("error");
     }
   };
+
+  if (!selectMyCart.length) {
+    navigate(RoutePath.cartScreen);
+  }
 
   return (
     <div className="bg-gray-50 -mt-8">
@@ -181,29 +188,33 @@ export default observer(function SummaryScreen() {
                     การชำระเงิน
                   </a>
                   <p className="text-base font-medium leading-6 text-gray-600">
-                    13/8/2567
+                    {dayjs(new Date()).add(543, "year").format("DD/MM/YYYY")}
                   </p>
                 </div>
 
                 <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800">
                   ตะกร้าสินค้า
                 </p>
+
                 {selectMyCart &&
                   selectMyCart.map((items: CartItem) => (
                     <div>
                       {items.products.map((item) => {
+                        console.log("item", JSON.stringify(item));
+
                         const TotalPriceForProduct =
                           item.price * item.quantityInCartItem;
                         const formatTotalPriceForProduct =
                           formatNumberWithCommas(TotalPriceForProduct);
+
                         return (
                           <div>
                             <div className="mt-4 md:mt-6 flex  flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full ">
                               <div className="pb-4 md:pb-8 w-full md:w-40">
                                 <img
-                                  className="w-full md:hidden"
-                                  src={item.images}
-                                  alt="dress"
+                                  className="w-full"
+                                  src={pathImages.product + item.images}
+                                  alt={item.images || "product image"}
                                 />
                               </div>
                               <div className="border-b border-gray-200 md:flex-row flex-col flex justify-between items-start w-full  pb-8 space-y-4 md:space-y-0">
@@ -323,7 +334,7 @@ export default observer(function SummaryScreen() {
                         รายการทั้งหมด
                       </p>
                       <p className="text-base leading-4 text-gray-600">
-                        {cartItems.length} รายการ
+                        {selectMyCart.length} รายการ
                       </p>
                     </div>
                   </div>

@@ -5,23 +5,25 @@ import SummaryScreen from "../SummaryScreen";
 import { useStore } from "../../store/store";
 
 const OrderSummary = () => {
-  const { myAddressgotoOrder, getAddressgotoOrderByUserId } =
-    useStore().addressStore;
+  const { getAddressgotoOrderByUserId } = useStore().addressStore;
 
   const [paging, setPaging] = useState<number>(1);
-  useEffect(() => {
-    getData();
-  }, []);
 
   const getData = async () => {
-    await getAddressgotoOrderByUserId().then(() => {
-      if (myAddressgotoOrder) {
+    await getAddressgotoOrderByUserId().then((res) => {
+      console.log("res", JSON.stringify(res));
+
+      if (res) {
         setPaging(2);
       } else {
         setPaging(1);
       }
     });
   };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   const data = [
     {

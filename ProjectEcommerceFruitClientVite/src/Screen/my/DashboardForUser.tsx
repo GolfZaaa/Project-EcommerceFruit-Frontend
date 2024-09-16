@@ -3,28 +3,28 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
 import { useEffect, useState } from "react";
 import moment from "moment";
-import Select from 'react-select';
+import Select from "react-select";
 
 export default observer(function DashboardForUser() {
   const { getOrdersByUser, order } = useStore().orderStore;
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalQuantity, setTotalQuantity] = useState(0);
-  const [totalOrderSuccess, setTotalOrderSuccess] = useState(0)
+  const [totalOrderSuccess, setTotalOrderSuccess] = useState(0);
 
   const [monthlyOrderData, setMonthlyOrderData] = useState([]);
   const [yearOptions, setYearOptions] = useState([]);
   const [selectedYear, setSelectedYear] = useState(moment().year());
 
-  useEffect(()  =>  {
-    getOrdersByUser()
-  }, [])
-
+  useEffect(() => {
+    getOrdersByUser();
+  }, []);
 
   useEffect(() => {
     if (order) {
       const total = order.reduce((acc, currentOrder) => {
         const orderTotal = currentOrder.orderItems.reduce(
-          (itemAcc, orderItem) => itemAcc + orderItem.quantity * orderItem.product.price,
+          (itemAcc, orderItem) =>
+            itemAcc + orderItem.quantity * orderItem.product.price,
           0
         );
         return acc + orderTotal;
@@ -40,25 +40,25 @@ export default observer(function DashboardForUser() {
       }, 0);
       setTotalQuantity(totalProduct);
 
-
       const totalOrderSuccess = order.reduce((acc, currentOrder) => {
         return currentOrder.status === 1 ? acc + 1 : acc;
       }, 0);
       setTotalOrderSuccess(totalOrderSuccess);
 
-
-
-      const years:any = [...new Set(order.map(o => moment(o.createdAt).year()))].sort((a, b) => a - b);
-      setYearOptions(years.map((year:any) => ({ value: year, label: year })));
+      const years: any = [
+        ...new Set(order.map((o) => moment(o.createdAt).year())),
+      ].sort((a, b) => a - b);
+      setYearOptions(years.map((year: any) => ({ value: year, label: year })));
 
       // Filter orders by selected year
-      const ordersByMonth = order.reduce((acc:any, currentOrder) => {
+      const ordersByMonth = order.reduce((acc: any, currentOrder) => {
         const orderYear = moment(currentOrder.createdAt).year();
         if (orderYear !== selectedYear) return acc;
 
         const month = moment(currentOrder.createdAt).format("MMMM");
         const orderTotal = currentOrder.orderItems.reduce(
-          (itemAcc, orderItem) => itemAcc + orderItem.quantity * orderItem.product.price,
+          (itemAcc, orderItem) =>
+            itemAcc + orderItem.quantity * orderItem.product.price,
           0
         );
 
@@ -70,23 +70,27 @@ export default observer(function DashboardForUser() {
       }, {});
 
       // Convert to an array and sort by month
-      const monthlyData:any = Object.entries(ordersByMonth).map(([month, total]) => ({
-        month,
-        total,
-      }));
+      const monthlyData: any = Object.entries(ordersByMonth).map(
+        ([month, total]) => ({
+          month,
+          total,
+        })
+      );
 
-      monthlyData.sort((a:any, b:any) => moment().month(a.month).valueOf() - moment().month(b.month).valueOf());
+      monthlyData.sort(
+        (a: any, b: any) =>
+          moment().month(a.month).valueOf() - moment().month(b.month).valueOf()
+      );
 
       setMonthlyOrderData(monthlyData);
     }
-  }, [order,selectedYear]);
+  }, [order, selectedYear]);
 
-  console.log("order",order)
-  
-  const handleYearChange = (selectedOption:any) => {
+  console.log("order", order);
+
+  const handleYearChange = (selectedOption: any) => {
     setSelectedYear(selectedOption.value);
   };
-
 
   const lineChartDataFiltered = [
     { date: "January", price: 120000 },
@@ -98,10 +102,10 @@ export default observer(function DashboardForUser() {
     { date: "July", price: 210000 },
   ];
 
-const option = {
+  const option = {
     xAxis: {
       type: "category",
-      data: monthlyOrderData.map((item:any) => item.month),
+      data: monthlyOrderData.map((item: any) => item.month),
       axisLabel: {
         fontSize: 10,
         fontWeight: 600,
@@ -110,14 +114,14 @@ const option = {
     yAxis: {
       type: "value",
       axisLabel: {
-        formatter: (value:any) => value.toLocaleString(),
+        formatter: (value: any) => value.toLocaleString(),
         fontSize: 10,
         fontWeight: 600,
       },
     },
     series: [
       {
-        data: monthlyOrderData.map((item:any) => item.total),
+        data: monthlyOrderData.map((item: any) => item.total),
         type: "line",
         smooth: true,
         lineStyle: {
@@ -136,7 +140,7 @@ const option = {
     ],
     tooltip: {
       trigger: "axis",
-      formatter: (params:any) => `${params[0].data.toLocaleString()} บาท`,
+      formatter: (params: any) => `${params[0].data.toLocaleString()} บาท`,
       textStyle: {
         fontSize: 14,
       },
@@ -198,7 +202,10 @@ const option = {
                 <path d="M12,23A1,1 0 0,1 11,22V19H7A2,2 0 0,1 5,17V7A2,2 0 0,1 7,5H21A2,2 0 0,1 23,7V17A2,2 0 0,1 21,19H16.9L13.2,22.71C13,22.89 12.76,23 12.5,23H12M13,17V20.08L16.08,17H21V7H7V17H13M3,15H1V3A2,2 0 0,1 3,1H19V3H3V15M9,9H19V11H9V9M9,13H17V15H9V13Z" />
               </svg>
 
-              <span className="font-bold text-gray-600"> {totalPrice.toLocaleString()} </span>
+              <span className="font-bold text-gray-600">
+                {" "}
+                {totalPrice.toLocaleString()}{" "}
+              </span>
             </div>
 
             <div className="mt-2 text-sm text-gray-400">
@@ -268,7 +275,9 @@ const option = {
                 <path d="M12,23A1,1 0 0,1 11,22V19H7A2,2 0 0,1 5,17V7A2,2 0 0,1 7,5H21A2,2 0 0,1 23,7V17A2,2 0 0,1 21,19H16.9L13.2,22.71C13,22.89 12.76,23 12.5,23H12M13,17V20.08L16.08,17H21V7H7V17H13M3,15H1V3A2,2 0 0,1 3,1H19V3H3V15M9,9H19V11H9V9M9,13H17V15H9V13Z" />
               </svg>
 
-              <span className="font-bold text-gray-600">{totalOrderSuccess}</span>
+              <span className="font-bold text-gray-600">
+                {totalOrderSuccess}
+              </span>
             </div>
 
             <div className="mt-2 text-sm text-gray-400">
@@ -279,30 +288,35 @@ const option = {
 
         <div className="w-full">
           <div className="grid grid-cols-4 gap-4 mt-5">
-
-
-          <div className="col-span-2 bg-white border rounded-sm overflow-hidden shadow">
-  <div className="p-2 flex justify-between items-center">
-    <p className="font-semibold">แสดงจำนวนคำสั่งซื้อในแต่ละเดือน</p>
-    <div className="flex items-center">
-      <p className="mr-2">ปี :</p>
-      <Select
-        options={yearOptions}
-        value={yearOptions.find((option:any) => option.value === selectedYear)}
-        onChange={handleYearChange}
-        placeholder="Select Year"
-        className="w-32" // Adjust width as needed
-      />
-    </div>
-  </div>
-  <div className="p-2 -mt-10">
-    <ReactECharts option={option} style={{ height: "300px", width: "100%" }} />
-  </div>
-</div>
+            <div className="col-span-2 bg-white border rounded-sm overflow-hidden shadow">
+              <div className="p-2 flex justify-between items-center">
+                <p className="font-semibold">แสดงจำนวนคำสั่งซื้อในแต่ละเดือน</p>
+                <div className="flex items-center">
+                  <p className="mr-2">ปี :</p>
+                  <Select
+                    options={yearOptions}
+                    value={yearOptions.find(
+                      (option: any) => option.value === selectedYear
+                    )}
+                    onChange={handleYearChange}
+                    placeholder="Select Year"
+                    className="w-32" // Adjust width as needed
+                  />
+                </div>
+              </div>
+              <div className="p-2 -mt-10">
+                <ReactECharts
+                  option={option}
+                  style={{ height: "300px", width: "100%" }}
+                />
+              </div>
+            </div>
 
             <div className="col-span-2 bg-white border rounded-sm overflow-hidden shadow">
               <div className="p-2 -mb-3">
-                <p className="font-semibold">สัดส่วนการใช้จ่ายในแต่ละหมวดหมู่สินค้า</p>
+                <p className="font-semibold">
+                  สัดส่วนการใช้จ่ายในแต่ละหมวดหมู่สินค้า
+                </p>
               </div>
               <div className="p-2">
                 <ReactECharts

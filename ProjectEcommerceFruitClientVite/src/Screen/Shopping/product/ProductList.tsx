@@ -38,6 +38,7 @@ import HTMLReactParser from "html-react-parser/lib/index";
 import EditIcon from "@mui/icons-material/Edit";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { pathImages } from "../../../constants/RoutePath";
+import { MySwitch } from "../../../helper/components/MySwitch";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -158,6 +159,7 @@ const ProductList = () => {
     { id: "price", label: "ราคา" },
     { id: "weight", label: "น้ำหนัก (กิโลกรัม)" },
     { id: "quantity", label: "จำนวน" },
+    { id: "status", label: "สถานะ" },
     { id: "edit", label: "ตัวเลือก" },
     { id: "remove", label: "ตัวเลือก" },
   ];
@@ -239,56 +241,69 @@ const ProductList = () => {
                         page * rowsPerPage + rowsPerPage
                       )
                     : product
-                  ).map((row) => (
-                    <TableRow key={row.id}>
-                      <TableCell component="th" scope="row">
-                        {row.productGI.name}
-                      </TableCell>
-                      <TableCell
-                        style={{ color: "red" }}
-                        //   align="right"
-                      >
-                        {row.images ? (
-                          <img
-                            src={pathImages.product + row.images}
-                            alt="product-image"
-                            style={{
-                              width: "250px",
-                              height: "200px",
-                              objectFit: "contain",
-                            }}
+                  ).map((row) => {
+                    console.log("row", JSON.stringify(row.status));
+
+                    return (
+                      <TableRow key={row.id}>
+                        <TableCell component="th" scope="row">
+                          {row.productGI.name}
+                        </TableCell>
+                        <TableCell
+                          style={{ color: "red" }}
+                          //   align="right"
+                        >
+                          {row.images ? (
+                            <img
+                              src={pathImages.product + row.images}
+                              alt="product-image"
+                              style={{
+                                width: "250px",
+                                height: "200px",
+                                objectFit: "contain",
+                              }}
+                            />
+                          ) : (
+                            "ไม่มีรูปภาพ"
+                          )}
+                        </TableCell>
+                        <TableCell>{row?.productGI?.category.name}</TableCell>
+                        <TableCell>{row?.price}</TableCell>
+                        <TableCell>{row?.weight}</TableCell>
+                        <TableCell>{row?.quantity}</TableCell>
+                        <TableCell>
+                          <MySwitch
+                            handleChange={async () =>
+                              await removeProduct(row.id).then(() => {
+                                getProductByStore(user?.stores[0].id || 0);
+                              })
+                            }
+                            checked={row.status}
                           />
-                        ) : (
-                          "ไม่มีรูปภาพ"
-                        )}
-                      </TableCell>
-                      <TableCell>{row?.productGI?.category.name}</TableCell>
-                      <TableCell>{row?.price}</TableCell>
-                      <TableCell>{row?.weight}</TableCell>
-                      <TableCell>{row?.quantity}</TableCell>
-                      <TableCell style={{ width: 100 }}>
-                        <Fab
-                          variant="extended"
-                          color="primary"
-                          onClick={() => {
-                            setDataEdit(row);
-                            onChangeCU();
-                          }}
-                        >
-                          <EditIcon sx={{ mr: 1 }} />
-                          แก้ไข
-                        </Fab>
-                      </TableCell>
-                      <TableCell style={{ width: 100 }}>
-                        <Fab
-                          variant="extended"
-                          color="error"
-                          onClick={handleClickOpen}
-                        >
-                          <RemoveIcon sx={{ mr: 1 }} />
-                          ลบ
-                        </Fab>
-                        {/* <Button
+                        </TableCell>
+                        <TableCell style={{ width: 100 }}>
+                          <Fab
+                            variant="extended"
+                            color="primary"
+                            onClick={() => {
+                              setDataEdit(row);
+                              onChangeCU();
+                            }}
+                          >
+                            <EditIcon sx={{ mr: 1 }} />
+                            แก้ไข
+                          </Fab>
+                        </TableCell>
+                        <TableCell style={{ width: 100 }}>
+                          <Fab
+                            variant="extended"
+                            color="error"
+                            onClick={handleClickOpen}
+                          >
+                            <RemoveIcon sx={{ mr: 1 }} />
+                            ลบ
+                          </Fab>
+                          {/* <Button
                           variant="contained"
                           color="primary"
                           size="large"
@@ -297,39 +312,40 @@ const ProductList = () => {
                         >
                           ลบ
                         </Button> */}
-                      </TableCell>
+                        </TableCell>
 
-                      <Dialog
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                      >
-                        <DialogTitle id="alert-dialog-title">
-                          {"ลบข้อมูลนี้ออกจากฐานข้อมูล"}
-                        </DialogTitle>
-                        <DialogContent>
-                          <DialogContentText id="alert-dialog-description">
-                            ลบข้อมูลนี้ออกจากฐานข้อมูล ยืนยันเพื่อลบ
-                          </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                          <Button onClick={handleClose}>ยกเลิก</Button>
-                          <Button
-                            onClick={async () => {
-                              await removeProduct(row.id).then(() => {
-                                getProductByStore(user?.stores[0].id || 0);
-                                handleClose();
-                              });
-                            }}
-                            autoFocus
-                          >
-                            ยืนยัน
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
-                    </TableRow>
-                  ))}
+                        <Dialog
+                          open={open}
+                          onClose={handleClose}
+                          aria-labelledby="alert-dialog-title"
+                          aria-describedby="alert-dialog-description"
+                        >
+                          <DialogTitle id="alert-dialog-title">
+                            {"ลบข้อมูลนี้ออกจากฐานข้อมูล"}
+                          </DialogTitle>
+                          <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                              ลบข้อมูลนี้ออกจากฐานข้อมูล ยืนยันเพื่อลบ
+                            </DialogContentText>
+                          </DialogContent>
+                          <DialogActions>
+                            <Button onClick={handleClose}>ยกเลิก</Button>
+                            <Button
+                              onClick={async () => {
+                                await removeProduct(row.id).then(() => {
+                                  getProductByStore(user?.stores[0].id || 0);
+                                  handleClose();
+                                });
+                              }}
+                              autoFocus
+                            >
+                              ยืนยัน
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
+                      </TableRow>
+                    );
+                  })}
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
                       <TableCell colSpan={6} />
