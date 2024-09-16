@@ -271,7 +271,7 @@ export default observer(function DashboardAdminShowUser() {
                                   handleChange={() =>
                                     handleDeleteUser(userItem.id)
                                   }
-                                  checked={userItem.hidden}
+                                  checked={!userItem.hidden}
                                 />
                                 {/* {userItem.hidden ? 'ถูกระงับการใช้งาน' : 'ใช้งานได้ปกติ'} */}
                               </div>

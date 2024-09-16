@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { observer } from "mobx-react-lite";
@@ -18,6 +18,11 @@ export default observer(function DashboardAdminHomePageScreen() {
   const { getStoreAll, shopAll } = useStore().shopuserStore;
   const { getProduct, product } = useStore().productStore;
   const { getOrdersAll, order } = useStore().orderStore;
+  const { getSystemSetting } = useStore().systemSettingStore;
+
+  useEffect(() => {
+    getSystemSetting();
+  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -65,7 +70,7 @@ export default observer(function DashboardAdminHomePageScreen() {
   };
 
   const handleDashboardAdminShowSystemSetting = () => {
-    getOrdersAll();
+    getSystemSetting();
     setScreenComponent("DashboardAdminShowSystemSetting");
   };
 

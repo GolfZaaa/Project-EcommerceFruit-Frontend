@@ -6,6 +6,7 @@ import ProductStore from "./product.store";
 import OrderStore from "./order.store";
 import CartStore from "./cart.store";
 import AddressStore from "./address.store";
+import SystemSettingStore from "./systemsetting.store";
 
 interface Store {
   commonStore: commonStore;
@@ -15,6 +16,7 @@ interface Store {
   orderStore: OrderStore;
   cartStore: CartStore;
   addressStore: AddressStore;
+  systemSettingStore: SystemSettingStore;
 }
 
 export const store: Store = {
@@ -25,6 +27,7 @@ export const store: Store = {
   orderStore: new OrderStore(),
   cartStore: new CartStore(),
   addressStore: new AddressStore(),
+  systemSettingStore: new SystemSettingStore(),
 };
 
 export const StoreContext = createContext(store);
