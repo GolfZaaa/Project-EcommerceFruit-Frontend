@@ -116,11 +116,11 @@ const AddressList = ({ confirmChangeAddress }: any) => {
               setDataEdit(null);
               onChangeCU();
               setAddress({
-                district: "", // ตำบล tambol
-                amphoe: "", // อำเภอ amphoe
-                province: "", // จังหวัด changwat
-                zipcode: "", // รหัสไปรษณีย์ postal code
-                detail: "", // รหัสไปรษณีย์ postal code
+                district: "",
+                amphoe: "",
+                province: "", 
+                zipcode: "",
+                detail: "",
               });
             }}
           >
@@ -177,11 +177,11 @@ const AddressList = ({ confirmChangeAddress }: any) => {
                   color="primary"
                   onClick={() => {
                     setAddress({
-                      district: item?.subDistrict, // ตำบล tambol
-                      amphoe: item?.district, // อำเภอ amphoe
-                      province: item?.province, // จังหวัด changwat
-                      zipcode: item?.postCode, // รหัสไปรษณีย์ postal code
-                      detail: item?.detail, // รหัสไปรษณีย์ postal code
+                      district: item?.subDistrict, 
+                      amphoe: item?.district, 
+                      province: item?.province, 
+                      zipcode: item?.postCode,
+                      detail: item?.detail,
                     });
                     setDataEdit(item);
                     onChangeCU();
