@@ -26,6 +26,7 @@ const formatNumberWithCommas = (number: number) => {
 };
 
 export default observer(function CartScreen() {
+
   const navigate = useNavigate();
 
   const [formattedTotalPrice, setFormattedTotalPrice] = useState<string>('');
@@ -49,51 +50,86 @@ export default observer(function CartScreen() {
     getAddressgotoOrderByUserId();
   }, []);
 
+
+
   useEffect(() => {
-    const fetchDataAndCalculatePrice = async () => {
-      try {
-        const calculateTotalPrice = () => {
-          return selectMyCart.reduce((total, item: CartItem) => {
-            const storeTotal = item.products.reduce(
-              (storeSum: number, product: Product) => {
-                return storeSum + product.quantityInCartItem * product.price;
-              },
-              0
-            );
-            return total + storeTotal;
-          }, 0);
-        };
-
-        const totalPrice = calculateTotalPrice();
-        setFormattedTotalPrice(formatNumberWithCommas(totalPrice));
-      } catch (error) {
-        console.error("Error fetching data or calculating price:", error);
-      }
+    const calculateTotalPrice = () => {
+      return selectMyCart.reduce((total, item: CartItem) => {
+        console.log("itemitemitemitem",item)
+        const storeTotal = item.products.reduce(
+          (storeSum: number, product: Product) => {
+            return storeSum + product.quantityInCartItem * product.price;
+          },
+          0
+        );
+        return total + storeTotal;
+      }, 0);
     };
-    fetchDataAndCalculatePrice();
-  }, [selectMyCart]); 
   
+    const totalPrice = calculateTotalPrice();
+    setFormattedTotalPrice(formatNumberWithCommas(totalPrice));
+  }, [selectMyCart]);
   
-
   const handleRemoveItem = async (item: CartItem) => {
-    console.log("item",item)
     const CartItemId = item.cartItemId;
     const Quantity = 1;
+  
     await RemoveToCart({ CartItemId, Quantity });
     await GetCartItemByUser();
     await GetCartItemByUserOrderStore();
+  
+    // อัปเดตราคารวมใหม่หลังจากลบสินค้า
+    const updatedSelectMyCart = selectMyCart.map((cartItem: CartItem) => {
+      if (cartItem.id === item.id) {
+        const updatedProducts = cartItem.products.map((product: Product) =>
+          product.id === item.products[0].id
+            ? { ...product, quantityInCartItem: product.quantityInCartItem - 1 }
+            : product
+        );
+        return { ...cartItem, products: updatedProducts };
+      }
+      return cartItem;
+    });
+  
+    // กรองสินค้าออกถ้าจำนวนสินค้าในตะกร้าเป็น 0
+    const filteredCart = updatedSelectMyCart.filter(
+      (cartItem) =>
+        cartItem.products.some((product) => product.quantityInCartItem > 0)
+    );
+  
+    setselectMyCart(filteredCart);
+  
+    // คำนวณราคารวมใหม่
+    const calculateTotalPrice = () => {
+      return filteredCart.reduce((total, item: CartItem) => {
+        const storeTotal = item.products.reduce(
+          (storeSum: number, product: Product) => {
+            return storeSum + product.quantityInCartItem * product.price;
+          },
+          0
+        );
+        return total + storeTotal;
+      }, 0);
+    };
+  
+    const totalPrice = calculateTotalPrice();
+    setFormattedTotalPrice(formatNumberWithCommas(totalPrice));
   };
+  
 
   const handleRemoveItemAll = async (item: CartItem, product: Product) => {
     const CartItemId = item.cartItemId;
     const Quantity = product.quantityInCartItem;
     await RemoveToCart({ CartItemId, Quantity });
+
+   
+
+
     await GetCartItemByUser();
     await GetCartItemByUserOrderStore();
   };
 
   const handleAddItem = async (product: Product) => {
-    // Add the item to the cart
     const ProductId = product.id;
     const Quantity = 1;
     await AddToCart({ ProductId, Quantity });
