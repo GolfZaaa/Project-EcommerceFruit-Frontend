@@ -92,7 +92,8 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                 <img
                   src={pathImages.paymentImage + dataEdit?.paymentImage}
                   alt={pathImages.paymentImage + dataEdit?.paymentImage}
-                  height={100}
+                  height={200}
+                  width={200}
                 />
               ) : (
                 "ไม่มีรูปภาพ"
@@ -172,12 +173,7 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                       <p className="text-sm text-gray-500 font-bold">
                         ประเภท : {item.product.productGI.category.name}
                       </p>
-                      <a
-                        href="#"
-                        className="text-base font-medium text-gray-900 hover:underline dark:text-gray-800"
-                      >
-                        ชื่อ : {item.product.productGI.name}
-                      </a>
+                      ชื่อ : {item.product.productGI.name}
                     </div>
                   </div>
                 </div>
