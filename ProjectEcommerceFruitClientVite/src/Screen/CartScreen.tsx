@@ -3,7 +3,7 @@ import Footer from "../layout/screen/Footer";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store/store";
 import { NavLink, useNavigate } from "react-router-dom";
-import { RoutePath } from "../constants/RoutePath";
+import { pathImages, RoutePath } from "../constants/RoutePath";
 import BannerComponent from "../layout/component/BannerComponent";
 
 // Define types for cart items and products
@@ -221,13 +221,16 @@ export default observer(function CartScreen() {
                         <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
                           ชื่อร้านค้า : {storeName}
                         </span>
-                        {items.map((item: CartItem) => (
-                          <div key={item.id} className="space-y-6">
+                        {items.map((item: CartItem) => {
+                          console.log("item",item)
+                          return (
+                            <div key={item.id} className="space-y-6">
                             {item.products.map((product: Product) => {
                               const TotalPriceForProduct =
                                 product.price * product.quantityInCartItem;
                               const formatTotalPriceForProduct =
                                 formatNumberWithCommas(TotalPriceForProduct);
+                                console.log("product",product)
                               return (
                                 <div
                                   key={product.id}
@@ -241,7 +244,7 @@ export default observer(function CartScreen() {
                                       >
                                         <img
                                           className="hidden h-20 w-20 dark:block"
-                                          src="https://shopee.co.th/blog/wp-content/uploads/2022/02/mango.jpg"
+                                          src={ pathImages.product + product.images}
                                           alt="product image"
                                         />
                                       </a>
@@ -312,7 +315,7 @@ export default observer(function CartScreen() {
 
                                     <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
                                       <p className="text-sm text-gray-500 font-bold">
-                                        ผลไม้แปรรูป
+                                        {item.categoryName}
                                       </p>
                                       <a
                                         href="#"
@@ -352,7 +355,8 @@ export default observer(function CartScreen() {
                               );
                             })}
                           </div>
-                        ))}
+                          )
+                        })}
                       </div>
                     </div>
                   </div>

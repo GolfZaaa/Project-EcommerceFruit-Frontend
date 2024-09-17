@@ -15,9 +15,11 @@ export default observer(function DashboardForUser() {
   const [yearOptions, setYearOptions] = useState([]);
   const [selectedYear, setSelectedYear] = useState(moment().year());
 
-  useEffect(() => {
-    getOrdersByUser();
-  }, []);
+  useEffect(()  =>  {
+    getOrdersByUser()
+  }, [])
+
+  console.log("order",order)
 
   useEffect(() => {
     if (order) {
@@ -147,15 +149,32 @@ export default observer(function DashboardForUser() {
     },
   };
 
-  const pieChartData = [
-    { value: 120, name: "Category A" },
-    { value: 150, name: "Category B" },
-    { value: 170, name: "Category C" },
-    { value: 140, name: "Category D" },
-    { value: 200, name: "Category E" },
-    { value: 190, name: "Category F" },
-    { value: 210, name: "Category G" },
-  ];
+
+  const [pieChartData, setPieChartData] = useState([]);
+
+  useEffect(() => {
+    // Assuming `order` contains the orders data
+    const categoryQuantities = {};
+    
+    // Aggregate quantities by category
+    order.forEach(orderItem => {
+      orderItem.orderItems.forEach(item => {
+        const categoryName = item.product.productGI.category.name;
+        if (!categoryQuantities[categoryName]) {
+          categoryQuantities[categoryName] = 0;
+        }
+        categoryQuantities[categoryName] += item.quantity;
+      });
+    });
+
+    // Convert aggregated data to ECharts format
+    const formattedData = Object.keys(categoryQuantities).map(categoryName => ({
+      name: categoryName,
+      value: categoryQuantities[categoryName],
+    }));
+    
+    setPieChartData(formattedData);
+  }, [order]);
 
   const pieOption = {
     tooltip: {
@@ -319,12 +338,13 @@ export default observer(function DashboardForUser() {
                 </p>
               </div>
               <div className="p-2">
-                <ReactECharts
-                  option={pieOption}
-                  style={{ height: "300px", width: "100%" }}
-                />
+              <ReactECharts
+      option={pieOption}
+      style={{ height: "300px", width: "100%" }}
+    />
               </div>
             </div>
+
           </div>
         </div>
       </div>
