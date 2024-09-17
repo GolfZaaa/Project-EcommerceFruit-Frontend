@@ -3,7 +3,7 @@ import { useStore } from "../store/store";
 import { observer } from "mobx-react-lite";
 import AddressList from "./address/AddressList";
 import { useNavigate } from "react-router-dom";
-import { RoutePath } from "../constants/RoutePath";
+import { pathImages, RoutePath } from "../constants/RoutePath";
 import DropZoneImageComponent from "../layout/component/DropZoneImageComponent";
 
 interface CartItem {
@@ -192,6 +192,7 @@ export default observer(function SummaryScreen() {
                   selectMyCart.map((items: CartItem) => (
                     <div>
                       {items.products.map((item) => {
+                        console.log("item",item)
                         const TotalPriceForProduct =
                           item.price * item.quantityInCartItem;
                         const formatTotalPriceForProduct =
@@ -201,8 +202,8 @@ export default observer(function SummaryScreen() {
                             <div className="mt-4 md:mt-6 flex  flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full ">
                               <div className="pb-4 md:pb-8 w-full md:w-40">
                                 <img
-                                  className="w-full md:hidden"
-                                  src={item.images}
+                                  className="w-36 h-36"
+                                  src={pathImages.product + item.images}
                                   alt="dress"
                                 />
                               </div>
@@ -214,7 +215,7 @@ export default observer(function SummaryScreen() {
                                 </div>
                                 <div className="flex justify-between space-x-8 items-start w-full">
                                   <p className="text-base xl:text-lg leading-6">
-                                    ราคา {item.price} บาท
+                                    ราคาสินค้า {item.price} บาท
                                   </p>
                                   <p className="text-base xl:text-lg leading-6 text-gray-800">
                                     {item.quantityInCartItem} จำนวน
