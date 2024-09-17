@@ -17,6 +17,8 @@ export const RoutePath = {
   OrderSummary: `${HOST}order-summary`,
   test: `${HOST}test`,
   successScreen: `${HOST}order-success-screen`,
+  checkorderScreen: `${HOST}check-order-user`,
+
 
   addressScreen: `${HOST}Address-screen`,
   summaryScreen: `${HOST}summary-screen`,

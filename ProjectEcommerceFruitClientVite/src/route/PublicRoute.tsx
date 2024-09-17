@@ -18,6 +18,7 @@ import SummaryScreen from "../Screen/SummaryScreen";
 import OrderSummary from "../Screen/order/OrderSummary";
 import SuccessComponent from "../layout/component/SuccessComponent";
 import DashboardForUser from "../Screen/my/DashboardForUser";
+import CheckOrderScreen from "../Screen/CheckOrderScreen";
 
 export const PublicRoute: any = [
   {
@@ -114,5 +115,10 @@ export const PublicRoute: any = [
     id: 18,
     path: "/dashboard-for-user",
     element: <DashboardForUser />,
+  },
+  {
+    id: 19,
+    path: RoutePath.checkorderScreen,
+    element: <CheckOrderScreen />,
   },
 ];

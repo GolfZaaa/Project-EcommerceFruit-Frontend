@@ -1,17 +1,12 @@
 import { makeAutoObservable, reaction } from "mobx";
-import { Order } from "../models/Order";
+import { Order, OrderNow } from "../models/Order";
 import agent from "../api/agent";
 
 
-interface CreateOrder {
-  PaymentImage: any;
-  ShippingType: string;
-  Tag: string;
-  StoreId: number;
-}
-
 export default class OrderStore {
   order: Order[] = [];
+  checkOrderNow: OrderNow[] = [];
+  orderid: number = 0;
 
   constructor() {
     makeAutoObservable(this);
@@ -58,6 +53,7 @@ export default class OrderStore {
   CreateUpdateOrderById = async (values: any) => {
     try {
       const result = await agent.Order.CreateUpdateOrderById(values);
+      this.orderid = result;
       return result;
     } catch (error) {
       return error;
@@ -68,6 +64,16 @@ export default class OrderStore {
     try {
       const result = await agent.Order.getOrdersAll();
       this.order = result;
+    } catch (error) {
+      return error;
+    }
+  };
+
+
+  getOrderItemByOrderId = async (orderId: number) => {
+    try {
+      const result = await agent.Order.getOrderItemByOrderId(orderId);
+      this.checkOrderNow = result;
     } catch (error) {
       return error;
     }

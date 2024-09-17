@@ -55,7 +55,6 @@ export default observer(function CartScreen() {
   useEffect(() => {
     const calculateTotalPrice = () => {
       return selectMyCart.reduce((total, item: CartItem) => {
-        console.log("itemitemitemitem",item)
         const storeTotal = item.products.reduce(
           (storeSum: number, product: Product) => {
             return storeSum + product.quantityInCartItem * product.price;
@@ -222,7 +221,6 @@ export default observer(function CartScreen() {
                           ชื่อร้านค้า : {storeName}
                         </span>
                         {items.map((item: CartItem) => {
-                          console.log("item",item)
                           return (
                             <div key={item.id} className="space-y-6">
                             {item.products.map((product: Product) => {
@@ -230,7 +228,6 @@ export default observer(function CartScreen() {
                                 product.price * product.quantityInCartItem;
                               const formatTotalPriceForProduct =
                                 formatNumberWithCommas(TotalPriceForProduct);
-                                console.log("product",product)
                               return (
                                 <div
                                   key={product.id}

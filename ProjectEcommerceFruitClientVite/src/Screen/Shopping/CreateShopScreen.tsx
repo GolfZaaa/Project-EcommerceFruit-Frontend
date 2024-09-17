@@ -44,10 +44,6 @@ export default observer(function CreateShopScreen({
 
   const addresss = !!dataEdit ? dataEdit : addressed;
 
-  console.log("dataId", JSON.stringify(dataId));
-
-  console.log("addresss", JSON.stringify(addresss));
-
   const [address, setAddress] = useState<Address | any>(
     addresss?.id !== 0 && addresss?.id !== undefined
       ? {

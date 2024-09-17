@@ -1,5 +1,6 @@
 import { Address } from "./Address";
 import { OrderItem } from "./OrderItem";
+import { Product } from "./Product";
 
 export interface Order {
   id: number;
@@ -14,4 +15,12 @@ export interface Order {
   address: Address;
 
   orderItems: OrderItem[];
+}
+
+
+export interface OrderNow {
+  id: number;
+  productId: number;
+  product: Product;
+  quantity:number;
 }

@@ -70,7 +70,6 @@ export default class ProductStore {
     const data = { productId, quantity };
     try {
       const result = await agent.Product.addStockProduct(data);
-      console.log("result,",result);
       return result;
     } catch (error) {
       return error;
