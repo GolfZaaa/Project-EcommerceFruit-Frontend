@@ -19,7 +19,6 @@ export default observer(function DashboardForUser() {
     getOrdersByUser()
   }, [])
 
-  console.log("order",order)
 
   useEffect(() => {
     if (order) {
@@ -82,8 +81,6 @@ export default observer(function DashboardForUser() {
     }
   }, [order,selectedYear]);
 
-  console.log("order",order)
-  
   const handleYearChange = (selectedOption:any) => {
     setSelectedYear(selectedOption.value);
   };

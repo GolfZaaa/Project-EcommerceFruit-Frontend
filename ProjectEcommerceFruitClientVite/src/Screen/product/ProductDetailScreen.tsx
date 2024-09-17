@@ -55,8 +55,6 @@ export default observer(function ProductDetailScreen() {
     }
   };
 
-  console.log("productDetail", productDetail);
-
   const hanldleDelete = async (productid: any) => {
     await DeleteProduct(productid);
     await getProductById(productid);

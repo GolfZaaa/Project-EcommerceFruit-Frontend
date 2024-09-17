@@ -11,4 +11,6 @@ export const Order = {
   CreateUpdateOrderById: (values: any | undefined) =>
     requests.post(`Order/CreateUpdateOrderById`, createFormData(values)),
   getOrdersAll: () => requests.get("Order/GetOrders"),
+  getOrderItemByOrderId: (orderId: number) =>
+    requests.get(`Order/GetOrderItemByOrderId?orderId=${orderId}`),
 };

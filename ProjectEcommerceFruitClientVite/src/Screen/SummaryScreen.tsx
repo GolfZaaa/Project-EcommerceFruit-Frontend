@@ -192,7 +192,6 @@ export default observer(function SummaryScreen() {
                   selectMyCart.map((items: CartItem) => (
                     <div>
                       {items.products.map((item) => {
-                        console.log("item",item)
                         const TotalPriceForProduct =
                           item.price * item.quantityInCartItem;
                         const formatTotalPriceForProduct =
@@ -215,7 +214,7 @@ export default observer(function SummaryScreen() {
                                 </div>
                                 <div className="flex justify-between space-x-8 items-start w-full">
                                   <p className="text-base xl:text-lg leading-6">
-                                    ราคาสินค้า {item.price} บาท
+                                    ราคาสินค้า {item.price.toLocaleString()} บาท
                                   </p>
                                   <p className="text-base xl:text-lg leading-6 text-gray-800">
                                     {item.quantityInCartItem} จำนวน

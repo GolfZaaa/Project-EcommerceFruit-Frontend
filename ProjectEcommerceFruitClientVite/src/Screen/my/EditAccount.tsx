@@ -11,10 +11,6 @@ interface props {
 
 const EditAccount = ({ onChangeCU, userEdit }: props) => {
   const { user, editUser } = useStore().userStore;
-
-  console.log("userEdit", JSON.stringify(userEdit));
-  console.log("userEdit - 1111", !!userEdit ? userEdit.id : 0);
-
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
