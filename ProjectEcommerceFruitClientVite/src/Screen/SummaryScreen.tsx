@@ -317,7 +317,7 @@ export default observer(function SummaryScreen() {
                   {selectedPaymentMethod === "slip" ? (
                     <div>
                       <div
-                        style={{ paddingLeft: "80px", marginTop: "20px" }}
+                        style={{ paddingLeft: "0px", marginTop: "20px" }}
                         className="payment-form-container"
                       >
                         <div
@@ -332,7 +332,7 @@ export default observer(function SummaryScreen() {
                           />
                         </div>
                         {!isImageValid && (
-                          <p className="text-red-500 text-sm mt-2 ml-16">
+                          <p className="text-red-500 text-sm mt-2 ml-16 pl-20 ">
                             กรุณาอัปโหลดรูปภาพสลีปการโอน
                           </p>
                         )}
