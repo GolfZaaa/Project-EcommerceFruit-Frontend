@@ -97,6 +97,8 @@ export default observer(function SummaryScreen() {
     setIsImageValid(!!file);
   };
 
+
+
   const handleSubmit = async (value: any) => {
     if (selectedPaymentMethod === "slip" && !dropZoneImage) {
       setIsImageValid(false);

@@ -150,10 +150,7 @@ export default observer(function DashboardForUser() {
   const [pieChartData, setPieChartData] = useState([]);
 
   useEffect(() => {
-    // Assuming `order` contains the orders data
-    const categoryQuantities = {};
-    
-    // Aggregate quantities by category
+    const categoryQuantities:any = {};
     order.forEach(orderItem => {
       orderItem.orderItems.forEach(item => {
         const categoryName = item.product.productGI.category.name;
@@ -164,8 +161,7 @@ export default observer(function DashboardForUser() {
       });
     });
 
-    // Convert aggregated data to ECharts format
-    const formattedData = Object.keys(categoryQuantities).map(categoryName => ({
+    const formattedData:any = Object.keys(categoryQuantities).map(categoryName => ({
       name: categoryName,
       value: categoryQuantities[categoryName],
     }));
