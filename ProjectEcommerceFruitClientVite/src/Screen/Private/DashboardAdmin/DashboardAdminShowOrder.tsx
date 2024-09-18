@@ -3,6 +3,9 @@ import { useStore } from "../../../store/store";
 import { pathImagepayment } from "../../../api/agent";
 import ExcelJS from "exceljs";
 import { AiFillFileExcel } from "react-icons/ai";
+import AOS from 'aos';
+import { motion } from 'framer-motion';
+import Swal from 'sweetalert2';
 
 export default function DashboardAdminShowOrder() {
   const [searchUser, setSearchUser] = useState<any>("");
@@ -11,6 +14,7 @@ export default function DashboardAdminShowOrder() {
   const { getOrdersAll, order } = useStore().orderStore;
   useEffect(() => {
     getOrdersAll();
+    AOS.init({ duration: 1000 });
   }, []);
 
   useEffect(() => {
@@ -93,6 +97,31 @@ export default function DashboardAdminShowOrder() {
     a.click();
     document.body.removeChild(a);
   };
+
+
+
+  
+  const handleDelete = () => {
+    Swal.fire({
+      title: 'ท่านแน่ใจหรือไม่ว่าต้องการลบ?',
+      text: 'หากลบแล้ว ท่านจะไม่สามารถกู้คืนข้อมูลได้',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ยืนยัน ต้องการลบ',
+      cancelButtonText:'ยกเลิก',
+    }).then((ผลลัพธ์) => {
+      if (ผลลัพธ์.isConfirmed) {
+        Swal.fire(
+          'ลบเรียบร้อยแล้ว',
+          'ข้อมูลของท่านถูกลบออกจากระบบแล้ว',
+          'success'
+        );
+      }
+    });
+  };
+  
 
   return (
     <div>
@@ -242,10 +271,6 @@ export default function DashboardAdminShowOrder() {
                         scope="col"
                         className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                       ></th>
-                      <th
-                        scope="col"
-                        className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
-                      ></th>
 
                       <th
                         scope="col"
@@ -301,11 +326,6 @@ export default function DashboardAdminShowOrder() {
                                 : "ยกเลิกคำสั่งซื้อแล้ว"}
                             </span>
                           </td>
-
-                          <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                            {" "}
-                          </td>
-
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"></td>
 
                           <td className=" p-5 ">
@@ -326,7 +346,7 @@ export default function DashboardAdminShowOrder() {
                                   ></path>
                                 </svg>
                               </button>
-                              <button className="p-2 rounded-full  group transition-all duration-500  flex item-center">
+                              <button className="p-2 rounded-full  group transition-all duration-500  flex item-center" onClick={handleDelete }>
                                 <svg
                                   className=""
                                   width="20"
