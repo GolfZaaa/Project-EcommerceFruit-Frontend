@@ -33,7 +33,7 @@ interface props {
 export default observer(function CreateProductScreen({
   onChangeCU,
   dataEdit,
-  id = 1,
+  id = 0,
 }: props) {
   const { productGI, getProductGI, createUpdateProduct } =
     useStore().productStore;

@@ -108,16 +108,20 @@ const AddressList = ({ confirmChangeAddress }: any) => {
         }}
       >
         <Grid item xs={10}></Grid>
+
         <Grid item xs={1}>
-          <Fab
-            variant="extended"
-            color="primary"
-            onClick={confirmChangeAddress}
-          >
-            <ArrowBackIosIcon sx={{ mr: 1 }} />
-            กลับ
-          </Fab>
+          {confirmChangeAddress !== undefined && (
+            <Fab
+              variant="extended"
+              color="primary"
+              onClick={confirmChangeAddress}
+            >
+              <ArrowBackIosIcon sx={{ mr: 1 }} />
+              กลับ
+            </Fab>
+          )}
         </Grid>
+
         <Grid item xs={1}>
           <Fab
             variant="extended"
@@ -163,18 +167,21 @@ const AddressList = ({ confirmChangeAddress }: any) => {
               <Grid item xs={2}>
                 ตั้งเป็นที่อยู่ร้านค้า
                 <Switch
-                  defaultChecked={item.isUsed_Store}
+                  checked={item.isUsed_Store}
                   onClick={() => handleAddressUpdate(item.id, true)}
                 />
               </Grid>
               <Grid item xs={2}>
                 ตั้งเป็นที่อยู่สั่งซื้อ
                 <Switch
-                  defaultChecked={item.isUsed}
+                  checked={item.isUsed}
                   onClick={() => {
                     handleAddressUpdate(item.id, false);
                     getAddressgotoOrderByUserId();
-                    confirmChangeAddress();
+
+                    if (confirmChangeAddress !== undefined) {
+                      confirmChangeAddress();
+                    }
                   }}
                 />
               </Grid>
@@ -214,6 +221,7 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           กลับ
         </Fab>
       </Grid>
+
       <Box mt={2} component="form" onSubmit={handleSubmit}>
         <TextField
           defaultValue={dataEdit?.detail}
@@ -229,24 +237,36 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           value={address["zipcode"]}
           onChange={handleChange("zipcode")}
           onSelect={(e: any) => handleSelect(e)}
+          style={{
+            height: "55px",
+          }}
         />
         <label>แขวง/ตำบล</label>
         <InputThaiAddress.District
           value={address["district"]}
           onChange={handleChange("district")}
           onSelect={(e: any) => handleSelect(e)}
+          style={{
+            height: "55px",
+          }}
         />
         <label>เขต/อำเภอ</label>
         <InputThaiAddress.Amphoe
           value={address["amphoe"]}
           onChange={handleChange("amphoe")}
           onSelect={(e: any) => handleSelect(e)}
+          style={{
+            height: "55px",
+          }}
         />
         <label>จังหวัด</label>
         <InputThaiAddress.Province
           value={address["province"]}
           onChange={handleChange("province")}
           onSelect={(e: any) => handleSelect(e)}
+          style={{
+            height: "55px",
+          }}
         />
 
         <Button

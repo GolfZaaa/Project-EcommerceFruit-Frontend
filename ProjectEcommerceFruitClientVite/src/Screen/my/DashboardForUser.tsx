@@ -15,10 +15,9 @@ export default observer(function DashboardForUser() {
   const [yearOptions, setYearOptions] = useState([]);
   const [selectedYear, setSelectedYear] = useState(moment().year());
 
-  useEffect(()  =>  {
-    getOrdersByUser()
-  }, [])
-
+  useEffect(() => {
+    getOrdersByUser();
+  }, []);
 
   useEffect(() => {
     if (order) {
@@ -66,7 +65,9 @@ export default observer(function DashboardForUser() {
         if (!acc[month]) {
           acc[month] = 0;
         }
+
         acc[month] += orderTotal;
+
         return acc;
       }, {});
 
@@ -87,7 +88,7 @@ export default observer(function DashboardForUser() {
     }
   }, [order, selectedYear]);
 
-  const handleYearChange = (selectedOption:any) => {
+  const handleYearChange = (selectedOption: any) => {
     setSelectedYear(selectedOption.value);
   };
 
@@ -104,7 +105,7 @@ export default observer(function DashboardForUser() {
   const option = {
     xAxis: {
       type: "category",
-      data: monthlyOrderData.map((item: any) => item.month),
+      data: monthlyOrderData?.map((item: any) => item?.month),
       axisLabel: {
         fontSize: 10,
         fontWeight: 600,
@@ -120,7 +121,7 @@ export default observer(function DashboardForUser() {
     },
     series: [
       {
-        data: monthlyOrderData.map((item: any) => item.total),
+        data: monthlyOrderData?.map((item: any) => item?.total),
         type: "line",
         smooth: true,
         lineStyle: {
@@ -139,20 +140,19 @@ export default observer(function DashboardForUser() {
     ],
     tooltip: {
       trigger: "axis",
-      formatter: (params: any) => `${params[0].data.toLocaleString()} บาท`,
+      formatter: (params: any) => `${params[0]?.data?.toLocaleString()} บาท`,
       textStyle: {
         fontSize: 14,
       },
     },
   };
 
-
   const [pieChartData, setPieChartData] = useState([]);
 
   useEffect(() => {
-    const categoryQuantities:any = {};
-    order.forEach(orderItem => {
-      orderItem.orderItems.forEach(item => {
+    const categoryQuantities: any = {};
+    order.forEach((orderItem) => {
+      orderItem.orderItems.forEach((item) => {
         const categoryName = item.product.productGI.category.name;
         if (!categoryQuantities[categoryName]) {
           categoryQuantities[categoryName] = 0;
@@ -161,11 +161,13 @@ export default observer(function DashboardForUser() {
       });
     });
 
-    const formattedData:any = Object.keys(categoryQuantities).map(categoryName => ({
-      name: categoryName,
-      value: categoryQuantities[categoryName],
-    }));
-    
+    const formattedData: any = Object.keys(categoryQuantities).map(
+      (categoryName) => ({
+        name: categoryName,
+        value: categoryQuantities[categoryName],
+      })
+    );
+
     setPieChartData(formattedData);
   }, [order]);
 
@@ -331,13 +333,12 @@ export default observer(function DashboardForUser() {
                 </p>
               </div>
               <div className="p-2">
-              <ReactECharts
-      option={pieOption}
-      style={{ height: "300px", width: "100%" }}
-    />
+                <ReactECharts
+                  option={pieOption}
+                  style={{ height: "300px", width: "100%" }}
+                />
               </div>
             </div>
-
           </div>
         </div>
       </div>

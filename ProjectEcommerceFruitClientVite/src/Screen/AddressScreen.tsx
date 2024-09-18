@@ -109,24 +109,36 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
                 value={createAddress["zipcode"]}
                 onChange={handleChange("zipcode")}
                 onSelect={(e: any) => handleSelect(e)}
+                style={{
+                  height: "55px",
+                }}
               />
               <label>แขวง/ตำบล</label>
               <InputThaiAddress.District
                 value={createAddress["district"]}
                 onChange={handleChange("district")}
                 onSelect={(e: any) => handleSelect(e)}
+                style={{
+                  height: "55px",
+                }}
               />
               <label>เขต/อำเภอ</label>
               <InputThaiAddress.Amphoe
                 value={createAddress["amphoe"]}
                 onChange={handleChange("amphoe")}
                 onSelect={(e: any) => handleSelect(e)}
+                style={{
+                  height: "55px",
+                }}
               />
               <label>จังหวัด</label>
               <InputThaiAddress.Province
                 value={createAddress["province"]}
                 onChange={handleChange("province")}
                 onSelect={(e: any) => handleSelect(e)}
+                style={{
+                  height: "55px",
+                }}
               />
               <button
                 type="submit"

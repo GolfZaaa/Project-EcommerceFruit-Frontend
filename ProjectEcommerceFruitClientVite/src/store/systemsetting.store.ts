@@ -6,17 +6,26 @@ import { SlideShow } from "../models/SlideShow";
 export default class SystemSettingStore {
   systemSetting: SystemSetting[] = [];
   slideShow: SlideShow[] = [];
+  loadings: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
   }
 
+  setLoading = (state: boolean) => (this.loadings = state);
+
   getSystemSetting = async () => {
+    this.setLoading(true);
+
     try {
       const result = await agent.SystemSetting.getSystemSetting();
 
       this.systemSetting = result;
+
+      this.setLoading(false);
     } catch (error) {
+      this.setLoading(false);
+
       throw error;
     }
   };

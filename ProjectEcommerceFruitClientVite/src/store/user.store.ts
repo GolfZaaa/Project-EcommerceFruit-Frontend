@@ -35,40 +35,54 @@ export default class UserStore {
   };
 
   login = async ({ PhoneNumber, Password }: RegisterInterface) => {
+    store.systemSettingStore.setLoading(true);
     const data = { phoneNumber: PhoneNumber, password: Password };
     try {
       const user = await agent.User.Login(data);
+      store.systemSettingStore.setLoading(false);
       return user;
     } catch (error) {
+      store.systemSettingStore.setLoading(false);
       return error;
     }
   };
 
   logout = () => {
+    store.systemSettingStore.setLoading(true);
     this.user = null;
     store.commonStore.setToken(null);
     store.shopuserStore.setUserShop(null);
     store.addressStore.setAddress(null);
     store.orderStore.setOrder([]);
+
+    store.systemSettingStore.setLoading(false);
   };
 
   getUserDetailbyId = async () => {
+    store.systemSettingStore.setLoading(true);
     try {
       const user = await agent.User.getUserDetailbyId();
       this.user = user;
+      store.systemSettingStore.setLoading(false);
+
       return user;
     } catch (error) {
+      store.systemSettingStore.setLoading(false);
       return error;
     }
   };
 
   editUser = async (values: any) => {
+    store.systemSettingStore.setLoading(true);
+
     try {
       const user = await agent.User.editUser(values);
       this.getUserDetailbyId();
       this.user = user;
+      store.systemSettingStore.setLoading(false);
       return user;
     } catch (error) {
+      store.systemSettingStore.setLoading(false);
       return error;
     }
   };

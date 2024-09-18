@@ -50,9 +50,41 @@ export default class AddressStore {
     }
   };
 
-  isUsedAddress = async (values: any) => {
+  isUsedAddress = async (values: { addressId: any; storeormine: any }) => {
+    // console.log("values", values);
+
+    // this.setAddress(
+    //   this.myAddress?.map((item) => {
+    //     console.log(
+    //       "test : ",
+    //       values.storeormine === false
+    //         ? item.id === values.addressId
+    //           ? true
+    //           : false
+    //         : item.isUsed
+    //     );
+
+    //     return {
+    //       ...item,
+    //       isUsed:
+    //         values.storeormine === false
+    //           ? item.id === values.addressId
+    //             ? true
+    //             : false
+    //           : item.isUsed,
+    //       isUsed_Store:
+    //         values.storeormine === true
+    //           ? item.id === values.addressId
+    //             ? true
+    //             : false
+    //           : item.isUsed_Store,
+    //     };
+    //   })
+    // );
+
     try {
       const result = await agent.Address.isUsedAddress(values);
+
       return result;
     } catch (error) {
       return error;

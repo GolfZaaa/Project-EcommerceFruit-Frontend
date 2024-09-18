@@ -20,10 +20,14 @@ export default observer(function HomeScreen() {
 
   const { GetStoreProductUser, shopProductUser } = useStore().shopuserStore;
 
+  console.log("user", user?.id);
+
   useEffect(() => {
     getProduct(0);
     getCategory();
-    GetStoreProductUser(user?.id);
+    if (user?.id !== undefined) {
+      GetStoreProductUser(user?.id);
+    }
   }, [getProduct, getCategory]);
 
   const [selectedCategory, setSelectedCategory] = useState(0);
@@ -136,8 +140,8 @@ export default observer(function HomeScreen() {
                       onChange={(e) => onSelectCate(Number(e.target.value))}
                       className="block w-52 bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:ring focus:ring-indigo-200"
                     >
-                      {categories.map((item) => (
-                        <option key={item.id} value={item.id}>
+                      {categories.map((item, i: number) => (
+                        <option key={i} value={item.id}>
                           {item.name}
                         </option>
                       ))}
@@ -405,13 +409,15 @@ export default observer(function HomeScreen() {
 
                 {taps === "taps1" && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-                    {filteredProducts.map((product, _) => {
+                    {filteredProducts.map((product, i: number) => {
                       const userid = user?.id;
                       const timePassed = dayjs(product.createdAt)
                         .locale("th")
                         .fromNow();
+
                       return (
                         <div
+                          key={i}
                           onClick={() => NavigateDetail(product)}
                           className="rounded overflow-hidden shadow-lg flex flex-col cursor-pointer"
                         >
@@ -491,14 +497,16 @@ export default observer(function HomeScreen() {
 
                 {taps === "taps2" && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-                    {shopProductUser.map((myProduct, _) => {
+                    {shopProductUser.map((myProduct, i: number) => {
                       const category = myProduct.productGI.category;
                       const userid = user?.id;
                       const timePassed = dayjs(myProduct.createdAt)
                         .locale("th")
                         .fromNow();
+
                       return (
                         <div
+                          key={i}
                           onClick={() => NavigateDetail(myProduct)}
                           className={`relative rounded overflow-hidden shadow-lg flex flex-col cursor-pointer ${
                             myProduct.status == false ? "opacity-70" : ""
@@ -521,69 +529,71 @@ export default observer(function HomeScreen() {
                               </div>
                             )}
 
-                            {myProduct.status == false && myProduct.quantity == 0 && (
-                              <div className="absolute inset-0 bg-gray-800 bg-opacity-75 flex flex-col justify-center items-center text-white">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="h-12 w-12 mb-4"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
-                                  />
-                                </svg>
-                                <span className="font-bold text-lg">
-                                  สินค้านี้ปิดการขาย
-                                </span>
-                                <span className="text-sm mt-1">
-                                  ท่านสามารถเปลี่ยนสถานะของสินค้าได้
-                                </span>
-                              </div>
-                            )}
+                            {myProduct.status == false &&
+                              myProduct.quantity == 0 && (
+                                <div className="absolute inset-0 bg-gray-800 bg-opacity-75 flex flex-col justify-center items-center text-white">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-12 w-12 mb-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+                                    />
+                                  </svg>
+                                  <span className="font-bold text-lg">
+                                    สินค้านี้ปิดการขาย
+                                  </span>
+                                  <span className="text-sm mt-1">
+                                    ท่านสามารถเปลี่ยนสถานะของสินค้าได้
+                                  </span>
+                                </div>
+                              )}
 
-                            {myProduct.quantity == 0 && myProduct.status == true && (
-                              <div className="absolute inset-0 bg-gray-500 bg-opacity-75 flex flex-col justify-center items-center text-white">
-                                <svg
-                                  viewBox="0 0 512 512"
-                                  fill="red"
-                                  height="4em"
-                                  width="4em"
-                                >
-                                  <path
-                                    fill="none"
-                                    stroke="red"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={32}
-                                    d="M85.57 446.25h340.86a32 32 0 0028.17-47.17L284.18 82.58c-12.09-22.44-44.27-22.44-56.36 0L57.4 399.08a32 32 0 0028.17 47.17z"
-                                  />
-                                  <path
-                                    fill="none"
-                                    stroke="red"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={32}
-                                    d="M250.26 195.39l5.74 122 5.73-121.95a5.74 5.74 0 00-5.79-6h0a5.74 5.74 0 00-5.68 5.95z"
-                                  />
-                                  <path
+                            {myProduct.quantity == 0 &&
+                              myProduct.status == true && (
+                                <div className="absolute inset-0 bg-gray-500 bg-opacity-75 flex flex-col justify-center items-center text-white">
+                                  <svg
+                                    viewBox="0 0 512 512"
                                     fill="red"
-                                    d="M256 397.25a20 20 0 1120-20 20 20 0 01-20 20z"
-                                  />
-                                </svg>
+                                    height="4em"
+                                    width="4em"
+                                  >
+                                    <path
+                                      fill="none"
+                                      stroke="red"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={32}
+                                      d="M85.57 446.25h340.86a32 32 0 0028.17-47.17L284.18 82.58c-12.09-22.44-44.27-22.44-56.36 0L57.4 399.08a32 32 0 0028.17 47.17z"
+                                    />
+                                    <path
+                                      fill="none"
+                                      stroke="red"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={32}
+                                      d="M250.26 195.39l5.74 122 5.73-121.95a5.74 5.74 0 00-5.79-6h0a5.74 5.74 0 00-5.68 5.95z"
+                                    />
+                                    <path
+                                      fill="red"
+                                      d="M256 397.25a20 20 0 1120-20 20 20 0 01-20 20z"
+                                    />
+                                  </svg>
 
-                                <span className="font-bold text-lg mt-2">
-                                  สินค้าชนิดนี้หมดจากคลังสินค้าแล้ว
-                                </span>
-                                <span className="text-sm mt-1">
-                                  โปรดทำการเพิ่มสินค้าลงคลังสินค้า
-                                </span>
-                              </div>
-                            )}
+                                  <span className="font-bold text-lg mt-2">
+                                    สินค้าชนิดนี้หมดจากคลังสินค้าแล้ว
+                                  </span>
+                                  <span className="text-sm mt-1">
+                                    โปรดทำการเพิ่มสินค้าลงคลังสินค้า
+                                  </span>
+                                </div>
+                              )}
                           </div>
                           <div className="px-6 py-4 mb-auto">
                             <div className="font-medium text-lg hover:text-indigo-600 transition duration-500 ease-in-out flex justify-between mb-2">
@@ -645,8 +655,6 @@ export default observer(function HomeScreen() {
             </section>
           </main>
         </div>
-
-        
       </>
     </>
   );

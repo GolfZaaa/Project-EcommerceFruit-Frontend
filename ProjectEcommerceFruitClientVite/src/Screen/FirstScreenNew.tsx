@@ -41,6 +41,8 @@ export default observer(function FirstScreenNew() {
 
   const { getUserAll, userAll, user } = useStore().userStore;
 
+  const { systemSetting, getSystemSetting } = useStore().systemSettingStore;
+
   const [randomProduct, setRandomProduct] = useState<Product>();
   const [topProducts, setTopProducts] = useState<Product[]>([]);
 
@@ -49,6 +51,7 @@ export default observer(function FirstScreenNew() {
       await getProduct(0);
       await getOrdersAll();
       await getUserAll();
+      await getSystemSetting();
     };
     fetchData();
   }, [getProduct, getCategory]);
@@ -150,16 +153,16 @@ export default observer(function FirstScreenNew() {
       <div className="overflow-hidden mt-4 ml-4 mr-4">
         <div className="w-full">
           <Slider {...settingsImageSlide}>
-            {images.map((image, index) => (
+            {systemSetting[0]?.slideShows.map((image, index) => (
               <div key={index} className="p-2 relative group">
                 <img
-                  src={image}
+                  src={pathImages.slideShow + image?.imageName || ""}
                   className="w-full h-96 object-cover rounded-md transition-transform duration-500 ease-in-out group-hover:scale-110 group-hover:rotate-3"
                   alt={`slide-${index}`}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
                 <div className="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <p className="text-lg font-semibold">รูปภาพ {index + 1}</p>
+                  {/* <p className="text-lg font-semibold">รูปภาพ {index + 1}</p> */}
                 </div>
               </div>
             ))}
@@ -743,20 +746,33 @@ export default observer(function FirstScreenNew() {
         <div className="pt-14 xl:px-0 px-4">
           <div className="w-full lg:flex overflow-x-hidden">
             <div className="lg:w-1/2">
-              <img  data-aos="fade-right"
-     data-aos-offset="300"
-     data-aos-easing="ease-in-sine" src={News1} className="w-full" />
-              <div  data-aos="fade-right"
-     data-aos-offset="300"
-     data-aos-easing="ease-in-sine" className="mt-8 lg:mb-0 mb-8">
-                <h1  data-aos="fade-right"
-     data-aos-offset="300"
-     data-aos-easing="ease-in-sine" className="f-m-m text-lg font-semibold leading-7">
+              <img
+                data-aos="fade-right"
+                data-aos-offset="300"
+                data-aos-easing="ease-in-sine"
+                src={News1}
+                className="w-full"
+              />
+              <div
+                data-aos="fade-right"
+                data-aos-offset="300"
+                data-aos-easing="ease-in-sine"
+                className="mt-8 lg:mb-0 mb-8"
+              >
+                <h1
+                  data-aos="fade-right"
+                  data-aos-offset="300"
+                  data-aos-easing="ease-in-sine"
+                  className="f-m-m text-lg font-semibold leading-7"
+                >
                   ลงพื้นที่รับขึ้นทะเบียนเกษตรกร 67/68 ม.6 ต.ลิ่นถิ่น
                 </h1>
-                <p  data-aos="fade-right"
-     data-aos-offset="300"
-     data-aos-easing="ease-in-sine" className="text-xs f-m-m leading-loose mt-2">
+                <p
+                  data-aos="fade-right"
+                  data-aos-offset="300"
+                  data-aos-easing="ease-in-sine"
+                  className="text-xs f-m-m leading-loose mt-2"
+                >
                   วันที่ 18 กรกฎาคม 2567 นายจตุพร อิ่มจิตร เกษตรอำเภอทองผาภูมิ
                   มอบหมายให้ นางสาวขนิษฐา บุญคำมา
                   นักวิชาการส่งเสริมการเกษตรชำนาญการ
@@ -765,9 +781,12 @@ export default observer(function FirstScreenNew() {
                   พร้อมทั้งแจงโครงการปุ๋ยคนละครึ่ง ณ หมู่ 6 ตำบลลิ่นถิ่น
                   อำเภอทองผาภูมิ จังหวัดกาญจนบุรี
                 </p>
-                <div  data-aos="fade-right"
-     data-aos-offset="300"
-     data-aos-easing="ease-in-sine" className="mt-6">
+                <div
+                  data-aos="fade-right"
+                  data-aos-offset="300"
+                  data-aos-easing="ease-in-sine"
+                  className="mt-6"
+                >
                   <a href="">
                     <p className="text-indigo-700 underline text-base font-semibold f-m-m">
                       อ่านเพิ่มเติม
@@ -778,19 +797,29 @@ export default observer(function FirstScreenNew() {
             </div>
             <div className="lg:w-1/2 lg:ml-8 ">
               <div className="lg:flex items-start mb-8">
-                <img data-aos="fade-left"
-     data-aos-offset="300"
-     data-aos-easing="ease-in-sine" src={News2} className="w-40" />
+                <img
+                  data-aos="fade-left"
+                  data-aos-offset="300"
+                  data-aos-easing="ease-in-sine"
+                  src={News2}
+                  className="w-40"
+                />
                 <div className="lg:ml-6">
-                  <h1 data-aos="fade-left"
-     data-aos-offset="300"
-     data-aos-easing="ease-in-sine" className="f-m-m text-lg font-semibold leading-7 lg:mt-0 mt-8">
+                  <h1
+                    data-aos="fade-left"
+                    data-aos-offset="300"
+                    data-aos-easing="ease-in-sine"
+                    className="f-m-m text-lg font-semibold leading-7 lg:mt-0 mt-8"
+                  >
                     ประชุมหารือผลวิเคราะห์ข้อมูลปริมาณการผลิตสินค้าเกษตรด้านพืช
                     ระดับจังหวัด
                   </h1>
-                  <p data-aos="fade-left"
-     data-aos-offset="300"
-     data-aos-easing="ease-in-sine" className="text-xs f-m-m leading-loose mt-2">
+                  <p
+                    data-aos="fade-left"
+                    data-aos-offset="300"
+                    data-aos-easing="ease-in-sine"
+                    className="text-xs f-m-m leading-loose mt-2"
+                  >
                     วันที่ 18 กรกฎาคม 2567 นายจตุพร เกษตรอำเภอทองผาภูมิ
                     มอบหมายให้ นางสาวขนิษฐา บุญคำมา
                     นักวิชาการส่งเสริมการเกษตรชำนาญการ
@@ -799,9 +828,12 @@ export default observer(function FirstScreenNew() {
                   </p>
                   <div className="mt-4">
                     <a href="">
-                      <p data-aos="fade-left"
-     data-aos-offset="300"
-     data-aos-easing="ease-in-sine" className="text-indigo-700 underline text-base font-semibold f-m-m">
+                      <p
+                        data-aos="fade-left"
+                        data-aos-offset="300"
+                        data-aos-easing="ease-in-sine"
+                        className="text-indigo-700 underline text-base font-semibold f-m-m"
+                      >
                         อ่านเพิ่มเติม
                       </p>
                     </a>
@@ -809,12 +841,19 @@ export default observer(function FirstScreenNew() {
                 </div>
               </div>
               <div className="lg:flex items-start mb-8">
-                <img data-aos="fade-left"
-     data-aos-offset="300"
-     data-aos-easing="ease-in-sine"  src={News3} className="w-40" />
-                <div data-aos="fade-left"
-     data-aos-offset="300"
-     data-aos-easing="ease-in-sine"  className="lg:ml-6">
+                <img
+                  data-aos="fade-left"
+                  data-aos-offset="300"
+                  data-aos-easing="ease-in-sine"
+                  src={News3}
+                  className="w-40"
+                />
+                <div
+                  data-aos="fade-left"
+                  data-aos-offset="300"
+                  data-aos-easing="ease-in-sine"
+                  className="lg:ml-6"
+                >
                   <h1 className="f-m-m text-lg font-semibold leading-7 lg:mt-0 mt-8">
                     กิจกรรมปลูกผักสวนครัวโครงการพัฒนาพื้นที่ต้นแบบ
                     เพื่อพัฒนาคุณภาพชีวิตฯ
@@ -834,12 +873,19 @@ export default observer(function FirstScreenNew() {
                 </div>
               </div>
               <div className="lg:flex items-start mb-8">
-                <img data-aos="fade-left"
-     data-aos-offset="300"
-     data-aos-easing="ease-in-sine"  src={News4} className="w-40" />
-                <div data-aos="fade-left"
-     data-aos-offset="300"
-     data-aos-easing="ease-in-sine"  className="lg:ml-6">
+                <img
+                  data-aos="fade-left"
+                  data-aos-offset="300"
+                  data-aos-easing="ease-in-sine"
+                  src={News4}
+                  className="w-40"
+                />
+                <div
+                  data-aos="fade-left"
+                  data-aos-offset="300"
+                  data-aos-easing="ease-in-sine"
+                  className="lg:ml-6"
+                >
                   <h1 className="f-m-m text-lg font-semibold leading-7 lg:mt-0 mt-8">
                     ให้บริการขึ้นทะเบียนเกษตรกรและปรับปรุงทะเบียนเกษตรกร ม.2
                     ต.สหกรณ์นิคม
@@ -866,7 +912,7 @@ export default observer(function FirstScreenNew() {
         </div>
         <div />
       </div>
-      
+
       {/* ข่าวสาร End */}
       <Footer />
     </div>

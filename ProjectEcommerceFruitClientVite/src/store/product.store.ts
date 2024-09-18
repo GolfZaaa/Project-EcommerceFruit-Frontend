@@ -2,16 +2,20 @@ import { makeAutoObservable } from "mobx";
 import agent from "../api/agent";
 import { Product } from "../models/Product";
 import { Category, ProductGI } from "../models/ProductGI";
+import { store } from "./store";
 
 export default class ProductStore {
   product: Product[] = [];
   productDetail: Product | null = null;
   productGI: ProductGI[] = [];
   category: Category[] = [];
+  loadingPGI: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
   }
+
+  setLoadingPGI = (state: boolean) => (this.loadingPGI = state);
 
   getProduct = async (categoryId: number) => {
     try {
@@ -66,7 +70,13 @@ export default class ProductStore {
     }
   };
 
-  addStockProduct = async ({productId,quantity}: {productId: number; quantity:number}) => {
+  addStockProduct = async ({
+    productId,
+    quantity,
+  }: {
+    productId: number;
+    quantity: number;
+  }) => {
     const data = { productId, quantity };
     try {
       const result = await agent.Product.addStockProduct(data);
@@ -79,10 +89,15 @@ export default class ProductStore {
   //-------------------------------------------- product-GI ----------------------------------------------------//
 
   getProductGI = async (id?: any | null) => {
+    this.setLoadingPGI(true);
     try {
       const result = await agent.Product.getProductGI(id);
+
       this.productGI = result;
+
+      this.setLoadingPGI(false);
     } catch (error) {
+      this.setLoadingPGI(false);
       return error;
     }
   };
@@ -90,7 +105,7 @@ export default class ProductStore {
   createUpdateProductGI = async (values: any, files: any) => {
     try {
       const result = await agent.Product.createUpdateProductGI(values, files);
-      this.getProductGI(0);
+      this.getProductGI(1);
       return result;
     } catch (error) {
       return error;
@@ -100,7 +115,7 @@ export default class ProductStore {
   removeProductGI = async (id: number) => {
     try {
       await agent.Product.removeProductGI(id);
-      this.getProductGI(0);
+      this.getProductGI(1);
     } catch (error) {
       return error;
     }
@@ -109,7 +124,7 @@ export default class ProductStore {
   removeImage = async (id: number) => {
     try {
       await agent.Product.removeImage(id);
-      this.getProductGI(0);
+      this.getProductGI(1);
     } catch (error) {
       return error;
     }
