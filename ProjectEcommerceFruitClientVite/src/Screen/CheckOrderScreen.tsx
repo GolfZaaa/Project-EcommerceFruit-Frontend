@@ -41,24 +41,30 @@ export default observer(function CheckOrderScreen() {
                 const totalPriceProduct = item.quantity * item.product.price;
                 return (
 <div className="flex-1 space-y-4 p-6">
-                <div className="flex items-center gap-6">
-                  <div  className="h-14 w-14 shrink-0">
-                    <img
-                      className="h-full w-full dark:hidden"
-                      src={pathImages.product + item.product.images}
-                      alt="imac image"
-                    />
-                    <img
-                      className="hidden h-full w-full dark:block"
-                      src={pathImages.product + item.product.images}
-                      alt="imac image"
-                    />
-                  </div>
-                  <a className="min-w-0 flex-1 font-medium text-gray-900 hover:underline dark:text-black">
-                    {" "}
-                    {item?.product?.productGI?.name}
-                  </a>
+                
+                <div className="flex justify-between">
+                      <div className="flex items-center gap-6">
+                        <div  className="h-14 w-14 shrink-0">
+                          <img
+                            className="hidden h-full w-full dark:block"
+                            src={pathImages.product + item.product.images}
+                            alt="imac image"
+                          />
+                        </div>
+                        <a className="min-w-0 flex-1 font-medium text-gray-900 hover:underline dark:text-black">
+                          {" "}
+                          {item?.product?.productGI?.name}
+                        </a>
+                      </div>
+
+                      <div className="flex items-center">
+                        <button>
+                          ซื้ออีกครั้ง
+                        </button>
+                      </div>
                 </div>
+                
+
                 <div className="flex items-center justify-between gap-4">
                   <p className="text-sm font-normal text-gray-500 dark:text-gray-400">
                     <span className="font-medium text-gray-900 dark:text-black">

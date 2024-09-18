@@ -26,6 +26,7 @@ export default class AddressStore {
     try {
       const result = await agent.Address.getAddressgotoOrderByUserId();
       this.myAddressgotoOrder = result;
+      return result;
     } catch (error) {
       throw error;
     }
