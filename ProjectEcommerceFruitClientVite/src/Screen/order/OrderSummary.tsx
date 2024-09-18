@@ -20,7 +20,7 @@ const OrderSummary = () => {
       }
     });
   };
-
+ 
   useEffect(() => {
     getData();
   }, []);
