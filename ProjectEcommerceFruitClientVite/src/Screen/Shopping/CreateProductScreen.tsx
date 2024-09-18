@@ -22,6 +22,7 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import DropZoneImageComponent from "../../layout/component/DropZoneImageComponent";
+import { pathImages } from "../../constants/RoutePath";
 
 interface props {
   onChangeCU?: any | null;
@@ -149,7 +150,7 @@ export default observer(function CreateProductScreen({
                   }}
                 >
                   <DropZoneImageComponent
-                    image={dataEdit?.images}
+                    image={pathImages.product + dataEdit?.images}
                     onImageUpload={handleImageUpload}
                   />
                 </div>

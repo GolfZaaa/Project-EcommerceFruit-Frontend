@@ -23,7 +23,6 @@ export const RoutePath = {
 
   dashboardforuser: `${HOST}dashboard-for-user`,
 
-
   productDetail: (id: string) => `${HOST}product-detail-screen/${id}`,
 
   createshop: `${HOST}create-shop`,
@@ -42,4 +41,6 @@ export const pathImages = {
   paymentImage: `${path}paymentImage/`,
   product_GI: `${path}product-gi/`,
   product: `${path}product/`,
+  image_web: `${path}image-web/`,
+  slideShow: `${path}slide-show/`,
 };

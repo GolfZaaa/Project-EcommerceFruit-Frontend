@@ -208,7 +208,7 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                 color="error"
                 size="large"
                 fullWidth
-                disabled={dataEdit?.status == 2}
+                disabled={dataEdit?.status == 1 || dataEdit?.status == 2}
               >
                 ยกเลิกคำสั่งซื้อ
               </Button>

@@ -22,19 +22,18 @@ function DropZoneImageComponent({ image = null, onImageUpload }: any) {
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
   });
+
+  console.log("image", image);
+
   return (
     <div>
       <div>
-        <div
-          {...getRootProps()}
-          className="dropzoneStyle"
-          style={{ marginLeft: "-80px" }}
-        >
+        <div {...getRootProps()} className="dropzoneStyle">
           <input {...getInputProps()} />
           {image && imageUri === null ? (
             <img
-              src={pathImages.product + image}
-              alt="product-image"
+              src={image}
+              alt="image"
               style={{ width: "250px", height: "200px", objectFit: "contain" }}
             />
           ) : imageUri ? (

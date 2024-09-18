@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { pathImages, RoutePath } from "../constants/RoutePath";
 import DropZoneImageComponent from "../layout/component/DropZoneImageComponent";
 import dayjs from "dayjs";
+import { myToast } from "../helper/components";
 
 interface CartItem {
   id: string;
@@ -29,8 +30,10 @@ const formatNumberWithCommas = (number: number) => {
 export default observer(function SummaryScreen() {
   const navigate = useNavigate();
   const [dropZoneImage, setDropZoneImage] = useState(null);
-  const [shippingType, setShippingType] = useState("asd");
+  const [shippingType, setShippingType] = useState("ไปรษณีย์ไทย");
   const [tag, setTag] = useState("");
+
+  const [isImageValid, setIsImageValid] = useState(true);
 
   const {
     myAddressgotoOrder,
@@ -65,10 +68,9 @@ export default observer(function SummaryScreen() {
   const handleChange = (e: any) => {
     setSelectedPaymentMethod(e.target.value);
 
-    if (e.target.value !== 'slip') {
+    if (e.target.value !== "slip") {
       setIsImageValid(true);
     }
-
   };
 
   const confirmChangeAddress = () => {
@@ -98,15 +100,21 @@ export default observer(function SummaryScreen() {
   const handleSubmit = async (value: any) => {
     if (selectedPaymentMethod === "slip" && !dropZoneImage) {
       setIsImageValid(false);
-      return
+
+      myToast("กรุณาเพิ่มรูปภาพสลิป");
+
+      return;
     }
+
     const Data = {
       PaymentImage: dropZoneImage,
       ShippingType: shippingType,
       Tag: tag,
       StoreId: value[0].storeId,
     };
+
     const test = await CreateUpdateOrderById(Data);
+
     if (test) {
       navigate(RoutePath.successScreen);
     } else {
@@ -197,18 +205,16 @@ export default observer(function SummaryScreen() {
                 </p>
 
                 {selectMyCart &&
-                  selectMyCart.map((items: CartItem) => (
-                    <div>
-                      {items.products.map((item) => {
-                        console.log("item", JSON.stringify(item));
-
+                  selectMyCart.map((items: CartItem, i: number) => (
+                    <div key={i}>
+                      {items.products.map((item, i: number) => {
                         const TotalPriceForProduct =
                           item.price * item.quantityInCartItem;
                         const formatTotalPriceForProduct =
                           formatNumberWithCommas(TotalPriceForProduct);
 
                         return (
-                          <div>
+                          <div key={i}>
                             <div className="mt-4 md:mt-6 flex  flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full ">
                               <div className="pb-4 md:pb-8 w-full md:w-40">
                                 <img
@@ -305,17 +311,30 @@ export default observer(function SummaryScreen() {
                       </span>
                     </label>
                   </div>
-                  
+
                   {selectedPaymentMethod === "slip" ? (
                     <div>
-                      <div style={{ paddingLeft: "80px", marginTop: "20px" }} className="payment-form-container">
-          <div style={{ display: "flex", justifyContent: "center", marginTop: "5px" }}>
-            <DropZoneImageComponent onImageUpload={handleImageUpload} />
-          </div>
-          {!isImageValid && (
-            <p className="text-red-500 text-sm mt-2 ml-16">กรุณาอัปโหลดรูปภาพสลีปการโอน</p>
-          )}
-        </div>
+                      <div
+                        style={{ paddingLeft: "80px", marginTop: "20px" }}
+                        className="payment-form-container"
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            marginTop: "5px",
+                          }}
+                        >
+                          <DropZoneImageComponent
+                            onImageUpload={handleImageUpload}
+                          />
+                        </div>
+                        {!isImageValid && (
+                          <p className="text-red-500 text-sm mt-2 ml-16">
+                            กรุณาอัปโหลดรูปภาพสลีปการโอน
+                          </p>
+                        )}
+                      </div>
                     </div>
                   ) : (
                     <div>

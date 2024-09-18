@@ -25,8 +25,10 @@ export default observer(function ProductDetailScreen() {
   const [show2, setShow2] = useState(false);
   const [quantity, setQuantity] = useState<number>(1);
 
-  const increaseQuantity = () => {
-    setQuantity(quantity + 1);
+  const increaseQuantity = (quantityy: any) => {
+    if (quantity < quantityy) {
+      setQuantity(quantity + 1);
+    }
   };
 
   const decreaseQuantity = () => {
@@ -378,6 +380,9 @@ export default observer(function ProductDetailScreen() {
             <p className="text-base leading-4 mt-4 text-gray-600 mb-5">
               ราคาต่อกิโลกรัม : {productDetail?.price} บาท
             </p>
+            <p className="text-base leading-4 mt-4 text-gray-600 mb-5">
+              คงเหลือ : {productDetail?.quantity} ชิ้น
+            </p>
 
             <Box display="flex" alignItems="center" gap={2}>
               <Button
@@ -390,7 +395,7 @@ export default observer(function ProductDetailScreen() {
               <Typography variant="body1">{quantity}</Typography>
               <Button
                 variant="outlined"
-                onClick={increaseQuantity}
+                onClick={() => increaseQuantity(productDetail?.quantity)}
                 size="medium"
               >
                 +
@@ -612,11 +617,9 @@ export default observer(function ProductDetailScreen() {
               <p className="text-gray-500">เข้าร่วมเมื่อ</p>
               <p className="text-red-500 text-xl font-bold">4 ปี ที่ผ่านมา</p>
             </div>
-
           </div>
         </div>
       </div>
-
     </div>
   );
 });

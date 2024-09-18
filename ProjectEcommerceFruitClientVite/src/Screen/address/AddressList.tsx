@@ -128,7 +128,7 @@ const AddressList = ({ confirmChangeAddress }: any) => {
               setAddress({
                 district: "",
                 amphoe: "",
-                province: "", 
+                province: "",
                 zipcode: "",
                 detail: "",
               });
@@ -187,9 +187,9 @@ const AddressList = ({ confirmChangeAddress }: any) => {
                   color="primary"
                   onClick={() => {
                     setAddress({
-                      district: item?.subDistrict, 
-                      amphoe: item?.district, 
-                      province: item?.province, 
+                      district: item?.subDistrict,
+                      amphoe: item?.district,
+                      province: item?.province,
                       zipcode: item?.postCode,
                       detail: item?.detail,
                     });
@@ -224,6 +224,12 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           name="detail"
           required
         />
+        <label>รหัสไปรษณีย์</label>
+        <InputThaiAddress.Zipcode
+          value={address["zipcode"]}
+          onChange={handleChange("zipcode")}
+          onSelect={(e: any) => handleSelect(e)}
+        />
         <label>แขวง/ตำบล</label>
         <InputThaiAddress.District
           value={address["district"]}
@@ -240,12 +246,6 @@ const AddressList = ({ confirmChangeAddress }: any) => {
         <InputThaiAddress.Province
           value={address["province"]}
           onChange={handleChange("province")}
-          onSelect={(e: any) => handleSelect(e)}
-        />
-        <label>รหัสไปรษณีย์</label>
-        <InputThaiAddress.Zipcode
-          value={address["zipcode"]}
-          onChange={handleChange("zipcode")}
           onSelect={(e: any) => handleSelect(e)}
         />
 

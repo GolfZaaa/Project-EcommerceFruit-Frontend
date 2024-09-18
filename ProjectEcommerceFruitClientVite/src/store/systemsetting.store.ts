@@ -1,9 +1,11 @@
 import { makeAutoObservable } from "mobx";
 import { SystemSetting } from "../models/SystemSetting";
 import agent from "../api/agent";
+import { SlideShow } from "../models/SlideShow";
 
 export default class SystemSettingStore {
   systemSetting: SystemSetting[] = [];
+  slideShow: SlideShow[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -25,6 +27,48 @@ export default class SystemSettingStore {
         values
       );
       this.getSystemSetting();
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  //-------------------------------------------slide show---------------------------------------------//
+
+  getSlideShow = async () => {
+    try {
+      const result = await agent.SystemSetting.getSlideShow();
+
+      this.slideShow = result;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  createUpdateSlideShow = async (values: any) => {
+    try {
+      const result = await agent.SystemSetting.createUpdateSlideShow(values);
+      this.getSlideShow();
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  isUsedSlideShow = async (id: any) => {
+    try {
+      const result = await agent.SystemSetting.isUsedSlideShow(id);
+      this.getSlideShow();
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  removeSlideShow = async (id: any) => {
+    try {
+      const result = await agent.SystemSetting.removeSlideShow(id);
+      this.getSlideShow();
       return result;
     } catch (error) {
       throw error;

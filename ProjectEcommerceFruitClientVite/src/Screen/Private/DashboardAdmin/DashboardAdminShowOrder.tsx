@@ -13,15 +13,17 @@ export default function DashboardAdminShowOrder() {
     getOrdersAll();
   }, []);
 
-
   useEffect(() => {
     if (searchUser === "") {
       setfilterUser(order);
     } else {
       const lowercasedSearchTerm = searchUser.toLowerCase();
-      const filtered = order.filter((user: any) =>
-        user.orderId.toLowerCase().includes(lowercasedSearchTerm) ||
-        user.address.user.fullName.toLowerCase().includes(lowercasedSearchTerm)
+      const filtered = order.filter(
+        (user: any) =>
+          user.orderId.toLowerCase().includes(lowercasedSearchTerm) ||
+          user.address.user.fullName
+            .toLowerCase()
+            .includes(lowercasedSearchTerm)
       );
       setfilterUser(filtered);
     }
@@ -59,7 +61,12 @@ export default function DashboardAdminShowOrder() {
         index: index + 1,
         name: orders.address.user.fullName,
         createdAt: formatDateToThai(orders.createdAt),
-        status: orders.status === 0 ? 'กำลังรออนุมัติ' : orders.status === 1 ? 'ยืนยันคำสั่งซื้อ' : 'ยกเลิกคำสั่งซื้อ',
+        status:
+          orders.status === 0
+            ? "กำลังรออนุมัติ"
+            : orders.status === 1
+            ? "ยืนยันคำสั่งซื้อ"
+            : "ยกเลิกคำสั่งซื้อ",
         // price: orders.price,
         // createdAt: formatDateToThai(orders.createdAt),
         // status: orders.status ? "ใช้งานได้ปกติ" : "ปิดการใช้งาน",
@@ -86,7 +93,6 @@ export default function DashboardAdminShowOrder() {
     a.click();
     document.body.removeChild(a);
   };
-
 
   return (
     <div>
@@ -134,69 +140,68 @@ export default function DashboardAdminShowOrder() {
                   onChange={(e) => setSearchUser(e.target.value)}
                 />
 
-<div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                <div className="relative inline-block text-left">
-                  <div>
-                    <button
-                      onClick={handleDropdown}
-                      type="button"
-                      className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                      id="menu-button"
-                      aria-expanded="true"
-                      aria-haspopup="true"
-                    >
-                      ดาวน์โหลดข้อมูล
-                      <svg
-                        className="-mr-1 h-5 w-5 text-gray-400"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                  <div className="relative inline-block text-left">
+                    <div>
+                      <button
+                        onClick={handleDropdown}
+                        type="button"
+                        className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                        id="menu-button"
+                        aria-expanded="true"
+                        aria-haspopup="true"
                       >
-                        <path
-                          fill-rule="evenodd"
-                          d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-
-                  {dropdown && (
-                    <div
-                      className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                      role="menu"
-                      aria-orientation="vertical"
-                      aria-labelledby="menu-button"
-                    >
-                      <div className="py-1 cursor-pointer" role="none">
-                        <a
-                          href="#"
-                          className="block px-4 py-2 text-sm text-gray-700"
-                          role="menuitem"
-                          id="menu-item-0"
+                        ดาวน์โหลดข้อมูล
+                        <svg
+                          className="-mr-1 h-5 w-5 text-gray-400"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          aria-hidden="true"
                         >
-                          PDF
-                        </a>
-                        <div className="">
-                          <button
-                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:bg-gray-200 hover:font-bold w-full"
-                            onClick={generateExcel}
+                          <path
+                            fill-rule="evenodd"
+                            d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+
+                    {dropdown && (
+                      <div
+                        className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        role="menu"
+                        aria-orientation="vertical"
+                        aria-labelledby="menu-button"
+                      >
+                        <div className="py-1 cursor-pointer" role="none">
+                          <a
+                            href="#"
+                            className="block px-4 py-2 text-sm text-gray-700"
                             role="menuitem"
-                            id="menu-item-1"
+                            id="menu-item-0"
                           >
-                            <AiFillFileExcel
-                              className="mr-2 text-green-600"
-                              size={25}
-                            />
-                            EXCEL
-                          </button>
+                            PDF
+                          </a>
+                          <div className="">
+                            <button
+                              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:bg-gray-200 hover:font-bold w-full"
+                              onClick={generateExcel}
+                              role="menuitem"
+                              id="menu-item-1"
+                            >
+                              <AiFillFileExcel
+                                className="mr-2 text-green-600"
+                                size={25}
+                              />
+                              EXCEL
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-              </div>
-
               </div>
               <div className="overflow-hidden ">
                 <table className="min-w-full border border-gray-300 rounded-tl-lg rounded-tr-lg overflow-hidden">
@@ -220,7 +225,7 @@ export default function DashboardAdminShowOrder() {
                       >
                         ชื่อผู้ชำระเงิน
                       </th>
-                     
+
                       <th
                         scope="col"
                         className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"

@@ -104,6 +104,12 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
                 name="detail"
                 required
               />
+              <label>รหัสไปรษณีย์</label>
+              <InputThaiAddress.Zipcode
+                value={createAddress["zipcode"]}
+                onChange={handleChange("zipcode")}
+                onSelect={(e: any) => handleSelect(e)}
+              />
               <label>แขวง/ตำบล</label>
               <InputThaiAddress.District
                 value={createAddress["district"]}
@@ -120,12 +126,6 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
               <InputThaiAddress.Province
                 value={createAddress["province"]}
                 onChange={handleChange("province")}
-                onSelect={(e: any) => handleSelect(e)}
-              />
-              <label>รหัสไปรษณีย์</label>
-              <InputThaiAddress.Zipcode
-                value={createAddress["zipcode"]}
-                onChange={handleChange("zipcode")}
                 onSelect={(e: any) => handleSelect(e)}
               />
               <button

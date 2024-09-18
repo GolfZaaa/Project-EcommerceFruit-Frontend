@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TextField,
   Box,
@@ -11,10 +11,14 @@ import {
 } from "@mui/material";
 import { useStore } from "../../../store/store";
 import { toast } from "react-toastify";
+import DropZoneImageComponent from "../../../layout/component/DropZoneImageComponent";
+import { pathImages } from "../../../constants/RoutePath";
 
 const DashboardAdminShowSystemSetting = () => {
   const { systemSetting, createUpdateSystemSetting } =
     useStore().systemSettingStore;
+
+  const [dropZoneImage, setDropZoneImage] = useState(null);
 
   const data = systemSetting[0];
 
@@ -25,6 +29,7 @@ const DashboardAdminShowSystemSetting = () => {
 
     const dataForm = {
       id: data.id || 0,
+      image: dropZoneImage || null,
       webName: formData.webName,
       description: formData.description,
     };
@@ -36,6 +41,10 @@ const DashboardAdminShowSystemSetting = () => {
         toast("บันทึกข้อมูลไม่สำเร็จ");
       }
     });
+  };
+
+  const handleImageUpload = (file: any) => {
+    setDropZoneImage(file);
   };
 
   return (
@@ -58,6 +67,19 @@ const DashboardAdminShowSystemSetting = () => {
             padding: 20,
           }}
         >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: 200,
+            }}
+          >
+            <DropZoneImageComponent
+              image={pathImages.image_web + data?.image}
+              onImageUpload={handleImageUpload}
+            />
+          </div>
           <TextField
             defaultValue={data?.webName}
             fullWidth
@@ -65,7 +87,6 @@ const DashboardAdminShowSystemSetting = () => {
             variant="outlined"
             margin="normal"
             name="webName"
-            autoFocus
             required
           />
           <TextField
