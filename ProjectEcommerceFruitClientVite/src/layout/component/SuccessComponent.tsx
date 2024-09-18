@@ -4,6 +4,9 @@ import { RoutePath } from "../../constants/RoutePath";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
 
+// import { Player, Controls } from '@lottiefiles/react-lottie-player';
+import animationData from '../../assets/successorder.mp4'
+
 export default observer(function SuccessComponent() {
   const navigate = useNavigate();
 
@@ -32,6 +35,24 @@ export default observer(function SuccessComponent() {
   return (
     <div>
       <section className="bg-white py-8 antialiased dark:bg-white md:py-16">
+
+      <div className="flex items-center justify-center min-w-screen -mt-16 mb-5">
+      {/* <Player
+        autoplay
+        loop
+        src={animationData}
+        style={{ height: '250px', width: '200px' }}
+      >
+      </Player> */}
+      <video width="250" height="250" autoPlay muted loop>
+        <source src={animationData} type="video/mp4" />
+        
+      </video>
+      </div>
+
+      
+
+
         <div className="mx-auto max-w-2xl px-4 2xl:px-0">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-black sm:text-2xl mb-2">
             ขอบคุณสำหรับการสั่งซื้อครับ!

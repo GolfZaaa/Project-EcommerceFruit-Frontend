@@ -15,7 +15,7 @@ interface Product {
   quantity: number;
 }
 
-interface CartItem {
+interface CartItem { 
   id: string;
   storeName: string;
   productName: string;
