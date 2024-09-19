@@ -1,0 +1,7 @@
+@media print {
+    .chart-container {
+      width: 50% !important; /* ลดขนาดลงตามที่ต้องการ */
+      height: 200px !important; /* ปรับความสูงตามต้องการ */
+    }
+  }
+  
