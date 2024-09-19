@@ -85,19 +85,23 @@ export default observer(function FirstScreenNew() {
     navigate(RoutePath.productDetail(product.id));
   };
 
-  const OrderDay = () => {
+  const OrderDay = (order:any) => {
     const today = new Date();
-
-    return order.filter((x) => {
-      const createDate = new Date(x.createdAt);
-
-      return (
-        createDate.getFullYear() === today.getFullYear() &&
-        createDate.getMonth() === today.getMonth() &&
-        createDate.getDate() === today.getDate()
-      );
+  
+    return order.filter((x:any) => {
+      if (x.status === 1) {
+        const createDate = new Date(x.createdAt);
+  
+        return (
+          createDate.getFullYear() === today.getFullYear() &&
+          createDate.getMonth() === today.getMonth() &&
+          createDate.getDate() === today.getDate()
+        );
+      }
+      return false;
     });
   };
+  
 
   const [inView, setInView] = useState(false);
   const ref: any = useRef(null);
@@ -728,7 +732,7 @@ export default observer(function FirstScreenNew() {
                 className="flex justify-center flex-col items-center w-36 h-36 md:w-44 md:h-48 lg:w-56 lg:h-56 bg-white shadow rounded-2xl"
               >
                 <h2 className="lg:text-5xl md:text-4xl text-2xl font-extrabold leading-10 text-center text-gray-800">
-                  {OrderDay.length}
+                  {OrderDay(order).length}
                 </h2>
                 <p className="mt-4 text-sm md:text-base lg:text-lg leading-none text-center text-gray-600">
                   ยอดขายของวันนี้

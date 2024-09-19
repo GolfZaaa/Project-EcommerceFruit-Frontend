@@ -7,12 +7,13 @@ import ToastAdd from "../../layout/component/ToastAdd";
 import { pathImages } from "../../constants/RoutePath";
 import { FaPlus } from "react-icons/fa6";
 import { Product } from "../../models/Product";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default observer(function ProductDetailScreen() {
   const { getProductById, productDetail, DeleteProduct, addStockProduct } =
     useStore().productStore;
   const { user } = useStore().userStore;
-  const { AddToCart, GetCartItemByUser } = useStore().cartStore;
+  const { AddToCart, GetCartItemByUser, loadingCart } = useStore().cartStore;
   const { id } = useParams<{ id: any }>();
 
   const [showToast, setShowToast] = useState(false);
@@ -552,8 +553,15 @@ export default observer(function ProductDetailScreen() {
                         mt-4 
 					"
               onClick={handleAddToCart}
+              disabled={loadingCart}
             >
-              <svg
+              {loadingCart ? 
+              <div>
+                <CircularProgress size={23} color="inherit" />
+              </div> :
+              
+              <div className="flex items-center">
+            <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="mr-2 h-6 w-6"
                 fill="none"
@@ -567,7 +575,9 @@ export default observer(function ProductDetailScreen() {
                   d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                 />
               </svg>
-              เพิ่มลงตะกร้า
+               เพิ่มลงตะกร้า
+                </div>}
+              
             </button>
           )}
         </div>
