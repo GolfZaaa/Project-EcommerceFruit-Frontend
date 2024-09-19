@@ -17,9 +17,9 @@ import DashboardAdminNEWS from "./DashboardAdminNEWS";
 export default observer(function DashboardAdminHomePageScreen() {
   const [show, setShow] = useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const { getStoreAll, shopAll } = useStore().shopuserStore;
-  const { getProduct, product } = useStore().productStore;
-  const { getOrdersAll, order } = useStore().orderStore;
+  const { getStoreAll } = useStore().shopuserStore;
+  const { getProduct } = useStore().productStore;
+  const { getOrdersAll } = useStore().orderStore;
   const { getSystemSetting } = useStore().systemSettingStore;
 
   useEffect(() => {

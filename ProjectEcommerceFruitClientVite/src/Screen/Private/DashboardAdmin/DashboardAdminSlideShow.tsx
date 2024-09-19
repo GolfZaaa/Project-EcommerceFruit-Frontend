@@ -31,17 +31,6 @@ const DashboardAdminSlideShow = () => {
     getSlideShowAdmin();
   }, []);
 
-  const formatDateToThai = (dateString: string) => {
-    const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      weekday: "long",
-    };
-    return new Intl.DateTimeFormat("th-TH", options).format(date);
-  };
-
   const handleIsUsed = (_userItem: any) => {
     isUsedSlideShow(_userItem.id);
   };
