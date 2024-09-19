@@ -4,6 +4,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useStore } from "../store/store";
 import { RoutePath } from "../constants/RoutePath";
 import ToastLoginRegister from "../layout/component/ToastLoginRegister";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default observer(function LoginScreen() {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ export default observer(function LoginScreen() {
   const [phoneNumberError, setPhoneNumberError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  const { login, getUserDetailbyId } = useStore().userStore;
+  const { login, getUserDetailbyId, loadingUser } = useStore().userStore;
   const { setToken, token } = useStore().commonStore;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -110,7 +111,7 @@ export default observer(function LoginScreen() {
               <div className="mt-4 flex items-center justify-between">
                 <span className="border-b w-1/5 lg:w-1/4"></span>
                 <p className="text-2xl text-center text-gray-700 uppercase">
-                  เข้าสู่ระบบ
+                  <p>เข้าสู่ระบบ</p>
                 </p>
                 <span className="border-b w-1/5 lg:w-1/4"></span>
               </div>
@@ -164,8 +165,13 @@ export default observer(function LoginScreen() {
                 <button
                   type="submit"
                   className="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600"
+                  disabled={loadingUser}
                 >
-                  เข้าสู่ระบบ
+                  {loadingUser ? <div>
+                    <CircularProgress size={17} color="inherit" />
+                  </div>: <div>
+                    <p>เข้าสู่ระบบ</p>
+                    </div>} 
                 </button>
               </div>
             </div>

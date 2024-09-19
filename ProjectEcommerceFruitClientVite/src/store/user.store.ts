@@ -14,12 +14,16 @@ interface RegisterInterface {
 export default class UserStore {
   user: User | null = null;
   userAll: User[] = [];
+  loadingUser:boolean = false;
 
   constructor() {
     makeAutoObservable(this);
   }
 
+  setLoadingUser = (state:boolean) => this.loadingUser = state; 
+
   register = async ({ Password, FullName, PhoneNumber }: RegisterInterface) => {
+    this.setLoadingUser(true);
     const data = {
       password: Password,
       fullName: FullName,
@@ -28,21 +32,23 @@ export default class UserStore {
     };
     try {
       const user = await agent.User.Register(data);
+      this.setLoadingUser(false);
       return user;
     } catch (error) {
+      this.setLoadingUser(false);
       return error;
     }
   };
 
   login = async ({ PhoneNumber, Password }: RegisterInterface) => {
-    store.systemSettingStore.setLoading(true);
+    this.setLoadingUser(true);
     const data = { phoneNumber: PhoneNumber, password: Password };
     try {
       const user = await agent.User.Login(data);
-      store.systemSettingStore.setLoading(false);
+      this.setLoadingUser(false);
       return user;
     } catch (error) {
-      store.systemSettingStore.setLoading(false);
+      this.setLoadingUser(false);
       return error;
     }
   };
