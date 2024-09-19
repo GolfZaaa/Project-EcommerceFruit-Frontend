@@ -346,7 +346,7 @@ export default function DashboardAdminShowOrder() {
                                   ></path>
                                 </svg>
                               </button>
-                              <button className="p-2 rounded-full  group transition-all duration-500  flex item-center" onClick={handleDelete }>
+                              {/* <button className="p-2 rounded-full  group transition-all duration-500  flex item-center" onClick={handleDelete }>
                                 <svg
                                   className=""
                                   width="20"
@@ -361,7 +361,7 @@ export default function DashboardAdminShowOrder() {
                                     fill="#F87171"
                                   ></path>
                                 </svg>
-                              </button>
+                              </button> */}
                               <button className="p-2 rounded-full  group transition-all duration-500  flex item-center">
                                 <svg
                                   width="20"

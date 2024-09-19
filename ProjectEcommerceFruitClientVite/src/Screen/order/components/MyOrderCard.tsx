@@ -1,18 +1,61 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Order } from "../../../models/Order";
 import { OrderItem } from "../../../models/OrderItem";
 import { formatNumberWithCommas } from "../../../helper/components";
 import { Typography } from "@mui/material";
 import { pathImages } from "../../../constants/RoutePath";
+import html2pdf from "html2pdf.js";
+import { BsFillPrinterFill } from "react-icons/bs";
 
 interface props {
   order: Order[];
 }
 
 const MyOrderCard = ({ order }: props) => {
+  const componentRef = useRef(null);
+  function generatePDF() {
+    const opt = {
+      margin: 0.2,
+      filename: "reportOrderAll.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 3 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
+
+    const downloadButton: any = document.querySelector("#downloadButton");
+
+    if (downloadButton) {
+      downloadButton.style.display = "none";
+    }
+
+    html2pdf()
+      .from(componentRef.current)
+      .set(opt)
+      .save()
+      .then(() => {
+        if (downloadButton) {
+          downloadButton.style.display = "block";
+        }
+      });
+  }
+
   return (
-    <>
-      <Typography variant="h5">จำนวน {order.length}</Typography>
+    <div ref={componentRef}>
+      <div className="flex justify-between">
+        <div>
+          <Typography variant="h5">จำนวน {order.length}</Typography>
+        </div>
+        <div>
+          <button
+            id="downloadButton"
+            onClick={generatePDF}
+            className=" p-2 bg-blue-500 text-white rounded-md"
+          >
+            <BsFillPrinterFill />
+          </button>
+        </div>
+      </div>
+
       {order.map((item) => (
         <div className="mt-5 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6">
           <div className="space-y-4">
@@ -94,7 +137,7 @@ const MyOrderCard = ({ order }: props) => {
           </div>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 

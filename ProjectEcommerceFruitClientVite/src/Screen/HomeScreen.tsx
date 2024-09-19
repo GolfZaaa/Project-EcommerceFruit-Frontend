@@ -445,9 +445,9 @@ export default observer(function HomeScreen() {
                               <span>{product.price} บาท</span>
                             </div>
 
-                            <p className="text-gray-500 text-sm">
+                            {/* <p className="text-gray-500 text-sm">
                               {product.detail.replace(/<\/?[^>]+(>|$)/g, "")}
-                            </p>
+                            </p> */}
                           </div>
                           <div className="px-6 py-3 flex flex-row items-center justify-between bg-gray-100">
                             <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
@@ -602,9 +602,9 @@ export default observer(function HomeScreen() {
                               <span>{myProduct.price} บาท</span>
                             </div>
 
-                            <p className="text-gray-500 text-sm">
+                            {/* <p className="text-gray-500 text-sm">
                               {myProduct.detail.replace(/<\/?[^>]+(>|$)/g, "")}
-                            </p>
+                            </p> */}
                           </div>
                           <div className="px-6 py-3 flex flex-row items-center justify-between bg-gray-100">
                             <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
