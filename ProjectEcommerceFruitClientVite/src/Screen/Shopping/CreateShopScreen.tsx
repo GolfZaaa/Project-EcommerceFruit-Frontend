@@ -31,6 +31,7 @@ export default observer(function CreateShopScreen({
   const navigate = useNavigate();
   const { usershop, GetShopByUserId, createandupdate } =
     useStore().shopuserStore;
+  const { getUserDetailbyId } = useStore().userStore;
   const { address: addressed, createUpdateAddress }: any =
     useStore().addressStore;
 
@@ -41,6 +42,9 @@ export default observer(function CreateShopScreen({
   }, []);
 
   const dataId = !!dataEdit ? dataEdit : usershop;
+
+  console.log("dataEdit", dataEdit);
+  console.log("usershop", usershop);
 
   const addresss = !!dataEdit ? dataEdit : addressed;
 
@@ -79,7 +83,7 @@ export default observer(function CreateShopScreen({
     const formData: any = Object.fromEntries(data.entries());
 
     const dataForm = {
-      id: dataId.id || 0,
+      id: dataId?.id || 0,
       name: formData.name,
       description: formData.description,
     };
@@ -100,6 +104,8 @@ export default observer(function CreateShopScreen({
 
         await createUpdateAddress(dataAddress);
         myToast("ลงทะเบียนร้านค้าสำเร็จ");
+        getUserDetailbyId();
+
         if (dataEdit) {
           onChangeCU();
         } else {
@@ -124,7 +130,7 @@ export default observer(function CreateShopScreen({
         >
           <CardContent>
             <Typography variant="h4" component="h1" gutterBottom align="center">
-              {dataId && dataId.id ? (
+              {dataId && dataId?.id ? (
                 <p>แก้ไขรายละเอียด</p>
               ) : (
                 <p>สร้างร้านค้า</p>
