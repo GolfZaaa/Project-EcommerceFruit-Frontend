@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import CreateSlideShow from "../../slideShow/CreateSlideShow";
 import { pathImages } from "../../../constants/RoutePath";
+import Swal from "sweetalert2";
 
 const DashboardAdminSlideShow = () => {
   const { slideShow, getSlideShowAdmin, isUsedSlideShow, removeSlideShow } =
@@ -46,7 +47,25 @@ const DashboardAdminSlideShow = () => {
   };
 
   const handleRemove = (_userItem: any) => {
-    removeSlideShow(_userItem.id);
+    Swal.fire({
+      title: "ท่านแน่ใจหรือไม่ว่าต้องการลบ?",
+      text: "หากลบแล้ว ท่านจะไม่สามารถกู้คืนข้อมูลได้",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ยืนยัน ต้องการลบ",
+      cancelButtonText: "ยกเลิก",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          "ลบเรียบร้อยแล้ว",
+          "ข้อมูลของท่านถูกลบออกจากระบบแล้ว",
+          "success"
+        );
+        removeSlideShow(_userItem.id);
+      }
+    });
   };
 
   const onChangeCU = () => {
@@ -65,6 +84,7 @@ const DashboardAdminSlideShow = () => {
             spacing={2}
             style={{
               marginBottom: 15,
+              marginLeft: -50,
             }}
           >
             <Grid item xs={11}></Grid>

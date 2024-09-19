@@ -13,6 +13,7 @@ import { useStore } from "../../../store/store";
 import { toast } from "react-toastify";
 import DropZoneImageComponent from "../../../layout/component/DropZoneImageComponent";
 import { pathImages } from "../../../constants/RoutePath";
+import Swal from 'sweetalert2';
 
 const DashboardAdminShowSystemSetting = () => {
   const { systemSetting, createUpdateSystemSetting } =
@@ -46,6 +47,9 @@ const DashboardAdminShowSystemSetting = () => {
   const handleImageUpload = (file: any) => {
     setDropZoneImage(file);
   };
+
+
+
 
   return (
     <div className="-mt-16">

@@ -137,13 +137,14 @@ export default observer(function RegisterScreen() {
             </div>
             <div className="mt-4">
               <div className="flex justify-between">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
+                <label  className="block text-gray-700 text-sm font-bold mb-2">
                   รหัสผ่าน
                 </label>
               </div>
               <input
                 id="Password"
                 name="Password"
+                type="password"
                 className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
               />
               {passwordError && (

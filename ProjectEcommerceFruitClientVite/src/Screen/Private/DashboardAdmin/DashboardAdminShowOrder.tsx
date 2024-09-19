@@ -111,8 +111,8 @@ export default function DashboardAdminShowOrder() {
       cancelButtonColor: '#d33',
       confirmButtonText: 'ยืนยัน ต้องการลบ',
       cancelButtonText:'ยกเลิก',
-    }).then((ผลลัพธ์) => {
-      if (ผลลัพธ์.isConfirmed) {
+    }).then((result) => {
+      if (result.isConfirmed) {
         Swal.fire(
           'ลบเรียบร้อยแล้ว',
           'ข้อมูลของท่านถูกลบออกจากระบบแล้ว',
