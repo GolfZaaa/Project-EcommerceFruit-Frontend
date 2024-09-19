@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { pathImages, RoutePath } from "../constants/RoutePath";
 import Loading from "../layout/component/LoadingComponent";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -16,7 +17,7 @@ export default observer(function HomeScreen() {
   const { product, getProduct, category, getCategory } =
     useStore().productStore;
 
-  const { user } = useStore().userStore;
+  const { user, setLoadingUser, loadingUser} = useStore().userStore;
 
   const { GetStoreProductUser, shopProductUser } = useStore().shopuserStore;
 
@@ -93,9 +94,13 @@ export default observer(function HomeScreen() {
     });
 
   const handleResetSort = async () => {
+    setLoadingUser(true);
     await setSelectedCategory(0);
     getProduct(0);
     await setSortPrice("");
+    setTimeout(() => {
+      setLoadingUser(false);
+    }, 700);
   };
 
   return (
@@ -170,8 +175,9 @@ export default observer(function HomeScreen() {
                       onClick={handleResetSort}
                       className="w-52 text-base rounded-md bg-green-600 py-2 px-4 border border-transparent text-center text-white transition-all shadow-md hover:shadow-lg active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:opacity-50 disabled:shadow-none ml-2"
                       type="button"
+                      disabled={loadingUser}
                     >
-                      รีเซ็ตกรองข้อมูลสินค้า
+                      {loadingUser ? <div> <CircularProgress size={17} color="inherit" /></div> : <div><p>รีเซ็ตกรองข้อมูลสินค้า</p></div>}
                     </button>
                   </div>
                 </div>

@@ -18,20 +18,25 @@ export default class CartStore {
   cartItemsStore = [];
   myCartItems = [];
   selectMyCart = [];
+  loadingCart:boolean = false;
 
   constructor() {
     makeAutoObservable(this);
   }
+  setLoadingCart = (state:boolean) => this.loadingCart = state;
 
   setMyCartItems = (state: any) => (this.myCartItems = state);
   setselectMyCart = (state: any) => (this.selectMyCart = state);
 
   AddToCart = async ({ ProductId, Quantity }: AddProduct) => {
+    this.setLoadingCart(true)
     const data = { quantity: Quantity, productId: ProductId };
     try {
       const result = await agent.Cart.AddtoCart(data);
+    this.setLoadingCart(false)
       return result;
     } catch (error) {
+    this.setLoadingCart(false)
       return error;
     }
   };
