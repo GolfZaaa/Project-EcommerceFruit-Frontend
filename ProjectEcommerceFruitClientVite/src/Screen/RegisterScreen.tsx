@@ -4,9 +4,10 @@ import { useStore } from "../store/store";
 import { NavLink, useNavigate } from "react-router-dom";
 import { RoutePath } from "../constants/RoutePath";
 import ToastLoginRegister from "../layout/component/ToastLoginRegister";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default observer(function RegisterScreen() {
-  const { register } = useStore().userStore;
+  const { register, loadingUser } = useStore().userStore;
   const navigate = useNavigate();
 
   const [showToast, setShowToast] = useState(false);
@@ -168,8 +169,13 @@ export default observer(function RegisterScreen() {
               <button
                 type="submit"
                 className="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600"
+                disabled={loadingUser}
               >
-                สมัครสมาชิก
+                {loadingUser ? <div>
+                    <CircularProgress size={17} color="inherit" />
+                  </div>: <div>
+                    <p>สมัครสมาชิก</p>
+                    </div>} 
               </button>
             </div>
           </div>

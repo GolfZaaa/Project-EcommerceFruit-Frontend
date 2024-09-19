@@ -43,8 +43,10 @@ const drawerWidth = 240;
 export default observer(function DashboardShopScreen() {
   const { usershop, GetShopByUserId } = useStore().shopuserStore;
   const { GetAddressByStore } = useStore().addressStore;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const { getOrderByStore, order } = useStore().orderStore;
 
+
+  const [mobileOpen, setMobileOpen] = React.useState(false);
   const componentRef = useRef(null);
   function generatePDF() {
     const opt = {
@@ -72,10 +74,34 @@ export default observer(function DashboardShopScreen() {
       });
   }
 
+  const ShopUserId:any = usershop?.id;
+
   useEffect(() => {
     GetShopByUserId();
     GetAddressByStore();
   }, []);
+
+  useEffect(() => {
+    getOrderByStore(ShopUserId)
+  }, [usershop])
+  
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  useEffect(() => {
+    if (order) {
+      const total = order.reduce((acc, currentOrder) => {
+        const orderTotal = currentOrder.orderItems.reduce(
+          (itemAcc, orderItem) =>
+            itemAcc + orderItem.quantity * orderItem.product.price,
+          0
+        );
+        return acc + orderTotal;
+      }, 0);
+      setTotalPrice(total);
+
+    }
+  }, [order]);
+
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -214,7 +240,7 @@ export default observer(function DashboardShopScreen() {
 
                     <span className="font-bold text-gray-600">
                       {" "}
-                      {/* {totalPrice.toLocaleString()}{" "} */}
+                      {totalPrice.toLocaleString()}{" "}
                     </span>
                   </div>
 
@@ -398,6 +424,8 @@ export default observer(function DashboardShopScreen() {
       <Divider />
     </div>
   );
+
+  console.log("order",order)
 
   return (
     <Box sx={{ display: "flex" }}>
