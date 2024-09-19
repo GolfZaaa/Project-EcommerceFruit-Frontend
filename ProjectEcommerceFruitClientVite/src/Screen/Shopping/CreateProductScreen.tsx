@@ -23,6 +23,7 @@ import { useStore } from "../../store/store";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import DropZoneImageComponent from "../../layout/component/DropZoneImageComponent";
 import { pathImages } from "../../constants/RoutePath";
+import { formats, modules, myToast } from "../../helper/components";
 
 interface props {
   onChangeCU?: any | null;
@@ -46,6 +47,8 @@ export default observer(function CreateProductScreen({
 
   const [dropZoneImage, setDropZoneImage] = useState(null);
 
+  const [showError, setShowError] = useState(false);
+
   useEffect(() => {
     getProductGI(id);
   }, []);
@@ -59,50 +62,34 @@ export default observer(function CreateProductScreen({
     const data = new FormData(event.currentTarget);
     const formData: any = Object.fromEntries(data.entries());
 
-    const dataForm = {
-      id: dataEdit?.id || 0,
-      images: dropZoneImage || null,
-      weight: parseFloat(formData.weight),
-      quantity: parseInt(formData.quantity),
-      price: parseFloat(formData.price),
-      detail: editorHtml || "<p></p>",
-      productGIId: selectGI,
-    };
+    if (!dataEdit?.images && dropZoneImage === null) {
+      setShowError(true);
+      myToast("กรุณาใส่รูปภาพสินค้า");
+    } else {
+      const dataForm = {
+        id: dataEdit?.id || 0,
+        images: dropZoneImage || null,
+        weight: parseFloat(formData.weight),
+        quantity: parseInt(formData.quantity),
+        price: parseFloat(formData.price),
+        detail: editorHtml || "<p></p>",
+        productGIId: selectGI,
+      };
 
-    await createUpdateProduct(dataForm).then((result) => {
-      if (!!result) {
-        onChangeCU();
-      }
-    });
+      await createUpdateProduct(dataForm).then((result) => {
+        if (!!result) {
+          onChangeCU();
+        }
+      });
+    }
   };
-
-  const modules = {
-    toolbar: [
-      [{ header: "1" }, { header: "2" }, { font: [] }],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["bold", "italic", "underline"],
-      [{ align: [] }],
-      ["image"],
-    ],
-  };
-
-  const formats = [
-    "header",
-    "font",
-    "list",
-    "bullet",
-    "bold",
-    "italic",
-    "underline",
-    "align",
-    "image",
-  ];
 
   const onSelectGI = (id: number) => {
     setSelectGI(id);
   };
 
   const handleImageUpload = (file: any) => {
+    setShowError(false);
     setDropZoneImage(file);
   };
 
@@ -138,22 +125,34 @@ export default observer(function CreateProductScreen({
 
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <div
-                style={{ paddingLeft: "80px", marginTop: "20px" }}
-                className="payment-form-container"
-              >
+              <div className="payment-form-container">
                 <div
                   style={{
                     display: "flex",
                     justifyContent: "center",
+                    alignItems: "center",
                     marginTop: "5px",
                   }}
                 >
                   <DropZoneImageComponent
-                    image={pathImages.product + dataEdit?.images}
+                    image={
+                      dataEdit?.images
+                        ? pathImages.product + dataEdit?.images
+                        : null
+                    }
                     onImageUpload={handleImageUpload}
                   />
                 </div>
+                {showError && (
+                  <div
+                    style={{
+                      textAlign: "center",
+                      color: "red",
+                    }}
+                  >
+                    กรุณาใส่รูปภาพสินค้า
+                  </div>
+                )}
               </div>
             </Grid>
             <Grid item xs={6}>
@@ -162,7 +161,8 @@ export default observer(function CreateProductScreen({
                   fullWidth
                   variant="outlined"
                   margin="normal"
-                  disabled={!id}
+                  disabled={id === 0}
+                  required
                 >
                   <InputLabel>ข้อมูลผลไม้ (GI)</InputLabel>
                   <Select
@@ -190,7 +190,6 @@ export default observer(function CreateProductScreen({
                   variant="outlined"
                   margin="normal"
                   name="weight"
-                  autoFocus
                   required
                 />
               </Grid>
@@ -203,7 +202,6 @@ export default observer(function CreateProductScreen({
                   variant="outlined"
                   margin="normal"
                   name="price"
-                  autoFocus
                   required
                 />
               </Grid>
@@ -216,7 +214,6 @@ export default observer(function CreateProductScreen({
                   variant="outlined"
                   margin="normal"
                   name="quantity"
-                  autoFocus
                   required
                 />
               </Grid>

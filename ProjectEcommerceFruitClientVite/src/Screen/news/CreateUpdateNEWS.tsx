@@ -8,6 +8,7 @@ import {
   Button,
   Grid,
   Fab,
+  TextField,
 } from "@mui/material";
 import "react-quill/dist/quill.snow.css";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -16,20 +17,20 @@ import DropZoneImageComponent from "../../layout/component/DropZoneImageComponen
 import { pathImages } from "../../constants/RoutePath";
 import { useState } from "react";
 import { useStore } from "../../store/store";
-import { myToast } from "../../helper/components";
-import { observer } from "mobx-react-lite";
+import { formats, modules, myToast } from "../../helper/components";
+import { NEWS } from "../../models/NEWS";
+import ReactQuill from "react-quill";
 
 interface props {
-  onChangeCU?: any | null;
-  dataEdit?: SlideShow | null;
+  onChangeCU?: any;
+  dataEdit?: NEWS | null;
 }
 
-export default observer(function CreateSlideShow({
-  onChangeCU,
-  dataEdit,
-}: props) {
-  const { createUpdateSlideShow } = useStore().systemSettingStore;
+const CreateUpdateNEWS = ({ onChangeCU, dataEdit }: props) => {
+  const { createUpdateNEWS } = useStore().systemSettingStore;
   const [dropZoneImage, setDropZoneImage] = useState(null);
+
+  const [editorHtml, setEditorHtml] = useState(dataEdit?.description || "");
 
   const [showError, setShowError] = useState(false);
 
@@ -40,17 +41,18 @@ export default observer(function CreateSlideShow({
 
     if (!dataEdit?.imageName && dropZoneImage === null) {
       setShowError(true);
-      myToast("กรุณาใส่รูปภาพหน้าเว็บ");
+      myToast("กรุณาใส่รูปภาพข่าวประชาสัมพันธ์");
     } else {
       const dataForm = {
         id: dataEdit?.id || 0,
+        title: formData.title,
         imageName: dropZoneImage || null,
-        systemSettingId: 1,
+        description: editorHtml || "<p></p>",
       };
 
       console.log("dataForm", dataForm);
 
-      await createUpdateSlideShow(dataForm).then((result) => {
+      await createUpdateNEWS(dataForm).then((result) => {
         if (!!result) {
           onChangeCU();
         }
@@ -58,13 +60,25 @@ export default observer(function CreateSlideShow({
     }
   };
 
+  const handleChange = (html: any) => {
+    setEditorHtml(html);
+  };
+
   const handleImageUpload = (file: any) => {
     setShowError(false);
     setDropZoneImage(file);
   };
 
+  console.log("dataEdit", dataEdit);
+
   return (
-    <Box component="form" onSubmit={handleSubmit}>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      component="form"
+      onSubmit={handleSubmit}
+    >
       <Card
         sx={{
           width: "100%",
@@ -84,7 +98,7 @@ export default observer(function CreateSlideShow({
 
         <CardContent>
           <Typography variant="h4" component="h1" gutterBottom align="center">
-            รูปภาพหน้าเว็บ
+            ข่าวประชาสัมพันธ์
           </Typography>
 
           <div
@@ -98,7 +112,7 @@ export default observer(function CreateSlideShow({
             <DropZoneImageComponent
               image={
                 dataEdit?.imageName
-                  ? pathImages.slideShow + dataEdit?.imageName
+                  ? pathImages.news + dataEdit?.imageName
                   : null
               }
               onImageUpload={handleImageUpload}
@@ -114,6 +128,28 @@ export default observer(function CreateSlideShow({
               กรุณาใส่รูปภาพ
             </div>
           )}
+          <TextField
+            defaultValue={dataEdit?.title}
+            fullWidth
+            label="ชื่อหัวข้อ"
+            variant="outlined"
+            margin="normal"
+            name="title"
+            required
+          />
+
+          <Typography variant="h6" component="h2" gutterBottom>
+            คำอธิบาย & รูปภาพ
+          </Typography>
+          <div className="editor-container">
+            <ReactQuill
+              value={editorHtml}
+              onChange={handleChange}
+              modules={modules}
+              formats={formats}
+              className="vertical-text-editor" // Add custom class here
+            />
+          </div>
         </CardContent>
         <CardActions sx={{ justifyContent: "center", mt: 2 }}>
           <Button
@@ -129,4 +165,6 @@ export default observer(function CreateSlideShow({
       </Card>
     </Box>
   );
-});
+};
+
+export default CreateUpdateNEWS;

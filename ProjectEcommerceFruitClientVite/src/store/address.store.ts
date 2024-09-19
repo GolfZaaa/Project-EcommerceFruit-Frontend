@@ -12,6 +12,8 @@ export default class AddressStore {
   }
 
   setAddress = (state: any) => (this.myAddress = state);
+  setAddressa = (state: any) => (this.address = state);
+  setAddressb = (state: any) => (this.myAddressgotoOrder = state);
 
   getAddressByUserId = async () => {
     try {

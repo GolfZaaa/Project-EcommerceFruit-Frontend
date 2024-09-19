@@ -40,6 +40,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import HTMLReactParser from "html-react-parser/lib/index";
 import CircularProgress from "@mui/material/CircularProgress";
+import { myToast } from "../../../helper/components";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -306,8 +307,12 @@ const ProductGIList = () => {
                               <Button onClick={handleClose}>ยกเลิก</Button>
                               <Button
                                 onClick={() => {
-                                  removeProductGI(row.id);
-                                  handleClose();
+                                  removeProductGI(row.id).then((res) => {
+                                    if (res !== true) {
+                                      myToast("ข้อมูล GI นี้มีการใช้งานอยู่");
+                                    }
+                                    handleClose();
+                                  });
                                 }}
                                 autoFocus
                               >

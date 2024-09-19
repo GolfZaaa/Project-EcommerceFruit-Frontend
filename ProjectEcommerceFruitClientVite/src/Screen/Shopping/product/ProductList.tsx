@@ -121,7 +121,8 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
 }
 
 const ProductList = () => {
-  const { product, getProductByStore, removeProduct } = useStore().productStore;
+  const { product, getProductByStore, isUsedProduct, removeProduct } =
+    useStore().productStore;
   const { user } = useStore().userStore;
 
   const [page, setPage] = React.useState(0);
@@ -180,7 +181,7 @@ const ProductList = () => {
         <CreateProductScreen
           onChangeCU={onChangeCU}
           dataEdit={dataEdit}
-          id={undefined}
+          id={1}
         />
       ) : (
         <Container maxWidth="lg">
@@ -274,7 +275,7 @@ const ProductList = () => {
                         <TableCell>
                           <MySwitch
                             handleChange={async () =>
-                              await removeProduct(row.id).then(() => {
+                              await isUsedProduct(row.id).then(() => {
                                 getProductByStore(user?.stores[0].id || 0);
                               })
                             }

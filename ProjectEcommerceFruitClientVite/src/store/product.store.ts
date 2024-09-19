@@ -53,6 +53,14 @@ export default class ProductStore {
     }
   };
 
+  isUsedProduct = async (id: number) => {
+    try {
+      return await agent.Product.isUsedProduct(id);
+    } catch (error) {
+      return error;
+    }
+  };
+
   removeProduct = async (id: number) => {
     try {
       return await agent.Product.removeProduct(id);
@@ -114,8 +122,10 @@ export default class ProductStore {
 
   removeProductGI = async (id: number) => {
     try {
-      await agent.Product.removeProductGI(id);
+      const result = await agent.Product.removeProductGI(id);
       this.getProductGI(1);
+
+      return result;
     } catch (error) {
       return error;
     }

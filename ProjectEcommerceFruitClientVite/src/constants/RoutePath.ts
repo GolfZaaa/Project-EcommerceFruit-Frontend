@@ -19,7 +19,6 @@ export const RoutePath = {
   successScreen: `${HOST}order-success-screen`,
   checkorderScreen: `${HOST}check-order-user`,
 
-
   addressScreen: `${HOST}Address-screen`,
   summaryScreen: `${HOST}summary-screen`,
 
@@ -45,4 +44,5 @@ export const pathImages = {
   product: `${path}product/`,
   image_web: `${path}image-web/`,
   slideShow: `${path}slide-show/`,
+  news: `${path}image-news/`,
 };

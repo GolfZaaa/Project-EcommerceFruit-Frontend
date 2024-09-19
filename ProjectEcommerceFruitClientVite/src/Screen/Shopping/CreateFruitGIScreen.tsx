@@ -164,7 +164,12 @@ export default observer(function CreateFruitGIScreen({
                 />
               </Grid>
               <Grid item xs={4}>
-                <FormControl fullWidth variant="outlined" margin="normal">
+                <FormControl
+                  fullWidth
+                  variant="outlined"
+                  margin="normal"
+                  required
+                >
                   <InputLabel>ประเภท</InputLabel>
                   <Select defaultValue={dataEdit?.categoryId} label="ประเภท">
                     {category.map((item) => (

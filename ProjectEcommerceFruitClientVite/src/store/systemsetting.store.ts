@@ -2,10 +2,12 @@ import { makeAutoObservable } from "mobx";
 import { SystemSetting } from "../models/SystemSetting";
 import agent from "../api/agent";
 import { SlideShow } from "../models/SlideShow";
+import { NEWS } from "../models/NEWS";
 
 export default class SystemSettingStore {
   systemSetting: SystemSetting[] = [];
   slideShow: SlideShow[] = [];
+  news: NEWS[] = [];
   loadings: boolean = false;
 
   constructor() {
@@ -54,10 +56,20 @@ export default class SystemSettingStore {
     }
   };
 
+  getSlideShowAdmin = async () => {
+    try {
+      const result = await agent.SystemSetting.getSlideShowAdmin();
+
+      this.slideShow = result;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   createUpdateSlideShow = async (values: any) => {
     try {
       const result = await agent.SystemSetting.createUpdateSlideShow(values);
-      this.getSlideShow();
+      this.getSlideShowAdmin();
       return result;
     } catch (error) {
       throw error;
@@ -67,7 +79,7 @@ export default class SystemSettingStore {
   isUsedSlideShow = async (id: any) => {
     try {
       const result = await agent.SystemSetting.isUsedSlideShow(id);
-      this.getSlideShow();
+      this.getSlideShowAdmin();
       return result;
     } catch (error) {
       throw error;
@@ -77,7 +89,59 @@ export default class SystemSettingStore {
   removeSlideShow = async (id: any) => {
     try {
       const result = await agent.SystemSetting.removeSlideShow(id);
-      this.getSlideShow();
+      this.getSlideShowAdmin();
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  //-------------------------------------------news---------------------------------------------//
+
+  getNEWSs = async () => {
+    try {
+      const result = await agent.SystemSetting.getNEWSs();
+
+      this.news = result;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getNEWSsAdmin = async () => {
+    try {
+      const result = await agent.SystemSetting.getNEWSsAdmin();
+
+      this.news = result;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  createUpdateNEWS = async (values: any) => {
+    try {
+      const result = await agent.SystemSetting.createUpdateNEWS(values);
+      this.getNEWSsAdmin();
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  isUsedNEWS = async (id: any) => {
+    try {
+      const result = await agent.SystemSetting.isUsedNEWS(id);
+      this.getNEWSsAdmin();
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  removeNEWS = async (id: any) => {
+    try {
+      const result = await agent.SystemSetting.removeNEWS(id);
+      this.getNEWSsAdmin();
       return result;
     } catch (error) {
       throw error;

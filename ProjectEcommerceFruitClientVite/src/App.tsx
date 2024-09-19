@@ -37,7 +37,7 @@ function App() {
         ))}
       </Routes>
       {/* <Footer /> */}
-      <ToastContainer position="bottom-right" />
+      <ToastContainer position="top-right" />
     </BrowserRouter>
   );
 }

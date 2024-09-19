@@ -11,9 +11,12 @@ export const Product = {
     requests.get(`Product/GetProductById?productId=${productId}`),
   removeProduct: (productId: number) =>
     requests.delete(`Product/RemoveProductById?productId=${productId}`),
+  isUsedProduct: (productId: number) =>
+    requests.delete(`Product/IsUsedProductById?productId=${productId}`),
   deleteProduct: (id: any) =>
     requests.delete(`Product/RemoveProductById?productId=${id}`),
-  addStockProduct: (value: any) => requests.post("Product/AddStockProduct", value),
+  addStockProduct: (value: any) =>
+    requests.post("Product/AddStockProduct", value),
 
   //-------------------------------------------- product-GI ----------------------------------------------------//
 

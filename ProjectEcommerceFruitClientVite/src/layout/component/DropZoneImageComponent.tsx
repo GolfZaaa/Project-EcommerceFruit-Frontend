@@ -26,36 +26,32 @@ function DropZoneImageComponent({ image = null, onImageUpload }: any) {
   console.log("image", image);
 
   return (
-    <div>
-      <div>
-        <div {...getRootProps()} className="dropzoneStyle">
-          <input {...getInputProps()} />
-          {image && imageUri === null ? (
-            <img
-              src={image}
-              alt="image"
-              style={{ width: "250px", height: "200px", objectFit: "contain" }}
-            />
-          ) : imageUri ? (
-            <img
-              src={imageUri.uri}
-              alt="Selected"
-              style={{ width: "250px", height: "200px", objectFit: "contain" }}
-            />
-          ) : (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
-              }}
-            >
-              <IoCloudUploadOutline size={60} style={{ color: "gray" }} />
-            </div>
-          )}
+    <div {...getRootProps()} className="dropzoneStyle">
+      <input {...getInputProps()} />
+      {image && imageUri === null ? (
+        <img
+          src={image}
+          alt="image"
+          style={{ width: "250px", height: "200px", objectFit: "contain" }}
+        />
+      ) : imageUri ? (
+        <img
+          src={imageUri.uri}
+          alt="Selected"
+          style={{ width: "250px", height: "200px", objectFit: "contain" }}
+        />
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
+          <IoCloudUploadOutline size={60} style={{ color: "gray" }} />
         </div>
-      </div>
+      )}
     </div>
   );
 }
