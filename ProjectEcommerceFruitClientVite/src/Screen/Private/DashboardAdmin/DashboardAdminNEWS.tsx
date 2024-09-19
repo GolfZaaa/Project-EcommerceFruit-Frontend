@@ -16,6 +16,7 @@ import {
 import { pathImages } from "../../../constants/RoutePath";
 import CreateUpdateNEWS from "../../news/CreateUpdateNEWS";
 import { NEWS } from "../../../models/NEWS";
+import Swal from "sweetalert2";
 
 const DashboardAdminNEWS = () => {
   const { news, getNEWSsAdmin, isUsedNEWS, removeNEWS } =
@@ -33,7 +34,26 @@ const DashboardAdminNEWS = () => {
   };
 
   const handleRemove = (_userItem: any) => {
-    removeNEWS(_userItem.id);
+    Swal.fire({
+      title: "ท่านแน่ใจหรือไม่ว่าต้องการลบ?",
+      text: "หากลบแล้ว ท่านจะไม่สามารถกู้คืนข้อมูลได้",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ยืนยัน ต้องการลบ",
+      cancelButtonText: "ยกเลิก",
+    }).then((result:any) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          "ลบเรียบร้อยแล้ว",
+          "ข้อมูลของท่านถูกลบออกจากระบบแล้ว",
+          "success"
+        );
+        removeNEWS(_userItem.id);
+
+      }
+    });
   };
 
   const onChangeCU = () => {
