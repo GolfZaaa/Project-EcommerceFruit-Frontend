@@ -41,7 +41,8 @@ export default observer(function FirstScreenNew() {
 
   const { getUserAll, userAll, user } = useStore().userStore;
 
-  const { systemSetting, getSystemSetting } = useStore().systemSettingStore;
+  const { slideShow, getSlideShow, getSystemSetting } =
+    useStore().systemSettingStore;
 
   const [randomProduct, setRandomProduct] = useState<Product>();
   const [topProducts, setTopProducts] = useState<Product[]>([]);
@@ -52,6 +53,7 @@ export default observer(function FirstScreenNew() {
       await getOrdersAll();
       await getUserAll();
       await getSystemSetting();
+      await getSlideShow();
     };
     fetchData();
   }, [getProduct, getCategory]);
@@ -153,7 +155,7 @@ export default observer(function FirstScreenNew() {
       <div className="overflow-hidden mt-4 ml-4 mr-4">
         <div className="w-full">
           <Slider {...settingsImageSlide}>
-            {systemSetting[0]?.slideShows.map((image, index) => (
+            {slideShow.map((image, index) => (
               <div key={index} className="p-2 relative group">
                 <img
                   src={pathImages.slideShow + image?.imageName || ""}

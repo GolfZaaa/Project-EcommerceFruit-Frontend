@@ -13,12 +13,15 @@ import { useStore } from "../../../store/store";
 import { toast } from "react-toastify";
 import DropZoneImageComponent from "../../../layout/component/DropZoneImageComponent";
 import { pathImages } from "../../../constants/RoutePath";
+import { myToast } from "../../../helper/components";
 
 const DashboardAdminShowSystemSetting = () => {
   const { systemSetting, createUpdateSystemSetting } =
     useStore().systemSettingStore;
 
   const [dropZoneImage, setDropZoneImage] = useState(null);
+
+  const [showError, setShowError] = useState(false);
 
   const data = systemSetting[0];
 
@@ -28,22 +31,28 @@ const DashboardAdminShowSystemSetting = () => {
     const formData: any = Object.fromEntries(dataform.entries());
 
     const dataForm = {
-      id: data.id || 0,
+      id: data?.id || 0,
       image: dropZoneImage || null,
       webName: formData.webName,
       description: formData.description,
     };
 
-    createUpdateSystemSetting(dataForm).then((result) => {
-      if (!!result) {
-        toast("บันทึกข้อมูลเสร็จสิ้น");
-      } else {
-        toast("บันทึกข้อมูลไม่สำเร็จ");
-      }
-    });
+    if (!data?.image && dropZoneImage === null) {
+      setShowError(true);
+      myToast("กรุณาใส่รูปภาพหน้าเว็บ");
+    } else {
+      createUpdateSystemSetting(dataForm).then((result) => {
+        if (!!result) {
+          toast("บันทึกข้อมูลเสร็จสิ้น");
+        } else {
+          toast("บันทึกข้อมูลไม่สำเร็จ");
+        }
+      });
+    }
   };
 
   const handleImageUpload = (file: any) => {
+    setShowError(false);
     setDropZoneImage(file);
   };
 
@@ -76,10 +85,20 @@ const DashboardAdminShowSystemSetting = () => {
             }}
           >
             <DropZoneImageComponent
-              image={pathImages.image_web + data?.image}
+              image={data?.image ? pathImages.image_web + data?.image : null}
               onImageUpload={handleImageUpload}
             />
           </div>
+          {showError && (
+            <div
+              style={{
+                textAlign: "center",
+                color: "red",
+              }}
+            >
+              กรุณาใส่รูปภาพ
+            </div>
+          )}
           <TextField
             defaultValue={data?.webName}
             fullWidth

@@ -45,7 +45,6 @@ export default observer(function CreateSlideShow({
       const dataForm = {
         id: dataEdit?.id || 0,
         imageName: dropZoneImage || null,
-        systemSettingId: 1,
       };
 
       console.log("dataForm", dataForm);
