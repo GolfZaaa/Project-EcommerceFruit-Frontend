@@ -112,12 +112,12 @@ export default observer(function ProductDetailScreen() {
   };
 
   return (
-    <div>
-      <div className="md:flex items-start justify-center py-12 2xl:px-20 md:px-6 px-4">
+    <div className="bg-gray-100 py-12 2xl:px-20 md:px-6 px-4">
+      <div className="md:flex items-start justify-center py-12 2xl:px-20 md:px-6 px-4 bg-white">
         {showToast && <ToastAdd Check={checkToast} />}
         <div className="xl:w-2/6 lg:w-2/5 w-80 md:block hidden">
           <img
-            className="w-full"
+            className="w-80 h-96 rounded-t-lg object-cover"
             alt="image main"
             src={pathImages.product + productDetail?.images}
           />
@@ -125,7 +125,7 @@ export default observer(function ProductDetailScreen() {
             {productDetail?.productGI.images.map((item) => (
               <img
                 alt="img-tag-one"
-                className="md:w-24 md:h-24 "
+                className="md:w-24 md:h-24 rounded-t-lg object-cover "
                 onClick={() =>
                   setPreViewImage(
                     preViewImage === pathImages.product_GI + item.imageName
@@ -555,42 +555,42 @@ export default observer(function ProductDetailScreen() {
               onClick={handleAddToCart}
               disabled={loadingCart}
             >
-              {loadingCart ? 
-              <div>
-                <CircularProgress size={23} color="inherit" />
-              </div> :
-              
-              <div className="flex items-center">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="mr-2 h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-               เพิ่มลงตะกร้า
-                </div>}
-              
+              {loadingCart ? (
+                <div>
+                  <CircularProgress size={23} color="inherit" />
+                </div>
+              ) : (
+                <div className="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="mr-2 h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                  เพิ่มลงตะกร้า
+                </div>
+              )}
             </button>
           )}
         </div>
       </div>
 
-      <div className="pl-14 pr-14 py-12">
+      <div className="pl-14 pr-14">
         <div className="bg-white p-6 rounded-lg shadow-md mx-auto mt-10 border border-gray-200">
           <div className="flex items-center">
             <div className="mr-4">
               <img
                 src="https://marketplace.canva.com/EAFaFUz4aKo/2/0/1600w/canva-yellow-abstract-cooking-fire-free-logo-JmYWTjUsE-Q.jpg"
                 alt="Store Logo"
-                className="rounded-full w-20 h-20"
+                className="rounded-full w-20 h-20 rounded-t-lg object-cover"
               />
             </div>
 
@@ -628,6 +628,102 @@ export default observer(function ProductDetailScreen() {
           </div>
         </div>
       </div>
+
+      <div className="bg-white mt-5">
+  <div className="ml-12 pt-5 text-2xl mb-3">
+    <p>สินค้าจากร้านเดียวกัน</p>
+  </div>
+  <div className="flex ml-6">
+    <div className="ml-7 mb-9 w-64 max-w-custom-size overflow-hidden rounded-lg bg-white border relative">
+      <div className="shadow-md relative">
+        <a href="#">
+          <img
+            className="h-48 w-full rounded-t-lg object-cover"
+            src="https://www.thaisook.org/wp-content/uploads/2023/05/2-3.png.webp"
+            alt="product image"
+          />
+        </a>
+        <span className="absolute top-0 left-0 w-28 translate-y-6 -translate-x-6 -rotate-45 bg-red-500 text-center text-sm text-white z-10">
+          ยอดนิยม
+        </span>
+        <div className="mt-4 px-3 pb-5">
+          <a href="#">
+            <h5 className="text-base font-semibold tracking-tight text-slate-900">
+              ผลฉุ้ย
+            </h5>
+          </a>
+          <div className="flex items-center justify-between mt-10">
+            <p>
+              <span className="text-xl font-bold text-slate-900">$249</span>
+            </p>
+            <button className="flex items-center rounded-md bg-slate-900 px-4 py-2.5 text-center text-xs font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="mr-2 h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
+              เพิ่มสินค้าลงตะกร้า
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div className="ml-7 mb-9 w-64 max-w-custom-size overflow-hidden rounded-lg bg-white border relative">
+      <div className="shadow-md relative">
+        <a href="#">
+          <img
+            className="h-48 w-full rounded-t-lg object-cover"
+            src="https://www.thaisook.org/wp-content/uploads/2023/05/2-3.png.webp"
+            alt="product image"
+          />
+        </a>
+        <span className="absolute top-0 left-0 w-28 translate-y-6 -translate-x-6 -rotate-45 bg-red-500 text-center text-sm text-white z-10">
+        ยอดนิยม
+        </span>
+        <div className="mt-4 px-3 pb-5">
+          <a href="#">
+            <h5 className="text-base font-semibold tracking-tight text-slate-900">
+              ผลมุ้ย
+            </h5>
+          </a>
+          <div className="flex items-center justify-between mt-10">
+            <p>
+              <span className="text-xl font-bold text-slate-900">$249</span>
+            </p>
+            <button className="flex items-center rounded-md bg-slate-900 px-4 py-2.5 text-center text-xs font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="mr-2 h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
+              เพิ่มสินค้าลงตะกร้า
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
     </div>
   );
 });
