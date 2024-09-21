@@ -11,11 +11,7 @@ import {
   ListItemText,
   Toolbar,
   Typography,
-  Button,
-  Grid,
   Card,
-  CardContent,
-  CardActions,
   CardMedia,
   Collapse,
 } from "@mui/material";
@@ -37,6 +33,8 @@ import { RoutePath } from "../../constants/RoutePath";
 import ReactECharts from "echarts-for-react";
 import html2pdf from "html2pdf.js";
 import { BsFillPrinterFill } from "react-icons/bs";
+import moment from "moment";
+import Select from "react-select";
 
 const drawerWidth = 240;
 
@@ -44,7 +42,6 @@ export default observer(function DashboardShopScreen() {
   const { usershop, GetShopByUserId } = useStore().shopuserStore;
   const { GetAddressByStore } = useStore().addressStore;
   const { getOrderByStore, order } = useStore().orderStore;
-
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const componentRef = useRef(null);
@@ -74,7 +71,7 @@ export default observer(function DashboardShopScreen() {
       });
   }
 
-  const ShopUserId:any = usershop?.id;
+  const ShopUserId: any = usershop?.id;
 
   useEffect(() => {
     GetShopByUserId();
@@ -82,34 +79,42 @@ export default observer(function DashboardShopScreen() {
   }, []);
 
   useEffect(() => {
-    getOrderByStore(ShopUserId)
-  }, [usershop])
-  
+    getOrderByStore(ShopUserId);
+  }, [usershop]);
+
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalOrderSuccess, setTotalOrderSuccess] = useState(0);
   const [totalOrderFailed, setTotalOrderFailed] = useState(0);
 
+  const [selectedYear, setSelectedYear] = useState(moment().year());
+  const [monthlyOrderData, setMonthlyOrderData] = useState([]);
+  const [yearOptions, setYearOptions] = useState([]);
+
   useEffect(() => {
     if (order) {
-      const total = order.filter(x=>x.status === 1).reduce((acc, currentOrder) => {
-        const orderTotal = currentOrder.orderItems.reduce(
-          (itemAcc, orderItem) =>
-            itemAcc + orderItem.quantity * orderItem.product.price,
-          0
-        );
-        return acc + orderTotal;
-      }, 0);
+      const total = order
+        .filter((x) => x.status === 1)
+        .reduce((acc, currentOrder) => {
+          const orderTotal = currentOrder.orderItems.reduce(
+            (itemAcc, orderItem) =>
+              itemAcc + orderItem.quantity * orderItem.product.price,
+            0
+          );
+          return acc + orderTotal;
+        }, 0);
       setTotalPrice(total);
     }
 
-    const totalProduct = order.filter(x=>x.status === 1).reduce((acc, currentOrder) => {
-      const orderQuantity = currentOrder.orderItems.reduce(
-        (itemAcc, orderItem) => itemAcc + orderItem.quantity,
-        0
-      );
-      return acc + orderQuantity;
-    }, 0);
+    const totalProduct = order
+      .filter((x) => x.status === 1)
+      .reduce((acc, currentOrder) => {
+        const orderQuantity = currentOrder.orderItems.reduce(
+          (itemAcc, orderItem) => itemAcc + orderItem.quantity,
+          0
+        );
+        return acc + orderQuantity;
+      }, 0);
     setTotalQuantity(totalProduct);
 
     const totalOrderSuccess = order.reduce((acc, currentOrder) => {
@@ -117,33 +122,65 @@ export default observer(function DashboardShopScreen() {
     }, 0);
     setTotalOrderSuccess(totalOrderSuccess);
 
-    
     const totalOrderFailed = order.reduce((acc, currentOrder) => {
       return currentOrder.status === 2 ? acc + 1 : acc;
     }, 0);
     setTotalOrderFailed(totalOrderFailed);
 
-  }, [order]);
+    const years: any = [
+      ...new Set(order.map((o) => moment(o.createdAt).year())),
+    ].sort((a, b) => a - b);
+    setYearOptions(years.map((year: any) => ({ value: year, label: year })));
 
+    const ordersByMonth = order
+      .filter((x) => x.status === 1)
+      .reduce((acc: any, currentOrder) => {
+        const orderYear = moment(currentOrder.createdAt).year();
+        if (orderYear !== selectedYear) return acc;
+
+        const month = moment(currentOrder.createdAt).format("MMMM");
+        const orderTotal = currentOrder.orderItems.reduce(
+          (itemAcc, orderItem) =>
+            itemAcc + orderItem.quantity * orderItem.product.price,
+          0
+        );
+
+        if (!acc[month]) {
+          acc[month] = 0;
+        }
+
+        acc[month] += orderTotal;
+
+        return acc;
+      }, {});
+
+    const monthlyData: any = Object.entries(ordersByMonth).map(
+      ([month, total]) => ({
+        month,
+        total,
+      })
+    );
+
+    monthlyData.sort(
+      (a: any, b: any) =>
+        moment().month(a.month).valueOf() - moment().month(b.month).valueOf()
+    );
+
+    setMonthlyOrderData(monthlyData);
+  }, [order, selectedYear]);
+
+  const handleYearChange = (selectedOption: any) => {
+    setSelectedYear(selectedOption.value);
+  };
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const lineChartDataFiltered = [
-    { date: "January", price: 120000 },
-    { date: "February", price: 150000 },
-    { date: "March", price: 170000 },
-    { date: "April", price: 140000 },
-    { date: "May", price: 200000 },
-    { date: "June", price: 190000 },
-    { date: "July", price: 210000 },
-  ];
-
   const option = {
     xAxis: {
       type: "category",
-      data: lineChartDataFiltered.map((item) => item.date),
+      data: monthlyOrderData?.map((item: any) => item?.month),
       axisLabel: {
         fontSize: 10,
         fontWeight: 600,
@@ -159,7 +196,7 @@ export default observer(function DashboardShopScreen() {
     },
     series: [
       {
-        data: lineChartDataFiltered.map((item) => item.price),
+        data: monthlyOrderData?.map((item: any) => item?.total),
         type: "line",
         smooth: true,
         lineStyle: {
@@ -178,22 +215,38 @@ export default observer(function DashboardShopScreen() {
     ],
     tooltip: {
       trigger: "axis",
-      formatter: (params: any) => `${params[0].data.toLocaleString()} บาท`,
+      formatter: (params: any) => `${params[0]?.data?.toLocaleString()} บาท`,
       textStyle: {
         fontSize: 14,
       },
     },
   };
 
-  const pieChartData = [
-    { value: 120, name: "Category A" },
-    { value: 150, name: "Category B" },
-    { value: 170, name: "Category C" },
-    { value: 140, name: "Category D" },
-    { value: 200, name: "Category E" },
-    { value: 190, name: "Category F" },
-    { value: 210, name: "Category G" },
-  ];
+  const [pieChartData, setPieChartData] = useState([]);
+
+  useEffect(() => {
+    const categoryQuantities: any = {};
+    order
+      .filter((x) => x.status === 1)
+      .forEach((orderItem) => {
+        orderItem.orderItems.forEach((item) => {
+          const categoryName = item.product.productGI.category.name;
+          if (!categoryQuantities[categoryName]) {
+            categoryQuantities[categoryName] = 0;
+          }
+          categoryQuantities[categoryName] += item.quantity;
+        });
+      });
+
+    const formattedData: any = Object.keys(categoryQuantities).map(
+      (categoryName) => ({
+        name: categoryName,
+        value: categoryQuantities[categoryName],
+      })
+    );
+
+    setPieChartData(formattedData);
+  }, [order]);
 
   const pieOption = {
     tooltip: {
@@ -246,9 +299,7 @@ export default observer(function DashboardShopScreen() {
 
             <div ref={componentRef}>
               <div className="mt-2 relative flex flex-wrap justify-center items-center gap-10">
-                <a
-                  className="flex h-28 w-48 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80"
-                >
+                <a className="flex h-28 w-48 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80">
                   <div className="flex flex-row items-center justify-center">
                     <svg
                       className="mr-3 fill-gray-500/95"
@@ -268,11 +319,9 @@ export default observer(function DashboardShopScreen() {
                   </div>
 
                   <div className="mt-2 text-sm text-gray-400">
-                  รายได้รวมการจำหน่ายสินค้า
+                    รายได้รวมการจำหน่ายสินค้า
                   </div>
                 </a>
-
-            
 
                 <a
                   href="#"
@@ -290,7 +339,9 @@ export default observer(function DashboardShopScreen() {
                       <path d="M5.68,19.74C7.16,20.95 9,21.75 11,21.95V19.93C9.54,19.75 8.21,19.17 7.1,18.31M13,19.93V21.95C15,21.75 16.84,20.95 18.32,19.74L16.89,18.31C15.79,19.17 14.46,19.75 13,19.93M18.31,16.9L19.74,18.33C20.95,16.85 21.75,15 21.95,13H19.93C19.75,14.46 19.17,15.79 18.31,16.9M15,12A3,3 0 0,0 12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12M4.07,13H2.05C2.25,15 3.05,16.84 4.26,18.32L5.69,16.89C4.83,15.79 4.25,14.46 4.07,13M5.69,7.1L4.26,5.68C3.05,7.16 2.25,9 2.05,11H4.07C4.25,9.54 4.83,8.21 5.69,7.1M19.93,11H21.95C21.75,9 20.95,7.16 19.74,5.68L18.31,7.1C19.17,8.21 19.75,9.54 19.93,11M18.32,4.26C16.84,3.05 15,2.25 13,2.05V4.07C14.46,4.25 15.79,4.83 16.9,5.69M11,4.07V2.05C9,2.25 7.16,3.05 5.68,4.26L7.1,5.69C8.21,4.83 9.54,4.25 11,4.07Z" />
                     </svg>
 
-                    <span className="font-bold text-gray-600">{totalQuantity}</span>
+                    <span className="font-bold text-gray-600">
+                      {totalQuantity}
+                    </span>
                   </div>
 
                   <div className="mt-2 text-sm text-gray-400">
@@ -362,20 +413,35 @@ export default observer(function DashboardShopScreen() {
               <div className="w-full">
                 <div className="grid grid-cols-4 gap-4 mt-5">
                   <div className="col-span-2 bg-white border rounded-sm overflow-hidden shadow">
-                    <div className="p-2 -mb-8">
-                      <p className="font-semibold">กราฟแสดงยอดขาย</p>
+                    <div className="p-2 flex justify-between items-center">
+                      <p className="font-semibold">
+                        กราฟแสดงยอดขายในแต่ละเดือน
+                      </p>
+                      <div className="flex items-center">
+                        <p className="mr-2">ปี :</p>
+                        <Select
+                          options={yearOptions}
+                          value={yearOptions.find(
+                            (option: any) => option.value === selectedYear
+                          )}
+                          onChange={handleYearChange}
+                          placeholder="Select Year"
+                          className="w-32 z-20"
+                        />
+                      </div>
                     </div>
-                    <div className="p-2">
+                    <div className="p-2 -mt-10">
                       <ReactECharts
                         option={option}
                         style={{ height: "300px", width: "100%" }}
                       />
                     </div>
                   </div>
+
                   <div className="col-span-2 bg-white border rounded-sm overflow-hidden shadow">
                     <div className="p-2 -mb-3">
                       <p className="font-semibold">
-                        กราฟแสดงยอดขายของแต่ละผลไม้
+                      สัดส่วนการกระจายยอดขายตามหมวดหมู่ผลิตภัณฑ์
                       </p>
                     </div>
                     <div className="p-2">
@@ -452,7 +518,7 @@ export default observer(function DashboardShopScreen() {
     </div>
   );
 
-  console.log("order",order)
+  console.log("order", order);
 
   return (
     <Box sx={{ display: "flex" }}>
