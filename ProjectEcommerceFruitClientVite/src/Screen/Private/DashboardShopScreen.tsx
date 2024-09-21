@@ -11,11 +11,7 @@ import {
   ListItemText,
   Toolbar,
   Typography,
-  Button,
-  Grid,
   Card,
-  CardContent,
-  CardActions,
   CardMedia,
   Collapse,
 } from "@mui/material";
@@ -38,6 +34,8 @@ import ReactECharts from "echarts-for-react";
 // @ts-ignore
 import html2pdf from "html2pdf.js";
 import { BsFillPrinterFill } from "react-icons/bs";
+import moment from "moment";
+import Select from "react-select";
 
 const drawerWidth = 240;
 
@@ -90,6 +88,10 @@ export default observer(function DashboardShopScreen() {
   const [totalOrderSuccess, setTotalOrderSuccess] = useState(0);
   const [totalOrderFailed, setTotalOrderFailed] = useState(0);
 
+  const [selectedYear, setSelectedYear] = useState(moment().year());
+  const [monthlyOrderData, setMonthlyOrderData] = useState([]);
+  const [yearOptions, setYearOptions] = useState([]);
+
   useEffect(() => {
     if (order) {
       const total = order
@@ -125,26 +127,61 @@ export default observer(function DashboardShopScreen() {
       return currentOrder.status === 2 ? acc + 1 : acc;
     }, 0);
     setTotalOrderFailed(totalOrderFailed);
-  }, [order]);
+
+    const years: any = [
+      ...new Set(order.map((o) => moment(o.createdAt).year())),
+    ].sort((a, b) => a - b);
+    setYearOptions(years.map((year: any) => ({ value: year, label: year })));
+
+    const ordersByMonth = order
+      .filter((x) => x.status === 1)
+      .reduce((acc: any, currentOrder) => {
+        const orderYear = moment(currentOrder.createdAt).year();
+        if (orderYear !== selectedYear) return acc;
+
+        const month = moment(currentOrder.createdAt).format("MMMM");
+        const orderTotal = currentOrder.orderItems.reduce(
+          (itemAcc, orderItem) =>
+            itemAcc + orderItem.quantity * orderItem.product.price,
+          0
+        );
+
+        if (!acc[month]) {
+          acc[month] = 0;
+        }
+
+        acc[month] += orderTotal;
+
+        return acc;
+      }, {});
+
+    const monthlyData: any = Object.entries(ordersByMonth).map(
+      ([month, total]) => ({
+        month,
+        total,
+      })
+    );
+
+    monthlyData.sort(
+      (a: any, b: any) =>
+        moment().month(a.month).valueOf() - moment().month(b.month).valueOf()
+    );
+
+    setMonthlyOrderData(monthlyData);
+  }, [order, selectedYear]);
+
+  const handleYearChange = (selectedOption: any) => {
+    setSelectedYear(selectedOption.value);
+  };
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const lineChartDataFiltered = [
-    { date: "January", price: 120000 },
-    { date: "February", price: 150000 },
-    { date: "March", price: 170000 },
-    { date: "April", price: 140000 },
-    { date: "May", price: 200000 },
-    { date: "June", price: 190000 },
-    { date: "July", price: 210000 },
-  ];
-
   const option = {
     xAxis: {
       type: "category",
-      data: lineChartDataFiltered.map((item) => item.date),
+      data: monthlyOrderData?.map((item: any) => item?.month),
       axisLabel: {
         fontSize: 10,
         fontWeight: 600,
@@ -160,7 +197,7 @@ export default observer(function DashboardShopScreen() {
     },
     series: [
       {
-        data: lineChartDataFiltered.map((item) => item.price),
+        data: monthlyOrderData?.map((item: any) => item?.total),
         type: "line",
         smooth: true,
         lineStyle: {
@@ -179,22 +216,38 @@ export default observer(function DashboardShopScreen() {
     ],
     tooltip: {
       trigger: "axis",
-      formatter: (params: any) => `${params[0].data.toLocaleString()} บาท`,
+      formatter: (params: any) => `${params[0]?.data?.toLocaleString()} บาท`,
       textStyle: {
         fontSize: 14,
       },
     },
   };
 
-  const pieChartData = [
-    { value: 120, name: "Category A" },
-    { value: 150, name: "Category B" },
-    { value: 170, name: "Category C" },
-    { value: 140, name: "Category D" },
-    { value: 200, name: "Category E" },
-    { value: 190, name: "Category F" },
-    { value: 210, name: "Category G" },
-  ];
+  const [pieChartData, setPieChartData] = useState([]);
+
+  useEffect(() => {
+    const categoryQuantities: any = {};
+    order
+      .filter((x) => x.status === 1)
+      .forEach((orderItem) => {
+        orderItem.orderItems.forEach((item) => {
+          const categoryName = item.product.productGI.category.name;
+          if (!categoryQuantities[categoryName]) {
+            categoryQuantities[categoryName] = 0;
+          }
+          categoryQuantities[categoryName] += item.quantity;
+        });
+      });
+
+    const formattedData: any = Object.keys(categoryQuantities).map(
+      (categoryName) => ({
+        name: categoryName,
+        value: categoryQuantities[categoryName],
+      })
+    );
+
+    setPieChartData(formattedData);
+  }, [order]);
 
   const pieOption = {
     tooltip: {
@@ -361,20 +414,35 @@ export default observer(function DashboardShopScreen() {
               <div className="w-full">
                 <div className="grid grid-cols-4 gap-4 mt-5">
                   <div className="col-span-2 bg-white border rounded-sm overflow-hidden shadow">
-                    <div className="p-2 -mb-8">
-                      <p className="font-semibold">กราฟแสดงยอดขาย</p>
+                    <div className="p-2 flex justify-between items-center">
+                      <p className="font-semibold">
+                        กราฟแสดงยอดขายในแต่ละเดือน
+                      </p>
+                      <div className="flex items-center">
+                        <p className="mr-2">ปี :</p>
+                        <Select
+                          options={yearOptions}
+                          value={yearOptions.find(
+                            (option: any) => option.value === selectedYear
+                          )}
+                          onChange={handleYearChange}
+                          placeholder="Select Year"
+                          className="w-32 z-20"
+                        />
+                      </div>
                     </div>
-                    <div className="p-2">
+                    <div className="p-2 -mt-10">
                       <ReactECharts
                         option={option}
                         style={{ height: "300px", width: "100%" }}
                       />
                     </div>
                   </div>
+
                   <div className="col-span-2 bg-white border rounded-sm overflow-hidden shadow">
                     <div className="p-2 -mb-3">
                       <p className="font-semibold">
-                        กราฟแสดงยอดขายของแต่ละผลไม้
+                      สัดส่วนการกระจายยอดขายตามหมวดหมู่ผลิตภัณฑ์
                       </p>
                     </div>
                     <div className="p-2">
