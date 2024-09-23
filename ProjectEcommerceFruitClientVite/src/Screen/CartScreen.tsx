@@ -185,6 +185,10 @@ export default observer(function CartScreen() {
     navigate(RoutePath.orderSummary);
   };
 
+  const handleBackHomeScreen = () => {
+    navigate(RoutePath.homeScreen);
+  }
+
   return (
     <div>
       <BannerComponent />
@@ -404,9 +408,9 @@ export default observer(function CartScreen() {
                       {" "}
                       หรือ{" "}
                     </span>
-                    <a
-                      href="#"
+                    <button
                       title=""
+                      onClick={handleBackHomeScreen}
                       className="inline-flex items-center gap-2 text-sm font-medium text-primary-700 underline hover:no-underline dark:text-primary-500"
                     >
                       ช้อปปิ้งต่อ
@@ -425,7 +429,7 @@ export default observer(function CartScreen() {
                           d="M19 12H5m14 0-4 4m4-4-4-4"
                         />
                       </svg>
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>

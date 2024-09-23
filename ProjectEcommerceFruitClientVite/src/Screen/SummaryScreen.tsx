@@ -91,6 +91,7 @@ export default observer(function SummaryScreen() {
   };
 
   const totalPrice = calculateTotalPrice();
+
   const formattedTotalPrice = formatNumberWithCommas(
     totalPrice + systemSetting[0]?.shippingCost
   );
@@ -202,9 +203,20 @@ export default observer(function SummaryScreen() {
                   </p>
                 </div>
 
-                <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800">
-                  ตะกร้าสินค้า
-                </p>
+                <div className="flex justify-between w-full px-4">
+                  <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800 w-1/4">
+                    ตะกร้าสินค้า
+                  </p>
+                  <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800 w-1/4 text-center">
+                    ราคาสินค้า
+                  </p>
+                  <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800 w-1/4 text-center">
+                    จำนวน
+                  </p>
+                  <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800 w-1/4 text-right">
+                    ราคารวม
+                  </p>
+                </div>
 
                 {selectMyCart &&
                   selectMyCart.map((items: CartItem, i: number) => (
@@ -217,31 +229,36 @@ export default observer(function SummaryScreen() {
 
                         return (
                           <div key={i}>
-                            <div className="mt-4 md:mt-6 flex  flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full ">
-                              <div className="pb-4 md:pb-8 w-full md:w-40">
+                            <div className="mt-4 md:mt-6 flex justify-between items-center w-full">
+                              {/* ตะกร้าสินค้า */}
+                              <div className="w-1/4 flex items-center space-x-4">
                                 <img
-                                  className="w-full"
+                                  className="w-20 h-20"
                                   src={pathImages.product + item.images}
                                   alt={item.images || "product image"}
                                 />
+                                <h3 className="text-base xl:text-lg font-semibold leading-6 text-gray-800">
+                                  {items.productName}
+                                </h3>
                               </div>
-                              <div className="border-b border-gray-200 md:flex-row flex-col flex justify-between items-start w-full  pb-8 space-y-4 md:space-y-0">
-                                <div className="w-full flex flex-col justify-start items-start space-y-8">
-                                  <h3 className="text-xl xl:text-2xl font-semibold leading-6 text-gray-800">
-                                    {items.productName}
-                                  </h3>
-                                </div>
-                                <div className="flex justify-between space-x-8 items-start w-full">
-                                  <p className="text-base xl:text-lg leading-6">
-                                    ราคาสินค้า {item.price.toLocaleString()} บาท
-                                  </p>
-                                  <p className="text-base xl:text-lg leading-6 text-gray-800">
-                                    {item.quantityInCartItem} จำนวน
-                                  </p>
-                                  <p className="text-base xl:text-lg font-semibold leading-6 text-gray-800">
-                                    {formatTotalPriceForProduct} บาท
-                                  </p>
-                                </div>
+
+                              {/* ราคาสินค้า */}
+                              <div className="w-1/4 text-center">
+                                <p className="text-base xl:text-lg leading-6">
+                                  {item.price.toLocaleString()} บาท
+                                </p>
+                              </div>
+                              {/* จำนวน */}
+                              <div className="w-1/4 text-center">
+                                <p className="text-base xl:text-lg leading-6 text-gray-800">
+                                  {item.quantityInCartItem}
+                                </p>
+                              </div>
+                              {/* ราคารวม */}
+                              <div className="w-1/4 text-right">
+                                <p className="text-base xl:text-lg font-semibold leading-6 text-gray-800">
+                                  {formatTotalPriceForProduct} บาท
+                                </p>
                               </div>
                             </div>
                           </div>
@@ -362,6 +379,14 @@ export default observer(function SummaryScreen() {
                       </p>
                       <p className="text-base leading-4 text-gray-600">
                         {selectMyCart.length} รายการ
+                      </p>
+                    </div>
+                    <div className="flex justify-between items-center w-full">
+                      <p className="text-base leading-4 text-gray-800">
+                        ราคารวม
+                      </p>
+                      <p className="text-base leading-4 text-gray-600">
+                        {totalPrice.toLocaleString()} บาท
                       </p>
                     </div>
 
