@@ -20,6 +20,7 @@ import SuccessComponent from "../layout/component/SuccessComponent";
 import DashboardForUser from "../Screen/my/DashboardForUser";
 import CheckOrderScreen from "../Screen/CheckOrderScreen";
 import OrderReceiptList from "../Screen/order/OrderReceiptList";
+import ShopDetailScreen from "../Screen/ShopDetailScreen";
 
 export const PublicRoute: any = [
   {
@@ -126,5 +127,10 @@ export const PublicRoute: any = [
     id: 20,
     path: RoutePath.orderReceiptList,
     element: <OrderReceiptList />,
+  },
+  {
+    id: 21,
+    path: "/shop-detail-screen/:id",
+    element: <ShopDetailScreen />,
   },
 ];
