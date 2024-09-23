@@ -404,7 +404,9 @@ export default observer(function SummaryScreen() {
                       ราคารวมทั้งหมด
                     </p>
                     <p className="text-base font-semibold leading-4 text-gray-600">
-                      {formattedTotalPrice} บาท
+                      {parseFloat(formattedTotalPrice) +
+                        systemSetting[0]?.shippingCost}{" "}
+                      บาท
                     </p>
                   </div>
 
