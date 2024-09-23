@@ -17,15 +17,14 @@ export default observer(function HomeScreen() {
   const { product, getProduct, category, getCategory } =
     useStore().productStore;
 
-  const { user, setLoadingUser, loadingUser } = useStore().userStore;
+  const { user, setLoadingUser, loadingUser, getUserDetailbyId } = useStore().userStore;
 
   const { GetStoreProductUser, shopProductUser } = useStore().shopuserStore;
-
-  console.log("user", user?.id);
 
   useEffect(() => {
     getProduct(0);
     getCategory();
+    getUserDetailbyId()
     if (user?.id !== undefined) {
       GetStoreProductUser(user?.id);
     }
@@ -102,6 +101,7 @@ export default observer(function HomeScreen() {
       setLoadingUser(false);
     }, 700);
   };
+
 
   return (
     <>
@@ -370,7 +370,7 @@ export default observer(function HomeScreen() {
                     </div>
                   </div>
 
-                  {user && user.id && (
+                  {user?.stores?.[0]?.name && (
                     <div
                       onClick={handletaps2}
                       className={`flex items-center pb-2 pr-2 border-b-2 uppercase cursor-pointer ${
@@ -420,11 +420,12 @@ export default observer(function HomeScreen() {
                       </div>
                     </div>
                   )}
+
                 </div>
 
                 {taps === "taps1" && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-                    {filteredProducts.map((product, i: number) => {
+                    {filteredProducts.filter(x=>x.productGI.store.hidden != true).map((product, i: number) => {
                       const userid = user?.id;
                       const timePassed = dayjs(product.createdAt)
                         .locale("th")

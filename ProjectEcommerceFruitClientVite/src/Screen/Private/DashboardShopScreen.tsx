@@ -259,7 +259,7 @@ export default observer(function DashboardShopScreen() {
     },
     series: [
       {
-        name: "Categories",
+        name: "ประเภทสินค้า",
         type: "pie",
         radius: "50%",
         data: pieChartData,

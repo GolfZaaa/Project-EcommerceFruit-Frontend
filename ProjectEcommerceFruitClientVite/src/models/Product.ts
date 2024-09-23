@@ -12,6 +12,7 @@ export interface Product {
   detail: string;
   status: boolean;
   createdAt: Date;
+  hidden: boolean;
 
   productGIId: number;
   productGI: ProductGI;

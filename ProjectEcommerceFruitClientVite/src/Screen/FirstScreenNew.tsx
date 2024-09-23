@@ -151,15 +151,13 @@ export default observer(function FirstScreenNew() {
     }
   }, [inView, controls]);
 
-  console.log("slideShow", JSON.stringify(slideShow.length));
-
   return (
     <div>
-      {/* รูปสไลด์ Start */}
+
       <div className="overflow-hidden mt-4 ml-4 mr-4">
-        <div className="w-full">
+        <div className="w-full ">
           {slideShow.length === 1 ? (
-            <div className="p-2 relative group">
+            <div className="p-2 relative group ">
               <img
                 src={pathImages.slideShow + slideShow[0]?.imageName || ""}
                 className="w-full h-96 object-cover rounded-md transition-transform duration-500 ease-in-out group-hover:scale-110 group-hover:rotate-3"
@@ -194,7 +192,8 @@ export default observer(function FirstScreenNew() {
         </div>
       </div>
 
-      {/* รูปสไลด์ End */}
+
+
 
       {/* ข้อมูลหลัก Start */}
       <div className="overflow-hidden">
@@ -321,7 +320,10 @@ export default observer(function FirstScreenNew() {
           </div>
         </div>
       </div>
-      {/* ข้อมูลรอง End */}
+      {/* ข้อมูลหลัก End */}
+
+
+
 
       {/* สินค้าสุ่ม Start */}
       <div className="xl:mx-auto xl:container">
@@ -373,8 +375,11 @@ export default observer(function FirstScreenNew() {
       </div>
       {/* สินค้าสุ่ม End */}
 
+
+
+
       {/* สินค้าขายดี Start */}
-      <div className="2xl:mx-auto 2xl:container px-4 md:px-6 2xl:px-0 py-16 flex justify-center">
+      <div className="2xl:mx-auto 2xl:container px-4 md:px-6 2xl:px-0 py-16 flex justify-center overflow-hidden">
         <div className="flex flex-col justify-center items-center">
           <div className="flex justify-start items-start">
             <p
@@ -479,6 +484,10 @@ export default observer(function FirstScreenNew() {
         </div>
       </div>
       {/* สินค้าขายดี End */}
+
+
+
+
 
       {/* Card Start */}
       <div className="2xl:container 2xl:mx-auto lg:px-20 md:py-12 md:px-6 py-9 px-4">
