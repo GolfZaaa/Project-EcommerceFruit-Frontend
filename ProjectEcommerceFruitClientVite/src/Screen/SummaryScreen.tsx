@@ -91,10 +91,7 @@ export default observer(function SummaryScreen() {
   };
 
   const totalPrice = calculateTotalPrice();
-
-  const formattedTotalPrice = formatNumberWithCommas(
-    totalPrice + systemSetting[0]?.shippingCost
-  );
+  const formattedTotalPrice = formatNumberWithCommas(totalPrice);
 
   const handleImageUpload = (file: any) => {
     setDropZoneImage(file);
