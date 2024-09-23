@@ -1,12 +1,13 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Order } from "../../../models/Order";
 import { OrderItem } from "../../../models/OrderItem";
 import { formatNumberWithCommas } from "../../../helper/components";
-import { Typography, CardActions, Button, Grid } from "@mui/material";
 import { pathImages } from "../../../constants/RoutePath";
 // @ts-ignore
 import html2pdf from "html2pdf.js";
 import { BsFillPrinterFill } from "react-icons/bs";
+import { Fab, Grid, Typography } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import { useStore } from "../../../store/store";
 import Swal from "sweetalert2";
 import TotalPrice from "./TotalPrice";
@@ -16,10 +17,11 @@ interface props {
   index: number;
 }
 
-const MyOrderCard = ({ order, index }: props) => {
-  const { changeConfirmReceiptOrder } = useStore().orderStore;
-  const { systemSetting } = useStore().systemSettingStore;
+const MyOrderCardToSend = ({ order, index }: props) => {
   const componentRef = useRef(null);
+  const { changeConfirmSendOrder } = useStore().orderStore;
+
+  const [select, setSelect] = useState<any[]>([]);
 
   function generatePDF() {
     const opt = {
@@ -47,10 +49,18 @@ const MyOrderCard = ({ order, index }: props) => {
       });
   }
 
-  const handleConfirm = (values: any) => {
+  const onSelect = (id: number) => {
+    if (select.find((x) => x === id) !== undefined) {
+      setSelect(select.filter((x) => x !== id));
+    } else {
+      setSelect([...select, id]);
+    }
+  };
+
+  const handleConfirm = () => {
     Swal.fire({
-      title: "ท่านแน่ใจหรือไม่ว่าต้องการรับหิ้ว?",
-      text: "หากยืนยันแล้ว ท่านจะสามารถดูรายการได้ใน ข้อมูลส่วนตัว",
+      title: "ท่านแน่ใจหรือไม่ว่าส่งสินค้าถึงมือลูกค้าแล้ว?",
+      text: "หากยืนยันแล้ว หมายถึงสินค้าได้ส่งถึงมือลูกค้าแล้ว",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -59,13 +69,9 @@ const MyOrderCard = ({ order, index }: props) => {
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire(
-          "รับหิ้วเรียบร้อยแล้ว",
-          "ท่านรับหิ้วเรียบร้อยแล้ว",
-          "success"
-        );
+        Swal.fire("ส่งเรียบร้อยแล้ว", "ท่านส่งสินค้าเรียบร้อยแล้ว", "success");
 
-        changeConfirmReceiptOrder(values);
+        changeConfirmSendOrder({ ...select.map((item) => item) });
       }
     });
   };
@@ -87,7 +93,30 @@ const MyOrderCard = ({ order, index }: props) => {
         </div>
       </div>
 
+      {select.length ? (
+        <Grid
+          container
+          spacing={2}
+          style={{
+            marginTop: 15,
+            marginBottom: 35,
+          }}
+        >
+          <Grid item xs={10.3}></Grid>
+          <Grid item xs={1.7}>
+            <Fab variant="extended" color="primary" onClick={handleConfirm}>
+              <EditIcon sx={{ mr: 1 }} />
+              ยืนยันการส่ง
+            </Fab>
+          </Grid>
+        </Grid>
+      ) : (
+        <></>
+      )}
+
       {order.map((item) => {
+        const status = item?.shippings[0]?.shippingStatus;
+
         const calculateTotalPrice = () => {
           return item?.orderItems?.reduce((total, item: OrderItem) => {
             total = item.product.price * item.quantity + total;
@@ -109,34 +138,48 @@ const MyOrderCard = ({ order, index }: props) => {
                 <span
                   className={
                     "text-lg font-semibold text-gray-900 text-" +
-                    (item.confirmReceipt === 2
-                      ? "red-500"
-                      : item.status === 0
+                    (status === 0
                       ? "yellow-500"
-                      : item.status === 1
+                      : status === 1
                       ? "green-500"
-                      : item.status === 2
+                      : status === 2
                       ? "red-500"
                       : "gray-500")
                   }
                   // className="text-lg font-semibold text-gray-900 dark:text-red-500"
                 >
                   สถานะ :{" "}
-                  {item.confirmReceipt === 2
-                    ? "ยกเลิกโดยคุณ"
-                    : item.status === 0
-                    ? "กำลังรออนุมัติ"
-                    : item.status === 1
-                    ? "ยืนยันคำสั่งซื้อแล้ว"
-                    : item.status === 2
-                    ? "ยกเลิกคำสั่งซื้อแล้ว"
+                  {status === 0
+                    ? "กำลังจัดส่ง"
+                    : status === 1
+                    ? "จัดส่งสำเร็จ"
+                    : status === 2
+                    ? "จัดส่งไม่สำเร็จ"
                     : "เพิ่มสถานะด้วย"}
-                  <div>
-                    {item.confirmReceipt === 1 && "ได้รับสินค้าแล้ว"}
-                    {(item.status === 2 && "ยกเลิกแล้ว โดยร้านค้า") ||
-                      (item.confirmReceipt === 2 && "ยกเลิกแล้ว โดยคุณ")}
-                  </div>
                 </span>
+
+                <div className="flex justify-between items-center mb-3">
+                  <p className="text-base leading-4 text-gray-800">
+                    ได้รับค่าจัดส่ง :
+                  </p>
+                  <p className="text-base leading-4 text-gray-600">
+                    {" "}
+                    {item?.shippings[0]?.shippingFee} บาท
+                  </p>
+                </div>
+
+                {index === 1 && (
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    style={{
+                      width: 50,
+                      height: 50,
+                    }}
+                    checked={select.find((x) => x === item.id) !== undefined}
+                    onChange={() => onSelect(item.id)}
+                  />
+                )}
               </div>
 
               {item.orderItems.map((item: OrderItem) => {
@@ -187,59 +230,34 @@ const MyOrderCard = ({ order, index }: props) => {
                 );
               })}
             </div>
-
             <TotalPrice
               formattedTotalPrice={parseFloat(formattedTotalPrice)}
-              ShippingFee={
-                item?.shippings[0]?.shippingFee !== undefined
-                  ? item?.shippings[0]?.shippingFee
-                  : systemSetting[0]?.shippingCost
-              }
+              ShippingFee={item?.shippings[0]?.shippingFee}
             />
-
-            {index === 4 && (
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  {/* <Typography align="center" color={"red"}>
-              * โปรดใส่หมายเลขพัสดุก่อนยืนยันคำสั่งซื้อ
-            </Typography> */}
-
-                  <CardActions sx={{ justifyContent: "center" }}>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="success"
-                      size="large"
-                      fullWidth
-                      // disabled={
-                      //   !trackingId || dataEdit?.status == 1 || dataEdit?.status == 2
-                      // }
-                      onClick={() =>
-                        handleConfirm({ orderId: item.id, status: 1 })
-                      }
-                    >
-                      ได้รับสินค้าแล้ว
-                    </Button>
-                  </CardActions>
-                </Grid>
-                <Grid item xs={6}>
-                  <CardActions sx={{ justifyContent: "center" }}>
-                    <Button
-                      onClick={() =>
-                        handleConfirm({ orderId: item.id, status: 2 })
-                      }
-                      variant="contained"
-                      color="error"
-                      size="large"
-                      fullWidth
-                      // disabled={dataEdit?.status == 1 || dataEdit?.status == 2}
-                    >
-                      ไม่ได้รับสินค้า
-                    </Button>
-                  </CardActions>
-                </Grid>
-              </Grid>
-            )}
+            {/* <div className="rounded-sm flex flex-col px-4 xl:p-6 w-full bg-white">
+              <div className="flex justify-between items-center w-full mb-3">
+                <p className="text-base leading-4 text-gray-800">ราคารวม</p>
+                <p className="text-base leading-4 text-gray-600">
+                  {formattedTotalPrice} บาท
+                </p>
+              </div>
+              <div className="flex justify-between items-center w-full mb-3">
+                <p className="text-base leading-4 text-gray-800">ค่าจัดส่ง</p>
+                <p className="text-base leading-4 text-gray-600">
+                  {item?.shippings[0]?.shippingFee} บาท
+                </p>
+              </div>
+              <div className="flex justify-between items-center w-full">
+                <p className="text-base font-semibold leading-4 text-gray-800">
+                  ราคารวมทั้งหมด
+                </p>
+                <p className="text-base font-semibold leading-4 text-gray-600">
+                  {parseFloat(formattedTotalPrice) +
+                    item?.shippings[0]?.shippingFee}{" "}
+                  บาท
+                </p>
+              </div>
+            </div> */}
           </div>
         );
       })}
@@ -247,4 +265,4 @@ const MyOrderCard = ({ order, index }: props) => {
   );
 };
 
-export default MyOrderCard;
+export default MyOrderCardToSend;

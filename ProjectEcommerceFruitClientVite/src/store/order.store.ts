@@ -2,21 +2,45 @@ import { makeAutoObservable, reaction } from "mobx";
 import { Order, OrderNow } from "../models/Order";
 import agent from "../api/agent";
 
-
 export default class OrderStore {
   order: Order[] = [];
   checkOrderNow: OrderNow[] = [];
   orderid: number = 0;
+  loadingOrder: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
   }
+
+  setLoadingOrder = (state: boolean) => (this.loadingOrder = state);
 
   setOrder = (state: any) => (this.order = state);
 
   getOrdersByUser = async () => {
     try {
       const result = await agent.Order.getOrdersByUser();
+      this.order = result;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  getOrdersWantToReceipt = async () => {
+    this.setLoadingOrder(true);
+    try {
+      const result = await agent.Order.getOrdersWantToReceipt();
+      this.order = result;
+
+      this.setLoadingOrder(false);
+    } catch (error) {
+      this.setLoadingOrder(false);
+      return error;
+    }
+  };
+
+  getMyOrderToSend = async () => {
+    try {
+      const result = await agent.Order.getMyOrderToSend();
       this.order = result;
     } catch (error) {
       return error;
@@ -69,11 +93,40 @@ export default class OrderStore {
     }
   };
 
-
   getOrderItemByOrderId = async (orderId: number) => {
     try {
       const result = await agent.Order.getOrderItemByOrderId(orderId);
       this.checkOrderNow = result;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  createOrderToReceipt = async (valus: any) => {
+    try {
+      const result = await agent.Order.createOrderToReceipt(valus);
+      this.getOrdersWantToReceipt();
+      return result;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  changeConfirmReceiptOrder = async (valus: any) => {
+    try {
+      const result = await agent.Order.changeConfirmReceiptOrder(valus);
+      this.getOrdersByUser();
+      return result;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  changeConfirmSendOrder = async (valus: any) => {
+    try {
+      const result = await agent.Order.changeConfirmSendOrder(valus);
+      this.getMyOrderToSend();
+      return result;
     } catch (error) {
       return error;
     }

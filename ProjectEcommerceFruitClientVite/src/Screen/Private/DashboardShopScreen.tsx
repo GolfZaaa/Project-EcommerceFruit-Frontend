@@ -35,6 +35,7 @@ import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import OrderList from "../order/OrderList";
 import { RoutePath } from "../../constants/RoutePath";
 import ReactECharts from "echarts-for-react";
+// @ts-ignore
 import html2pdf from "html2pdf.js";
 import { BsFillPrinterFill } from "react-icons/bs";
 
@@ -44,7 +45,6 @@ export default observer(function DashboardShopScreen() {
   const { usershop, GetShopByUserId } = useStore().shopuserStore;
   const { GetAddressByStore } = useStore().addressStore;
   const { getOrderByStore, order } = useStore().orderStore;
-
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const componentRef = useRef(null);
@@ -74,7 +74,7 @@ export default observer(function DashboardShopScreen() {
       });
   }
 
-  const ShopUserId:any = usershop?.id;
+  const ShopUserId: any = usershop?.id;
 
   useEffect(() => {
     GetShopByUserId();
@@ -82,9 +82,9 @@ export default observer(function DashboardShopScreen() {
   }, []);
 
   useEffect(() => {
-    getOrderByStore(ShopUserId)
-  }, [usershop])
-  
+    getOrderByStore(ShopUserId);
+  }, [usershop]);
+
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalOrderSuccess, setTotalOrderSuccess] = useState(0);
@@ -92,24 +92,28 @@ export default observer(function DashboardShopScreen() {
 
   useEffect(() => {
     if (order) {
-      const total = order.filter(x=>x.status === 1).reduce((acc, currentOrder) => {
-        const orderTotal = currentOrder.orderItems.reduce(
-          (itemAcc, orderItem) =>
-            itemAcc + orderItem.quantity * orderItem.product.price,
-          0
-        );
-        return acc + orderTotal;
-      }, 0);
+      const total = order
+        .filter((x) => x.status === 1)
+        .reduce((acc, currentOrder) => {
+          const orderTotal = currentOrder.orderItems.reduce(
+            (itemAcc, orderItem) =>
+              itemAcc + orderItem.quantity * orderItem.product.price,
+            0
+          );
+          return acc + orderTotal;
+        }, 0);
       setTotalPrice(total);
     }
 
-    const totalProduct = order.filter(x=>x.status === 1).reduce((acc, currentOrder) => {
-      const orderQuantity = currentOrder.orderItems.reduce(
-        (itemAcc, orderItem) => itemAcc + orderItem.quantity,
-        0
-      );
-      return acc + orderQuantity;
-    }, 0);
+    const totalProduct = order
+      .filter((x) => x.status === 1)
+      .reduce((acc, currentOrder) => {
+        const orderQuantity = currentOrder.orderItems.reduce(
+          (itemAcc, orderItem) => itemAcc + orderItem.quantity,
+          0
+        );
+        return acc + orderQuantity;
+      }, 0);
     setTotalQuantity(totalProduct);
 
     const totalOrderSuccess = order.reduce((acc, currentOrder) => {
@@ -117,14 +121,11 @@ export default observer(function DashboardShopScreen() {
     }, 0);
     setTotalOrderSuccess(totalOrderSuccess);
 
-    
     const totalOrderFailed = order.reduce((acc, currentOrder) => {
       return currentOrder.status === 2 ? acc + 1 : acc;
     }, 0);
     setTotalOrderFailed(totalOrderFailed);
-
   }, [order]);
-
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -246,9 +247,7 @@ export default observer(function DashboardShopScreen() {
 
             <div ref={componentRef}>
               <div className="mt-2 relative flex flex-wrap justify-center items-center gap-10">
-                <a
-                  className="flex h-28 w-48 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80"
-                >
+                <a className="flex h-28 w-48 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80">
                   <div className="flex flex-row items-center justify-center">
                     <svg
                       className="mr-3 fill-gray-500/95"
@@ -268,11 +267,9 @@ export default observer(function DashboardShopScreen() {
                   </div>
 
                   <div className="mt-2 text-sm text-gray-400">
-                  รายได้รวมการจำหน่ายสินค้า
+                    รายได้รวมการจำหน่ายสินค้า
                   </div>
                 </a>
-
-            
 
                 <a
                   href="#"
@@ -290,7 +287,9 @@ export default observer(function DashboardShopScreen() {
                       <path d="M5.68,19.74C7.16,20.95 9,21.75 11,21.95V19.93C9.54,19.75 8.21,19.17 7.1,18.31M13,19.93V21.95C15,21.75 16.84,20.95 18.32,19.74L16.89,18.31C15.79,19.17 14.46,19.75 13,19.93M18.31,16.9L19.74,18.33C20.95,16.85 21.75,15 21.95,13H19.93C19.75,14.46 19.17,15.79 18.31,16.9M15,12A3,3 0 0,0 12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12M4.07,13H2.05C2.25,15 3.05,16.84 4.26,18.32L5.69,16.89C4.83,15.79 4.25,14.46 4.07,13M5.69,7.1L4.26,5.68C3.05,7.16 2.25,9 2.05,11H4.07C4.25,9.54 4.83,8.21 5.69,7.1M19.93,11H21.95C21.75,9 20.95,7.16 19.74,5.68L18.31,7.1C19.17,8.21 19.75,9.54 19.93,11M18.32,4.26C16.84,3.05 15,2.25 13,2.05V4.07C14.46,4.25 15.79,4.83 16.9,5.69M11,4.07V2.05C9,2.25 7.16,3.05 5.68,4.26L7.1,5.69C8.21,4.83 9.54,4.25 11,4.07Z" />
                     </svg>
 
-                    <span className="font-bold text-gray-600">{totalQuantity}</span>
+                    <span className="font-bold text-gray-600">
+                      {totalQuantity}
+                    </span>
                   </div>
 
                   <div className="mt-2 text-sm text-gray-400">
@@ -452,7 +451,7 @@ export default observer(function DashboardShopScreen() {
     </div>
   );
 
-  console.log("order",order)
+  console.log("order", order);
 
   return (
     <Box sx={{ display: "flex" }}>

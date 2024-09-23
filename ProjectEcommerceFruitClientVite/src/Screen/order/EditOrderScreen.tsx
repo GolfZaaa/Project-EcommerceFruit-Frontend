@@ -9,6 +9,8 @@ import {
   Grid,
   FormControl,
   InputLabel,
+  Fab,
+  MenuItem,
   Select,
 } from "@mui/material";
 import "react-quill/dist/quill.snow.css";
@@ -17,6 +19,11 @@ import { Order } from "../../models/Order";
 import { useState } from "react";
 import { useStore } from "../../store/store";
 import { pathImages } from "../../constants/RoutePath";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import { Product } from "../../models/Product";
+import { CartItem } from "../../models/CartItem";
+import { formatNumberWithCommas } from "../../helper/components";
+import { OrderItem } from "../../models/OrderItem";
 
 interface props {
   onChangeCU?: any | null;
@@ -25,8 +32,11 @@ interface props {
 
 const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
   const { confirmOrder, cancelOrder } = useStore().orderStore;
+  const { systemSetting } = useStore().systemSettingStore;
 
   const [trackingId, setTrackingId] = useState(dataEdit?.tag || null);
+
+  const [selectCate, setSelectCate] = useState(dataEdit?.shippingType || null);
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -35,7 +45,8 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
 
     const dataForm = {
       orderId: dataEdit?.id || 0,
-      trackingId: formData.tag,
+      trackingId: formData.tag || null,
+      shippingType: !!selectCate ? selectCate : null,
     };
 
     await confirmOrder(dataForm).then((result) => {
@@ -52,6 +63,65 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
       }
     });
   };
+
+  const onSelectCate = (name: string) => {
+    setSelectCate(name);
+  };
+
+  const categorySend = [
+    {
+      id: 1,
+      name: "ส่งไปรษณีย์แบบลงทะเบียน",
+    },
+    {
+      id: 2,
+      name: "ส่งแบบไปรษณีย์ด่วนพิเศษ ( EMS )",
+    },
+    {
+      id: 3,
+      name: "เคอรี่ เอ็กซ์เพรส (Kerry Express)",
+    },
+    {
+      id: 4,
+      name: "เจแอนด์ที เอ็กซ์เพรส (J&T Express) ",
+    },
+    {
+      id: 5,
+      name: "แฟลช เอ็กซ์เพรส (Flash Express) ",
+    },
+    {
+      id: 6,
+      name: "เบสท์ เอ็กซ์เพรส (Best Express)",
+    },
+    {
+      id: 7,
+      name: "นินจา แวน (Ninja Van)",
+    },
+    {
+      id: 8,
+      name: "อื่น ๆ",
+    },
+  ];
+
+  const calculateTotalPrice = () => {
+    return dataEdit?.orderItems.reduce((total, item: OrderItem) => {
+      // const storeTotal = item.product.reduce(
+      //   (storeSum: number, product: Product) => {
+      //     return storeSum + item.quantity * product.price;
+      //   },
+      //   0
+      // );
+
+      total = item.product.price * item.quantity + total;
+
+      console.log("total :: ", total);
+
+      return total;
+    }, 0);
+  };
+
+  const totalPrice: any = calculateTotalPrice();
+  const formattedTotalPrice = formatNumberWithCommas(totalPrice);
 
   return (
     <Box
@@ -70,16 +140,20 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
       >
         <Grid container spacing={2}>
           <Grid item xs={1}>
-            <Button
+            <Fab variant="extended" color="primary" onClick={onChangeCU}>
+              <ArrowBackIosIcon sx={{ mr: 1 }} />
+              กลับ
+            </Fab>
+            {/* <Button
               type="submit"
               variant="contained"
               color="primary"
               size="large"
               fullWidth
               onClick={onChangeCU}
-            >
-              กลับ
-            </Button>
+            > */}
+            {/* กลับ */}
+            {/* </Button> */}
           </Grid>
           <Grid item xs={11} />
         </Grid>
@@ -103,9 +177,36 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
             <Grid item xs={6}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Typography gutterBottom align="left">
+                  <FormControl
+                    fullWidth
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    disabled={
+                      dataEdit?.status === 0 ||
+                      !!dataEdit?.tag ||
+                      dataEdit?.status == 2
+                    }
+                  >
+                    <InputLabel>เลือกบริษัทขนส่ง</InputLabel>
+                    <Select
+                      label="เลือกบริษัทขนส่ง"
+                      defaultValue={dataEdit?.shippingType}
+                    >
+                      {categorySend.map((item) => (
+                        <MenuItem
+                          key={item.id}
+                          value={item.name}
+                          onClick={() => onSelectCate(item.name)}
+                        >
+                          {item.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  {/* <Typography gutterBottom align="left">
                     ประเภทการขนส่ง : {dataEdit?.shippingType}
-                  </Typography>
+                  </Typography> */}
                   {/* <TextField
                     defaultValue={dataEdit?.shippingType}
                     fullWidth
@@ -120,16 +221,20 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    defaultValue={trackingId}
+                    defaultValue={trackingId || "จัดส่งผ่านผู้รับหิ้ว"}
                     fullWidth
                     onChange={(e) => setTrackingId(e.target.value)}
                     label="หมายเลขพัสดุ (tracking)"
                     variant="outlined"
                     margin="normal"
                     name="tag"
-                    autoFocus
-                    required
-                    disabled={dataEdit?.status == 1 || dataEdit?.status == 2}
+                    // autoFocus
+                    // required
+                    disabled={
+                      dataEdit?.status === 0 ||
+                      !!dataEdit?.tag ||
+                      dataEdit?.status == 2
+                    }
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -182,27 +287,69 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
             </Grid>
           </Grid>
         ))}
+        <div className="rounded-sm flex flex-col px-4 xl:p-6 w-full bg-white">
+          <div className="flex justify-between items-center w-full mb-3">
+            <p className="text-base leading-4 text-gray-800">ราคารวม</p>
+            <p className="text-base leading-4 text-gray-600">
+              {formattedTotalPrice} บาท
+            </p>
+          </div>
+          <div className="flex justify-between items-center w-full mb-3">
+            <p className="text-base leading-4 text-gray-800">ค่าจัดส่ง</p>
+            <p className="text-base leading-4 text-gray-600">
+              {systemSetting[0]?.shippingCost} บาท
+            </p>
+          </div>
+          <div className="flex justify-between items-center w-full">
+            <p className="text-base font-semibold leading-4 text-gray-800">
+              ราคารวมทั้งหมด
+            </p>
+            <p className="text-base font-semibold leading-4 text-gray-600">
+              {parseFloat(formattedTotalPrice) + systemSetting[0]?.shippingCost}{" "}
+              บาท
+            </p>
+          </div>
+        </div>
 
         <Grid container spacing={2}>
           <Grid item xs={6}>
-            <Typography align="center" color={"red"}>
+            {/* <Typography align="center" color={"red"}>
               * โปรดใส่หมายเลขพัสดุก่อนยืนยันคำสั่งซื้อ
-            </Typography>
-            <Button
-              type="submit"
-              variant="contained"
-              color="success"
-              size="large"
-              fullWidth
-              disabled={
-                !trackingId || dataEdit?.status == 1 || dataEdit?.status == 2
-              }
-            >
-              ยืนยันคำสั่งซื้อ
-            </Button>
+            </Typography> */}
+
+            <CardActions sx={{ justifyContent: "center" }}>
+              {dataEdit?.status === 0 ? (
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="success"
+                  size="large"
+                  fullWidth
+                  // disabled={
+                  //   !trackingId || dataEdit?.status == 1 || dataEdit?.status == 2
+                  // }
+                >
+                  ยืนยันคำสั่งซื้อ
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="success"
+                  size="large"
+                  fullWidth
+                  // disabled={
+                  //   !trackingId || dataEdit?.status == 1 || dataEdit?.status == 2
+                  // }
+                  disabled={!!dataEdit?.tag || dataEdit?.status == 2}
+                >
+                  {!!dataEdit?.tag ? "เสร็จสิ้น" : "บันทึกหมายเลขพัสดุ"}
+                </Button>
+              )}
+            </CardActions>
           </Grid>
           <Grid item xs={6}>
-            <CardActions sx={{ justifyContent: "center", mt: 2 }}>
+            <CardActions sx={{ justifyContent: "center" }}>
               <Button
                 onClick={() => handleCancel({ orderId: dataEdit?.id })}
                 variant="contained"

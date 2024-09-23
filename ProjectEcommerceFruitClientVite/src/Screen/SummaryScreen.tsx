@@ -30,7 +30,6 @@ const formatNumberWithCommas = (number: number) => {
 export default observer(function SummaryScreen() {
   const navigate = useNavigate();
   const [dropZoneImage, setDropZoneImage] = useState(null);
-  const [shippingType, setShippingType] = useState("ไปรษณีย์ไทย");
   const [tag, setTag] = useState("");
 
   const [isImageValid, setIsImageValid] = useState(true);
@@ -50,6 +49,7 @@ export default observer(function SummaryScreen() {
   } = useStore().cartStore;
 
   const { CreateUpdateOrderById } = useStore().orderStore;
+  const { systemSetting } = useStore().systemSettingStore;
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("slip");
 
@@ -85,19 +85,20 @@ export default observer(function SummaryScreen() {
         },
         0
       );
+
       return total + storeTotal;
     }, 0);
   };
 
   const totalPrice = calculateTotalPrice();
-  const formattedTotalPrice = formatNumberWithCommas(totalPrice);
+  const formattedTotalPrice = formatNumberWithCommas(
+    totalPrice + systemSetting[0]?.shippingCost
+  );
 
   const handleImageUpload = (file: any) => {
     setDropZoneImage(file);
     setIsImageValid(!!file);
   };
-
-
 
   const handleSubmit = async (value: any) => {
     if (selectedPaymentMethod === "slip" && !dropZoneImage) {
@@ -110,14 +111,13 @@ export default observer(function SummaryScreen() {
 
     const Data = {
       PaymentImage: dropZoneImage,
-      ShippingType: shippingType,
       Tag: tag,
       StoreId: value[0].storeId,
     };
 
     const test = await CreateUpdateOrderById(Data);
 
-    if (test) {
+    if (!!test) {
       navigate(RoutePath.successScreen);
     } else {
       alert("error");
@@ -332,9 +332,15 @@ export default observer(function SummaryScreen() {
                           />
                         </div>
                         {!isImageValid && (
-                          <p className="text-red-500 text-sm mt-2 ml-16 pl-20 ">
+                          <div
+                            style={{
+                              textAlign: "center",
+                              color: "red",
+                            }}
+                            className="text-red-500 text-sm mt-2"
+                          >
                             กรุณาอัปโหลดรูปภาพสลีปการโอน
-                          </p>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -345,7 +351,7 @@ export default observer(function SummaryScreen() {
                   )}
                 </div>
 
-                <div className=" shadow-md rounded-sm  flex flex-col px-4 py-6 md:p-6 xl:p-8 w-full bg-white space-y-6   ">
+                <div className=" shadow-md rounded-sm  flex flex-col px-4 py-6 md:p-6 xl:p-8 w-full bg-white space-y-6">
                   <h3 className="text-xl font-semibold leading-5 text-gray-800">
                     สรุปการสั่งซื้อ
                   </h3>
@@ -356,6 +362,15 @@ export default observer(function SummaryScreen() {
                       </p>
                       <p className="text-base leading-4 text-gray-600">
                         {selectMyCart.length} รายการ
+                      </p>
+                    </div>
+
+                    <div className="flex justify-between items-center w-full">
+                      <p className="text-base leading-4 text-gray-800">
+                        ค่าจัดส่ง
+                      </p>
+                      <p className="text-base leading-4 text-gray-600">
+                        {systemSetting[0]?.shippingCost} บาท
                       </p>
                     </div>
                   </div>

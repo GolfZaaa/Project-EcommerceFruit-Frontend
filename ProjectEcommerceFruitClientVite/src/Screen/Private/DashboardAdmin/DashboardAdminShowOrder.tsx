@@ -3,9 +3,9 @@ import { useStore } from "../../../store/store";
 import { pathImagepayment } from "../../../api/agent";
 import ExcelJS from "exceljs";
 import { AiFillFileExcel } from "react-icons/ai";
-import AOS from 'aos';
-import { motion } from 'framer-motion';
-import Swal from 'sweetalert2';
+import AOS from "aos";
+import { motion } from "framer-motion";
+import Swal from "sweetalert2";
 
 export default function DashboardAdminShowOrder() {
   const [searchUser, setSearchUser] = useState<any>("");
@@ -98,30 +98,26 @@ export default function DashboardAdminShowOrder() {
     document.body.removeChild(a);
   };
 
-
-
-  
   const handleDelete = () => {
     Swal.fire({
-      title: 'ท่านแน่ใจหรือไม่ว่าต้องการลบ?',
-      text: 'หากลบแล้ว ท่านจะไม่สามารถกู้คืนข้อมูลได้',
-      icon: 'warning',
+      title: "ท่านแน่ใจหรือไม่ว่าต้องการลบ?",
+      text: "หากลบแล้ว ท่านจะไม่สามารถกู้คืนข้อมูลได้",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'ยืนยัน ต้องการลบ',
-      cancelButtonText:'ยกเลิก',
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ยืนยัน ต้องการลบ",
+      cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire(
-          'ลบเรียบร้อยแล้ว',
-          'ข้อมูลของท่านถูกลบออกจากระบบแล้ว',
-          'success'
+          "ลบเรียบร้อยแล้ว",
+          "ข้อมูลของท่านถูกลบออกจากระบบแล้ว",
+          "success"
         );
       }
     });
   };
-  
 
   return (
     <div>
@@ -309,15 +305,15 @@ export default function DashboardAdminShowOrder() {
                             {" "}
                             <span
                               className={`
-  ${
-    userItem.status === 0
-      ? "text-yellow-500 bg-yellow-100 border border-yellow-500"
-      : userItem.status === 1
-      ? "text-green-500 bg-green-100 border border-green-500"
-      : "text-red-500 bg-red-100 border border-red-500"
-  }
-  px-3 py-1 rounded-full font-semibold
-`}
+                              ${
+                                userItem.status === 0
+                                  ? "text-yellow-500 bg-yellow-100 border border-yellow-500"
+                                  : userItem.status === 1
+                                  ? "text-green-500 bg-green-100 border border-green-500"
+                                  : "text-red-500 bg-red-100 border border-red-500"
+                              }
+                              px-3 py-1 rounded-full font-semibold
+                            `}
                             >
                               {userItem.status === 0
                                 ? "กำลังรออนุมัติ"

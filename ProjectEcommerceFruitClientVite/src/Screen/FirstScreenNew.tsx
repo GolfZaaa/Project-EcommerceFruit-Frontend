@@ -85,13 +85,13 @@ export default observer(function FirstScreenNew() {
     navigate(RoutePath.productDetail(product.id));
   };
 
-  const OrderDay = (order:any) => {
+  const OrderDay = (order: any) => {
     const today = new Date();
-  
-    return order.filter((x:any) => {
+
+    return order.filter((x: any) => {
       if (x.status === 1) {
         const createDate = new Date(x.createdAt);
-  
+
         return (
           createDate.getFullYear() === today.getFullYear() &&
           createDate.getMonth() === today.getMonth() &&
@@ -101,7 +101,6 @@ export default observer(function FirstScreenNew() {
       return false;
     });
   };
-  
 
   const [inView, setInView] = useState(false);
   const ref: any = useRef(null);
@@ -153,26 +152,46 @@ export default observer(function FirstScreenNew() {
     }
   }, [inView, controls]);
 
+  console.log("slideShow", JSON.stringify(slideShow.length));
+
   return (
     <div>
       {/* รูปสไลด์ Start */}
       <div className="overflow-hidden mt-4 ml-4 mr-4">
         <div className="w-full">
-          <Slider {...settingsImageSlide}>
-            {slideShow.map((image, index) => (
-              <div key={index} className="p-2 relative group">
-                <img
-                  src={pathImages.slideShow + image?.imageName || ""}
-                  className="w-full h-96 object-cover rounded-md transition-transform duration-500 ease-in-out group-hover:scale-110 group-hover:rotate-3"
-                  alt={`slide-${index}`}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
-                <div className="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  {/* <p className="text-lg font-semibold">รูปภาพ {index + 1}</p> */}
-                </div>
+          {slideShow.length === 1 ? (
+            <div className="p-2 relative group">
+              <img
+                src={pathImages.slideShow + slideShow[0]?.imageName || ""}
+                className="w-full h-96 object-cover rounded-md transition-transform duration-500 ease-in-out group-hover:scale-110 group-hover:rotate-3"
+                alt={`slide-image`}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
+              <div className="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                {/* <p className="text-lg font-semibold">รูปภาพ {index + 1}</p> */}
               </div>
-            ))}
-          </Slider>
+            </div>
+          ) : (
+            <Slider {...settingsImageSlide}>
+              {slideShow.map((image, index) => {
+                console.log("image" + index, JSON.stringify(image));
+
+                return (
+                  <div key={index} className="p-2 relative group">
+                    <img
+                      src={pathImages.slideShow + image?.imageName || ""}
+                      className="w-full h-96 object-cover rounded-md transition-transform duration-500 ease-in-out group-hover:scale-110 group-hover:rotate-3"
+                      alt={`slide-${index}`}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
+                    <div className="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      {/* <p className="text-lg font-semibold">รูปภาพ {index + 1}</p> */}
+                    </div>
+                  </div>
+                );
+              })}
+            </Slider>
+          )}
         </div>
       </div>
 

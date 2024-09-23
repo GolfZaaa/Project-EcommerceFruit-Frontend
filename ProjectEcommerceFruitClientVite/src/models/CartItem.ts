@@ -3,7 +3,7 @@ import { User } from "./User";
 
 export interface CartItem {
   id: number;
-  weight: number;
+  quantity: number;
 
   userId: number;
   user: User;

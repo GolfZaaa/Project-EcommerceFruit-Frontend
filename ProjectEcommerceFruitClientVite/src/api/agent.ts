@@ -35,6 +35,17 @@ export const createFormData = (item: any) => {
   return formData;
 };
 
+export const createFormDataUseMyName = (item: any, name: string) => {
+  let formData = new FormData();
+  for (const key in item) {
+    if (item[key] !== null && item[key] !== undefined) {
+      formData.append(name, item[key]);
+    }
+  }
+
+  return formData;
+};
+
 export const requests = {
   get: (url: string, params?: URLSearchParams) =>
     axios.get(url, { params }).then(responseBody),

@@ -14,13 +14,13 @@ interface RegisterInterface {
 export default class UserStore {
   user: User | null = null;
   userAll: User[] = [];
-  loadingUser:boolean = false;
+  loadingUser: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  setLoadingUser = (state:boolean) => this.loadingUser = state; 
+  setLoadingUser = (state: boolean) => (this.loadingUser = state);
 
   register = async ({ Password, FullName, PhoneNumber }: RegisterInterface) => {
     this.setLoadingUser(true);

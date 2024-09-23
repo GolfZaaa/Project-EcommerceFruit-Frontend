@@ -17,7 +17,7 @@ export default observer(function HomeScreen() {
   const { product, getProduct, category, getCategory } =
     useStore().productStore;
 
-  const { user, setLoadingUser, loadingUser} = useStore().userStore;
+  const { user, setLoadingUser, loadingUser } = useStore().userStore;
 
   const { GetStoreProductUser, shopProductUser } = useStore().shopuserStore;
 
@@ -177,7 +177,16 @@ export default observer(function HomeScreen() {
                       type="button"
                       disabled={loadingUser}
                     >
-                      {loadingUser ? <div> <CircularProgress size={17} color="inherit" /></div> : <div><p>รีเซ็ตกรองข้อมูลสินค้า</p></div>}
+                      {loadingUser ? (
+                        <div>
+                          {" "}
+                          <CircularProgress size={17} color="inherit" />
+                        </div>
+                      ) : (
+                        <div>
+                          <p>รีเซ็ตกรองข้อมูลสินค้า</p>
+                        </div>
+                      )}
                     </button>
                   </div>
                 </div>

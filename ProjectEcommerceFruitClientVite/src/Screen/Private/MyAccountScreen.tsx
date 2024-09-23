@@ -13,6 +13,8 @@ import {
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PeopleIcon from "@mui/icons-material/People";
+import DirectionsBikeIcon from "@mui/icons-material/DirectionsBike";
+import ListAltIcon from "@mui/icons-material/ListAlt";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
 import { Link } from "react-router-dom";
@@ -22,18 +24,19 @@ import AddressList from "../address/AddressList";
 import MyOrderList from "../order/MyOrderList";
 import EditAccount from "../my/EditAccount";
 import DashboardForUser from "../my/DashboardForUser";
+import MyOrderToSendList from "../order/MyOrderToSendList";
 
 const drawerWidth = 240;
 
 const MyAccountScreen = () => {
   const { getAddressByUserId } = useStore().addressStore;
   const { getUserDetailbyId } = useStore().userStore;
+  const { order, getOrdersByUser, getMyOrderToSend } = useStore().orderStore;
 
   const [screenComponent, setScreenComponent] = useState("my-dashboard");
 
   useEffect(() => {
     getAddressByUserId();
-    getUserDetailbyId();
   }, []);
 
   const renderScreens = () => {
@@ -41,7 +44,9 @@ const MyAccountScreen = () => {
       case "addressList":
         return <AddressList />;
       case "orderList":
-        return <MyOrderList />;
+        return <MyOrderList order={order} />;
+      case "orderToSendList":
+        return <MyOrderToSendList order={order} />;
       case "my-account":
         return <EditAccount />;
       case "my-dashboard":
@@ -98,12 +103,30 @@ const MyAccountScreen = () => {
           style={{
             cursor: "pointer",
           }}
-          onClick={() => setScreenComponent("orderList")}
+          onClick={() => {
+            setScreenComponent("orderList");
+            getOrdersByUser();
+          }}
         >
           <ListItemIcon>
-            <PeopleIcon />
+            <ListAltIcon />
           </ListItemIcon>
           <ListItemText primary="คำสั่งซื้อ" />
+        </ListItem>
+
+        <ListItem
+          style={{
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            setScreenComponent("orderToSendList");
+            getMyOrderToSend();
+          }}
+        >
+          <ListItemIcon>
+            <DirectionsBikeIcon />
+          </ListItemIcon>
+          <ListItemText primary="สร้างรายได้" />
         </ListItem>
       </List>
       <Divider orientation="vertical" flexItem sx={{ height: "100vh" }} />

@@ -35,6 +35,7 @@ const DashboardAdminShowSystemSetting = () => {
       image: dropZoneImage || null,
       webName: formData.webName,
       description: formData.description,
+      shippingCost: formData.shippingCost,
     };
 
     if (!data?.image && dropZoneImage === null) {
@@ -55,9 +56,6 @@ const DashboardAdminShowSystemSetting = () => {
     setShowError(false);
     setDropZoneImage(file);
   };
-
-
-
 
   return (
     <div className="-mt-16">
@@ -118,6 +116,16 @@ const DashboardAdminShowSystemSetting = () => {
             variant="outlined"
             margin="normal"
             name="description"
+            required
+          />
+          <TextField
+            defaultValue={data?.shippingCost}
+            type="number"
+            fullWidth
+            label="อัตราค่าจัดส่ง"
+            variant="outlined"
+            margin="normal"
+            name="shippingCost"
             required
           />
           <CardActions sx={{ justifyContent: "center", mt: 2 }}>

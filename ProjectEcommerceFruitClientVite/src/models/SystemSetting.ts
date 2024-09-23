@@ -3,4 +3,5 @@ export interface SystemSetting {
   image?: string | null;
   webName: string;
   description: string;
+  shippingCost: number;
 }

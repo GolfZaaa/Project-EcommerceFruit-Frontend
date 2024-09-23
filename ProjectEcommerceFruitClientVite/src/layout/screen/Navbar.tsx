@@ -18,6 +18,7 @@ export default observer(function Navbar() {
   const { logout, user } = useStore().userStore;
   const { GetCartItemByUser, cartItems } = useStore().cartStore;
   const { token } = useStore().commonStore;
+  const { getOrdersWantToReceipt } = useStore().orderStore;
   const { systemSetting, getSystemSetting, loadings } =
     useStore().systemSettingStore;
 
@@ -36,7 +37,9 @@ export default observer(function Navbar() {
 
   useEffect(() => {
     getSystemSetting();
-    GetCartItemByUser();
+    if (token) {
+      GetCartItemByUser();
+    }
   }, [token]);
 
   return (
@@ -168,7 +171,8 @@ export default observer(function Navbar() {
             </li>
             <li>
               <NavLink
-                to={"/Contact"}
+                to={RoutePath.orderReceiptList}
+                onClick={() => getOrdersWantToReceipt()}
                 className={({ isActive }) =>
                   `text-sm ${
                     isActive
@@ -177,7 +181,7 @@ export default observer(function Navbar() {
                   }`
                 }
               >
-                ติดต่อ
+                สร้างรายได้
               </NavLink>
             </li>
           </ul>

@@ -34,9 +34,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useStore } from "../../store/store";
 import { Order } from "../../models/Order";
 import EditOrderScreen from "./EditOrderScreen";
-import moment from "moment";
-import EditIcon from "@mui/icons-material/Edit";
 import { pathImages } from "../../constants/RoutePath";
+import dayjs from "dayjs";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -158,6 +157,7 @@ const OrderList = () => {
     { id: "description", label: "หมายเลขพัสดุ (tracking)" },
     { id: "createdAt", label: "สร้างเมื่อวันที่" },
     { id: "status", label: "สถานะ" },
+    { id: "confirmReceipt", label: "สถานะพัสดุ" },
     { id: "edit", label: "ตัวเลือก" },
   ];
 
@@ -195,10 +195,11 @@ const OrderList = () => {
               >
                 <TableHead>
                   <TableRow>
-                    {columns.map((column, i) => (
+                    {columns.map((column) => (
                       <TableCell
                         key={column.id}
-                        align={i > 2 ? "center" : "left"}
+                        // align={i > 2 ? "center" : "left"}
+                        align="center"
                       >
                         {column.label}
                       </TableCell>
@@ -214,10 +215,10 @@ const OrderList = () => {
                     : order
                   ).map((row) => (
                     <TableRow key={row.id}>
-                      <TableCell component="th" scope="row">
+                      <TableCell component="th" scope="row" align="center">
                         {row.orderId}
                       </TableCell>
-                      <TableCell component="th" scope="row">
+                      <TableCell component="th" scope="row" align="center">
                         {row.paymentImage ? (
                           <img
                             src={pathImages.paymentImage + row.paymentImage}
@@ -231,22 +232,61 @@ const OrderList = () => {
                         )}
                       </TableCell>
                       <TableCell
-                      // style={{ width: 160 }}
-                      //   align="right"
+                        // style={{ width: 160 }}
+                        align="center"
                       >
-                        {row.tag}
+                        <div
+                          className={
+                            row.status !== 2
+                              ? !!row.tag
+                                ? ""
+                                : "text-yellow-500 bg-yellow-100 border border-yellow-500 px-3 py-1 rounded-full font-semibold"
+                              : ""
+                          }
+                        >
+                          {row.status === 2
+                            ? "ยกเลิกคำสั่งซื้อแล้ว"
+                            : !!row.tag
+                            ? row.tag
+                            : "ยังไม่ได้กรอกหมายเลขพัสดุ"}
+                        </div>
                       </TableCell>
-                      <TableCell>{moment(row.createdAt).format("L")}</TableCell>
-                      <TableCell>
-                        {row.status === 0
-                          ? "กำลังรออนุมัติ"
-                          : row.status === 1
-                          ? "ยืนยันคำสั่งซื้อแล้ว"
-                          : row.status === 2
-                          ? "ยกเลิกคำสั่งซื้อแล้ว"
+                      <TableCell align="center">
+                        {dayjs(row.createdAt)
+                          .add(543, "year")
+                          .format("DD/MM/YYYY")}
+                      </TableCell>
+                      <TableCell align="center">
+                        <div
+                          className={
+                            (row.status === 0
+                              ? "text-yellow-500 bg-yellow-100 border border-yellow-500"
+                              : row.status === 1
+                              ? "text-green-500 bg-green-100 border border-green-500"
+                              : row.status === 2
+                              ? "text-red-500 bg-red-100 border border-red-500"
+                              : "") + " px-3 py-1 rounded-full font-semibold"
+                          }
+                        >
+                          {row.status === 0
+                            ? "กำลังรออนุมัติ"
+                            : row.status === 1
+                            ? "ยืนยันคำสั่งซื้อแล้ว"
+                            : row.status === 2
+                            ? "ยกเลิกคำสั่งซื้อแล้ว"
+                            : "เพิ่มสถานะด้วย"}
+                        </div>
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.confirmReceipt === 0
+                          ? "กำลังดำเนินการ"
+                          : row.confirmReceipt === 1
+                          ? "ได้รับพัสดุแล้ว"
+                          : row.confirmReceipt === 2
+                          ? "ไม่ได้รับพัสดุ"
                           : "เพิ่มสถานะด้วย"}
                       </TableCell>
-                      <TableCell style={{ width: 100 }}>
+                      <TableCell align="center">
                         <Fab
                           variant="extended"
                           color="primary"
@@ -255,8 +295,8 @@ const OrderList = () => {
                             onChangeCU();
                           }}
                         >
-                          <EditIcon sx={{ mr: 1 }} />
-                          แก้ไข
+                          {/* <EditIcon sx={{ mr: 1 }} /> */}
+                          เพิ่มเติม
                         </Fab>
                       </TableCell>
                       {/* <TableCell style={{ width: 100 }}>

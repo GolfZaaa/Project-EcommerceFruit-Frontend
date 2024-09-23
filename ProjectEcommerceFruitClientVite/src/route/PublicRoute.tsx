@@ -19,31 +19,32 @@ import OrderSummary from "../Screen/order/OrderSummary";
 import SuccessComponent from "../layout/component/SuccessComponent";
 import DashboardForUser from "../Screen/my/DashboardForUser";
 import CheckOrderScreen from "../Screen/CheckOrderScreen";
+import OrderReceiptList from "../Screen/order/OrderReceiptList";
 
 export const PublicRoute: any = [
   {
     id: 0,
-    path: "/register-screen",
+    path: RoutePath.registerScreen,
     element: <RegisterScreen />,
   },
   {
     id: 1,
-    path: "/login-screen",
+    path: RoutePath.loginScreen,
     element: <LoginScreen />,
   },
   {
     id: 2,
-    path: "/create-shop-screen",
+    path: RoutePath.createShopScreen,
     element: <CreateShopScreen />,
   },
   {
     id: 3,
-    path: "/success-shop-screen",
+    path: RoutePath.successShopScreen,
     element: <SuccessShopScreen />,
   },
   {
     id: 4,
-    path: "/shop-address-screen",
+    path: RoutePath.shopAddressScreen,
     element: <ShopAddressScreen />,
   },
   // {
@@ -53,12 +54,12 @@ export const PublicRoute: any = [
   // },
   {
     id: 6,
-    path: "/create-product-screen",
+    path: RoutePath.createProductScreen,
     element: <CreateProductScreen />,
   },
   {
     id: 7,
-    path: "/home-screen",
+    path: RoutePath.homeScreen,
     element: <HomeScreen />,
   },
   {
@@ -66,29 +67,29 @@ export const PublicRoute: any = [
     path: "*",
     element: <NotFoundScreen />,
   },
-  {
-    id: 9,
-    path: "/FirstScreen",
-    element: <FirstScreen />,
-  },
+  // {
+  //   id: 9,
+  //   path: "/FirstScreen",
+  //   element: <FirstScreen />,
+  // },
   {
     id: 10,
-    path: "/cart-screen",
+    path: RoutePath.cartScreen,
     element: <CartScreen />,
   },
   {
     id: 11,
-    path: "/product-detail-screen/:id",
+    path: RoutePath.firstscreen + "product-detail-screen/:id",
     element: <ProductDetailScreen />,
   },
   {
     id: 12,
-    path: "/",
+    path: RoutePath.firstscreen,
     element: <FirstScreenNew />,
   },
   {
     id: 13,
-    path: "/Address-screen",
+    path: RoutePath.addressScreen,
     element: <AddressScreen />,
   },
   {
@@ -98,27 +99,32 @@ export const PublicRoute: any = [
   },
   {
     id: 15,
-    path: RoutePath.OrderSummary,
+    path: RoutePath.orderSummary,
     element: <OrderSummary />,
   },
   {
     id: 16,
-    path: "/summary-screen",
+    path: RoutePath.summaryScreen,
     element: <SummaryScreen />,
   },
   {
     id: 17,
-    path: "/order-success-screen",
+    path: RoutePath.successScreen,
     element: <SuccessComponent />,
   },
   {
     id: 18,
-    path: "/dashboard-for-user",
+    path: RoutePath.dashboardforuser,
     element: <DashboardForUser />,
   },
   {
     id: 19,
     path: RoutePath.checkorderScreen,
     element: <CheckOrderScreen />,
+  },
+  {
+    id: 20,
+    path: RoutePath.orderReceiptList,
+    element: <OrderReceiptList />,
   },
 ];

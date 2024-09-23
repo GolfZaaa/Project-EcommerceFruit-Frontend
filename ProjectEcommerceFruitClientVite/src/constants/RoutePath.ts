@@ -14,7 +14,7 @@ export const RoutePath = {
   createFruitGIScreen: `${HOST}create-fruitGI-screen`,
   createProductScreen: `${HOST}create-product-screen`,
   myaccountScreen: `${HOST}my-account-screen`,
-  OrderSummary: `${HOST}order-summary`,
+  orderSummary: `${HOST}order-summary`,
   test: `${HOST}test`,
   successScreen: `${HOST}order-success-screen`,
   checkorderScreen: `${HOST}check-order-user`,
@@ -23,6 +23,8 @@ export const RoutePath = {
   summaryScreen: `${HOST}summary-screen`,
 
   dashboardforuser: `${HOST}dashboard-for-user`,
+
+  orderReceiptList: `${HOST}order-receipt-list`,
 
   productDetail: (id: string) => `${HOST}product-detail-screen/${id}`,
 
