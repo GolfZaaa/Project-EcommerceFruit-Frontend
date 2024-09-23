@@ -7,4 +7,6 @@ export const Shop = {
   GetStoreAll: () => requests.get("Store/StoreAll"),
   deleteStore: (id: any) => requests.delete(`Store/RemoveStoreById?storeId=${id}`),
   GetStoreProductUser: (id: any) => requests.get(`Store/GetStoreProductUser?userid=${id}`),
+  GetStoreDetailByUserId: (id: any) => requests.get(`Store/GetStoreDetailByUserId?userid=${id}`),
+
 };
