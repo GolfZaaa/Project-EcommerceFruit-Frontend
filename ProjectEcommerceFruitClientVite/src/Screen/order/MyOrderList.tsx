@@ -67,7 +67,7 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
         mt={4}
       >
         <Typography variant="h4" component="h1" gutterBottom align="center">
-          คำสั่งซื้อ
+          คำสั่งซื้อของฉัน
         </Typography>
         <Tabs
           value={value}

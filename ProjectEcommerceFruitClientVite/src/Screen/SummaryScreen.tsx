@@ -91,9 +91,7 @@ export default observer(function SummaryScreen() {
   };
 
   const totalPrice = calculateTotalPrice();
-  const formattedTotalPrice = formatNumberWithCommas(
-    totalPrice + systemSetting[0]?.shippingCost
-  );
+  const formattedTotalPrice = formatNumberWithCommas(totalPrice);
 
   const handleImageUpload = (file: any) => {
     setDropZoneImage(file);
@@ -364,6 +362,14 @@ export default observer(function SummaryScreen() {
                         {selectMyCart.length} รายการ
                       </p>
                     </div>
+                    <div className="flex justify-between items-center w-full">
+                      <p className="text-base leading-4 text-gray-800">
+                        ราคารวม
+                      </p>
+                      <p className="text-base leading-4 text-gray-600">
+                        {formattedTotalPrice} บาท
+                      </p>
+                    </div>
 
                     <div className="flex justify-between items-center w-full">
                       <p className="text-base leading-4 text-gray-800">
@@ -379,7 +385,9 @@ export default observer(function SummaryScreen() {
                       ราคารวมทั้งหมด
                     </p>
                     <p className="text-base font-semibold leading-4 text-gray-600">
-                      {formattedTotalPrice} บาท
+                      {parseFloat(formattedTotalPrice) +
+                        systemSetting[0]?.shippingCost}{" "}
+                      บาท
                     </p>
                   </div>
 
