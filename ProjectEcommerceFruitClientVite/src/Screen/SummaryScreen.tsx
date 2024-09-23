@@ -91,10 +91,7 @@ export default observer(function SummaryScreen() {
   };
 
   const totalPrice = calculateTotalPrice();
-
-  const formattedTotalPrice = formatNumberWithCommas(
-    totalPrice + systemSetting[0]?.shippingCost
-  );
+  const formattedTotalPrice = formatNumberWithCommas(totalPrice);
 
   const handleImageUpload = (file: any) => {
     setDropZoneImage(file);
@@ -395,7 +392,7 @@ export default observer(function SummaryScreen() {
                         ค่าจัดส่ง
                       </p>
                       <p className="text-base leading-4 text-gray-600">
-                        {systemSetting[0]?.shippingCost} บาท
+                        {formattedTotalPrice} บาท
                       </p>
                     </div>
                   </div>

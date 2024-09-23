@@ -34,9 +34,13 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
   const { confirmOrder, cancelOrder } = useStore().orderStore;
   const { systemSetting } = useStore().systemSettingStore;
 
-  const [trackingId, setTrackingId] = useState(dataEdit?.tag || null);
+  const [trackingId, setTrackingId] = useState(
+    dataEdit?.tag || "จัดส่งผ่านผู้รับหิ้ว"
+  );
 
-  const [selectCate, setSelectCate] = useState(dataEdit?.shippingType || null);
+  const [selectCate, setSelectCate] = useState(
+    dataEdit?.shippingType || "อื่น ๆ"
+  );
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -65,6 +69,11 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
   };
 
   const onSelectCate = (name: string) => {
+    if (name === "อื่น ๆ") {
+      setTrackingId("จัดส่งผ่านผู้รับหิ้ว");
+    } else {
+      setTrackingId("");
+    }
     setSelectCate(name);
   };
 
@@ -113,8 +122,6 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
       // );
 
       total = item.product.price * item.quantity + total;
-
-      console.log("total :: ", total);
 
       return total;
     }, 0);
@@ -191,7 +198,7 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                     <InputLabel>เลือกบริษัทขนส่ง</InputLabel>
                     <Select
                       label="เลือกบริษัทขนส่ง"
-                      defaultValue={dataEdit?.shippingType}
+                      defaultValue={dataEdit?.shippingType || "อื่น ๆ"}
                     >
                       {categorySend.map((item) => (
                         <MenuItem
@@ -221,7 +228,8 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    defaultValue={trackingId || "จัดส่งผ่านผู้รับหิ้ว"}
+                    value={trackingId}
+                    defaultValue={trackingId}
                     fullWidth
                     onChange={(e) => setTrackingId(e.target.value)}
                     label="หมายเลขพัสดุ (tracking)"
@@ -229,7 +237,7 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                     margin="normal"
                     name="tag"
                     // autoFocus
-                    // required
+                    required
                     disabled={
                       dataEdit?.status === 0 ||
                       !!dataEdit?.tag ||
