@@ -106,6 +106,7 @@ export default observer(function HomeScreen() {
     }, 700);
   };
 
+
   return (
     <>
       <>
@@ -423,6 +424,7 @@ export default observer(function HomeScreen() {
                       </div>
                     </div>
                   )}
+
                 </div>
 
                 {taps === "taps1" && (
