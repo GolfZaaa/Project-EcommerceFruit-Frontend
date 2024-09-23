@@ -22,11 +22,15 @@ export const RoutePath = {
   addressScreen: `${HOST}Address-screen`,
   summaryScreen: `${HOST}summary-screen`,
 
+
   dashboardforuser: `${HOST}dashboard-for-user`,
 
   orderReceiptList: `${HOST}order-receipt-list`,
 
   productDetail: (id: string) => `${HOST}product-detail-screen/${id}`,
+  shopDetail: (id: string) => `${HOST}shop-detail-screen/${id}`,
+  // shopdetailScreen: `${HOST}shop-detail-screen`,
+
 
   createshop: `${HOST}create-shop`,
   cartScreen: `${HOST}cart-screen`,
