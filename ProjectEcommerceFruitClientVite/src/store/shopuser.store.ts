@@ -13,6 +13,7 @@ export default class ShopUserStore {
   usershop: Store | null = null;
   shopAll: Store[] = [];
   shopProductUser: Product[] = [];
+  shopProductDetail: Store[] | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -62,6 +63,15 @@ export default class ShopUserStore {
       const result = await agent.Shop.GetStoreProductUser(id);
       this.shopProductUser = result;
       this.getStoreAll();
+    } catch (error) {
+      return error;
+    }
+  };
+
+  GetStoreDetailByUserId = async (id: number | undefined) => {
+    try {
+      const result = await agent.Shop.GetStoreDetailByUserId(id);
+      this.shopProductDetail = result;
     } catch (error) {
       return error;
     }

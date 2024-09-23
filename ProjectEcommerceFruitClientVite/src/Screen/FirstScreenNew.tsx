@@ -20,7 +20,6 @@ import { useNavigate } from "react-router-dom";
 import { pathImages, RoutePath } from "../constants/RoutePath";
 import { Product } from "../models/Product";
 import { motion, useAnimation } from "framer-motion";
-const images = [image1, image2, image3];
 
 const settingsImageSlide = {
   dots: false,

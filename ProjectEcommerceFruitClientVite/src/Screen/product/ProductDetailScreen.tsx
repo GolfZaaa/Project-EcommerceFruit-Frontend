@@ -1,18 +1,57 @@
 import { observer } from "mobx-react-lite";
-import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useStore } from "../../store/store";
 import { Button, Typography, Box } from "@mui/material";
 import ToastAdd from "../../layout/component/ToastAdd";
-import { pathImages } from "../../constants/RoutePath";
+import { pathImages, RoutePath } from "../../constants/RoutePath";
 import { FaPlus } from "react-icons/fa6";
 import { Product } from "../../models/Product";
 import CircularProgress from "@mui/material/CircularProgress";
+import { GrNext, GrPrevious } from "react-icons/gr";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/th";
+dayjs.extend(relativeTime);
+dayjs.locale("th");
 
 export default observer(function ProductDetailScreen() {
+  const navigate = useNavigate();
   const { getProductById, productDetail, DeleteProduct, addStockProduct } =
     useStore().productStore;
   const { user } = useStore().userStore;
+  const {
+    GetStoreProductUser,
+    shopProductUser,
+    GetStoreDetailByUserId,
+    shopProductDetail,
+  } = useStore().shopuserStore;
+  const { getOrderByStore, order } = useStore().orderStore;
+  const { product, getProduct } = useStore().productStore;
+
+  useEffect(() => {
+    getProduct(0);
+    GetStoreDetailByUserId(productDetail?.productGI.store.userId);
+    if (productDetail?.productGI.store.id) {
+      getOrderByStore(productDetail?.productGI.store.id);
+    }
+  }, [getProduct, productDetail]);
+
+  const OrderByStore = order.filter((x) => x.status === 1).length;
+
+  const totalQuantity = order.reduce((total, currentOrder) => {
+    const orderItemsQuantity = currentOrder.orderItems.reduce(
+      (sum, item) => sum + item.quantity,
+      0
+    );
+    return total + orderItemsQuantity;
+  }, 0);
+
+  const createdAt = dayjs(shopProductDetail?.[0]?.createdAt);
+  const timeAgo = createdAt ? createdAt.fromNow() : "N/A";
+  
+  
+
   const { AddToCart, GetCartItemByUser, loadingCart } = useStore().cartStore;
   const { id } = useParams<{ id: any }>();
 
@@ -48,11 +87,8 @@ export default observer(function ProductDetailScreen() {
         setTimeout(() => {
           setShowToast(false);
         }, 3000);
-        // console.log("Successfully added to cart");
       } else {
-        // console.log("Failed to add to cart");
       }
-      // console.log(result);
     } catch (error) {
       alert("Failed to add product to cart.");
     }
@@ -91,6 +127,10 @@ export default observer(function ProductDetailScreen() {
     );
   }, [id]);
 
+  useEffect(() => {
+    GetStoreProductUser(productDetail?.productGI.store.userId);
+  }, [productDetail]);
+
   const [openModel, setOpenModel] = useState(false);
 
   const handlemodel = async (product: any) => {
@@ -110,6 +150,63 @@ export default observer(function ProductDetailScreen() {
       setShowToast(false);
     }, 3000);
   };
+
+  const NavigateDetail = (product: any) => {
+    navigate(RoutePath.productDetail(product.id));
+  };
+
+  const carouselRef: any = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const itemsPerPage = 4;
+
+  const handleNext = () => {
+    const remainingItems = shopProductUser.filter(
+      (x) => x.id !== productDetail?.id
+    ).length;
+    if (currentIndex < remainingItems - itemsPerPage) {
+      setCurrentIndex((prevIndex) =>
+        Math.min(prevIndex + 1, remainingItems - itemsPerPage)
+      );
+      carouselRef.current.scrollBy({
+        left: carouselRef.current.offsetWidth,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+      carouselRef.current.scrollBy({
+        left: -carouselRef.current.offsetWidth,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const isDisabled =
+    currentIndex >=
+    shopProductUser.filter((x) => x.id !== productDetail?.id).length - 1;
+
+  const [visibleCount, setVisibleCount] = useState(8);
+
+  const loadMore = () => {
+    setVisibleCount((x) => x + 4);
+  };
+
+  const filteredProducts = product.filter(
+    (x) =>
+      x.quantity > 0 &&
+      x.status === true &&
+      x.id != productDetail?.id &&
+      x.productGI.category.name === productDetail?.productGI.category.name &&
+      x.productGI.store.userId != user?.id
+  );
+
+
+  const handleShopDetail = (item:any) => {
+    navigate(RoutePath.shopDetail(item[0].userId))
+  }
 
   return (
     <div className="bg-gray-100 py-12 2xl:px-20 md:px-6 px-4">
@@ -270,26 +367,6 @@ export default observer(function ProductDetailScreen() {
                               </button>
                             </div>
                           </div>
-
-                          {/* <div>
-                            <label
-                              htmlFor="category"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                            >
-                              ประเภท
-                            </label>
-                            <select
-                              id="category"
-                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            >
-                              <option selected="">Select category</option>
-                              <option value="TV">TV/Monitors</option>
-                              <option value="PC">PC</option>
-                              <option value="GA">Gaming/Console</option>
-                              <option value="PH">Phones</option>
-                            </select>
-                          </div> */}
-
                           <div>
                             <label
                               htmlFor="price"
@@ -595,135 +672,210 @@ export default observer(function ProductDetailScreen() {
             </div>
 
             <div className="flex-grow">
-              <h1 className="text-2xl font-bold">อวิรุทธ์ การช่าง</h1>
+              <h1 className="text-2xl font-bold">{shopProductDetail?.[0]?.name}</h1>
             </div>
 
             <div className="flex space-x-2">
-              <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-semibold border">
-                ดูร้านค้า
-              </button>
-            </div>
+  <button 
+    onClick={() => handleShopDetail(shopProductDetail)}  
+    className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-semibold border hover:bg-gray-200 hover:text-gray-800"
+  >
+    ดูร้านค้า
+  </button>
+</div>
+
           </div>
 
           <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-6">
             <div>
               <p className="text-gray-500">จำนวนสินค้าที่ถูกซื้อ</p>
-              <p className="text-red-500 text-xl font-bold">19.8พัน</p>
+              <p className="text-red-500 text-xl font-bold">
+                {totalQuantity.toLocaleString()}
+              </p>
             </div>
 
             <div>
               <p className="text-gray-500">รายการสินค้า</p>
-              <p className="text-red-500 text-xl font-bold">284</p>
+              <p className="text-red-500 text-xl font-bold">
+                {shopProductUser.length.toLocaleString()}
+              </p>
             </div>
 
             <div>
               <p className="text-gray-500">ยอดการสั่งซื้อ</p>
-              <p className="text-red-500 text-xl font-bold">9.2พัน</p>
+              <p className="text-red-500 text-xl font-bold">
+                {OrderByStore.toLocaleString()}
+              </p>
             </div>
 
             <div>
               <p className="text-gray-500">เข้าร่วมเมื่อ</p>
-              <p className="text-red-500 text-xl font-bold">4 ปี ที่ผ่านมา</p>
+              <p className="text-red-500 text-xl font-bold">{timeAgo}</p>
             </div>
           </div>
         </div>
       </div>
 
       <div className="bg-white mt-5">
-  <div className="ml-12 pt-5 text-2xl mb-3">
-    <p>สินค้าจากร้านเดียวกัน</p>
-  </div>
-  <div className="flex ml-6">
-    <div className="ml-7 mb-9 w-64 max-w-custom-size overflow-hidden rounded-lg bg-white border relative">
-      <div className="shadow-md relative">
-        <a href="#">
-          <img
-            className="h-48 w-full rounded-t-lg object-cover"
-            src="https://www.thaisook.org/wp-content/uploads/2023/05/2-3.png.webp"
-            alt="product image"
-          />
-        </a>
-        <span className="absolute top-0 left-0 w-28 translate-y-6 -translate-x-6 -rotate-45 bg-red-500 text-center text-sm text-white z-10">
-          ยอดนิยม
-        </span>
-        <div className="mt-4 px-3 pb-5">
-          <a href="#">
-            <h5 className="text-base font-semibold tracking-tight text-slate-900">
-              ผลฉุ้ย
-            </h5>
-          </a>
-          <div className="flex items-center justify-between mt-10">
-            <p>
-              <span className="text-xl font-bold text-slate-900">$249</span>
-            </p>
-            <button className="flex items-center rounded-md bg-slate-900 px-4 py-2.5 text-center text-xs font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="mr-2 h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-              เพิ่มสินค้าลงตะกร้า
-            </button>
+        <div className="ml-12 pt-5 text-2xl mb-3 flex justify-between">
+          <p>สินค้าจากร้านเดียวกัน</p>
+          <div className="mr-10 flex cursor-pointer">
+            <p className="font-semibold text-sm text-red-500">ดูทั้งหมด</p>
+            <GrNext className="text-red-500" />
+          </div>
+        </div>
+
+        <div className="relative">
+          <button
+            onClick={handlePrev}
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-green-700 rounded-full p-2"
+            disabled={currentIndex <= 0}
+          >
+            <GrPrevious className="text-white" />
+          </button>
+
+          <div ref={carouselRef} className="flex overflow-hidden">
+            {shopProductUser &&
+              shopProductUser
+                .filter((x) => x.id !== productDetail?.id)
+                .slice(currentIndex, currentIndex + itemsPerPage)
+                .map((item, _) => (
+                  <div
+                    onClick={() => NavigateDetail(item)}
+                    key={item.id}
+                    className=" m-custom-marginleft mb-9 w-64 max-w-custom-size overflow-hidden rounded-lg bg-white border relative cursor-pointer"
+                  >
+                    <div className="shadow-md relative">
+                      <img
+                        className="h-48 w-full rounded-t-lg object-cover"
+                        src={pathImages.product + item.images}
+                        alt="product image"
+                      />
+                      {user &&
+                      user?.id == productDetail?.productGI?.store?.userId ? (
+                        <span className="absolute top-0 left-0 w-28 translate-y-6 -translate-x-6 -rotate-45 bg-red-500 text-center text-sm text-white z-10">
+                          สินค้าของคุณ
+                        </span>
+                      ) : (
+                        <div></div>
+                      )}
+
+                      <div className="mt-4 px-3 pb-5">
+                        <h5 className="text-base font-semibold tracking-tight text-slate-900">
+                          {item.productGI.name}
+                        </h5>
+                        <div className="flex items-center justify-between mt-10">
+                          <p>
+                            <span className="text-xl font-bold text-slate-900">
+                              ฿{item.price}
+                            </span>
+                          </p>
+                          <button className="flex items-center rounded-md bg-slate-900 px-4 py-2.5 text-center text-xs font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="mr-2 h-4 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                              />
+                            </svg>
+                            เพิ่มสินค้าลงตะกร้า
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+          </div>
+
+          <button
+            onClick={handleNext}
+            className={`absolute right-0 top-1/2 transform -translate-y-1/2 z-10 rounded-full p-2 ${
+              isDisabled ? "bg-gray-400" : "bg-green-700"
+            }`}
+            disabled={isDisabled}
+          >
+            <GrNext className="text-white" />
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-white mt-5">
+        <div className="ml-12 pt-5 text-2xl mb-3 flex justify-between">
+          <p>สินค้าใกล้เคียงกัน</p>
+        </div>
+
+        <div className="relative">
+          <div className="flex overflow-hidden">
+            <div className="grid grid-cols-4 gap-4">
+              {filteredProducts.slice(0, visibleCount).map((item) => (
+                <div
+                  onClick={() => NavigateDetail(item)}
+                  key={item.id}
+                  className="m-4 w-64 max-w-full overflow-hidden rounded-lg bg-white border relative cursor-pointer"
+                >
+                  <div className="shadow-md relative">
+                    <img
+                      className="h-48 w-full rounded-t-lg object-cover"
+                      src={pathImages.product + item.images}
+                      alt="product image"
+                    />
+                    {/* <span className="absolute top-0 left-0 w-28 translate-y-6 -translate-x-6 -rotate-45 bg-red-500 text-center text-sm text-white z-10">
+                      ยอดนิยม
+                    </span> */}
+                    <div className="mt-4 px-3 pb-5">
+                      <h5 className="text-base font-semibold tracking-tight text-slate-900">
+                        {item.productGI.name}
+                      </h5>
+                      <div className="flex items-center justify-between mt-10">
+                        <p>
+                          <span className="text-xl font-bold text-slate-900">
+                            ฿{item.price}
+                          </span>
+                        </p>
+                        <button className="flex items-center rounded-md bg-slate-900 px-4 py-2.5 text-center text-xs font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="mr-2 h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                            />
+                          </svg>
+                          เพิ่มสินค้าลงตะกร้า
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div className="ml-7 mb-9 w-64 max-w-custom-size overflow-hidden rounded-lg bg-white border relative">
-      <div className="shadow-md relative">
-        <a href="#">
-          <img
-            className="h-48 w-full rounded-t-lg object-cover"
-            src="https://www.thaisook.org/wp-content/uploads/2023/05/2-3.png.webp"
-            alt="product image"
-          />
-        </a>
-        <span className="absolute top-0 left-0 w-28 translate-y-6 -translate-x-6 -rotate-45 bg-red-500 text-center text-sm text-white z-10">
-        ยอดนิยม
-        </span>
-        <div className="mt-4 px-3 pb-5">
-          <a href="#">
-            <h5 className="text-base font-semibold tracking-tight text-slate-900">
-              ผลมุ้ย
-            </h5>
-          </a>
-          <div className="flex items-center justify-between mt-10">
-            <p>
-              <span className="text-xl font-bold text-slate-900">$249</span>
-            </p>
-            <button className="flex items-center rounded-md bg-slate-900 px-4 py-2.5 text-center text-xs font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="mr-2 h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-              เพิ่มสินค้าลงตะกร้า
-            </button>
-          </div>
+      {visibleCount < filteredProducts.length && (
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={loadMore}
+            className="rounded-md bg-white px-4 py-2 text-black hover:bg-gray-300 w-96 border border-gray-300"
+          >
+            ดูเพิ่มเติม
+          </button>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-
+      )}
     </div>
   );
 });

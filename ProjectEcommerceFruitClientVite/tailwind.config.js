@@ -6,6 +6,9 @@ export default {
       maxWidth: {
         'custom-size' : '265px',
       },
+      margin: {
+        'custom-marginleft' : '35px',
+      },
     },
   },
   plugins: [],
