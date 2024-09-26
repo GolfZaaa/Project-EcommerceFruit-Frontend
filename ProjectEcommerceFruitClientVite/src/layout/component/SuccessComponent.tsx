@@ -5,6 +5,8 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
 
 // import { Player, Controls } from '@lottiefiles/react-lottie-player';
+import animationData from '../../assets/successorder.mp4'
+import { resetScroll } from "../../api/agent";
 import animationData from "../../assets/successorder.mp4";
 
 export default observer(function SuccessComponent() {
@@ -12,6 +14,7 @@ export default observer(function SuccessComponent() {
 
   const handleToProductScreen = () => {
     navigate(RoutePath.homeScreen);
+    resetScroll();
   };
 
   const [currentTime, setCurrentTime] = useState(new Date());

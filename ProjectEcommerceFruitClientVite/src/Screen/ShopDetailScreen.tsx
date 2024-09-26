@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { pathImages, RoutePath } from "../constants/RoutePath";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Product } from "../models/Product";
+import { resetScroll } from "../api/agent";
 
 export default observer(function ShopDetailScreen() {
   const { id: userId } = useParams<{ id: any }>();
@@ -68,6 +69,7 @@ export default observer(function ShopDetailScreen() {
 
   const NavigateDetail = (product: any) => {
     navigate(RoutePath.productDetail(product.id));
+    resetScroll();
   };
 
   const navigate = useNavigate();

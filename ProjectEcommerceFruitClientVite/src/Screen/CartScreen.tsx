@@ -5,6 +5,7 @@ import { useStore } from "../store/store";
 import { NavLink, useNavigate } from "react-router-dom";
 import { pathImages, RoutePath } from "../constants/RoutePath";
 import BannerComponent from "../layout/component/BannerComponent";
+import { resetScroll } from "../api/agent";
 
 // Define types for cart items and products
 interface Product {
@@ -183,10 +184,12 @@ export default observer(function CartScreen() {
 
   const handleToOrderSummary = () => {
     navigate(RoutePath.orderSummary);
+    resetScroll();
   };
 
   const handleBackHomeScreen = () => {
     navigate(RoutePath.homeScreen);
+    resetScroll();
   }
 
   return (
@@ -195,7 +198,7 @@ export default observer(function CartScreen() {
       <section className="bg-white py-8 antialiased md:py-16">
         <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
           <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">
-            ตะกร้าสินค้า ({cartItems.length})
+             ตะกร้าสินค้า ({cartItems.length})
           </h2>
 
           <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">

@@ -9,6 +9,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/th";
+import { resetScroll } from "../api/agent";
 import MyLottie from "../helper/components/MyLottie";
 dayjs.extend(relativeTime);
 
@@ -56,6 +57,7 @@ export default observer(function HomeScreen() {
 
   const NavigateDetail = (product: any) => {
     navigate(RoutePath.productDetail(product.id));
+    resetScroll();
   };
 
   if (!Array.isArray(product) || !Array.isArray(category)) {
