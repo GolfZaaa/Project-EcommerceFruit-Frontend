@@ -3,6 +3,14 @@ import { createFormData, createFormDataUseMyName, requests } from "./agent";
 export const Order = {
   getOrdersByUser: () => requests.get("Order/GetOrdersByUser"),
   getOrdersWantToReceipt: () => requests.get("Order/GetOrdersWantToReceipt"),
+  searchOrdersWantToReceipt: (values: {
+    district?: string | null;
+    subDistrict?: string | null;
+  }) =>
+    requests.getFormAny(
+      "Order/SearchOrdersWantToReceipt",
+      createFormData(values)
+    ),
   getMyOrderToSend: () => requests.get("Order/GetMyOrderToSend"),
   getOrderByStore: (storeId: number) =>
     requests.get(`Order/GetOrdersByStore?storeId=${storeId}`),

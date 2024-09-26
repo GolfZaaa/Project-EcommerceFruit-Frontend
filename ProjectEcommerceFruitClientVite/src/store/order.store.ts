@@ -38,6 +38,22 @@ export default class OrderStore {
     }
   };
 
+  searchOrdersWantToReceipt = async (values: {
+    district?: string | null;
+    subDistrict?: string | null;
+  }) => {
+    this.setLoadingOrder(true);
+    try {
+      const result = await agent.Order.searchOrdersWantToReceipt(values);
+      this.order = result;
+
+      this.setLoadingOrder(false);
+    } catch (error) {
+      this.setLoadingOrder(false);
+      return error;
+    }
+  };
+
   getMyOrderToSend = async () => {
     try {
       const result = await agent.Order.getMyOrderToSend();

@@ -25,12 +25,12 @@ import MyOrderList from "../order/MyOrderList";
 import EditAccount from "../my/EditAccount";
 import DashboardForUser from "../my/DashboardForUser";
 import MyOrderToSendList from "../order/MyOrderToSendList";
+import SearchOrderToSendList from "../order/SearchOrderToSendList";
 
 const drawerWidth = 240;
 
 const MyAccountScreen = () => {
   const { getAddressByUserId } = useStore().addressStore;
-  const { getUserDetailbyId } = useStore().userStore;
   const { order, getOrdersByUser, getMyOrderToSend } = useStore().orderStore;
 
   const [screenComponent, setScreenComponent] = useState("my-dashboard");
@@ -47,6 +47,8 @@ const MyAccountScreen = () => {
         return <MyOrderList order={order} />;
       case "orderToSendList":
         return <MyOrderToSendList order={order} />;
+      case "searchorderToSendList":
+        return <SearchOrderToSendList />;
       case "my-account":
         return <EditAccount />;
       case "my-dashboard":
@@ -127,6 +129,21 @@ const MyAccountScreen = () => {
             <DirectionsBikeIcon />
           </ListItemIcon>
           <ListItemText primary="สร้างรายได้" />
+        </ListItem>
+
+        <ListItem
+          style={{
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            setScreenComponent("searchorderToSendList");
+            getMyOrderToSend();
+          }}
+        >
+          <ListItemIcon>
+            <DirectionsBikeIcon />
+          </ListItemIcon>
+          <ListItemText primary="รับ-ส่งต่อ คำสั่งซื้อ" />
         </ListItem>
       </List>
       <Divider orientation="vertical" flexItem sx={{ height: "100vh" }} />

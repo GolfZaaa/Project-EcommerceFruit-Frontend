@@ -1,18 +1,26 @@
 import { observer } from "mobx-react-lite";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useStore } from "../../store/store";
 import NotFoundScreen from "../NotFoundScreen";
 import MyCardOrderReceipt from "./MyCardOrderReceipt";
-import { Typography } from "@mui/material";
+import { Typography, TextField, Button, Grid } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import Backdrop from "@mui/material/Backdrop";
+import Lottie from "react-lottie";
+import lottiteEmpty from "../../assets/lotties/lf20_qh5z2fdq.json";
+import MyLottie from "../../helper/components/MyLottie";
 
 const OrderReceiptList = () => {
   const { token } = useStore().commonStore;
-  const { order, getOrdersWantToReceipt, loadingOrder } = useStore().orderStore;
+  const { order, searchOrdersWantToReceipt, loadingOrder } =
+    useStore().orderStore;
+
+  const [district, setDistrict] = useState<string | null>(null);
+  const [subDistrict, setSubDistrict] = useState<string | null>(null);
 
   useEffect(() => {
-    getOrdersWantToReceipt();
+    setDistrict(null);
+    setSubDistrict(null);
+    searchOrdersWantToReceipt({ district: district, subDistrict: subDistrict });
   }, []);
 
   const data = order?.map((item: any) => ({
@@ -20,7 +28,9 @@ const OrderReceiptList = () => {
     address: item?.address,
   }));
 
-  console.log("order", order);
+  const onSearchOrder = () => {
+    searchOrdersWantToReceipt({ district: district, subDistrict: subDistrict });
+  };
 
   return token === null ? (
     <NotFoundScreen name={"เข้าสู่ระบบก่อน"} />
@@ -53,20 +63,86 @@ const OrderReceiptList = () => {
             padding: "0 20px 0 20px",
           }}
         >
+          <Typography
+            variant="h5"
+            component="h3"
+            gutterBottom
+            align="left"
+            color={"red"}
+            marginBottom={-1}
+          >
+            ค้นหาพื้นที่ที่คุณกำลังจะไป
+          </Typography>
           <div
             style={{
               fontSize: 30,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: "red",
               marginBottom: 20,
             }}
           >
-            พื้นที่ทำค้นหาที่อยู่ร้านค้า
+            <Grid container spacing={2}>
+              <Grid item xs={5}>
+                <TextField
+                  value={district}
+                  fullWidth
+                  label="อำเภอ"
+                  margin="normal"
+                  name="district"
+                  onChange={(e) => setDistrict(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={5}>
+                <TextField
+                  value={subDistrict}
+                  fullWidth
+                  label="ตำบล"
+                  margin="normal"
+                  name="subDistrict"
+                  onChange={(e) => setSubDistrict(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <div
+                  style={{
+                    marginTop: 15,
+                  }}
+                >
+                  <Button
+                    style={{
+                      padding: 15,
+                    }}
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    fullWidth
+                    onClick={() => onSearchOrder()}
+                  >
+                    ค้นหา
+                  </Button>
+                </div>
+              </Grid>
+            </Grid>
           </div>
-
-          {data?.length ? <MyCardOrderReceipt data={data} /> : <></>}
+          {data?.length ? (
+            <MyCardOrderReceipt data={data} />
+          ) : (
+            <div>
+              <MyLottie lottieFile={lottiteEmpty} />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  fontSize: 30,
+                }}
+              >
+                ไม่มีสินค้าที่รับหิ้วได้
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

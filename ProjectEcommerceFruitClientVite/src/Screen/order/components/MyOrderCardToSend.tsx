@@ -72,6 +72,8 @@ const MyOrderCardToSend = ({ order, index }: props) => {
         Swal.fire("ส่งเรียบร้อยแล้ว", "ท่านส่งสินค้าเรียบร้อยแล้ว", "success");
 
         changeConfirmSendOrder({ ...select.map((item) => item) });
+
+        setSelect([]);
       }
     });
   };
@@ -102,7 +104,36 @@ const MyOrderCardToSend = ({ order, index }: props) => {
             marginBottom: 35,
           }}
         >
-          <Grid item xs={10.3}></Grid>
+          <Grid item xs={7.6}>
+            <Typography variant="h5">จำนวนที่เลือก {select.length}</Typography>
+          </Grid>
+          <Grid item xs={2.7}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <input
+                type="checkbox"
+                className="mr-2"
+                style={{
+                  width: 50,
+                  height: 50,
+                }}
+                checked={select.length === order.length}
+                onChange={() =>
+                  select.length === order.length
+                    ? setSelect([])
+                    : setSelect(order.map((item) => item.id))
+                }
+              />
+              <Typography variant="h5" align="left">
+                เลือกทั้งหมด
+              </Typography>
+            </div>
+          </Grid>
           <Grid item xs={1.7}>
             <Fab variant="extended" color="primary" onClick={handleConfirm}>
               <EditIcon sx={{ mr: 1 }} />
@@ -160,25 +191,32 @@ const MyOrderCardToSend = ({ order, index }: props) => {
 
                 <div className="flex justify-between items-center mb-3">
                   <p className="text-base leading-4 text-gray-800">
-                    ได้รับค่าจัดส่ง :
-                  </p>
-                  <p className="text-base leading-4 text-gray-600">
-                    {" "}
-                    {item?.shippings[0]?.shippingFee} บาท
+                    ได้รับค่าจัดส่ง : {item?.shippings[0]?.shippingFee} บาท
                   </p>
                 </div>
 
                 {index === 1 && (
-                  <input
-                    type="checkbox"
-                    className="mr-2"
+                  <div
                     style={{
-                      width: 50,
-                      height: 50,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
-                    checked={select.find((x) => x === item.id) !== undefined}
-                    onChange={() => onSelect(item.id)}
-                  />
+                  >
+                    <input
+                      type="checkbox"
+                      className="mr-2"
+                      style={{
+                        width: 50,
+                        height: 50,
+                      }}
+                      checked={select.find((x) => x === item.id) !== undefined}
+                      onChange={() => onSelect(item.id)}
+                    />
+                    <Typography variant="h5" align="left">
+                      เลือกสินค้า
+                    </Typography>
+                  </div>
                 )}
               </div>
 
@@ -234,6 +272,21 @@ const MyOrderCardToSend = ({ order, index }: props) => {
               formattedTotalPrice={parseFloat(formattedTotalPrice)}
               ShippingFee={item?.shippings[0]?.shippingFee}
             />
+            <div className="flex-1">
+              <p className="text-xl leading-4 text-gray-800 font-medium">
+                ชื่อ-ที่อยู่ลูกค้า : {item?.address?.user?.fullName} เบอร์ :{" "}
+                {item?.address?.user?.phoneNumber} บ้านเลขที่{" "}
+                {item?.address?.detail} แขวง/ตำบล
+                {item?.address?.subDistrict} เขต/อำเภอ
+                {item?.address?.district}
+                <br />
+                <div className="mt-4">
+                  จังหวัด
+                  {item?.address?.province} รหัสไปรษณีย์{" "}
+                  {item?.address?.postCode}
+                </div>
+              </p>
+            </div>
             {/* <div className="rounded-sm flex flex-col px-4 xl:p-6 w-full bg-white">
               <div className="flex justify-between items-center w-full mb-3">
                 <p className="text-base leading-4 text-gray-800">ราคารวม</p>

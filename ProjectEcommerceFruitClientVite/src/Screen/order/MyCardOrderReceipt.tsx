@@ -94,12 +94,28 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
             key={i}
             className="mb-5 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6"
           >
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div className="md:flex md:justify-between">
-                <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
+                <Typography
+                  variant="h5"
+                  align="left"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  className="text-lg font-semibold text-gray-900 dark:text-gray-900"
+                >
                   รหัสคำสั่งซื้อ : {item.order.orderId}
-                </span>
-                <span
+                </Typography>
+                <Typography
+                  variant="h5"
+                  align="left"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
                   className={
                     "text-lg font-semibold text-gray-900 dark:text-" +
                     (item.order.status === 0
@@ -120,20 +136,32 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
                     : item.order.status === 2
                     ? "ยกเลิกคำสั่งซื้อแล้ว"
                     : "เพิ่มสถานะด้วย"}
-                </span>
-                <input
-                  type="checkbox"
-                  className="mr-2"
+                </Typography>
+                <div
                   style={{
-                    width: 50,
-                    height: 50,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  checked={
-                    select.find((x) => x === item.order.id) !== undefined
-                  }
-                  onChange={() => onSelect(item.order.id)}
-                />
+                >
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    style={{
+                      width: 50,
+                      height: 50,
+                    }}
+                    checked={
+                      select.find((x) => x === item.order.id) !== undefined
+                    }
+                    onChange={() => onSelect(item.order.id)}
+                  />
+                  <Typography variant="h5" align="left">
+                    เลือกสินค้า
+                  </Typography>
+                </div>
               </div>
+
               {item?.order?.orderItems?.map((item: OrderItem) => {
                 const TotalPriceForProduct = item.product.price * item.quantity;
                 const formatTotalPriceForProduct =
@@ -181,6 +209,7 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
                   </div>
                 );
               })}
+
               <div className="rounded-sm flex flex-col px-4 xl:p-6 w-full bg-white">
                 <div className="flex justify-between items-center w-full mb-3">
                   <p className="text-base leading-4 text-gray-800">ราคารวม</p>
@@ -216,7 +245,7 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
                 <div className="flex-1">
                   <p className="text-xl leading-4 text-gray-800 font-medium">
                     ชื่อ-ที่อยู่ร้านค้า : {item.address?.user?.fullName} เบอร์ :{" "}
-                    {item.address?.user?.phoneNumber}
+                    {item.address?.user?.phoneNumber} บ้านเลขที่{" "}
                     {item.address?.detail} แขวง/ตำบล
                     {item.address?.subDistrict} เขต/อำเภอ
                     {item.address?.district} จังหวัด
@@ -224,6 +253,18 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
                     {item.address?.postCode}
                   </p>
                 </div>
+              </div>
+
+              <div className="flex-1">
+                <p className="text-xl leading-4 text-gray-800 font-medium">
+                  ชื่อ-ที่อยู่ลูกค้า : {item?.order?.address?.user?.fullName}{" "}
+                  เบอร์ : {item?.order?.address?.user?.phoneNumber} บ้านเลขที่{" "}
+                  {item?.order?.address?.detail} แขวง/ตำบล
+                  {item?.order?.address?.subDistrict} เขต/อำเภอ
+                  {item?.order?.address?.district} จังหวัด
+                  {item?.order?.address?.province} รหัสไปรษณีย์{" "}
+                  {item?.order?.address?.postCode}
+                </p>
               </div>
             </div>
           </div>

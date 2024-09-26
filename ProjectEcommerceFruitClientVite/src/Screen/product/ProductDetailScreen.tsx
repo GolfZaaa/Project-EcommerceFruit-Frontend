@@ -55,9 +55,9 @@ export default observer(function ProductDetailScreen() {
 
   const [showToast, setShowToast] = useState(false);
   const [checkToast, setCheckToast] = useState("");
-  const [preViewImage, setPreViewImage] = useState(
-    productDetail && pathImages.product + productDetail?.images
-  );
+
+  const [preViewImage, setPreViewImage] = useState<any>(null);
+
   const [addquantity, setAddQuantity] = useState<any>();
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
@@ -116,13 +116,12 @@ export default observer(function ProductDetailScreen() {
   };
 
   useEffect(() => {
+    window.scroll(0, 0);
+
     const getProduct = async () => {
       await getProductById(id);
     };
     getProduct();
-    setPreViewImage(
-      productDetail && pathImages.product + productDetail?.images
-    );
   }, [id]);
 
   useEffect(() => {
@@ -219,11 +218,16 @@ export default observer(function ProductDetailScreen() {
     <div className="bg-gray-100 py-12 2xl:px-20 md:px-6 px-4">
       <div className="md:flex items-start justify-center py-12 2xl:px-20 md:px-6 px-4 bg-white">
         {showToast && <ToastAdd Check={checkToast} />}
-        <div className="xl:w-2/6 lg:w-2/5 w-80 md:block hidden">
+        {/* <div className="xl:w-2/6 lg:w-2/5 w-80 md:block hidden"> */}
+        <div>
           <img
-            className="w-80 h-96 rounded-t-lg object-cover"
+            className="h-96 rounded-t-lg object-cover"
             alt="image main"
-            src={pathImages.product + productDetail?.images}
+            src={
+              preViewImage
+                ? preViewImage
+                : pathImages.product + productDetail?.images
+            }
           />
           <div className="flex mt-2 space-x-4">
             {productDetail?.productGI.images.map((item) => (

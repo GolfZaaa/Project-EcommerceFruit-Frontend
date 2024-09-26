@@ -9,7 +9,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/th";
+import MyLottie from "../helper/components/MyLottie";
 dayjs.extend(relativeTime);
+
+import lottiteEmpty from "../assets/lotties/lf20_qh5z2fdq.json";
 
 export default observer(function HomeScreen() {
   const navigate = useNavigate();
@@ -17,14 +20,15 @@ export default observer(function HomeScreen() {
   const { product, getProduct, category, getCategory } =
     useStore().productStore;
 
-  const { user, setLoadingUser, loadingUser, getUserDetailbyId } = useStore().userStore;
+  const { user, setLoadingUser, loadingUser, getUserDetailbyId } =
+    useStore().userStore;
 
   const { GetStoreProductUser, shopProductUser } = useStore().shopuserStore;
 
   useEffect(() => {
     getProduct(0);
     getCategory();
-    getUserDetailbyId()
+    getUserDetailbyId();
     if (user?.id !== undefined) {
       GetStoreProductUser(user?.id);
     }
@@ -101,7 +105,6 @@ export default observer(function HomeScreen() {
       setLoadingUser(false);
     }, 700);
   };
-
 
   return (
     <>
@@ -420,95 +423,111 @@ export default observer(function HomeScreen() {
                       </div>
                     </div>
                   )}
-
                 </div>
 
                 {taps === "taps1" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-                    {filteredProducts.filter(x=>x.productGI.store.hidden != true).map((product, i: number) => {
-                      const userid = user?.id;
-                      const timePassed = dayjs(product.createdAt)
-                        .locale("th")
-                        .fromNow();
+                  <>
+                    {filteredProducts.length ? (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+                        {filteredProducts
+                          .filter((x) => x.productGI.store.hidden != true)
+                          .map((product, i: number) => {
+                            const userid = user?.id;
+                            const timePassed = dayjs(product.createdAt)
+                              .locale("th")
+                              .fromNow();
 
-                      return (
-                        <div
-                          key={i}
-                          onClick={() => NavigateDetail(product)}
-                          className="rounded overflow-hidden shadow-lg flex flex-col cursor-pointer"
-                        >
-                          <div className="relative">
-                            <img
-                              className="w-full h-72 "
-                              src={pathImages.product + product.images}
-                              alt="Sunset in the mountains"
-                            />
-                            <div className="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
-                            <div className="text-xs absolute top-0 right-0 bg-indigo-600 px-4 py-2 text-white mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                              {product.productGI.category.name}
-                            </div>
+                            return (
+                              <div
+                                key={i}
+                                onClick={() => NavigateDetail(product)}
+                                className="rounded overflow-hidden shadow-lg flex flex-col cursor-pointer"
+                              >
+                                <div className="relative">
+                                  <img
+                                    className="w-full h-72 "
+                                    src={pathImages.product + product.images}
+                                    alt="Sunset in the mountains"
+                                  />
+                                  <div className="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
+                                  <div className="text-xs absolute top-0 right-0 bg-indigo-600 px-4 py-2 text-white mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
+                                    {product.productGI.category.name}
+                                  </div>
 
-                            {userid == product?.productGI?.store?.user?.id && (
-                              <div className="absolute top-0 left-0 bg-green-600 px-4 py-2 text-white mt-3 ml-3 text-xs font-bold rounded">
-                                สินค้าของคุณ
-                              </div>
-                            )}
-                          </div>
-                          <div className="px-6 py-4 mb-auto">
-                            <div className="font-medium text-lg hover:text-indigo-600 transition duration-500 ease-in-out flex justify-between mb-2">
-                              <span>{product.productGI.name}</span>
+                                  {userid ==
+                                    product?.productGI?.store?.user?.id && (
+                                    <div className="absolute top-0 left-0 bg-green-600 px-4 py-2 text-white mt-3 ml-3 text-xs font-bold rounded">
+                                      สินค้าของคุณ
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="px-6 py-4 mb-auto">
+                                  <div className="font-medium text-lg hover:text-indigo-600 transition duration-500 ease-in-out flex justify-between mb-2">
+                                    <span>{product.productGI.name}</span>
 
-                              <span>{product.price} บาท</span>
-                            </div>
+                                    <span>{product.price} บาท</span>
+                                  </div>
 
-                            {/* <p className="text-gray-500 text-sm">
+                                  {/* <p className="text-gray-500 text-sm">
                               {product.detail.replace(/<\/?[^>]+(>|$)/g, "")}
                             </p> */}
-                          </div>
-                          <div className="px-6 py-3 flex flex-row items-center justify-between bg-gray-100">
-                            <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
-                              <svg
-                                height="13px"
-                                width="13px"
-                                version="1.1"
-                                id="Layer_1"
-                                xmlns="http://www.w3.org/2000/svg"
-                                x="0px"
-                                y="0px"
-                                viewBox="0 0 512 512"
-                              >
-                                <g>
-                                  <g>
-                                    <path d="M256,0C114.837,0,0,114.837,0,256s114.837,256,256,256s256-114.837,256-256S397.163,0,256,0z M277.333,256 c0,11.797-9.536,21.333-21.333,21.333h-85.333c-11.797,0-21.333-9.536-21.333-21.333s9.536-21.333,21.333-21.333h64v-128 c0-11.797,9.536-21.333,21.333-21.333s21.333,9.536,21.333,21.333V256z"></path>
-                                  </g>
-                                </g>
-                              </svg>
-                              <span className="ml-1">{timePassed}</span>
-                            </span>
+                                </div>
+                                <div className="px-6 py-3 flex flex-row items-center justify-between bg-gray-100">
+                                  <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
+                                    <svg
+                                      height="13px"
+                                      width="13px"
+                                      version="1.1"
+                                      id="Layer_1"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      x="0px"
+                                      y="0px"
+                                      viewBox="0 0 512 512"
+                                    >
+                                      <g>
+                                        <g>
+                                          <path d="M256,0C114.837,0,0,114.837,0,256s114.837,256,256,256s256-114.837,256-256S397.163,0,256,0z M277.333,256 c0,11.797-9.536,21.333-21.333,21.333h-85.333c-11.797,0-21.333-9.536-21.333-21.333s9.536-21.333,21.333-21.333h64v-128 c0-11.797,9.536-21.333,21.333-21.333s21.333,9.536,21.333,21.333V256z"></path>
+                                        </g>
+                                      </g>
+                                    </svg>
+                                    <span className="ml-1">{timePassed}</span>
+                                  </span>
 
-                            <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
-                              <svg
-                                className="h-5"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-                                ></path>
-                              </svg>
-                              <span className="ml-1">
-                                {product.sold} ยอดขาย
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                                  <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
+                                    <svg
+                                      className="h-5"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                    >
+                                      <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+                                      ></path>
+                                    </svg>
+                                    <span className="ml-1">
+                                      {product.sold} ยอดขาย
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    ) : (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <MyLottie lottieFile={lottiteEmpty} />
+                      </div>
+                    )}
+                  </>
                 )}
 
                 {taps === "taps2" && (

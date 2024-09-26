@@ -18,7 +18,7 @@ export default observer(function Navbar() {
   const { logout, user } = useStore().userStore;
   const { GetCartItemByUser, cartItems } = useStore().cartStore;
   const { token } = useStore().commonStore;
-  const { getOrdersWantToReceipt } = useStore().orderStore;
+  const { searchOrdersWantToReceipt } = useStore().orderStore;
   const { systemSetting, getSystemSetting, loadings } =
     useStore().systemSettingStore;
 
@@ -172,7 +172,12 @@ export default observer(function Navbar() {
             <li>
               <NavLink
                 to={RoutePath.orderReceiptList}
-                onClick={() => getOrdersWantToReceipt()}
+                onClick={() =>
+                  searchOrdersWantToReceipt({
+                    district: null,
+                    subDistrict: null,
+                  })
+                }
                 className={({ isActive }) =>
                   `text-sm ${
                     isActive

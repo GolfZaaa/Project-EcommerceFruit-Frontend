@@ -241,10 +241,12 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                     disabled={
                       dataEdit?.status === 0 ||
                       !!dataEdit?.tag ||
-                      dataEdit?.status == 2
+                      dataEdit?.status == 2 ||
+                      selectCate === "อื่น ๆ"
                     }
                   />
                 </Grid>
+
                 <Grid item xs={12}>
                   <label>ที่อยู่ผู้สั่งซื้อ</label>
                   <Typography gutterBottom align="left">

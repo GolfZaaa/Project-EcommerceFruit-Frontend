@@ -4,25 +4,22 @@ import { useStore } from "../store/store";
 import { pathImages } from "../constants/RoutePath";
 
 export default observer(function CheckOrderScreen() {
+  const { checkOrderNow, getOrderItemByOrderId, orderid } =
+    useStore().orderStore;
 
-    const {
-        checkOrderNow,
-        getOrderItemByOrderId,
-        orderid
-      } = useStore().orderStore;
+  //   console.log("orderid",orderid)
 
-    //   console.log("orderid",orderid)
+  useEffect(() => {
+    getOrderItemByOrderId(orderid);
+    // getOrderItemByOrderId(23)
+  }, []);
 
-      useEffect(() => {
-        getOrderItemByOrderId(orderid)
-        // getOrderItemByOrderId(23)
-      }, []);
+  console.log("checkOrderNow", checkOrderNow);
 
-      console.log("checkOrderNow",checkOrderNow)
-
-      const totalOrderPrice = checkOrderNow?.reduce((acc, item) => {
-        const totalPriceProduct = item.quantity * item.product.price;
-        return acc + totalPriceProduct;
+  const totalOrderPrice =
+    checkOrderNow?.reduce((acc, item) => {
+      const totalPriceProduct = item.quantity * item.product.price;
+      return acc + totalPriceProduct;
     }, 0) ?? 0;
 
   return (
@@ -34,17 +31,13 @@ export default observer(function CheckOrderScreen() {
           </h2>
           <div className="mt-6 sm:mt-8 lg:flex lg:gap-8">
             <div className="w-full divide-y divide-gray-200 overflow-hidden rounded-lg border border-gray-200 dark:divide-gray-700 dark:border-gray-700 lg:max-w-xl xl:max-w-2xl flex flex-col h-full">
-              
-
-
-            {checkOrderNow.map((item,i) => {
+              {checkOrderNow.map((item) => {
                 const totalPriceProduct = item.quantity * item.product.price;
                 return (
-<div className="flex-1 space-y-4 p-6">
-                
-                <div className="flex justify-between">
+                  <div className="flex-1 space-y-4 p-6">
+                    <div className="flex justify-between">
                       <div className="flex items-center gap-6">
-                        <div  className="h-14 w-14 shrink-0">
+                        <div className="h-14 w-14 shrink-0">
                           <img
                             className="hidden h-full w-full dark:block"
                             src={pathImages.product + item.product.images}
@@ -60,42 +53,31 @@ export default observer(function CheckOrderScreen() {
                       <div className="flex items-center">
                         <div className="flex h-12 justify-center gap-x-6 dark:text-white">
                           <button className="group flex h-min items-center disabled:opacity-50 disabled:hover:opacity-50 hover:opacity-95 justify-center ring-none rounded-lg shadow-lg font-semibold py-1 px-4 font-dm focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-violet-500 border-b-violet-700 disabled:border-0 disabled:bg-violet-500 disabled:text-white ring-white text-white border-b-4 hover:border-0 active:border-0 hover:text-gray-100 active:bg-green-500 active:text-white focus-visible:outline-green-500 text-sm sm:text-base dark:bg-green-600 dark:border-green-600 dark:border-b-green-900">
-                              ซื้ออีกครั้ง
-                            </button>
+                            ซื้ออีกครั้ง
+                          </button>
                         </div>
                       </div>
-                </div>
-                
+                    </div>
 
-                <div className="flex items-center justify-between gap-4">
-                  <p className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                    <span className="font-medium text-gray-900 dark:text-black">
-                      ประเภทสินค้า :
-                    </span>{" "}
-                    {item.product.productGI.category.name}
-                  </p>
-                  <div className="flex items-center justify-end gap-4">
-                    <p className="text-base font-normal text-gray-900 dark:text-black">
-                      x{item.quantity}
-                    </p>
-                    <p className="text-xl font-bold leading-tight text-gray-900 dark:text-black">
-                      {totalPriceProduct.toLocaleString()} บาท
-                    </p>
+                    <div className="flex items-center justify-between gap-4">
+                      <p className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                        <span className="font-medium text-gray-900 dark:text-black">
+                          ประเภทสินค้า :
+                        </span>{" "}
+                        {item.product.productGI.category.name}
+                      </p>
+                      <div className="flex items-center justify-end gap-4">
+                        <p className="text-base font-normal text-gray-900 dark:text-black">
+                          x{item.quantity}
+                        </p>
+                        <p className="text-xl font-bold leading-tight text-gray-900 dark:text-black">
+                          {totalPriceProduct.toLocaleString()} บาท
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-                )
-            })}
-
-
-              
-
-
-
-
-
-
-
+                );
+              })}
 
               <div className="space-y-4 bg-gray-50 p-6 flex-shrink-0">
                 <div className="space-y-2">
@@ -146,7 +128,7 @@ export default observer(function CheckOrderScreen() {
                       </svg>
                     </span>
                     <h4 className="mb-0.5 text-base font-semibold text-gray-900 dark:text-black">
-                    20 ตุลาคม 2567, 10:45
+                      20 ตุลาคม 2567, 10:45
                     </h4>
                     <p className="text-sm font-normal text-gray-500 dark:text-gray-400">
                       ส่งสินค้าสำเร็จ
@@ -173,10 +155,10 @@ export default observer(function CheckOrderScreen() {
                       </svg>
                     </span>
                     <h4 className="mb-0.5 text-base font-semibold text-gray-900 dark:text-black">
-                    19 ตุลาคม 2567, 17:00
+                      19 ตุลาคม 2567, 17:00
                     </h4>
                     <p className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                    สินค้าที่กำลังจัดส่ง
+                      สินค้าที่กำลังจัดส่ง
                     </p>
                   </li>
                   <li className="mb-10 ms-6 text-primary-700 dark:text-primary-500">
@@ -199,10 +181,10 @@ export default observer(function CheckOrderScreen() {
                         />
                       </svg>
                     </span>
-                    <h4 className="mb-0.5 font-semibold">19 ตุลาคม 2567, 15:15</h4>
-                    <p className="text-sm">
-                       
-                    </p>
+                    <h4 className="mb-0.5 font-semibold">
+                      19 ตุลาคม 2567, 15:15
+                    </h4>
+                    <p className="text-sm"></p>
                   </li>
                   <li className="mb-10 ms-6 text-primary-700 dark:text-primary-500">
                     <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full ring-8 ring-white dark:bg-blue-300 dark:ring-white">
@@ -225,11 +207,9 @@ export default observer(function CheckOrderScreen() {
                       </svg>
                     </span>
                     <h4 className="mb-0.5 text-base font-semibold">
-                        19 ตุลาคม 2567, 12:27
+                      19 ตุลาคม 2567, 12:27
                     </h4>
-                    <p className="text-sm">
-                       
-                    </p>
+                    <p className="text-sm"></p>
                   </li>
                   <li className="mb-10 ms-6 text-primary-700 dark:text-primary-500">
                     <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full ring-8 ring-white dark:bg-blue-300 dark:ring-white">
@@ -251,10 +231,10 @@ export default observer(function CheckOrderScreen() {
                         />
                       </svg>
                     </span>
-                    <h4 className="mb-0.5 font-semibold">19 ตุลาคม 2567, 10:47</h4>
-                    <p className="text-sm">
-                      อนุมัติคำสั่งซื้อ
-                    </p>
+                    <h4 className="mb-0.5 font-semibold">
+                      19 ตุลาคม 2567, 10:47
+                    </h4>
+                    <p className="text-sm">อนุมัติคำสั่งซื้อ</p>
                   </li>
                   <li className="ms-6 text-primary-700 dark:text-primary-500">
                     <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full ring-8 ring-white dark:bg-blue-300 dark:ring-white">
@@ -280,9 +260,7 @@ export default observer(function CheckOrderScreen() {
                       <h4 className="mb-0.5 font-semibold">
                         19 ตุลาคม 2567, 10:45
                       </h4>
-                      <a
-                        className="text-sm font-medium hover:underline"
-                      >
+                      <a className="text-sm font-medium hover:underline">
                         มีคำสั่งซื้อใหม่ #{orderid}
                       </a>
                     </div>
@@ -306,4 +284,4 @@ export default observer(function CheckOrderScreen() {
       </section>
     </div>
   );
-})
+});

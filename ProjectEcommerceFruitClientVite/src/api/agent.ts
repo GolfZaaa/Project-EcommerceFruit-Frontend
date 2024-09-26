@@ -49,6 +49,8 @@ export const createFormDataUseMyName = (item: any, name: string) => {
 export const requests = {
   get: (url: string, params?: URLSearchParams) =>
     axios.get(url, { params }).then(responseBody),
+  getFormAny: (url: string, params?: any) =>
+    axios.get(url, { params }).then(responseBody),
   post: (url: string, params: {}) => axios.post(url, params).then(responseBody),
   onlyPost: (url: string) => axios.post(url).then(responseBody),
   put: (url: string, params: {}) => axios.put(url, params).then(responseBody),

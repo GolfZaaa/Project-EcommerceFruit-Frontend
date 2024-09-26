@@ -1,15 +1,5 @@
-import {
-  Container,
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  CardActions,
-  Button,
-} from "@mui/material";
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
-import { RoutePath } from "../../constants/RoutePath";
+import { Container, Box, Card, CardContent, Typography } from "@mui/material";
+import { useEffect } from "react";
 import { useStore } from "../../store/store";
 
 export default function SuccessShopScreen() {
