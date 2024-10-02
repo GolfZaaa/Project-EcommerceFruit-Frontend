@@ -231,7 +231,7 @@ export default observer(function DashboardShopScreen() {
       .filter((x) => x.status === 1)
       .forEach((orderItem) => {
         orderItem.orderItems.forEach((item) => {
-          const categoryName = item.product.productGI.category.name;
+          const categoryName = item.product?.productGI?.category?.name;
           if (!categoryQuantities[categoryName]) {
             categoryQuantities[categoryName] = 0;
           }

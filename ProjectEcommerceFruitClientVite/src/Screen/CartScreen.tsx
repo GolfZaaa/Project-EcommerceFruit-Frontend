@@ -6,6 +6,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { pathImages, RoutePath } from "../constants/RoutePath";
 import BannerComponent from "../layout/component/BannerComponent";
 import { resetScroll } from "../api/agent";
+import CircularProgress from "@mui/material/CircularProgress";
 
 // Define types for cart items and products
 interface Product {
@@ -183,14 +184,22 @@ export default observer(function CartScreen() {
   };
 
   const handleToOrderSummary = () => {
+    setLoadingUser(true)
+    setTimeout(() => {
+      setLoadingUser(false)
     navigate(RoutePath.orderSummary);
     resetScroll();
+    }, 700);
   };
 
   const handleBackHomeScreen = () => {
     navigate(RoutePath.homeScreen);
     resetScroll();
   }
+
+  const { setLoadingUser, loadingUser } =
+  useStore().userStore;
+
 
   return (
     <div>
@@ -397,14 +406,14 @@ export default observer(function CartScreen() {
                   </div>
                   <button
                     onClick={handleToOrderSummary}
-                    disabled={!checkedItem}
+                    disabled={!checkedItem && loadingUser}
                     className={`flex w-full items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium text-white focus:outline-none focus:ring-4 ${
                       !checkedItem
                         ? "bg-gray-400 cursor-not-allowed"
                         : "bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 dark:bg-green-500 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                     }`}
                   >
-                    ดำเนินการชำระเงิน
+                   {loadingUser ? <div><CircularProgress size={17} color="inherit" /></div>:<div><p>ดำเนินการชำระเงิน</p></div>} 
                   </button>
                   <div className="flex items-center justify-center gap-2">
                     <span className="text-sm font-normal text-gray-800 dark:text-gray-800">

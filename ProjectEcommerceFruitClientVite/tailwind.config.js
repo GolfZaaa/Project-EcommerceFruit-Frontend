@@ -9,6 +9,13 @@ export default {
       margin: {
         'custom-marginleft' : '35px',
       },
+      height: {
+        '15': '15px', 
+      },
+      padding: {
+        '23': '23px', 
+        '22': '22px', 
+      },
     },
   },
   plugins: [],

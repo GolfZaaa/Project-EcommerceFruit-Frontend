@@ -31,6 +31,7 @@ export default observer(function DashboardForUser() {
     getOrdersByUser();
   }, []);
 
+
   useEffect(() => {
     if (order) {
       const total = order
@@ -108,6 +109,8 @@ export default observer(function DashboardForUser() {
       setMonthlyOrderData(monthlyData);
     }
   }, [order, selectedYear]);
+
+
 
   const handleYearChange = (selectedOption: any) => {
     setSelectedYear(selectedOption.value);

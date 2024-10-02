@@ -5,10 +5,8 @@ import {
   CardContent,
   Switch,
   Fab,
-  Container,
   TextField,
   Button,
-  Typography,
   Box,
 } from "@mui/material";
 import { observer } from "mobx-react-lite";
@@ -33,6 +31,8 @@ const AddressList = ({ confirmChangeAddress }: any) => {
     getAddressByUserId,
     getAddressgotoOrderByUserId,
   } = useStore().addressStore;
+
+  const {loadings} = useStore().systemSettingStore
 
   const [form, setForm] = useState(false);
   const [dataEdit, setDataEdit] = useState<Address | null>(null);
@@ -296,8 +296,18 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           color="primary"
           size="large"
           fullWidth
+          disabled={loadings}
         >
-          บันทึก
+         {loadings ? (
+  <div className="flex justify-center items-center h-full mt-1 mb-1">
+    <CircularProgress className="flex items-center" size={18} color="inherit" />
+  </div>
+) : (
+  <div className="flex justify-center items-center h-full ">
+    <p>บันทึก</p>
+    </div>
+)}
+
         </Button>
       </Box>
     </>

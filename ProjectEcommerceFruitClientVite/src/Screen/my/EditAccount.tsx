@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { TextField, Box, CardActions, Button, Card } from "@mui/material";
 import { useStore } from "../../store/store";
 import { myToast } from "../../helper/components";
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface props {
   onChangeCU?: any;
@@ -11,6 +12,7 @@ interface props {
 
 const EditAccount = ({ onChangeCU, userEdit }: props) => {
   const { user, editUser } = useStore().userStore;
+  const {loadings} = useStore().systemSettingStore
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -67,8 +69,9 @@ const EditAccount = ({ onChangeCU, userEdit }: props) => {
             color="primary"
             size="large"
             fullWidth
+            disabled={loadings}
           >
-            บันทึก
+            {loadings ? <div><CircularProgress size={17} color="inherit" /></div>:<div>บันทึก</div>} 
           </Button>
         </CardActions>
       </Card>

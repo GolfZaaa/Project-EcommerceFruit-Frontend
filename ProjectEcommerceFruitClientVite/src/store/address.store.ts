@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import agent from "../api/agent";
 import { Address } from "../models/Address";
+import { store } from "./store";
 
 export default class AddressStore {
   address: Address | null = null;
@@ -44,8 +45,10 @@ export default class AddressStore {
   };
 
   createUpdateAddress = async (values: any) => {
+    store.systemSettingStore.setLoading(true);
     try {
       const result = await agent.Address.createUpdateAddress(values);
+    store.systemSettingStore.setLoading(false);
       return result;
     } catch (error) {
       return error;
