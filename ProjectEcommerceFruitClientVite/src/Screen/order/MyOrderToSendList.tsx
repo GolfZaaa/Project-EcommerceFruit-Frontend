@@ -416,13 +416,17 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
 
   const [sortOption, setSortOption] = useState("quantity_desc");
 
-  const [selectedSorting, setSelectedSorting] = useState(sortingOptions[0].label);
+  const [selectedSorting, setSelectedSorting] = useState(
+    sortingOptions[0].label
+  );
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSortOption(event.target.value);
-    const selectedOption = sortingOptions.find(option => option.value === event.target.value);
+    const selectedOption = sortingOptions.find(
+      (option) => option.value === event.target.value
+    );
     if (selectedOption) {
-      setSelectedSorting(selectedOption.label); 
+      setSelectedSorting(selectedOption.label);
     }
   };
 
@@ -825,7 +829,10 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
                   </div>
                 </div>
 
-                <div id="downloadButton" className="flex justify-center items-center mt-5">
+                <div
+                  id="downloadButton"
+                  className="flex justify-center items-center mt-5"
+                >
                   <button
                     onClick={generatePDF}
                     className="  bg-blue-500 text-white rounded-md w-full flex justify-center items-center p-2"

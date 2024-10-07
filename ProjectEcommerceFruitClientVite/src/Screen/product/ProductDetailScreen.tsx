@@ -12,7 +12,12 @@ import { GrNext, GrPrevious } from "react-icons/gr";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/th";
-import { fontSizeBiglittle, fontSizenormal, fontSizesmall, resetScroll } from "../../api/agent";
+import {
+  fontSizeBiglittle,
+  fontSizenormal,
+  fontSizesmall,
+  resetScroll,
+} from "../../api/agent";
 import MyDescription from "../../component/MyDescription";
 import { motion } from "framer-motion";
 
@@ -228,6 +233,9 @@ export default observer(function ProductDetailScreen() {
         <div>
           <img
             className="h-96 rounded-t-lg object-cover"
+            style={{
+              width: 545,
+            }}
             alt="image main"
             src={
               preViewImage
@@ -256,7 +264,10 @@ export default observer(function ProductDetailScreen() {
         <div className="xl:w-2/5 md:w-1/2 lg:ml-8 md:ml-6 md:mt-0 mt-6">
           <div className="border-b border-gray-200 pb-6 flex justify-between">
             <div>
-              <p className="text-sm leading-none text-gray-600" style={{fontSize:fontSizesmall}}>
+              <p
+                className="text-sm leading-none text-gray-600"
+                style={{ fontSize: fontSizesmall }}
+              >
                 {productDetail && productDetail?.productGI?.category.name}
               </p>
               <h1
@@ -269,7 +280,7 @@ export default observer(function ProductDetailScreen() {
 							text-gray-800
 							mt-2
 						"
-            style={{fontSize:fontSizeBiglittle}}
+                style={{ fontSize: fontSizeBiglittle }}
               >
                 {productDetail && productDetail?.productGI?.name}
               </h1>
@@ -467,7 +478,11 @@ export default observer(function ProductDetailScreen() {
           <div>
             <p className="xl:pr-48 text-base lg:leading-tight leading-normal text-gray-600 mt-7">
               {/* {productDetail?.detail.replace(/<\/?[^>]+(>|$)/g, "")} */}
-             {productDetail?.detail ? <MyDescription text={productDetail?.detail} /> : <div></div>} 
+              {productDetail?.detail ? (
+                <MyDescription text={productDetail?.detail} />
+              ) : (
+                <div></div>
+              )}
             </p>
             <p className="text-base leading-4 mt-4 text-gray-600">
               ขายแล้ว : {productDetail?.sold} ชิ้น
@@ -541,7 +556,11 @@ export default observer(function ProductDetailScreen() {
                 }
                 id="sect"
               >
-                {productDetail?.productGI?.description ? <MyDescription text={productDetail?.productGI?.description} /> : <div></div>}
+                {productDetail?.productGI?.description ? (
+                  <MyDescription text={productDetail?.productGI?.description} />
+                ) : (
+                  <div></div>
+                )}
                 {/* <MyDescription text={productDetail?.productGI?.description} /> */}
               </div>
             </div>
@@ -685,111 +704,110 @@ export default observer(function ProductDetailScreen() {
         </div>
       </div>
 
-
-
-
-
-
       {RecommendProducts.length > 0 && (
-  <div className="bg-white mt-5">
-    <div className="ml-12 pt-5 text-2xl mb-3 flex justify-between">
-      <p>สินค้าจากร้านเดียวกัน</p>
-      <div className="mr-10 flex cursor-pointer" onClick={() => handleShopDetail(shopProductDetail)}>
-        <p className="font-semibold text-sm text-red-500">ดูทั้งหมด</p>
-        <GrNext className="text-red-500" />
-      </div>
-    </div>
-
-    <div className="relative">
-      <button
-        onClick={handlePrev}
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-green-700 rounded-full p-2"
-        disabled={currentIndex <= 0}
-      >
-        <GrPrevious className="text-white" />
-      </button>
-
-      <motion.div 
-        ref={carouselRef} 
-        className="flex overflow-hidden"
-        transition={{ type: 'tween', duration: 0.5 }} // กำหนด transition
-      >
-        {RecommendProducts.slice(currentIndex, currentIndex + itemsPerPage).map((item) => (
-          <motion.div
-            onClick={() => NavigateDetail(item)}
-            key={item.id}
-            className="m-custom-marginleft mb-9 w-64 max-w-custom-size overflow-hidden rounded-lg bg-white border relative cursor-pointer"
-            initial={{ opacity: 0, y: 20 }} // เริ่มต้นด้วยความโปร่งใส 0 และเลื่อนขึ้นเล็กน้อย
-            animate={{ opacity: 1, y: 0 }} // เปลี่ยนเป็นโปร่งใส 1 และกลับมาอยู่ที่ตำแหน่งเดิม
-            exit={{ opacity: 0, y: -20 }} // เมื่อเลิกแสดงให้ลดความโปร่งใสและเลื่อนขึ้นเล็กน้อย
-            transition={{ duration: 0.5 }} // ใช้เวลาประมาณ 0.5 วินาทีในการทำให้โปร่งใส
-          >
-            {/* เนื้อหาสินค้า */}
-            <div className="shadow-md relative">
-              <img
-                className="h-48 w-full rounded-t-lg object-cover"
-                src={pathImages.product + item.images}
-                alt="product image"
-              />
-              {user && user?.id === productDetail?.productGI?.store?.userId ? (
-                <span className="absolute top-0 left-0 w-28 translate-y-6 -translate-x-6 -rotate-45 bg-red-500 text-center text-sm text-white z-10">
-                  สินค้าของคุณ
-                </span>
-              ) : null}
-
-              <div className="mt-4 px-3 pb-5">
-                <h5 className="text-base font-semibold tracking-tight text-slate-900" style={{ fontSize: fontSizenormal }}>
-                  {item.productGI.name}
-                </h5>
-                <div className="flex items-center justify-between mt-10">
-                  <p>
-                    <span className="text-xl font-bold text-slate-900">
-                      ฿{item.price.toLocaleString()}
-                    </span>
-                  </p>
-                  <button className="flex items-center rounded-md bg-slate-900 px-4 py-2.5 text-center text-xs font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="mr-2 h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                      />
-                    </svg>
-                    {/* เพิ่มสินค้าลงตะกร้า */}
-                    รายละเอียดสินค้า
-                  </button>
-                </div>
-              </div>
+        <div className="bg-white mt-5">
+          <div className="ml-12 pt-5 text-2xl mb-3 flex justify-between">
+            <p>สินค้าจากร้านเดียวกัน</p>
+            <div
+              className="mr-10 flex cursor-pointer"
+              onClick={() => handleShopDetail(shopProductDetail)}
+            >
+              <p className="font-semibold text-sm text-red-500">ดูทั้งหมด</p>
+              <GrNext className="text-red-500" />
             </div>
-          </motion.div>
-        ))}
-      </motion.div>
+          </div>
 
-      <button
-        onClick={handleNext}
-        className={`absolute right-0 top-1/2 transform -translate-y-1/2 z-10 rounded-full p-2 ${
-          isDisabled ? "bg-gray-400" : "bg-green-700"
-        }`}
-        disabled={isDisabled}
-      >
-        <GrNext className="text-white" />
-      </button>
-    </div>
-  </div>
-)}
+          <div className="relative">
+            <button
+              onClick={handlePrev}
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-green-700 rounded-full p-2"
+              disabled={currentIndex <= 0}
+            >
+              <GrPrevious className="text-white" />
+            </button>
 
+            <motion.div
+              ref={carouselRef}
+              className="flex overflow-hidden"
+              transition={{ type: "tween", duration: 0.5 }} // กำหนด transition
+            >
+              {RecommendProducts.slice(
+                currentIndex,
+                currentIndex + itemsPerPage
+              ).map((item) => (
+                <motion.div
+                  onClick={() => NavigateDetail(item)}
+                  key={item.id}
+                  className="m-custom-marginleft mb-9 w-64 max-w-custom-size overflow-hidden rounded-lg bg-white border relative cursor-pointer"
+                  initial={{ opacity: 0, y: 20 }} // เริ่มต้นด้วยความโปร่งใส 0 และเลื่อนขึ้นเล็กน้อย
+                  animate={{ opacity: 1, y: 0 }} // เปลี่ยนเป็นโปร่งใส 1 และกลับมาอยู่ที่ตำแหน่งเดิม
+                  exit={{ opacity: 0, y: -20 }} // เมื่อเลิกแสดงให้ลดความโปร่งใสและเลื่อนขึ้นเล็กน้อย
+                  transition={{ duration: 0.5 }} // ใช้เวลาประมาณ 0.5 วินาทีในการทำให้โปร่งใส
+                >
+                  {/* เนื้อหาสินค้า */}
+                  <div className="shadow-md relative">
+                    <img
+                      className="h-48 w-full rounded-t-lg object-cover"
+                      src={pathImages.product + item.images}
+                      alt="product image"
+                    />
+                    {user &&
+                    user?.id === productDetail?.productGI?.store?.userId ? (
+                      <span className="absolute top-0 left-0 w-28 translate-y-6 -translate-x-6 -rotate-45 bg-red-500 text-center text-sm text-white z-10">
+                        สินค้าของคุณ
+                      </span>
+                    ) : null}
 
+                    <div className="mt-4 px-3 pb-5">
+                      <h5
+                        className="text-base font-semibold tracking-tight text-slate-900"
+                        style={{ fontSize: fontSizenormal }}
+                      >
+                        {item.productGI.name}
+                      </h5>
+                      <div className="flex items-center justify-between mt-10">
+                        <p>
+                          <span className="text-xl font-bold text-slate-900">
+                            ฿{item.price.toLocaleString()}
+                          </span>
+                        </p>
+                        <button className="flex items-center rounded-md bg-slate-900 px-4 py-2.5 text-center text-xs font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="mr-2 h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                            />
+                          </svg>
+                          {/* เพิ่มสินค้าลงตะกร้า */}
+                          รายละเอียดสินค้า
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
 
-
-
-      
+            <button
+              onClick={handleNext}
+              className={`absolute right-0 top-1/2 transform -translate-y-1/2 z-10 rounded-full p-2 ${
+                isDisabled ? "bg-gray-400" : "bg-green-700"
+              }`}
+              disabled={isDisabled}
+            >
+              <GrNext className="text-white" />
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="bg-white mt-5">
         <div className="ml-12 pt-5 text-2xl mb-3 flex justify-between">
@@ -815,7 +833,10 @@ export default observer(function ProductDetailScreen() {
                       ยอดนิยม
                     </span> */}
                     <div className="mt-4 px-3 pb-5">
-                      <h5 className="text-base font-semibold tracking-tight text-slate-900" style={{fontSize:fontSizenormal}}>
+                      <h5
+                        className="text-base font-semibold tracking-tight text-slate-900"
+                        style={{ fontSize: fontSizenormal }}
+                      >
                         {item.productGI.name}
                       </h5>
                       <div className="flex items-center justify-between mt-10">

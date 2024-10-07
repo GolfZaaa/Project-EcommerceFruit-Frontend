@@ -6,6 +6,7 @@ import { RoutePath } from "../constants/RoutePath";
 import ToastLoginRegister from "../layout/component/ToastLoginRegister";
 import CircularProgress from "@mui/material/CircularProgress";
 import "./css/register-style.css";
+import { resetScroll } from "../api/agent";
 
 export default observer(function LoginScreen() {
   const navigate = useNavigate();

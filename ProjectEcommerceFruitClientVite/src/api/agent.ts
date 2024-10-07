@@ -16,17 +16,11 @@ export const pathImageProduct = "https://localhost:7168/product/";
 
 export const pathImagepayment = "https://localhost:7168/paymentImage/";
 
-export const resetScroll = () => {
-  window.scrollTo(0, 0);
-}
+export const fontSizenormal = "20px";
 
-export const fontSizenormal = "20px"
+export const fontSizesmall = "15px";
 
-export const fontSizesmall= "15px"
-
-export const fontSizeBiglittle= "25px"
-
-
+export const fontSizeBiglittle = "25px";
 
 const responseBody = <T>(res: AxiosResponse<T>) => res.data;
 

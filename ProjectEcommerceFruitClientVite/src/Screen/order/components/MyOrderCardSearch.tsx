@@ -60,7 +60,7 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
 
   const handleConfirm = () => {
     Swal.fire({
-      title: "ท่านแน่ใจหรือไม่ว่าส่งสินค้าถึงมือลูกค้าแล้ว?" + select,
+      title: "ท่านแน่ใจหรือไม่ว่าส่งสินค้าถึงมือลูกค้าแล้ว?",
       text: "หากยืนยันแล้ว หมายถึงสินค้าได้ส่งถึงมือลูกค้าแล้ว",
       icon: "warning",
       showCancelButton: true,
@@ -105,7 +105,7 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
             marginBottom: 35,
           }}
         >
-          <Grid item xs={4} sm={4} md={4} lg={4} xl={2}>
+          <Grid item xs={4} sm={8} md={8} lg={8} xl={8}>
             <Typography variant="h5">จำนวนที่เลือก {select.length}</Typography>
           </Grid>
           <Grid item xs={4} sm={4} md={4} lg={4} xl={2}>
