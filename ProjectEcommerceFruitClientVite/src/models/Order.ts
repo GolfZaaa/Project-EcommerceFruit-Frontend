@@ -36,6 +36,7 @@ export interface DriverHistory {
   id: number;
   shippingFee: number;
   createdAt: Date;
+  statusDriver: number;
 
   userId: number;
   user: User;

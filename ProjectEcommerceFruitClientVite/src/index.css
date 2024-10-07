@@ -7,9 +7,6 @@
 }
 
 .delete-icon {
-  position: absolute;
-  margin-left: 160px;
-  margin-top: -15px;
   background-color: whitesmoke;
   padding: 9px;
   border-radius: 50%;

@@ -46,11 +46,17 @@ export const createFormDataUseMyName = (item: any, name: string) => {
   return formData;
 };
 
+export const resetScroll = () => {
+  window.scrollTo(0, 0);
+};
+
 export const requests = {
   get: (url: string, params?: URLSearchParams) =>
     axios.get(url, { params }).then(responseBody),
   getFormAny: (url: string, params?: any) =>
     axios.get(url, { params }).then(responseBody),
+  onlyGet: (url: string, params?: any) =>
+    axios.get(url + params).then(responseBody),
   post: (url: string, params: {}) => axios.post(url, params).then(responseBody),
   onlyPost: (url: string) => axios.post(url).then(responseBody),
   put: (url: string, params: {}) => axios.put(url, params).then(responseBody),

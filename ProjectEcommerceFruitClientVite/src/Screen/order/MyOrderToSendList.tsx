@@ -6,6 +6,7 @@ import { Order } from "../../models/Order";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import MyOrderCardToSend from "./components/MyOrderCardToSend";
+import { useStore } from "../../store/store";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -13,7 +14,7 @@ interface TabPanelProps {
   value: number;
 }
 
-function CustomTabPanel(props: TabPanelProps) {
+export function CustomTabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
   return (
@@ -32,19 +33,20 @@ function CustomTabPanel(props: TabPanelProps) {
   );
 }
 
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
-
 const MyOrderToSendList = ({ order }: { order: Order[] }) => {
+  const { user } = useStore().userStore;
+
   const [value, setValue] = useState(0);
 
   const handleChange = (value: number) => {
     setValue(value);
   };
+
+  const dataForwardDriver: Order[] = order.filter((item) =>
+    item.shippings[0].driverHistories.some(
+      (history) => history.statusDriver === 3 && history.userId === user?.id
+    )
+  );
 
   return (
     <div className="-mt-12">
@@ -87,6 +89,12 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
               width: "20%",
             }}
           />
+          <Tab
+            label="ส่งต่อให้ผู้จัดส่งคนอื่น"
+            style={{
+              width: "20%",
+            }}
+          />
         </Tabs>
 
         <CustomTabPanel value={value} index={0}>
@@ -107,6 +115,9 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
             )}
             index={2}
           />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={3}>
+          <MyOrderCardToSend order={dataForwardDriver} index={3} />
         </CustomTabPanel>
       </Box>
     </div>

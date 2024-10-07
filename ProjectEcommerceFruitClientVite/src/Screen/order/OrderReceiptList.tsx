@@ -8,6 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Lottie from "react-lottie";
 import lottiteEmpty from "../../assets/lotties/lf20_qh5z2fdq.json";
 import MyLottie from "../../helper/components/MyLottie";
+import { myToast } from "../../helper/components";
 
 const OrderReceiptList = () => {
   const { token } = useStore().commonStore;
@@ -29,7 +30,14 @@ const OrderReceiptList = () => {
   }));
 
   const onSearchOrder = () => {
-    searchOrdersWantToReceipt({ district: district, subDistrict: subDistrict });
+    if (district === null && subDistrict === null) {
+      myToast("กรุณากรอก อำเภอ หรือ ตำบล");
+    } else {
+      searchOrdersWantToReceipt({
+        district: district,
+        subDistrict: subDistrict,
+      });
+    }
   };
 
   return token === null ? (

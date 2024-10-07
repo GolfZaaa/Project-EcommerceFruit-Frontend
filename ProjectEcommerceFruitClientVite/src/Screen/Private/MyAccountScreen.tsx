@@ -26,12 +26,15 @@ import EditAccount from "../my/EditAccount";
 import DashboardForUser from "../my/DashboardForUser";
 import MyOrderToSendList from "../order/MyOrderToSendList";
 import SearchOrderToSendList from "../order/SearchOrderToSendList";
+import EmailIcon from "@mui/icons-material/Email";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 
 const drawerWidth = 240;
 
 const MyAccountScreen = () => {
   const { getAddressByUserId } = useStore().addressStore;
-  const { order, getOrdersByUser, getMyOrderToSend } = useStore().orderStore;
+  const { order, getOrdersByUser, getMyOrderToSend, setOrder } =
+    useStore().orderStore;
 
   const [screenComponent, setScreenComponent] = useState("my-dashboard");
 
@@ -126,7 +129,7 @@ const MyAccountScreen = () => {
           }}
         >
           <ListItemIcon>
-            <DirectionsBikeIcon />
+            <MonetizationOnIcon />
           </ListItemIcon>
           <ListItemText primary="สร้างรายได้" />
         </ListItem>
@@ -137,11 +140,11 @@ const MyAccountScreen = () => {
           }}
           onClick={() => {
             setScreenComponent("searchorderToSendList");
-            getMyOrderToSend();
+            setOrder([]);
           }}
         >
           <ListItemIcon>
-            <DirectionsBikeIcon />
+            <EmailIcon />
           </ListItemIcon>
           <ListItemText primary="รับ-ส่งต่อ คำสั่งซื้อ" />
         </ListItem>

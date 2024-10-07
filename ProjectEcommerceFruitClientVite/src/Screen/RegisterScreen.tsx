@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { RoutePath } from "../constants/RoutePath";
 import ToastLoginRegister from "../layout/component/ToastLoginRegister";
 import CircularProgress from "@mui/material/CircularProgress";
+import "./css/register-style.css";
 
 export default observer(function RegisterScreen() {
   const { register, loadingUser } = useStore().userStore;
@@ -127,8 +128,14 @@ export default observer(function RegisterScreen() {
                 id="PhoneNumber"
                 name="PhoneNumber"
                 maxLength={10}
-                type="text"
+                type="number"
                 className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
+                style={{ WebkitAppearance: "none", MozAppearance: "textfield" }}
+                onInput={(e: any) => {
+                  if (e.target.value.length > 10) {
+                    e.target.value = e.target.value.slice(0, 10);
+                  }
+                }}
               />
               {phoneNumberError && (
                 <p className="text-red-500 text-xs italic">
@@ -138,7 +145,7 @@ export default observer(function RegisterScreen() {
             </div>
             <div className="mt-4">
               <div className="flex justify-between">
-                <label  className="block text-gray-700 text-sm font-bold mb-2">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
                   รหัสผ่าน
                 </label>
               </div>
@@ -171,11 +178,15 @@ export default observer(function RegisterScreen() {
                 className="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600"
                 disabled={loadingUser}
               >
-                {loadingUser ? <div>
+                {loadingUser ? (
+                  <div>
                     <CircularProgress size={17} color="inherit" />
-                  </div>: <div>
+                  </div>
+                ) : (
+                  <div>
                     <p>สมัครสมาชิก</p>
-                    </div>} 
+                  </div>
+                )}
               </button>
             </div>
           </div>

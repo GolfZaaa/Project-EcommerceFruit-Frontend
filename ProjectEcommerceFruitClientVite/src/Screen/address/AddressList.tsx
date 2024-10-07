@@ -20,6 +20,8 @@ import { myToast } from "../../helper/components";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import EditIcon from "@mui/icons-material/Edit";
+import MyLottie from "../../helper/components/MyLottie";
+import lottiteEmptyList from "../../assets/lotties/emptyList.json";
 
 const InputThaiAddress = CreateInput();
 
@@ -144,74 +146,90 @@ const AddressList = ({ confirmChangeAddress }: any) => {
         </Grid>
       </Grid>
 
-      {myAddress?.map((item, i) => (
-        <div key={i}>
-          <Card style={{ marginBottom: "20px" }} key={i}>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <CardContent>
-                  {item?.detail}
-                  <br />
-                  แขวง/ตำบล
-                  {item?.subDistrict}
-                  <br />
-                  เขต/อำเภอ
-                  {item?.district}
-                  <br />
-                  จังหวัด
-                  {item?.province}
-                  <br />
-                  รหัสไปรษณีย์ {item?.postCode}
-                </CardContent>
-              </Grid>
-              <Grid item xs={2}>
-                ตั้งเป็นที่อยู่ร้านค้า
-                <Switch
-                  checked={item.isUsed_Store}
-                  onClick={() => handleAddressUpdate(item.id, true)}
-                />
-              </Grid>
-              <Grid item xs={2}>
-                ตั้งเป็นที่อยู่สั่งซื้อ
-                <Switch
-                  checked={item.isUsed}
-                  onClick={() => {
-                    handleAddressUpdate(item.id, false);
-                    getAddressgotoOrderByUserId();
+      {myAddress?.length ? (
+        myAddress?.map((item, i) => (
+          <div key={i}>
+            <Card style={{ marginBottom: "20px" }} key={i}>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <CardContent>
+                    {item?.detail}
+                    <br />
+                    แขวง/ตำบล
+                    {item?.subDistrict}
+                    <br />
+                    เขต/อำเภอ
+                    {item?.district}
+                    <br />
+                    จังหวัด
+                    {item?.province}
+                    <br />
+                    รหัสไปรษณีย์ {item?.postCode}
+                  </CardContent>
+                </Grid>
+                <Grid item xs={2}>
+                  ตั้งเป็นที่อยู่ร้านค้า
+                  <Switch
+                    checked={item.isUsed_Store}
+                    onClick={() => handleAddressUpdate(item.id, true)}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  ตั้งเป็นที่อยู่สั่งซื้อ
+                  <Switch
+                    checked={item.isUsed}
+                    onClick={() => {
+                      handleAddressUpdate(item.id, false);
+                      getAddressgotoOrderByUserId();
 
-                    if (confirmChangeAddress !== undefined) {
-                      confirmChangeAddress();
-                    }
-                  }}
-                />
+                      if (confirmChangeAddress !== undefined) {
+                        confirmChangeAddress();
+                      }
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <Fab
+                    style={{
+                      margin: 15,
+                    }}
+                    variant="extended"
+                    color="primary"
+                    onClick={() => {
+                      setAddress({
+                        district: item?.subDistrict,
+                        amphoe: item?.district,
+                        province: item?.province,
+                        zipcode: item?.postCode,
+                        detail: item?.detail,
+                      });
+                      setDataEdit(item);
+                      onChangeCU();
+                    }}
+                  >
+                    <EditIcon sx={{ mr: 1 }} />
+                    แก้ไข
+                  </Fab>
+                </Grid>
               </Grid>
-              <Grid item xs={2}>
-                <Fab
-                  style={{
-                    margin: 15,
-                  }}
-                  variant="extended"
-                  color="primary"
-                  onClick={() => {
-                    setAddress({
-                      district: item?.subDistrict,
-                      amphoe: item?.district,
-                      province: item?.province,
-                      zipcode: item?.postCode,
-                      detail: item?.detail,
-                    });
-                    setDataEdit(item);
-                    onChangeCU();
-                  }}
-                >
-                  <EditIcon sx={{ mr: 1 }} />
-                  แก้ไข
-                </Fab>
-              </Grid>
-            </Grid>
-          </Card>
+            </Card>
+          </div>
+        ))
+      ) : (
+        <div>
+          <MyLottie lottieFile={lottiteEmptyList} />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: 30,
+            }}
+          >
+            ที่อยู่ของคุณว่าง
+          </div>
         </div>
-      ))}
+      )}
     </>
   ) : (
     <>

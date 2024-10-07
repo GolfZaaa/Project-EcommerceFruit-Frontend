@@ -73,7 +73,6 @@ const DashboardAdminSlideShow = () => {
             spacing={2}
             style={{
               marginBottom: 15,
-              marginLeft: -50,
             }}
           >
             <Grid item xs={11}></Grid>

@@ -11,6 +11,24 @@ export const Order = {
       "Order/SearchOrdersWantToReceipt",
       createFormData(values)
     ),
+  searchOrderToSendByOrderId: (orderId: string | null) => {
+    console.log("before send data to server", orderId);
+
+    return requests.onlyGet(
+      "Order/SearchOrderToSendByOrderId?orderId=",
+      orderId
+    );
+  },
+  iWantToTakeOrdertoSend: (valus: any) => {
+    return requests.post(
+      `Order/IWantToTakeOrdertoSend`,
+      createFormDataUseMyName(valus, "orderId")
+    );
+  },
+  getMyOrderUserWantToTaketoSend: () =>
+    requests.get("Order/GetMyOrderUserWantToTaketoSend"),
+  confirmOrderToForward: (values: any | undefined) =>
+    requests.post(`Order/ConfirmOrderToForward`, createFormData(values)),
   getMyOrderToSend: () => requests.get("Order/GetMyOrderToSend"),
   getOrderByStore: (storeId: number) =>
     requests.get(`Order/GetOrdersByStore?storeId=${storeId}`),

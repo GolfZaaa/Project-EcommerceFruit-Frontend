@@ -7,6 +7,8 @@ import { pathImages, RoutePath } from "../constants/RoutePath";
 import DropZoneImageComponent from "../layout/component/DropZoneImageComponent";
 import dayjs from "dayjs";
 import { myToast } from "../helper/components";
+import { resetScroll } from "../api/agent";
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface CartItem {
   id: string;
@@ -33,6 +35,8 @@ export default observer(function SummaryScreen() {
   const [tag, setTag] = useState("");
 
   const [isImageValid, setIsImageValid] = useState(true);
+
+  const { setLoadingUser, loadingUser } = useStore().userStore;
 
   const {
     myAddressgotoOrder,
@@ -91,7 +95,9 @@ export default observer(function SummaryScreen() {
   };
 
   const totalPrice = calculateTotalPrice();
-  const formattedTotalPrice = formatNumberWithCommas(totalPrice);
+  const formattedTotalPrice = formatNumberWithCommas(
+    totalPrice + systemSetting[0]?.shippingCost
+  );
 
   const handleImageUpload = (file: any) => {
     setDropZoneImage(file);
@@ -107,6 +113,12 @@ export default observer(function SummaryScreen() {
       return;
     }
 
+    setLoadingUser(true);
+
+    setTimeout(() => {
+      setLoadingUser(false);
+    }, 700);
+
     const Data = {
       PaymentImage: dropZoneImage,
       Tag: tag,
@@ -117,6 +129,7 @@ export default observer(function SummaryScreen() {
 
     if (!!test) {
       navigate(RoutePath.successScreen);
+      resetScroll();
     } else {
       alert("error");
     }
@@ -392,7 +405,7 @@ export default observer(function SummaryScreen() {
                         ค่าจัดส่ง
                       </p>
                       <p className="text-base leading-4 text-gray-600">
-                        {formattedTotalPrice} บาท
+                        {systemSetting[0]?.shippingCost} บาท
                       </p>
                     </div>
                   </div>
@@ -401,9 +414,7 @@ export default observer(function SummaryScreen() {
                       ราคารวมทั้งหมด
                     </p>
                     <p className="text-base font-semibold leading-4 text-gray-600">
-                      {parseFloat(formattedTotalPrice) +
-                        systemSetting[0]?.shippingCost}{" "}
-                      บาท
+                      {formattedTotalPrice} บาท
                     </p>
                   </div>
 
@@ -412,8 +423,17 @@ export default observer(function SummaryScreen() {
                       type="button"
                       onClick={() => handleSubmit(selectMyCart)}
                       className="px-8 py-3 font-semibold rounded dark:bg-gray-800 dark:text-gray-100"
+                      disabled={loadingUser}
                     >
-                      ชำระเงิน
+                      {loadingUser ? (
+                        <div className="px-22 ">
+                          <CircularProgress size={17} color="inherit" />
+                        </div>
+                      ) : (
+                        <div>
+                          <p>ชำระเงิน</p>
+                        </div>
+                      )}
                     </button>
                   </div>
                 </div>

@@ -27,6 +27,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Badge from "@mui/material/Badge";
 
 interface props {
   onChangeCU: any;
@@ -207,6 +208,7 @@ export default observer(function CreateFruitGIScreen({
               showPreviews
               showPreviewsInDropzone={false}
               dropzoneText="ลากและวางไฟล์ที่นี่หรือคลิก"
+              filesLimit={5}
             />
           </div>
 
@@ -214,11 +216,12 @@ export default observer(function CreateFruitGIScreen({
             style={{
               marginTop: 30,
             }}
+            delete-icon
           >
             <Grid container spacing={2}>
               {files?.map((url: any, index: number) => (
                 <Grid item xs={2} className="product-image-container">
-                  <div className="delete-icon">
+                  {/* <div className="delete-icon">
                     <DeleteIcon
                       style={{
                         position: "relative",
@@ -226,14 +229,33 @@ export default observer(function CreateFruitGIScreen({
                       onClick={() => handleOpenClose(true)}
                       color="action"
                     />
-                  </div>
+                  </div> */}
+                  <Badge
+                    badgeContent={
+                      <div className="delete-icon">
+                        <DeleteIcon
+                          style={{
+                            borderRadius: "50%", // ทำให้ badge เป็นวงกลม
+                            width: "40px", // กำหนดขนาดตามที่ต้องการ
+                            height: "40px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                          onClick={() => handleOpenClose(true)}
+                          color="action"
+                        />
+                      </div>
+                    }
+                  >
+                    <img
+                      className="product-image"
+                      key={index}
+                      src={url.name}
+                      alt={`Product image ${index + 1}`}
+                    />
+                  </Badge>
 
-                  <img
-                    className="product-image"
-                    key={index}
-                    src={url.name}
-                    alt={`Product image ${index + 1}`}
-                  />
                   <Dialog
                     open={open}
                     onClose={() => handleOpenClose(false)}

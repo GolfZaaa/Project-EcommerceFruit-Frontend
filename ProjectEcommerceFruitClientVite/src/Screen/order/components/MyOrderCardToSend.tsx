@@ -20,6 +20,7 @@ interface props {
 const MyOrderCardToSend = ({ order, index }: props) => {
   const componentRef = useRef(null);
   const { changeConfirmSendOrder } = useStore().orderStore;
+  const { user } = useStore().userStore;
 
   const [select, setSelect] = useState<any[]>([]);
 
@@ -148,6 +149,14 @@ const MyOrderCardToSend = ({ order, index }: props) => {
       {order.map((item) => {
         const status = item?.shippings[0]?.shippingStatus;
 
+        const myDriver = item.shippings[0].driverHistories.find(
+          (x) => x.statusDriver === 3 && x.userId === user?.id
+        );
+
+        const myDriverFee = item.shippings[0].driverHistories.find(
+          (x) => x.userId === user?.id
+        );
+
         const calculateTotalPrice = () => {
           return item?.orderItems?.reduce((total, item: OrderItem) => {
             total = item.product.price * item.quantity + total;
@@ -186,16 +195,18 @@ const MyOrderCardToSend = ({ order, index }: props) => {
                     ? "จัดส่งสำเร็จ"
                     : status === 2
                     ? "จัดส่งไม่สำเร็จ"
-                    : "เพิ่มสถานะด้วย"}
+                    : "เพิ่มสถานะด้วย"}{" "}
+                  {!!myDriver && "(" + "ส่งต่อให้ผู้จัดส่งคนอื่นแล้ว" + ")"}
                 </span>
 
                 <div className="flex justify-between items-center mb-3">
                   <p className="text-base leading-4 text-gray-800">
-                    ได้รับค่าจัดส่ง : {item?.shippings[0]?.shippingFee} บาท
+                    {/* ได้รับค่าจัดส่ง : {item?.shippings[0]?.shippingFee} บาท */}
+                    ได้รับค่าจัดส่ง : {myDriverFee?.shippingFee} บาท
                   </p>
                 </div>
 
-                {index === 1 && (
+                {index === 1 && !myDriver && (
                   <div
                     style={{
                       display: "flex",

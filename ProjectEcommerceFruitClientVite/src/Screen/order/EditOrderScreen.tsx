@@ -49,9 +49,12 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
 
     const dataForm = {
       orderId: dataEdit?.id || 0,
-      trackingId: formData.tag || null,
+      trackingId: dataEdit?.status === 1 ? trackingId : null,
       shippingType: !!selectCate ? selectCate : null,
     };
+
+    console.log("dataForm", dataForm);
+    console.log("formData", formData.tag);
 
     await confirmOrder(dataForm).then((result) => {
       if (result) {
@@ -169,7 +172,15 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
             คำสั่งซื้อ
           </Typography>
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid
+              item
+              xs={6}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               {dataEdit?.paymentImage ? (
                 <img
                   src={pathImages.paymentImage + dataEdit?.paymentImage}
@@ -198,6 +209,7 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                     <InputLabel>เลือกบริษัทขนส่ง</InputLabel>
                     <Select
                       label="เลือกบริษัทขนส่ง"
+                      value={selectCate}
                       defaultValue={dataEdit?.shippingType || "อื่น ๆ"}
                     >
                       {categorySend.map((item) => (
@@ -353,7 +365,11 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                   // }
                   disabled={!!dataEdit?.tag || dataEdit?.status == 2}
                 >
-                  {!!dataEdit?.tag ? "เสร็จสิ้น" : "บันทึกหมายเลขพัสดุ"}
+                  {!!dataEdit?.tag
+                    ? "เสร็จสิ้น"
+                    : selectCate === "อื่น ๆ"
+                    ? "บันทึก"
+                    : "บันทึกหมายเลขพัสดุ"}
                 </Button>
               )}
             </CardActions>

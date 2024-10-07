@@ -5,6 +5,7 @@ import { useStore } from "../store/store";
 import { RoutePath } from "../constants/RoutePath";
 import ToastLoginRegister from "../layout/component/ToastLoginRegister";
 import CircularProgress from "@mui/material/CircularProgress";
+import "./css/register-style.css";
 
 export default observer(function LoginScreen() {
   const navigate = useNavigate();
@@ -123,8 +124,17 @@ export default observer(function LoginScreen() {
                   id="PhoneNumber"
                   name="PhoneNumber"
                   maxLength={10}
-                  type="text"
+                  type="number"
                   className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
+                  style={{
+                    WebkitAppearance: "none",
+                    MozAppearance: "textfield",
+                  }}
+                  onInput={(e: any) => {
+                    if (e.target.value.length > 10) {
+                      e.target.value = e.target.value.slice(0, 10);
+                    }
+                  }}
                 />
                 {phoneNumberError && (
                   <p className="text-red-500 text-xs italic">
@@ -167,11 +177,15 @@ export default observer(function LoginScreen() {
                   className="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600"
                   disabled={loadingUser}
                 >
-                  {loadingUser ? <div>
-                    <CircularProgress size={17} color="inherit" />
-                  </div>: <div>
-                    <p>เข้าสู่ระบบ</p>
-                    </div>} 
+                  {loadingUser ? (
+                    <div>
+                      <CircularProgress size={17} color="inherit" />
+                    </div>
+                  ) : (
+                    <div>
+                      <p>เข้าสู่ระบบ</p>
+                    </div>
+                  )}
                 </button>
               </div>
             </div>

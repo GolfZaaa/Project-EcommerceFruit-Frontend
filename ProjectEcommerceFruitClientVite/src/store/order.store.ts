@@ -54,6 +54,65 @@ export default class OrderStore {
     }
   };
 
+  searchOrderToSendByOrderId = async (orderId: string | null) => {
+    this.setLoadingOrder(true);
+    try {
+      const result = await agent.Order.searchOrderToSendByOrderId(orderId);
+      this.order = result;
+
+      this.setLoadingOrder(false);
+
+      return result;
+    } catch (error) {
+      this.setLoadingOrder(false);
+      return error;
+    }
+  };
+
+  iWantToTakeOrdertoSend = async (values: number[]) => {
+    this.setLoadingOrder(true);
+    try {
+      const result = await agent.Order.iWantToTakeOrdertoSend(values);
+      this.order = result;
+
+      this.setLoadingOrder(false);
+
+      return result;
+    } catch (error) {
+      this.setLoadingOrder(false);
+      return error;
+    }
+  };
+
+  getMyOrderUserWantToTaketoSend = async () => {
+    this.setLoadingOrder(true);
+    try {
+      const result = await agent.Order.getMyOrderUserWantToTaketoSend();
+      this.order = result;
+
+      this.setLoadingOrder(false);
+    } catch (error) {
+      this.setLoadingOrder(false);
+      return error;
+    }
+  };
+
+  confirmOrderToForward = async (values: any) => {
+    this.setLoadingOrder(true);
+    try {
+      const result = await agent.Order.confirmOrderToForward(values);
+
+      console.log("result :: ", result);
+
+      this.setLoadingOrder(false);
+
+      this.getMyOrderUserWantToTaketoSend();
+    } catch (error) {
+      this.setLoadingOrder(false);
+      return error;
+    }
+  };
+
   getMyOrderToSend = async () => {
     try {
       const result = await agent.Order.getMyOrderToSend();
