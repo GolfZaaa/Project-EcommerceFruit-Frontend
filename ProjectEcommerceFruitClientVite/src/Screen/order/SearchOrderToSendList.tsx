@@ -42,7 +42,7 @@ const SearchOrderToSendList = () => {
 
   const onSearchOrder = () => {
     searchOrderToSendByOrderId(orderId).then((res) => {
-      console.log("res", res.length);
+      console.log("res length", res.length);
 
       if (res.length === 0) {
         setShowOrderEmpty(true);

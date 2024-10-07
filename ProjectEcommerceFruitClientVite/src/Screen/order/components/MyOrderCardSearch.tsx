@@ -105,10 +105,10 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
             marginBottom: 35,
           }}
         >
-          <Grid item xs={7.6}>
+          <Grid item xs={4} sm={4} md={4} lg={4} xl={2}>
             <Typography variant="h5">จำนวนที่เลือก {select.length}</Typography>
           </Grid>
-          <Grid item xs={2.7}>
+          <Grid item xs={4} sm={4} md={4} lg={4} xl={2}>
             {/* <div
               style={{
                 display: "flex",
@@ -135,10 +135,10 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
               </Typography>
             </div> */}
           </Grid>
-          <Grid item xs={1.7}>
+          <Grid item xs={4} sm={4} md={4} lg={4} xl={2}>
             <Fab variant="extended" color="primary" onClick={handleConfirm}>
               <EditIcon sx={{ mr: 1 }} />
-              ยืนยันการส่ง
+              ยืนยันการเลือก
             </Fab>
           </Grid>
         </Grid>
@@ -192,11 +192,11 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
                         : "เพิ่มสถานะด้วย"}
                     </span>
 
-                    <div className="flex justify-between items-center mb-3">
+                    {/* <div className="flex justify-between items-center mb-3">
                       <p className="text-base leading-4 text-gray-800">
                         ได้รับค่าจัดส่ง : {item?.shippings[0]?.shippingFee} บาท
                       </p>
-                    </div>
+                    </div> */}
 
                     {/* {index === 1 && ( */}
                     <div

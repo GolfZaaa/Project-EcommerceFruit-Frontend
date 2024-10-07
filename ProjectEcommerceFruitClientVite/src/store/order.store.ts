@@ -73,11 +73,8 @@ export default class OrderStore {
     this.setLoadingOrder(true);
     try {
       const result = await agent.Order.iWantToTakeOrdertoSend(values);
-      this.order = result;
 
       this.setLoadingOrder(false);
-
-      return result;
     } catch (error) {
       this.setLoadingOrder(false);
       return error;

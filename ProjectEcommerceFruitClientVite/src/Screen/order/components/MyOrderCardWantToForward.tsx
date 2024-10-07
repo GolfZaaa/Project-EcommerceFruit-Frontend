@@ -127,6 +127,10 @@ const MyOrderCardWantToForward = ({ order }: props) => {
               }, 0);
             };
 
+            const myDriverFee = item.shippings[0].driverHistories.find(
+              (x) => x.userId === user?.id
+            );
+
             const totalPrice: any = calculateTotalPrice();
             const formattedTotalPrice = formatNumberWithCommas(totalPrice);
 
@@ -137,6 +141,12 @@ const MyOrderCardWantToForward = ({ order }: props) => {
                     <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
                       รหัสคำสั่งซื้อ : {item.orderId}
                     </span>
+                    <div className="flex justify-between items-center mb-3">
+                      <p className="text-base leading-4 text-gray-800">
+                        {/* ได้รับค่าจัดส่ง : {item?.shippings[0]?.shippingFee} บาท */}
+                        ได้รับค่าจัดส่ง : {myDriverFee?.shippingFee} บาท
+                      </p>
+                    </div>
                     <span
                       className={
                         "text-lg font-semibold text-gray-900 text-" +
