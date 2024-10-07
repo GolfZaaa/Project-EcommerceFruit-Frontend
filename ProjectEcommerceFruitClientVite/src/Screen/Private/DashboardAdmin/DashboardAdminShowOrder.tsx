@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useStore } from "../../../store/store";
 import { pathImagepayment } from "../../../api/agent";
 import ExcelJS from "exceljs";
@@ -6,6 +6,10 @@ import { AiFillFileExcel } from "react-icons/ai";
 import AOS from "aos";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
+import { BiDownload } from "react-icons/bi";
+import html2pdf from "html2pdf.js";
+import { VscFilePdf } from "react-icons/vsc";
+import { RiFileExcel2Line } from "react-icons/ri";
 
 export default function DashboardAdminShowOrder() {
   const [searchUser, setSearchUser] = useState<any>("");
@@ -119,12 +123,41 @@ export default function DashboardAdminShowOrder() {
     });
   };
 
+
+  const componentRef = useRef(null);
+  function generatePDF() {
+    const opt = {
+      margin: 0.2,
+      filename: "report_Order_ByAdmin.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 3 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
+
+    const downloadButton: any = document.querySelector("#downloadButton");
+
+    if (downloadButton) {
+      downloadButton.style.display = "none";
+      setDropdown(!dropdown);
+    }
+
+    html2pdf()
+      .from(componentRef.current)
+      .set(opt)
+      .save()
+      .then(() => {
+        if (downloadButton) {
+          downloadButton.style.display = "block";
+        }
+      });
+  }
+
   return (
     <div>
       <div className="p-4">
         <div className="flex flex-col">
           <div className=" overflow-x-auto">
-            <div className="min-w-full inline-block align-middle">
+            <div className="min-w-full inline-block align-middle" ref={componentRef}>
               <div className="relative  text-gray-500 focus-within:text-gray-900 mb-4">
                 <div className="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none ">
                   <svg
@@ -167,7 +200,7 @@ export default function DashboardAdminShowOrder() {
 
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                   <div className="relative inline-block text-left">
-                    <div>
+                    <div id="downloadButton">
                       <button
                         onClick={handleDropdown}
                         type="button"
@@ -176,19 +209,7 @@ export default function DashboardAdminShowOrder() {
                         aria-expanded="true"
                         aria-haspopup="true"
                       >
-                        ดาวน์โหลดข้อมูล
-                        <svg
-                          className="-mr-1 h-5 w-5 text-gray-400"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                            clip-rule="evenodd"
-                          />
-                        </svg>
+                        <BiDownload/>
                       </button>
                     </div>
 
@@ -199,15 +220,14 @@ export default function DashboardAdminShowOrder() {
                         aria-orientation="vertical"
                         aria-labelledby="menu-button"
                       >
-                        <div className="py-1 cursor-pointer" role="none">
-                          <a
-                            href="#"
-                            className="block px-4 py-2 text-sm text-gray-700"
+                        <div className="py-1 cursor-pointer " role="none" onClick={generatePDF}>
+                          <button
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-red-600 hover:bg-gray-200 hover:font-bold w-full"
                             role="menuitem"
                             id="menu-item-0"
                           >
-                            PDF
-                          </a>
+                           <VscFilePdf className="mr-2"size={20} /> PDF
+                          </button>
                           <div className="">
                             <button
                               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:bg-gray-200 hover:font-bold w-full"
@@ -215,9 +235,9 @@ export default function DashboardAdminShowOrder() {
                               role="menuitem"
                               id="menu-item-1"
                             >
-                              <AiFillFileExcel
-                                className="mr-2 text-green-600"
-                                size={25}
+                              <RiFileExcel2Line
+                                className="mr-2"
+                                size={20}
                               />
                               EXCEL
                             </button>
@@ -227,6 +247,7 @@ export default function DashboardAdminShowOrder() {
                     )}
                   </div>
                 </div>
+                
               </div>
               <div className="overflow-hidden ">
                 <table className="min-w-full border border-gray-300 rounded-tl-lg rounded-tr-lg overflow-hidden">

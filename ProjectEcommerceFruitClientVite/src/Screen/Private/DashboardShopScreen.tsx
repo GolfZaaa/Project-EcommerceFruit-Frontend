@@ -31,12 +31,17 @@ import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import OrderList from "../order/OrderList";
 import { RoutePath } from "../../constants/RoutePath";
 import ReactECharts from "echarts-for-react";
-// @ts-ignore
 import html2pdf from "html2pdf.js";
 import { BsFillPrinterFill } from "react-icons/bs";
 import moment from "moment";
 import Select from "react-select";
+import { BiDownload } from "react-icons/bi";
+import { VscFilePdf } from "react-icons/vsc";
+import { RiFileExcel2Line } from "react-icons/ri";
+import ExcelJS from "exceljs";
 
+import "moment/locale/th";
+moment.locale("th");
 const drawerWidth = 240;
 
 export default observer(function DashboardShopScreen() {
@@ -59,6 +64,7 @@ export default observer(function DashboardShopScreen() {
 
     if (downloadButton) {
       downloadButton.style.display = "none";
+      toggleDropdown();
     }
 
     html2pdf()
@@ -178,14 +184,38 @@ export default observer(function DashboardShopScreen() {
     setMobileOpen(!mobileOpen);
   };
 
+  const thaiMonths = [
+    "มกราคม",
+    "กุมภาพันธ์",
+    "มีนาคม",
+    "เมษายน",
+    "พฤษภาคม",
+    "มิถุนายน",
+    "กรกฎาคม",
+    "สิงหาคม",
+    "กันยายน",
+    "ตุลาคม",
+    "พฤศจิกายน",
+    "ธันวาคม",
+  ];
+
+  // ยอดขาย(กราฟเส้น)
   const option = {
     xAxis: {
       type: "category",
-      data: monthlyOrderData?.map((item: any) => item?.month),
+      data: monthlyOrderData?.map(
+        (item: any) => thaiMonths[moment(item?.month, "MMMM").month()]
+      ),
       axisLabel: {
         fontSize: 10,
         fontWeight: 600,
       },
+    },
+    grid: {
+      left: "0%",
+      right: "0%",
+      bottom: "0%",
+      containLabel: true,
     },
     yAxis: {
       type: "value",
@@ -200,6 +230,7 @@ export default observer(function DashboardShopScreen() {
         data: monthlyOrderData?.map((item: any) => item?.total),
         type: "line",
         smooth: true,
+
         lineStyle: {
           color: "#00910a",
           width: 2,
@@ -222,6 +253,52 @@ export default observer(function DashboardShopScreen() {
       },
     },
   };
+
+  // ยอดขาย (กราฟแท่ง)
+  // const option = {
+  //   xAxis: {
+  //     type: "category",
+  //     data: monthlyOrderData?.map((item: any) =>
+  //       thaiMonths[moment(item?.month, "MMMM").month()]
+  //     ),
+  //     axisLabel: {
+  //       fontSize: 10,
+  //       fontWeight: 600,
+  //     },
+  //   },
+  //   yAxis: {
+  //     type: "value",
+  //     axisLabel: {
+  //       formatter: (value: any) => value.toLocaleString(),
+  //       fontSize: 10,
+  //       fontWeight: 600,
+  //     },
+  //   },
+  //   series: [
+  //     {
+  //       data: monthlyOrderData?.map((item: any) => item?.total),
+  //       type: "bar", // เปลี่ยนเป็น bar หากต้องการให้เป็นกราฟแท่ง
+  //       smooth: true,
+  //       lineStyle: {
+  //         color: "#00910a",
+  //         width: 2,
+  //       },
+  //       itemStyle: {
+  //         color: "#00910a",
+  //         borderColor: "#00910a",
+  //       },
+  //       barWidth: '10%', // เพิ่ม barWidth ที่นี่
+  //       symbolSize: 6,
+  //     },
+  //   ],
+  //   tooltip: {
+  //     trigger: "axis",
+  //     formatter: (params: any) => `${params[0]?.data?.toLocaleString()} บาท`,
+  //     textStyle: {
+  //       fontSize: 14,
+  //     },
+  //   },
+  // };
 
   const [pieChartData, setPieChartData] = useState([]);
 
@@ -274,7 +351,80 @@ export default observer(function DashboardShopScreen() {
     ],
   };
 
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const toggleDropdown = () => {
+    setOpenDropdown(!openDropdown);
+  };
+
   const [screenComponent, setScreenComponent] = useState("dashboard");
+
+  const generateExcel = () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Dashboard Data");
+
+    worksheet.columns = [
+      { header: "รายการ", key: "item", width: 30 },
+      { header: "ข้อมูล", key: "value", width: 30 },
+      { header: "หน่วย", key: "unit", width: 30 },
+    ];
+
+    worksheet.addRow({
+      item: "รายได้รวมการจำหน่ายสินค้า",
+      value: totalPrice.toLocaleString(),
+      unit: "บาท",
+    });
+
+    worksheet.addRow({
+      item: "จำนวนสินค้าที่ซื้อ",
+      value: totalQuantity.toLocaleString(),
+      unit: "ครั้ง",
+    });
+
+    worksheet.addRow({
+      item: "ยอดคำสั่งซื้อที่สำเร็จ",
+      value: totalOrderSuccess.toLocaleString(),
+      unit: "ครั้ง",
+    });
+
+    worksheet.addRow({
+      item: "ยอดคำสั่งซื้อที่ยกเลิก",
+      value: totalOrderFailed.toLocaleString(),
+      unit: "ครั้ง",
+    });
+
+    worksheet.addRow({ item: "รายได้ต่อเดือน", value: "", unit: "" });
+
+    monthlyOrderData.forEach((data: any) => {
+      const monthIndex = parseInt(moment().month(data.month).format("M")) - 1;
+      const monthInThai = thaiMonths[monthIndex];
+      worksheet.addRow({
+        item: `  ${monthInThai}`,
+        value: data.total.toLocaleString(),
+        unit: "บาท",
+      });
+    });
+
+    worksheet.addRow({ item: "จำนวนสินค้าต่อหมวดหมู่", value: "", unit: "" });
+    pieChartData.forEach((data: any) => {
+      worksheet.addRow({
+        item: `  ${data.name}`,
+        value: data.value.toLocaleString(),
+        unit: "ชิ้น",
+      });
+    });
+
+    workbook.xlsx.writeBuffer().then((data) => {
+      const blob = new Blob([data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "dashboard_shopper.xlsx";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  };
 
   const renderScreens = () => {
     switch (screenComponent) {
@@ -404,16 +554,35 @@ export default observer(function DashboardShopScreen() {
 
                 <button
                   id="downloadButton"
-                  onClick={generatePDF}
-                  className="absolute top-0 right-0 p-2 bg-blue-500 text-white rounded-md"
+                  onClick={toggleDropdown}
+                  className="absolute top-0 right-0 p-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-200"
                 >
-                  <BsFillPrinterFill />
+                  <BiDownload />
                 </button>
+
+                {openDropdown && (
+                  <div className="absolute right-0 top-5 mt-2 bg-white border rounded shadow-md w-28">
+                    <ul>
+                      <li
+                        className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
+                        onClick={generatePDF}
+                      >
+                        <VscFilePdf className="mr-2" /> PDF
+                      </li>
+                      <li
+                        className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
+                        onClick={generateExcel}
+                      >
+                        <RiFileExcel2Line className="mr-2" /> Excel
+                      </li>
+                    </ul>
+                  </div>
+                )}
               </div>
 
               <div className="w-full">
-                <div className="grid grid-cols-4 gap-4 mt-5">
-                  <div className="col-span-2 bg-white border rounded-sm overflow-hidden shadow">
+                <div className="gap-4 mt-5 flex">
+                  <div className="w-9/12 bg-white border rounded-sm overflow-hidden shadow">
                     <div className="p-2 flex justify-between items-center">
                       <p className="font-semibold">
                         กราฟแสดงยอดขายในแต่ละเดือน
@@ -439,10 +608,10 @@ export default observer(function DashboardShopScreen() {
                     </div>
                   </div>
 
-                  <div className="col-span-2 bg-white border rounded-sm overflow-hidden shadow">
+                  <div className="w-5/12 bg-white border rounded-sm overflow-hidden shadow ">
                     <div className="p-2 -mb-3">
                       <p className="font-semibold">
-                      สัดส่วนการกระจายยอดขายตามหมวดหมู่ผลิตภัณฑ์
+                        สัดส่วนยอดขายตามหมวดหมู่ผลิตภัณฑ์
                       </p>
                     </div>
                     <div className="p-2">

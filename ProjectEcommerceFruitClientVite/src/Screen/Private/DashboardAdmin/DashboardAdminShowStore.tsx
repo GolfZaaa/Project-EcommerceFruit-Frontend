@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useStore } from "../../../store/store";
 import ExcelJS from "exceljs";
 import { AiFillFileExcel } from "react-icons/ai";
@@ -9,6 +9,10 @@ import { MySwitch } from "../../../helper/components/MySwitch";
 import { observer } from "mobx-react-lite";
 import { Store } from "../../../models/Store";
 import CreateShopScreen from "../../Shopping/CreateShopScreen";
+import { BiDownload } from "react-icons/bi";
+import html2pdf from "html2pdf.js";
+import { VscFilePdf } from "react-icons/vsc";
+import { RiFileExcel2Line } from "react-icons/ri";
 
 export default observer(function DashboardAdminShowStore() {
   const { getStoreAll, shopAll, DeleteStore } = useStore().shopuserStore;
@@ -88,6 +92,38 @@ export default observer(function DashboardAdminShowStore() {
     document.body.removeChild(a);
   };
 
+
+  const componentRef = useRef(null);
+
+  function generatePDF() {
+    const opt = {
+      margin: 0.2,
+      filename: "report_Store_ByAdmin.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 3 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
+
+    const downloadButton: any = document.querySelector("#downloadButton");
+
+    if (downloadButton) {
+      downloadButton.style.display = "none";
+      setDropdown(!dropdown);
+    }
+
+    html2pdf()
+      .from(componentRef.current)
+      .set(opt)
+      .save()
+      .then(() => {
+        if (downloadButton) {
+          downloadButton.style.display = "block";
+        }
+      });
+  }
+
+  
+
   const [dropdown, setDropdown] = useState(false);
 
   const handleDropdown = () => {
@@ -112,7 +148,7 @@ export default observer(function DashboardAdminShowStore() {
           <div className="p-4">
             <div className="flex flex-col">
               <div className=" overflow-x-auto">
-                <div className="min-w-full inline-block align-middle">
+                <div className="min-w-full inline-block align-middle" ref={componentRef}>
                   <div className="relative  text-gray-500 focus-within:text-gray-900 mb-4">
                     <div className="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none ">
                       <svg
@@ -153,68 +189,59 @@ export default observer(function DashboardAdminShowStore() {
                       onChange={(e) => setSearchUser(e.target.value)}
                     />
 
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                      <div className="relative inline-block text-left">
-                        <div>
-                          <button
-                            onClick={handleDropdown}
-                            type="button"
-                            className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                            id="menu-button"
-                            aria-expanded="true"
-                            aria-haspopup="true"
-                          >
-                            ดาวน์โหลดข้อมูล
-                            <svg
-                              className="-mr-1 h-5 w-5 text-gray-400"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                              aria-hidden="true"
-                            >
-                              <path
-                                fill-rule="evenodd"
-                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                clip-rule="evenodd"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-
-                        {dropdown && (
-                          <div
-                            className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                            role="menu"
-                            aria-orientation="vertical"
-                            aria-labelledby="menu-button"
-                          >
-                            <div className="py-1 cursor-pointer" role="none">
-                              <a
-                                href="#"
-                                className="block px-4 py-2 text-sm text-gray-700"
-                                role="menuitem"
-                                id="menu-item-0"
-                              >
-                                PDF
-                              </a>
-                              <div className="">
-                                <button
-                                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:bg-gray-200 hover:font-bold w-full"
-                                  onClick={generateExcel}
-                                  role="menuitem"
-                                  id="menu-item-1"
-                                >
-                                  <AiFillFileExcel
-                                    className="mr-2 text-green-600"
-                                    size={25}
-                                  />
-                                  EXCEL
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
+<div className="absolute inset-y-0 right-0 flex items-center pr-3" id="downloadButton">
+                  <div className="relative inline-block text-left" >
+                    <div>
+                      <button
+                        onClick={handleDropdown}
+                        type="button"
+                        className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                        id="menu-button"
+                        aria-expanded="true"
+                        aria-haspopup="true"
+                      >
+                        <BiDownload/>
+                      </button>
                     </div>
+
+                    {dropdown && (
+                      <div
+                        className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        role="menu"
+                        aria-orientation="vertical"
+                        aria-labelledby="menu-button"
+                      >
+                        <div className="py-1 cursor-pointer " role="none" >
+                          <div onClick={generatePDF}  >
+                          <button
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-red-600 hover:bg-gray-200 hover:font-bold w-full"
+                            role="menuitem"
+                            id="menu-item-0"
+                          >
+                           <VscFilePdf className="mr-2"size={20} /> PDF
+                          </button>
+                          </div>
+                          <div className="">
+                            <button
+                              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:bg-gray-200 hover:font-bold w-full"
+                              onClick={generateExcel}
+                              role="menuitem"
+                              id="menu-item-1"
+                            >
+                              <RiFileExcel2Line
+                                className="mr-2"
+                                size={20}
+                              />
+                              EXCEL
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+
                   </div>
                   <div className="overflow-hidden ">
                     <table className="min-w-full border border-gray-300 rounded-tl-lg rounded-tr-lg overflow-hidden">

@@ -128,9 +128,11 @@ export const PublicRoute: any = [
     path: RoutePath.orderReceiptList,
     element: <OrderReceiptList />,
   },
+  
   {
     id: 21,
     path: "/shop-detail-screen/:id",
     element: <ShopDetailScreen />,
   },
+
 ];

@@ -73,7 +73,7 @@ export default observer(function LoginScreen() {
         setTimeout(() => {
           setShowToast(false);
         }, 2000);
-
+        resetScroll();
         navigate(RoutePath.homeScreen);
         await getUserDetailbyId();
       }

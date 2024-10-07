@@ -55,10 +55,12 @@ export default observer(function HomeScreen() {
     setSortPrice(e.target.value);
   };
 
+  
   const NavigateDetail = (product: any) => {
     navigate(RoutePath.productDetail(product.id));
     resetScroll();
   };
+
 
   if (!Array.isArray(product) || !Array.isArray(category)) {
     return <Loading />;

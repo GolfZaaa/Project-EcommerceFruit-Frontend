@@ -67,6 +67,7 @@ export default observer(function RegisterScreen() {
       setCheckToast("Register Success");
       setTimeout(() => {
         setShowToast(false);
+        resetScroll();
         navigate(RoutePath.loginScreen);
       }, 3000);
     }

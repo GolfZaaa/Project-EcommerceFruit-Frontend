@@ -17,6 +17,7 @@ import { pathImages } from "../../../constants/RoutePath";
 import CreateUpdateNEWS from "../../news/CreateUpdateNEWS";
 import { NEWS } from "../../../models/NEWS";
 import Swal from "sweetalert2";
+import { BiDownload } from "react-icons/bi";
 
 const DashboardAdminNEWS = () => {
   const { news, getNEWSsAdmin, isUsedNEWS, removeNEWS } =

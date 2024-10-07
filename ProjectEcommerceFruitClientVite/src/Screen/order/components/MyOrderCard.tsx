@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Order } from "../../../models/Order";
 import { OrderItem } from "../../../models/OrderItem";
 import { formatNumberWithCommas } from "../../../helper/components";
@@ -10,6 +10,10 @@ import { BsFillPrinterFill } from "react-icons/bs";
 import { useStore } from "../../../store/store";
 import Swal from "sweetalert2";
 import TotalPrice from "./TotalPrice";
+import { RiFileExcel2Line } from "react-icons/ri";
+import { BiDownload } from "react-icons/bi";
+import { VscFilePdf } from "react-icons/vsc";
+import ExcelJS from "exceljs";
 
 interface props {
   order: Order[];
@@ -20,6 +24,7 @@ const MyOrderCard = ({ order, index }: props) => {
   const { changeConfirmReceiptOrder } = useStore().orderStore;
   const { systemSetting } = useStore().systemSettingStore;
   const componentRef = useRef(null);
+
 
   function generatePDF() {
     const opt = {
@@ -34,6 +39,7 @@ const MyOrderCard = ({ order, index }: props) => {
 
     if (downloadButton) {
       downloadButton.style.display = "none";
+      setOpenDropdown(false);
     }
 
     html2pdf()
@@ -47,6 +53,96 @@ const MyOrderCard = ({ order, index }: props) => {
       });
   }
 
+  const generateExcel = () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Order Data");
+  
+    // กำหนดหัวตาราง
+    worksheet.columns = [
+      { header: "รหัสคำสั่งซื้อ", key: "orderId", width: 20 },
+      { header: "สถานะ", key: "status", width: 30 },
+      { header: "รหัสสินค้า", key: "productId", width: 15 },
+      { header: "หมวดหมู่", key: "category", width: 20 },
+      { header: "ชื่อสินค้า", key: "productName", width: 30 },
+      { header: "จำนวน", key: "quantity", width: 10 },
+      { header: "ราคา", key: "price", width: 15 },
+      { header: "ราคารวม", key: "totalPrice", width: 15 },
+    ];
+  
+    let grandTotalPrice = 0;
+    let grandTotalQuantity = 0;
+  
+    // วนลูปผ่านรายการสั่งซื้อ
+    order.forEach((orderItem) => {
+      // กำหนดสถานะ
+      let statusText = "";
+      if (orderItem.confirmReceipt === 2) {
+        statusText = "ยกเลิกโดยคุณ";
+      } else if (orderItem.status === 0) {
+        statusText = "กำลังรออนุมัติ";
+      } else if (orderItem.status === 1) {
+        statusText = "ยืนยันคำสั่งซื้อแล้ว";
+      } else if (orderItem.status === 2) {
+        statusText = "ยกเลิกคำสั่งซื้อแล้ว";
+      } else {
+        statusText = "สถานะไม่ระบุ";
+      }
+  
+      if (orderItem.confirmReceipt === 1) {
+        statusText += " | ได้รับสินค้าแล้ว";
+      }
+      if (orderItem.status === 2) {
+        statusText += " | ยกเลิกแล้ว โดยร้านค้า";
+      } else if (orderItem.confirmReceipt === 2) {
+        statusText += " | ยกเลิกแล้ว โดยคุณ";
+      }
+  
+      // วนลูปผ่านรายการสินค้าในคำสั่งซื้อ
+      orderItem.orderItems.forEach((orderProductItem) => {
+        const totalProductPrice =
+          orderProductItem.product.price * orderProductItem.quantity + 50;
+        grandTotalPrice += totalProductPrice;
+        grandTotalQuantity += orderProductItem.quantity;
+  
+        worksheet.addRow({
+          orderId: orderItem.orderId,
+          status: statusText,
+          productId: orderProductItem.product.id,
+          category: orderProductItem.product.productGI.category.name,
+          productName: orderProductItem.product.productGI.name,
+          quantity: orderProductItem.quantity,
+          price: orderProductItem.product.price,
+          totalPrice: totalProductPrice,
+        });
+      });
+    });
+  
+    worksheet.addRow({});
+    worksheet.addRow({
+      productName: "รวมทั้งหมด",
+      quantity: grandTotalQuantity,
+      totalPrice: grandTotalPrice,
+    });
+  
+    // ทำการจัดรูปแบบเซลล์สรุปยอดให้เป็นตัวหนา
+    const lastRow = worksheet.lastRow;
+    lastRow.font = { bold: true };
+  
+    workbook.xlsx.writeBuffer().then((data) => {
+      const blob = new Blob([data], {
+        type:
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "order_data.xlsx";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  };
+
+  
   const handleConfirm = (values: any) => {
     Swal.fire({
       title: "ท่านแน่ใจหรือไม่ว่าต้องการรับหิ้ว?",
@@ -70,6 +166,11 @@ const MyOrderCard = ({ order, index }: props) => {
     });
   };
 
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const toggleDropdown = () => {
+    setOpenDropdown(!openDropdown);
+  };
+
   return (
     <div ref={componentRef}>
       <div className="flex justify-between">
@@ -77,13 +178,41 @@ const MyOrderCard = ({ order, index }: props) => {
           <Typography variant="h5">จำนวน {order.length}</Typography>
         </div>
         <div>
-          <button
+          {/* <button
             id="downloadButton"
-            onClick={generatePDF}
+            onClick={generateExcel}
             className=" p-2 bg-blue-500 text-white rounded-md"
           >
-            <BsFillPrinterFill />
+            <RiFileExcel2Line />
+          </button> */}
+
+          <button
+            onClick={toggleDropdown}
+            id="downloadButton"
+            className=" p-2 bg-blue-500 text-white rounded-md"
+          >
+            <BiDownload />
           </button>
+
+          {openDropdown && (
+            <div className="absolute right-12 -mt-2 bg-white border rounded shadow-md w-20">
+              <ul>
+                <li
+                  className="p-2 hover:bg-gray-200 cursor-pointer flex items-center "
+                  onClick={generatePDF}
+                >
+                  <VscFilePdf className="mr-2" /> PDF
+                </li>
+                <li
+                  className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
+                  onClick={generateExcel}
+                >
+                  <RiFileExcel2Line className="mr-2" /> Excel
+                </li>
+              </ul>
+            </div>
+          )}
+
         </div>
       </div>
 
