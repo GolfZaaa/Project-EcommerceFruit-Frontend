@@ -11,6 +11,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useStore } from "../../../store/store";
 import Swal from "sweetalert2";
 import TotalPrice from "./TotalPrice";
+import ExcelJS from "exceljs";
+import { BiDownload } from "react-icons/bi";
+import { VscFilePdf } from "react-icons/vsc";
+import { RiFileExcel2Line } from "react-icons/ri";
 
 interface props {
   order: Order[];
@@ -79,22 +83,126 @@ const MyOrderCardToSend = ({ order, index }: props) => {
     });
   };
 
+
+  const generateExcel = () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Order Data");
+  
+    worksheet.columns = [
+      { header: "รหัสคำสั่งซื้อ", key: "orderId", width: 30 },
+      { header: "รายการ", key: "item", width: 30 },
+      { header: "ข้อมูล", key: "value", width: 30 },
+      { header: "หน่วย", key: "unit", width: 30 },
+    ];
+  
+    let totalPrice = 0;
+    let totalQuantity = 0;
+    let totalOrderSuccess = 0;
+    let totalOrderCancel = 0;
+    let totalShippingFee = 0;
+  
+    worksheet.addRow({
+      item: "จำนวนรายการ",
+      value: order.length,
+      unit: "รายการ",
+    });
+  
+    order.forEach((item) => {
+      const orderTotalPrice = item.orderItems.reduce((sum, item: OrderItem) => {
+        return sum + item.product.price * item.quantity;
+      }, 0);
+  
+      const orderTotalQuantity = item.orderItems.reduce((sum, item: OrderItem) => {
+        return sum + item.quantity;
+      }, 0);
+  
+      totalPrice += orderTotalPrice;
+      totalQuantity += orderTotalQuantity;
+  
+      const myDriverFee = item.shippings[0]?.driverHistories.find(
+        (x) => x.userId === user?.id
+      )?.shippingFee || 0;
+      totalShippingFee += myDriverFee;  
+  
+      if (item.shippings[0]?.shippingStatus === 1) {
+        totalOrderSuccess += 1;
+      } else if (item.shippings[0]?.shippingStatus === 2) {
+        totalOrderCancel += 1;
+      }
+  
+      worksheet.addRow({
+        orderId: item.orderId, 
+        item: "ค่าจัดส่งจากผู้จัดส่ง",
+        value: myDriverFee,  
+        unit: "บาท",
+      });
+  
+      worksheet.addRow({
+        item: "จำนวนสินค้าที่หิ้วทั้งหมด",
+        value: totalQuantity,
+        unit: "ชิ้น",
+      });
+    });
+  
+    workbook.xlsx.writeBuffer().then((data) => {
+      const blob = new Blob([data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "order_data.xlsx"; 
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  };
+  
+  
+  
+  
+
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const toggleDropdown = () => {
+    setOpenDropdown(!openDropdown);
+  };
+
   return (
     <div ref={componentRef}>
       <div className="flex justify-between">
         <div>
           <Typography variant="h5">จำนวน {order.length}</Typography>
         </div>
+
+        {order.length > 0 &&
         <div>
-          <button
-            id="downloadButton"
-            onClick={generatePDF}
-            className=" p-2 bg-blue-500 text-white rounded-md"
+        <button
+            onClick={toggleDropdown}
+            className="p-2 bg-blue-500 text-white rounded-md"
           >
-            <BsFillPrinterFill />
+            <BiDownload />
           </button>
-        </div>
+      </div> 
+      }
       </div>
+
+      {openDropdown && (
+            <div className="absolute right-12 -mt-1 bg-white border rounded shadow-md w-20">
+              <ul>
+                <li
+                  className="p-2 hover:bg-gray-200 cursor-pointer flex items-center "
+                  onClick={generatePDF}
+                >
+                  <VscFilePdf className="mr-2" /> PDF
+                </li>
+                <li
+                  className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
+                  onClick={generateExcel}
+                >
+                  <RiFileExcel2Line className="mr-2" /> Excel
+                </li>
+              </ul>
+            </div>
+          )}
 
       {select.length ? (
         <Grid

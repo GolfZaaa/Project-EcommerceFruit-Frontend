@@ -125,7 +125,7 @@ const MyOrderCard = ({ order, index }: props) => {
     });
   
     // ทำการจัดรูปแบบเซลล์สรุปยอดให้เป็นตัวหนา
-    const lastRow = worksheet.lastRow;
+    const lastRow:any = worksheet.lastRow;
     lastRow.font = { bold: true };
   
     workbook.xlsx.writeBuffer().then((data) => {
@@ -178,21 +178,16 @@ const MyOrderCard = ({ order, index }: props) => {
           <Typography variant="h5">จำนวน {order.length}</Typography>
         </div>
         <div>
-          {/* <button
-            id="downloadButton"
-            onClick={generateExcel}
-            className=" p-2 bg-blue-500 text-white rounded-md"
-          >
-            <RiFileExcel2Line />
-          </button> */}
 
+          {order.length > 0 &&
           <button
-            onClick={toggleDropdown}
-            id="downloadButton"
-            className=" p-2 bg-blue-500 text-white rounded-md"
-          >
-            <BiDownload />
-          </button>
+          onClick={toggleDropdown}
+          id="downloadButton"
+          className=" p-2 bg-blue-500 text-white rounded-md"
+        >
+          <BiDownload />
+        </button>
+          }
 
           {openDropdown && (
             <div className="absolute right-12 -mt-2 bg-white border rounded shadow-md w-20">
