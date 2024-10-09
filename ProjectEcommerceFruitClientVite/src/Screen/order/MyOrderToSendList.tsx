@@ -74,17 +74,18 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
   useEffect(() => {
     if (order) {
       const total = order
-        .filter((x) => x.shippings?.[0]?.shippingStatus === 1)
+        .filter(
+          (x) =>
+            x.shippings?.[0]?.shippingStatus === 1 && x.confirmReceipt === 1
+        )
         .reduce((acc, currentOrder) => {
-          const shippingFeeTotal =
-            currentOrder.shippings[0].shippingFee *
-            currentOrder.orderItems.length;
+          const shippingFeeTotal = currentOrder.shippings[0].shippingFee;
           return acc + shippingFeeTotal;
         }, 0);
       settotalPrice(total);
 
       const shippingSuccess = order.filter(
-        (x) => x.shippings?.[0]?.shippingStatus === 1
+        (x) => x.shippings?.[0]?.shippingStatus === 1 && x.confirmReceipt === 1
       );
       settotalSuccess(shippingSuccess.length);
 
@@ -96,7 +97,8 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
         return (
           orderDate.getMonth() === currentMonth &&
           orderDate.getFullYear() === currentYear &&
-          x.shippings?.[0]?.shippingStatus === 1
+          x.shippings?.[0]?.shippingStatus === 1 &&
+          x.confirmReceipt === 1
         );
       });
       settotalSuccessForMonth(shippingSuccessForMonth.length);
@@ -107,13 +109,12 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
           return (
             orderDate.getMonth() === currentMonth &&
             orderDate.getFullYear() === currentYear &&
-            x.shippings?.[0]?.shippingStatus === 1
+            x.shippings?.[0]?.shippingStatus === 1 &&
+            x.confirmReceipt === 1
           );
         })
         .reduce((acc, currentOrder) => {
-          const shippingFeeTotal =
-            currentOrder.shippings[0].shippingFee *
-            currentOrder.orderItems.length;
+          const shippingFeeTotal = currentOrder.shippings[0].shippingFee;
           return acc + shippingFeeTotal;
         }, 0);
       settotalPriceForMonth(totalformonth);
@@ -128,18 +129,20 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
   const calculateMonthlyTotal = (orders: Order[], year: number) => {
     const monthlyTotals = Array(12).fill(0);
 
-    orders.forEach((order) => {
-      const shipping = order.shippings?.[0];
-      if (shipping?.shippingStatus === 1) {
-        const orderDate: any = new Date(shipping.createdAt);
-        const orderYear = orderDate.getFullYear();
-        const month = orderDate.getMonth();
-        if (orderYear === year) {
-          const totalForOrder = shipping.shippingFee * order.orderItems.length;
-          monthlyTotals[month] += totalForOrder;
+    orders
+      .filter((x) => x.confirmReceipt === 1)
+      .forEach((order) => {
+        const shipping = order.shippings?.[0];
+        if (shipping?.shippingStatus === 1) {
+          const orderDate: any = new Date(shipping.createdAt);
+          const orderYear = orderDate.getFullYear();
+          const month = orderDate.getMonth();
+          if (orderYear === year) {
+            const totalForOrder = shipping.shippingFee;
+            monthlyTotals[month] += totalForOrder;
+          }
         }
-      }
-    });
+      });
 
     return monthlyTotals;
   };
@@ -228,16 +231,18 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
 
   const productCount: any = {};
 
-  filteredOrders.forEach((o) => {
-    o.orderItems.forEach((item) => {
-      const productName = item.product.productGI.name;
-      if (productCount[productName]) {
-        productCount[productName] += item.quantity;
-      } else {
-        productCount[productName] = item.quantity;
-      }
+  filteredOrders
+    .filter((x) => x.confirmReceipt === 1)
+    .forEach((o) => {
+      o.orderItems.forEach((item) => {
+        const productName = item.product.productGI.name;
+        if (productCount[productName]) {
+          productCount[productName] += item.quantity;
+        } else {
+          productCount[productName] = item.quantity;
+        }
+      });
     });
-  });
 
   const productNames = Object.keys(productCount);
   const quantities = Object.values(productCount);
@@ -368,14 +373,24 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
       unit: "บาท",
     });
 
+    // เพิ่มแถวสำหรับปีที่เลือก
+    worksheet.addRow({
+      item: "ปีที่เลือก",
+      value: selectedYear.toString(),
+      unit: "",
+    });
+    
     worksheet.addRow({ item: "รายได้สุทธิของแต่ละเดือน", value: "" });
     data.months.forEach((month, index) => {
-      worksheet.addRow({
-        item: month,
-        value: monthlyTotal[index].toLocaleString(), // ใช้ข้อมูลรายได้ที่มี
-        unit: "บาท",
-      });
+      if (monthlyTotal[index] > 0) {
+        worksheet.addRow({
+          item: month,
+          value: monthlyTotal[index].toLocaleString(),
+          unit: "บาท",
+        });
+      }
     });
+    
 
     worksheet.addRow({ item: "สัดส่วนจำนวนหิ้วของแต่ละสินค้า", value: "" });
     Object.keys(productCount).forEach((productName) => {
@@ -596,12 +611,15 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
           </div>
         </a>
 
+        {order.filter(x=>x.confirmReceipt === 1).length > 0 &&
+        
         <button
           onClick={toggleDropdown}
           className="absolute top-5 right-5 p-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-200"
         >
           <BiDownload />
         </button>
+        }
 
         {openDropdown && (
           <div className="absolute right-0 top-10 mt-2 bg-white border rounded shadow-md w-28">
@@ -840,21 +858,24 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
                     <BiDownload size={30} className="mr-3" /> <p>ดาวน์โหลด</p>
                   </button>
                 </div>
+                
               </div>
             </div>
           </div>
         )}
 
+        {order.filter(x=>x.confirmReceipt === 1).length > 0 &&
         <div>
-          <motion.div
-            className="flex items-center font-semibold cursor-pointer"
-            onClick={toggleMoreData}
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.2 }}
-          >
-            ดูข้อมูลเพิ่มเติม <MdExpandMore size={25} className="-mb-1" />
-          </motion.div>
-        </div>
+        <motion.div
+          className="flex items-center font-semibold cursor-pointer"
+          onClick={toggleMoreData}
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.2 }}
+        >
+          ดูข้อมูลเพิ่มเติม <MdExpandMore size={25} className="-mb-1" />
+        </motion.div>
+      </div>
+        }
 
         {moreData && (
           <motion.div
@@ -992,7 +1013,6 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
             }}
           />
         </Tabs>
-
         <CustomTabPanel value={value} index={0}>
           <MyOrderCardToSend order={order} index={0} />
         </CustomTabPanel>

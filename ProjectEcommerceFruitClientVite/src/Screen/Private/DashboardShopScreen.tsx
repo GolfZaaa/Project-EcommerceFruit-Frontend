@@ -32,7 +32,6 @@ import OrderList from "../order/OrderList";
 import { RoutePath } from "../../constants/RoutePath";
 import ReactECharts from "echarts-for-react";
 import html2pdf from "html2pdf.js";
-import { BsFillPrinterFill } from "react-icons/bs";
 import moment from "moment";
 import Select from "react-select";
 import { BiDownload } from "react-icons/bi";
@@ -101,7 +100,7 @@ export default observer(function DashboardShopScreen() {
   useEffect(() => {
     if (order) {
       const total = order
-        .filter((x) => x.status === 1)
+        .filter((x) => x.status === 1 && x.confirmReceipt === 1)
         .reduce((acc, currentOrder) => {
           const orderTotal = currentOrder.orderItems.reduce(
             (itemAcc, orderItem) =>
@@ -114,7 +113,7 @@ export default observer(function DashboardShopScreen() {
     }
 
     const totalProduct = order
-      .filter((x) => x.status === 1)
+      .filter((x) => x.status === 1 && x.confirmReceipt === 1)
       .reduce((acc, currentOrder) => {
         const orderQuantity = currentOrder.orderItems.reduce(
           (itemAcc, orderItem) => itemAcc + orderItem.quantity,
@@ -124,12 +123,12 @@ export default observer(function DashboardShopScreen() {
       }, 0);
     setTotalQuantity(totalProduct);
 
-    const totalOrderSuccess = order.reduce((acc, currentOrder) => {
+    const totalOrderSuccess = order.filter(x=>x.confirmReceipt === 1).reduce((acc, currentOrder) => {
       return currentOrder.status === 1 ? acc + 1 : acc;
     }, 0);
     setTotalOrderSuccess(totalOrderSuccess);
 
-    const totalOrderFailed = order.reduce((acc, currentOrder) => {
+    const totalOrderFailed = order.filter(x=>x.confirmReceipt === 1).reduce((acc, currentOrder) => {
       return currentOrder.status === 2 ? acc + 1 : acc;
     }, 0);
     setTotalOrderFailed(totalOrderFailed);
@@ -140,7 +139,7 @@ export default observer(function DashboardShopScreen() {
     setYearOptions(years.map((year: any) => ({ value: year, label: year })));
 
     const ordersByMonth = order
-      .filter((x) => x.status === 1)
+      .filter((x) => x.status === 1 && x.confirmReceipt === 1)
       .reduce((acc: any, currentOrder) => {
         const orderYear = moment(currentOrder.createdAt).year();
         if (orderYear !== selectedYear) return acc;
@@ -305,7 +304,7 @@ export default observer(function DashboardShopScreen() {
   useEffect(() => {
     const categoryQuantities: any = {};
     order
-      .filter((x) => x.status === 1)
+      .filter((x) => x.status === 1 && x.confirmReceipt === 1)
       .forEach((orderItem) => {
         orderItem.orderItems.forEach((item) => {
           const categoryName = item.product?.productGI?.category?.name;
@@ -587,25 +586,49 @@ export default observer(function DashboardShopScreen() {
                       <p className="font-semibold">
                         กราฟแสดงยอดขายในแต่ละเดือน
                       </p>
-                      <div className="flex items-center">
-                        <p className="mr-2">ปี :</p>
-                        <Select
-                          options={yearOptions}
-                          value={yearOptions.find(
-                            (option: any) => option.value === selectedYear
-                          )}
-                          onChange={handleYearChange}
-                          placeholder="Select Year"
-                          className="w-32 z-20"
-                        />
-                      </div>
+
+                      {order.filter(x=>x.confirmReceipt === 1).length > 0 ?
+                      (
+                        <div className="flex items-center">
+                      <p className="mr-2">ปี :</p>
+                      <Select
+                        options={yearOptions}
+                        value={yearOptions.find(
+                          (option: any) => option.value === selectedYear
+                        )}
+                        onChange={handleYearChange}
+                        placeholder="Select Year"
+                        className="w-32 z-20"
+                      />
                     </div>
-                    <div className="p-2 -mt-10">
+                      ):(
+                        <div>
+                  </div>
+                      )}
+
+                    </div>
+                    {/* <div className="p-2 -mt-10">
+
                       <ReactECharts
                         option={option}
                         style={{ height: "300px", width: "100%" }}
                       />
-                    </div>
+                    </div> */}
+                    <div className="p-2 -mt-10">
+                {order?.filter(x=>x.confirmReceipt === 1).length > 0 ? (
+                  <div>
+                  <ReactECharts
+                  option={option}
+                  style={{ height: "300px", width: "100%" }}
+                />
+                </div>
+                ):(
+                  <div className="flex justify-center items-center h-80">
+                    <p className="text-4xl font-medium">ไม่มีข้อมูล</p>
+                  </div>
+                )}
+              </div>
+
                   </div>
 
                   <div className="w-5/12 bg-white border rounded-sm overflow-hidden shadow ">
@@ -614,12 +637,24 @@ export default observer(function DashboardShopScreen() {
                         สัดส่วนยอดขายตามหมวดหมู่ผลิตภัณฑ์
                       </p>
                     </div>
-                    <div className="p-2">
+                    {/* <div className="p-2">
                       <ReactECharts
                         option={pieOption}
                         style={{ height: "300px", width: "100%" }}
                       />
-                    </div>
+                    </div> */}
+                    <div className="p-2">
+                {order?.filter(x=>x.confirmReceipt === 1).length > 0 ? (
+                  <ReactECharts
+                  option={pieOption}
+                  style={{ height: "300px", width: "100%" }}
+                />
+                ):(
+                  <div className="flex justify-center items-center h-80 -mt-5">
+                    <p className="text-4xl font-medium">ไม่มีข้อมูล</p>
+                  </div>
+                )}
+              </div>
                   </div>
                 </div>
               </div>

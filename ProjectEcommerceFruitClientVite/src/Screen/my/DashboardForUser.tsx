@@ -34,7 +34,7 @@ export default observer(function DashboardForUser() {
   useEffect(() => {
     if (order) {
       const total = order
-        .filter((x) => x.status === 1)
+        .filter((x) => x.confirmReceipt === 1)
         .reduce((acc, currentOrder) => {
           const orderTotal = currentOrder.orderItems.reduce(
             (itemAcc, orderItem) =>
@@ -46,7 +46,7 @@ export default observer(function DashboardForUser() {
       setTotalPrice(total);
 
       const totalProduct = order
-        .filter((x) => x.status === 1)
+        .filter((x) => x.confirmReceipt === 1)
         .reduce((acc, currentOrder) => {
           const orderQuantity = currentOrder.orderItems.reduce(
             (itemAcc, orderItem) => itemAcc + orderItem.quantity,
@@ -57,12 +57,12 @@ export default observer(function DashboardForUser() {
       setTotalQuantity(totalProduct);
 
       const totalOrderSuccess = order.reduce((acc, currentOrder) => {
-        return currentOrder.status === 1 ? acc + 1 : acc;
+        return currentOrder.confirmReceipt === 1 ? acc + 1 : acc;
       }, 0);
       setTotalOrderSuccess(totalOrderSuccess);
 
       const totalOrderFailed = order.reduce((acc, currentOrder) => {
-        return currentOrder.status === 2 ? acc + 1 : acc;
+        return currentOrder.confirmReceipt === 2 ? acc + 1 : acc;
       }, 0);
       setTotalOrderCancel(totalOrderFailed);
 
@@ -72,7 +72,7 @@ export default observer(function DashboardForUser() {
       setYearOptions(years.map((year: any) => ({ value: year, label: year })));
 
       const ordersByMonth = order
-        .filter((x) => x.status === 1)
+        .filter((x) => x.confirmReceipt === 1)
         .reduce((acc: any, currentOrder) => {
           const month = dayjs(currentOrder.createdAt).format("MMMM");
           const orderYear = moment(currentOrder.createdAt).year();
@@ -163,7 +163,7 @@ export default observer(function DashboardForUser() {
   useEffect(() => {
     const categoryQuantities: any = {};
     order
-      .filter((x) => x.status === 1)
+      .filter((x) => x.confirmReceipt === 1)
       .forEach((orderItem) => {
         orderItem.orderItems.forEach((item) => {
           const categoryName = item.product.productGI.category.name;
@@ -327,6 +327,8 @@ export default observer(function DashboardForUser() {
     setmodal(false);
   };
 
+  
+  console.log("แสดงจำนวนคำสั่งซื้อในแต่ละเดือน",order)
   return (
     <div className="-ml-10 -mt-16">
       <div>
@@ -431,12 +433,17 @@ export default observer(function DashboardForUser() {
             </div>
           </a>
 
-          <button
+          {order?.filter(x=>x.confirmReceipt === 1).length ? 
+          (
+            <button
             onClick={toggleDropdown}
             className="absolute top-0 right-0 p-2 bg-blue-500 text-white rounded-md"
           >
             <BiDownload />
           </button>
+          ):(
+            <div></div>
+          )}
 
           {openDropdown && (
             <div className="absolute right-0 mt-2 bg-white border rounded shadow-md w-20">
@@ -651,7 +658,8 @@ export default observer(function DashboardForUser() {
             <div className="col-span-2 bg-white border rounded-sm overflow-hidden shadow">
               <div className="p-2 flex justify-between items-center">
                 <p className="font-semibold">แสดงจำนวนคำสั่งซื้อในแต่ละเดือน</p>
-                <div className="flex items-center">
+                {order?.filter(x=>x.confirmReceipt === 1).length > 0 ? (
+                  <div className="flex items-center">
                   <p className="mr-2">ปี :</p>
                   <Select
                     options={yearOptions}
@@ -663,12 +671,25 @@ export default observer(function DashboardForUser() {
                     className="w-32 z-40"
                   />
                 </div>
+                ):(
+                  <div>
+                  </div>
+                )}
+                
               </div>
               <div className="p-2 -mt-10">
-                <ReactECharts
+                {order?.filter(x=>x.confirmReceipt === 1).length > 0 ? (
+                  <div>
+                  <ReactECharts
                   option={option}
                   style={{ height: "300px", width: "100%" }}
                 />
+                </div>
+                ):(
+                  <div className="flex justify-center items-center h-80">
+                    <p className="text-4xl font-medium">ไม่มีข้อมูล</p>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -679,10 +700,16 @@ export default observer(function DashboardForUser() {
                 </p>
               </div>
               <div className="p-2">
-                <ReactECharts
+                {order?.filter(x=>x.confirmReceipt === 1).length > 0 ? (
+                  <ReactECharts
                   option={pieOption}
                   style={{ height: "300px", width: "100%" }}
                 />
+                ):(
+                  <div className="flex justify-center items-center h-80 -mt-5">
+                    <p className="text-4xl font-medium">ไม่มีข้อมูล</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
