@@ -9,10 +9,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Address } from "../../models/Address";
 import Swal from "sweetalert2";
 import Divider from "@mui/material/Divider";
-import MyLottie from "../../helper/components/MyLottie";
-import lottiteDelivery from "../../assets/lotties/delivery.json";
+import AddressTwoForCard from "../../components/AddressTwoForCard";
 
-interface OrderToReceipt {
+export interface OrderToReceipt {
   order: Order;
   address: Address;
 }
@@ -80,10 +79,10 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
         <></>
       )}
 
-      {data.map((item, i) => {
+      {data?.map((item, i) => {
         const calculateTotalPrice = () => {
           return item?.order?.orderItems?.reduce((total, item: OrderItem) => {
-            total = item.product.price * item.quantity + total;
+            total = item?.product?.price * item?.quantity + total;
 
             return total;
           }, 0);
@@ -109,7 +108,7 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
                   }}
                   className="text-lg font-semibold text-gray-900 dark:text-gray-900"
                 >
-                  รหัสคำสั่งซื้อ : {item.order.orderId}
+                  รหัสคำสั่งซื้อ : {item?.order?.orderId}
                 </Typography>
                 <Typography
                   variant="h5"
@@ -121,22 +120,22 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
                   }}
                   className={
                     "text-lg font-semibold text-gray-900 dark:text-" +
-                    (item.order.status === 0
+                    (item?.order?.status === 0
                       ? "กำลังรออนุมัติ"
-                      : item.order.status === 1
+                      : item?.order?.status === 1
                       ? "ยืนยันคำสั่งซื้อแล้ว"
-                      : item.order.status === 2
+                      : item?.order?.status === 2
                       ? "red-500"
                       : "gray-500")
                   }
                   // className="text-lg font-semibold text-gray-900 dark:text-red-500"
                 >
                   สถานะ :{" "}
-                  {item.order.status === 0
+                  {item?.order?.status === 0
                     ? "กำลังรออนุมัติ"
-                    : item.order.status === 1
+                    : item?.order?.status === 1
                     ? "ยืนยันคำสั่งซื้อแล้ว"
-                    : item.order.status === 2
+                    : item?.order?.status === 2
                     ? "ยกเลิกคำสั่งซื้อแล้ว"
                     : "เพิ่มสถานะด้วย"}
                 </Typography>
@@ -155,9 +154,9 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
                       height: 50,
                     }}
                     checked={
-                      select.find((x) => x === item.order.id) !== undefined
+                      select.find((x) => x === item?.order?.id) !== undefined
                     }
-                    onChange={() => onSelect(item.order.id)}
+                    onChange={() => onSelect(item?.order?.id)}
                   />
                   <Typography variant="h5" align="left">
                     เลือกสินค้า
@@ -166,28 +165,29 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
               </div>
 
               {item?.order?.orderItems?.map((item: OrderItem) => {
-                const TotalPriceForProduct = item.product.price * item.quantity;
+                const TotalPriceForProduct =
+                  item?.product?.price * item?.quantity;
                 const formatTotalPriceForProduct =
                   formatNumberWithCommas(TotalPriceForProduct);
 
                 return (
                   <div
-                    key={item.product.id}
+                    key={item?.product?.id}
                     className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6"
                   >
                     <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                       <a href="#" className="shrink-0 md:order-1">
                         <img
                           className="hidden h-20 w-20 dark:block"
-                          src={pathImages.product + item.product.images}
-                          alt={item.product.images || "product image"}
+                          src={pathImages.product + item?.product?.images}
+                          alt={item?.product?.images || "product image"}
                         />
                       </a>
                       <label className="sr-only">Choose quantity:</label>
                       <div className="flex items-center justify-between md:order-3 md:justify-end">
                         <div className="flex items-center">
                           <p className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-gray-800">
-                            {item.quantity}
+                            {item?.quantity}
                           </p>
                         </div>
                         <div className="text-end md:order-4 md:w-32">
@@ -199,13 +199,13 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
 
                       <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
                         <p className="text-sm text-gray-500 font-bold">
-                          {item.product.productGI.category.name}
+                          {item?.product?.productGI?.category?.name}
                         </p>
                         <a
                           href="#"
                           className="text-base font-medium text-gray-900 hover:underline dark:text-gray-800"
                         >
-                          {item.product.productGI.name}
+                          {item?.product?.productGI?.name}
                         </a>
                       </div>
                     </div>
@@ -242,8 +242,18 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
 
               <Divider />
 
-              <Grid container>
-                <Grid alignContent="center" item xs={4}>
+              <AddressTwoForCard
+                Astore={{
+                  user: item?.address?.user,
+                  address: item?.address,
+                }}
+                ACustomer={{
+                  user: item?.order?.address?.user,
+                  order: item?.order,
+                }}
+              />
+              {/* <Grid container justifyContent="space-evenly">
+                <Grid alignContent="center" item>
                   <div>
                     <Typography fontSize={22}>
                       ชื่อ-ที่อยู่ร้านค้า : {item.address?.user?.fullName}
@@ -271,10 +281,10 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
                     </Typography>
                   </div>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item>
                   <MyLottie lottieFile={lottiteDelivery} />
                 </Grid>
-                <Grid alignContent="center" item xs={4}>
+                <Grid alignContent="center">
                   <div>
                     <Typography fontSize={22}>
                       ชื่อ-ที่อยู่ลูกค้า :{" "}
@@ -303,7 +313,7 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
                     </Typography>
                   </div>
                 </Grid>
-              </Grid>
+              </Grid> */}
             </div>
           </div>
         );

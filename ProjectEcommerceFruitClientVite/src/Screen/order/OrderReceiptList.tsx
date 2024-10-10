@@ -12,7 +12,7 @@ import { myToast } from "../../helper/components";
 
 const OrderReceiptList = () => {
   const { token } = useStore().commonStore;
-  const { order, searchOrdersWantToReceipt, loadingOrder } =
+  const { orderWantToReceipt, searchOrdersWantToReceipt, loadingOrder } =
     useStore().orderStore;
 
   const [subDistrict, setSubDistrict] = useState<string | null>(null);
@@ -32,7 +32,7 @@ const OrderReceiptList = () => {
     searchOrdersWantToReceipt(params);
   }, []);
 
-  const data = order?.map((item: any) => ({
+  const data = orderWantToReceipt?.map((item: any) => ({
     order: item?.order,
     address: item?.address,
   }));
@@ -149,6 +149,7 @@ const OrderReceiptList = () => {
               </Grid>
             </Grid>
           </div>
+
           {data?.length ? (
             <MyCardOrderReceipt data={data} />
           ) : (

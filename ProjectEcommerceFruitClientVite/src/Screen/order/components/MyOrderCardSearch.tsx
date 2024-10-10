@@ -11,6 +11,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import Swal from "sweetalert2";
 import TotalPrice from "./TotalPrice";
 import { useStore } from "../../../store/store";
+import AddressForCard from "../../../components/AddressForCard";
 
 interface props {
   order: Order[];
@@ -278,7 +279,13 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
                   formattedTotalPrice={parseFloat(formattedTotalPrice)}
                   ShippingFee={item?.shippings[0]?.shippingFee}
                 />
-                <div className="flex-1">
+                <AddressForCard
+                  ACustomer={{
+                    user: item?.address?.user,
+                    address: item?.address,
+                  }}
+                />
+                {/* <div className="flex-1">
                   <p className="text-xl leading-4 text-gray-800 font-medium">
                     ชื่อ-ที่อยู่ลูกค้า : {item?.address?.user?.fullName} เบอร์ :{" "}
                     {item?.address?.user?.phoneNumber} บ้านเลขที่{" "}
@@ -292,7 +299,7 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
                       {item?.address?.postCode}
                     </div>
                   </p>
-                </div>
+                </div> */}
               </div>
             );
           })}
