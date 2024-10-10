@@ -320,7 +320,7 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
             <p className="text-base leading-4 text-gray-800">ค่าจัดส่ง</p>
             <p className="text-base leading-4 text-gray-600">
               {/* {systemSetting[0]?.shippingCost} บาท */}
-              {dataEdit?.shippings[0].shippingFee} บาท
+              {dataEdit?.shippings[0]?.shippingFee} บาท
             </p>
           </div>
           <div className="flex justify-between items-center w-full">
@@ -328,7 +328,8 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
               ราคารวมทั้งหมด
             </p>
             <p className="text-base font-semibold leading-4 text-gray-600">
-              {parseFloat(formattedTotalPrice) + systemSetting[0]?.shippingCost}{" "}
+              {parseFloat(formattedTotalPrice) +
+                (dataEdit?.shippings[0]?.shippingFee || 0)}{" "}
               บาท
             </p>
           </div>

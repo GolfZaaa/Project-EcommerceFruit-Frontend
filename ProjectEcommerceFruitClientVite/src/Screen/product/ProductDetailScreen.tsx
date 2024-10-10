@@ -18,7 +18,7 @@ import {
   fontSizesmall,
   resetScroll,
 } from "../../api/agent";
-import MyDescription from "../../component/MyDescription";
+import MyDescription from "../../components/MyDescription";
 import { motion } from "framer-motion";
 
 dayjs.extend(relativeTime);

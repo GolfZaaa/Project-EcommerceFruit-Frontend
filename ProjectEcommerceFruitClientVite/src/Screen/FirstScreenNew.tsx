@@ -26,8 +26,8 @@ import {
   fontSizesmall,
   resetScroll,
 } from "../api/agent";
-import MyDescription from "../component/MyDescription";
-import MyContent from "../component/MyContent";
+import MyDescription from "../components/MyDescription";
+import MyContent from "../components/MyContent";
 
 const settingsImageSlide = {
   dots: false,
