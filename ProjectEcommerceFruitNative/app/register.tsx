@@ -148,7 +148,7 @@ export default function RegisterScreen() {
           <ButtonText>ลงทะเบียน</ButtonText>
         </ButtonGradient>
 
-        <TouchableOpacity onPress={() => router.push(pathsPubilc.login)}>
+        <TouchableOpacity onPress={() => router.push("/login")}>
           <LinkText>มีบัญชีแล้ว? เข้าสู่ระบบ</LinkText>
         </TouchableOpacity>
       </Container>

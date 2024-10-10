@@ -3,7 +3,7 @@ import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const Container = styled(LinearGradient).attrs({
+const Container:any = styled(LinearGradient).attrs({
   colors: ['#e0f7fa', '#ffffff'],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
@@ -12,9 +12,10 @@ const Container = styled(LinearGradient).attrs({
   justify-content: flex-start;
   padding: 20px;
   background-color: #f8f9fa;
+  padding-top:60px;
 `;
 
-const Title = styled.Text`
+const Title:any = styled.Text`
   font-size: 24px;
   font-weight: bold;
   color: #333;
@@ -22,7 +23,7 @@ const Title = styled.Text`
   margin-bottom: 20px;
 `;
 
-const Card = styled(LinearGradient).attrs({
+const Card:any = styled(LinearGradient).attrs({
   colors: ['#ffffff', '#f7f9fc'],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
@@ -36,27 +37,27 @@ const Card = styled(LinearGradient).attrs({
   elevation: 2;
 `;
 
-const CardText = styled.Text`
+const CardText:any = styled.Text`
   font-size: 18px;
   color: #333;
   font-weight: bold;
   margin-bottom: 10px;
 `;
 
-const CardDescription = styled.Text`
+const CardDescription:any = styled.Text`
   font-size: 14px;
   color: #666;
   margin-bottom: 20px;
 `;
 
-const Button = styled.TouchableOpacity`
+const Button:any = styled.TouchableOpacity`
   background-color: #007bff;
   padding: 10px;
   border-radius: 8px;
   align-items: center;
 `;
 
-const ButtonText = styled.Text`
+const ButtonText:any = styled.Text`
   color: #fff;
   font-size: 16px;
   font-weight: bold;
@@ -64,10 +65,10 @@ const ButtonText = styled.Text`
 
 export default function TabTwoScreen() {
   const data = [
-    { id: '1', title: 'Card 1', description: 'This is the description for card 1.' },
-    { id: '2', title: 'Card 2', description: 'This is the description for card 2.' },
-    { id: '3', title: 'Card 3', description: 'This is the description for card 3.' },
-    { id: '4', title: 'Card 4', description: 'This is the description for card 4.' },
+    { id: '1', title: 'KRU-1-1', description: 'ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี' },
+    { id: '2', title: 'KRU-1-2', description: 'ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี' },
+    { id: '3', title: 'KRU-1-3', description: 'ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี' },
+    { id: '4', title: 'KRU-1-4', description: 'ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี' },
   ];
 
   const renderItem = ({ item }: any) => (
@@ -75,14 +76,13 @@ export default function TabTwoScreen() {
       <CardText>{item.title}</CardText>
       <CardDescription>{item.description}</CardDescription>
       <Button onPress={() => alert(`${item.title} Button Pressed`)}>
-        <ButtonText>Press me</ButtonText>
+        <ButtonText>รับหิ้ว</ButtonText>
       </Button>
     </Card>
   );
 
   return (
     <Container>
-      {/* ข้อความที่อยู่ตรงกลาง */}
       <Title>คำสั่งซื้อที่สามารถรับหิ้วได้</Title>
 
       <FlatList

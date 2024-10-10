@@ -10,7 +10,7 @@ const Container:any = styled.View`
   flex: 1;
   padding: 10px;
   background-color: #f8f9fa;
-  padding-top: 30px;
+  padding-top: 60px;
 `;
 
 const Header:any = styled.View`
@@ -21,16 +21,17 @@ const Header:any = styled.View`
 `;
 
 const HeaderText:any = styled.Text`
-  font-size: 20px;
+  font-size: 28px;
   font-weight: bold;
   color: #333;
+  padding-left: 10px;
 `;
 
-const IconButton = styled.TouchableOpacity`
+const IconButton:any = styled.TouchableOpacity`
   padding: 10px;
 `;
 
-const ProductCard = styled(TouchableOpacity)<{ numColumns: number }>`
+const ProductCard:any = styled(TouchableOpacity)<{ numColumns: number }>`
   background-color: #ffffff;
   border-radius: 15px;
   margin: 10px;
@@ -40,27 +41,27 @@ const ProductCard = styled(TouchableOpacity)<{ numColumns: number }>`
   position: relative;
 `;
 
-const ProductImage = styled(Image)`
+const ProductImage:any = styled(Image)`
   width: 100%;
   height: 150px;
   border-radius: 10px;
   margin-bottom: 10px;
 `;
 
-const ProductName = styled.Text`
+const ProductName:any = styled.Text`
   font-size: 16px;
   font-weight: bold;
   color: #333;
 `;
 
-const ProductPrice = styled.Text`
+const ProductPrice:any = styled.Text`
   font-size: 14px;
   color: #e74c3c;
   font-weight: bold;
   margin-top: 5px;
 `;
 
-const Badge = styled(LinearGradient).attrs({
+const Badge:any = styled(LinearGradient).attrs({
   colors: ['#ff6f00', '#ff8f00'],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
@@ -72,7 +73,7 @@ const Badge = styled(LinearGradient).attrs({
   border-radius: 5px;
 `;
 
-const BadgeText = styled.Text`
+const BadgeText:any = styled.Text`
   color: #fff;
   font-size: 12px;
   font-weight: bold;
@@ -84,20 +85,19 @@ export default function HomeScreen() {
   const [filterModalVisible, setFilterModalVisible] = useState(false); // ใช้สถานะสำหรับเปิดปิด modal ฟิลเตอร์
 
   const products = [
-    { id: '1', name: 'Striped Maxi Dress', price: 'Rs. 1,299', image: 'https://via.placeholder.com/150', isNew: true },
-    { id: '2', name: 'Envelope Sling Bag', price: 'Rs. 895', image: 'https://via.placeholder.com/150', isSale: true },
-    { id: '3', name: 'Laser Cut Heeled Sandals', price: 'Rs. 2,295', image: 'https://via.placeholder.com/150' },
-    { id: '4', name: 'Sunglasses', price: 'Rs. 1,150', image: 'https://via.placeholder.com/150' },
+    { id: '1', name: 'เงาะ', price: '200฿', image: 'https://hdmall.co.th/blog/wp-content/uploads/2024/04/%E0%B9%80%E0%B8%87%E0%B8%B2%E0%B8%B0-Rambutan-scaled.jpg', isNew: true },
+    { id: '2', name: 'ทุเรียน', price: '500฿', image: 'https://s.isanook.com/wo/0/ud/50/250005/250005-thumbnail.jpg?ip/crop/w670h402/q80/jpg', isSale: true },
+    { id: '3', name: 'มังคุด', price: '50฿', image: 'https://medthai.com/wp-content/uploads/2013/07/Mangosteen-1.jpg' },
+    { id: '4', name: 'ส้ม', price: '40฿', image: 'https://image.makewebeasy.net/makeweb/m_1920x0/qeb9oj2Lg/Ingradian/shutterstock_2053015835.jpg?v=202012190947' },
   ];
 
-  // สลับระหว่างคอลัมน์ 1 และ 2
   const toggleColumns = () => {
     setNumColumns((prev) => (prev === 1 ? 2 : 1));
   };
 
   const renderProduct = ({ item }: any) => (
-    // <ProductCard numColumns={numColumns} onPress={() => router.push(pathsPubilc.productDetails)}>
-    <ProductCard numColumns={numColumns} >
+    <ProductCard numColumns={numColumns} onPress={() => router.push("/productdetail")}>
+    {/* <ProductCard numColumns={numColumns} > */}
       <ProductImage source={{ uri: item.image }} />
       <ProductName>{item.name}</ProductName>
       <ProductPrice>{item.price}</ProductPrice>
@@ -108,19 +108,19 @@ export default function HomeScreen() {
         </Badge>
       )}
       {item.isSale && (
-        <Badge>
-          <BadgeText>Sale</BadgeText>
-        </Badge>
+        // <Badge>
+        //   <BadgeText>Sale</BadgeText>
+        // </Badge>
+        <View>
+        </View>
       )}
     </ProductCard>
   );
 
   return (
     <Container>
-      {/* ส่วนหัวสำหรับการปรับคอลัมน์ */}
       <HeaderText>รายการสินค้า</HeaderText>
       <Header>
-        {/* ปุ่มฟิลเตอร์ */}
         <IconButton onPress={() => setFilterModalVisible(true)}>
           <Ionicons name="filter-outline" size={24} color="#333" />
         </IconButton>
@@ -129,16 +129,14 @@ export default function HomeScreen() {
         </IconButton>
       </Header>
 
-      {/* การใช้ key เพื่อบังคับให้ FlatList ทำการ re-render */}
       <FlatList
         data={products}
         keyExtractor={(item) => item.id}
         renderItem={renderProduct}
         numColumns={numColumns}
-        key={numColumns}  // เพิ่ม key เพื่อบังคับ re-render เมื่อเปลี่ยนคอลัมน์
+        key={numColumns}  
       />
 
-      {/* Modal สำหรับฟิลเตอร์ */}
       <Modal
         animationType="slide"
         transparent={true}
