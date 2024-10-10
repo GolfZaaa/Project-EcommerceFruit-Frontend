@@ -12,6 +12,7 @@ export default function MyContent({
     smaller: 15,
     small: 18,
     normal:25,
+    big:35,
     large: 50,
   };
  
