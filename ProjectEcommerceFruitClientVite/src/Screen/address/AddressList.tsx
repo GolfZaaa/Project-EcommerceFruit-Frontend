@@ -20,6 +20,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import EditIcon from "@mui/icons-material/Edit";
 import MyLottie from "../../helper/components/MyLottie";
 import lottiteEmptyList from "../../assets/lotties/emptyList.json";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const InputThaiAddress = CreateInput();
 
@@ -32,7 +33,7 @@ const AddressList = ({ confirmChangeAddress }: any) => {
     getAddressgotoOrderByUserId,
   } = useStore().addressStore;
 
-  const {loadings} = useStore().systemSettingStore
+  const { loadings } = useStore().systemSettingStore;
 
   const [form, setForm] = useState(false);
   const [dataEdit, setDataEdit] = useState<Address | null>(null);
@@ -298,16 +299,19 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           fullWidth
           disabled={loadings}
         >
-         {loadings ? (
-  <div className="flex justify-center items-center h-full mt-1 mb-1">
-    <CircularProgress className="flex items-center" size={18} color="inherit" />
-  </div>
-) : (
-  <div className="flex justify-center items-center h-full ">
-    <p>บันทึก</p>
-    </div>
-)}
-
+          {loadings ? (
+            <div className="flex justify-center items-center h-full mt-1 mb-1">
+              <CircularProgress
+                className="flex items-center"
+                size={18}
+                color="inherit"
+              />
+            </div>
+          ) : (
+            <div className="flex justify-center items-center h-full ">
+              <p>บันทึก</p>
+            </div>
+          )}
         </Button>
       </Box>
     </>

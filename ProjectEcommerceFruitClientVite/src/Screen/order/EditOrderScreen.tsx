@@ -319,7 +319,8 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
           <div className="flex justify-between items-center w-full mb-3">
             <p className="text-base leading-4 text-gray-800">ค่าจัดส่ง</p>
             <p className="text-base leading-4 text-gray-600">
-              {systemSetting[0]?.shippingCost} บาท
+              {/* {systemSetting[0]?.shippingCost} บาท */}
+              {dataEdit?.shippings[0].shippingFee} บาท
             </p>
           </div>
           <div className="flex justify-between items-center w-full">

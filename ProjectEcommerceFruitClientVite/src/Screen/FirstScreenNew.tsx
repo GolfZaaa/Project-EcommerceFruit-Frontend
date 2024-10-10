@@ -20,7 +20,12 @@ import { useNavigate } from "react-router-dom";
 import { pathImages, RoutePath } from "../constants/RoutePath";
 import { Product } from "../models/Product";
 import { motion, useAnimation } from "framer-motion";
-import { fontSizeBiglittle, fontSizenormal, fontSizesmall, resetScroll } from "../api/agent";
+import {
+  fontSizeBiglittle,
+  fontSizenormal,
+  fontSizesmall,
+  resetScroll,
+} from "../api/agent";
 import MyDescription from "../component/MyDescription";
 import MyContent from "../component/MyContent";
 
@@ -39,7 +44,7 @@ export default observer(function FirstScreenNew() {
 
   const { product, getProduct, getCategory } = useStore().productStore;
 
-  const { getOrdersAll, order } = useStore().orderStore;
+  const { getOrdersAll, ordertotal } = useStore().orderStore;
 
   const { getUserAll, userAll, user } = useStore().userStore;
 
@@ -78,7 +83,6 @@ export default observer(function FirstScreenNew() {
       once: true,
     });
   }, []);
-
 
   const NavigateDetail = (product: any) => {
     navigate(RoutePath.productDetail(product.id));
@@ -154,7 +158,6 @@ export default observer(function FirstScreenNew() {
 
   return (
     <div>
-
       <div className="overflow-hidden mt-4 ml-4 mr-4">
         <div className="w-full ">
           {slideShow.length === 1 ? (
@@ -192,9 +195,6 @@ export default observer(function FirstScreenNew() {
           )}
         </div>
       </div>
-
-
-
 
       {/* ข้อมูลหลัก Start */}
       <div className="overflow-hidden">
@@ -258,7 +258,7 @@ export default observer(function FirstScreenNew() {
                 transition={{ duration: 0.7, ease: "easeInOut" }}
                 whileHover={{ scale: 1.05, color: "#2f855a", rotate: -2 }}
               >
-                <MyContent name={"เกษตรกรออนไลน์"} fontSize="large" /> 
+                <MyContent name={"เกษตรกรออนไลน์"} fontSize="large" />
               </motion.p>
               <motion.p
                 data-aos="fade-up"
@@ -267,7 +267,7 @@ export default observer(function FirstScreenNew() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.7, ease: "easeInOut" }}
                 whileHover={{ opacity: 0.8, color: "#2f855a" }}
-                style={{fontSize:fontSizenormal}}
+                style={{ fontSize: fontSizenormal }}
               >
                 เกษตรกรออนไลน์ เริ่มได้ง่าย ๆ
                 เพียงใช้อินเทอร์เน็ตและอุปกรณ์เข้าถึงที่เราใช้กันอยู่แล้วในชีวิตประจำวัน
@@ -324,9 +324,6 @@ export default observer(function FirstScreenNew() {
       </div>
       {/* ข้อมูลหลัก End */}
 
-
-
-
       {/* สินค้าสุ่ม Start */}
       <div className="xl:mx-auto xl:container">
         <div className="lg:px-20 md:px-6 px-4 md:py-12 py-8">
@@ -348,18 +345,30 @@ export default observer(function FirstScreenNew() {
               animate={controls}
               className="lg:w-1/2 lg:pl-12 lg:pr-24"
             >
-              <p className="text-sm leading-none text-gray-600 pb-2" style={{fontSize:fontSizesmall}}>
+              <p
+                className="text-sm leading-none text-gray-600 pb-2"
+                style={{ fontSize: fontSizesmall }}
+              >
                 {randomProduct && randomProduct.productGI.category.name}
               </p>
-              <p className="md:text-3xl lg:text-4xl text-2xl font-semibold lg:leading-9 text-gray-800 lg:pb-6 md:pb-4 pb-2" style={{fontSize:fontSizeBiglittle}}>
+              <p
+                className="md:text-3xl lg:text-4xl text-2xl font-semibold lg:leading-9 text-gray-800 lg:pb-6 md:pb-4 pb-2"
+                style={{ fontSize: fontSizeBiglittle }}
+              >
                 {randomProduct && randomProduct.productGI.name}
               </p>
-              <p className="text-sm leading-5 text-gray-600 md:pb-10 pb-8" style={{fontSize:fontSizesmall}}>
-                {randomProduct &&
-                    randomProduct && <MyDescription text={randomProduct.productGI.description} /> 
-                }
+              <p
+                className="text-sm leading-5 text-gray-600 md:pb-10 pb-8"
+                style={{ fontSize: fontSizesmall }}
+              >
+                {randomProduct && randomProduct && (
+                  <MyDescription text={randomProduct.productGI.description} />
+                )}
               </p>
-              <div className="md:block flex items-center justify-center" style={{fontSize:fontSizesmall}}>
+              <div
+                className="md:block flex items-center justify-center"
+                style={{ fontSize: fontSizesmall }}
+              >
                 <motion.button
                   onClick={() => NavigateDetail(randomProduct)}
                   className="lg:w-auto w-full border border-gray-800 hover:text-gray-50 hover:bg-gray-800 focus:outline-none lg:px-10 px-7 lg:py-4 py-3 text-sm leading-none text-gray-800"
@@ -367,7 +376,6 @@ export default observer(function FirstScreenNew() {
                   whileTap={{ scale: 0.95, rotate: -1 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
-                  
                   <MyContent name="ดูรายละเอียดเพิ่มเติม" fontSize="small" />
                 </motion.button>
               </div>
@@ -376,9 +384,6 @@ export default observer(function FirstScreenNew() {
         </div>
       </div>
       {/* สินค้าสุ่ม End */}
-
-
-
 
       {/* สินค้าขายดี Start */}
       <div className="2xl:mx-auto 2xl:container px-4 md:px-6 2xl:px-0 py-16 flex justify-center overflow-hidden">
@@ -468,13 +473,19 @@ export default observer(function FirstScreenNew() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
                     >
-                      <p className="text-lg font-medium leading-4 text-gray-800" style={{fontSize:fontSizenormal}}>
+                      <p
+                        className="text-lg font-medium leading-4 text-gray-800"
+                        style={{ fontSize: fontSizenormal }}
+                      >
                         {productItem.productGI.name}
                       </p>
                     </motion.div>
 
                     <motion.div data-aos="fade-up">
-                      <p className="text-lg leading-4 text-gray-600" style={{fontSize:fontSizesmall}}>
+                      <p
+                        className="text-lg leading-4 text-gray-600"
+                        style={{ fontSize: fontSizesmall }}
+                      >
                         {productItem.price.toLocaleString()} บาท
                       </p>
                     </motion.div>
@@ -486,10 +497,6 @@ export default observer(function FirstScreenNew() {
         </div>
       </div>
       {/* สินค้าขายดี End */}
-
-
-
-
 
       {/* Card Start */}
       <div className="2xl:container 2xl:mx-auto lg:px-20 md:py-12 md:px-6 py-9 px-4">
@@ -725,7 +732,7 @@ export default observer(function FirstScreenNew() {
                 className="flex justify-center flex-col items-center w-36 h-36 md:w-44 md:h-48 lg:w-56 lg:h-56 bg-white shadow rounded-2xl"
               >
                 <h2 className="lg:text-5xl md:text-4xl text-2xl font-extrabold leading-10 text-center text-gray-800">
-                  {order.length}
+                  {ordertotal.length}
                 </h2>
                 <p className="mt-4 text-sm md:text-base lg:text-lg leading-none text-center text-gray-600">
                   จำนวนคำสั่งซื้อทั้งหมด
@@ -761,7 +768,7 @@ export default observer(function FirstScreenNew() {
                 className="flex justify-center flex-col items-center w-36 h-36 md:w-44 md:h-48 lg:w-56 lg:h-56 bg-white shadow rounded-2xl"
               >
                 <h2 className="lg:text-5xl md:text-4xl text-2xl font-extrabold leading-10 text-center text-gray-800">
-                  {OrderDay(order).length}
+                  {OrderDay(ordertotal).length}
                 </h2>
                 <p className="mt-4 text-sm md:text-base lg:text-lg leading-none text-center text-gray-600">
                   ยอดขายของวันนี้
@@ -807,15 +814,18 @@ export default observer(function FirstScreenNew() {
                   data-aos-offset="300"
                   data-aos-easing="ease-in-sine"
                   className="f-m-m leading-loose mt-2"
-                  style={{fontSize:fontSizesmall}}
+                  style={{ fontSize: fontSizesmall }}
                 >
-                  <MyContent name="วันที่ 18 กรกฎาคม 2567 นายจตุพร อิ่มจิตร เกษตรอำเภอทองผาภูมิ
+                  <MyContent
+                    name="วันที่ 18 กรกฎาคม 2567 นายจตุพร อิ่มจิตร เกษตรอำเภอทองผาภูมิ
                   มอบหมายให้ นางสาวขนิษฐา บุญคำมา
                   นักวิชาการส่งเสริมการเกษตรชำนาญการ
                   ลงพื้นที่รับขึ้นทะเบียนเกษตรกรผู้ปลูกข้าว ปี67/68 ณ หมู่ 6
                   ตำบลลิ่นถิ่น อำเภอทองผาภูมิ จังหวัดกาญจนบุรี
                   พร้อมทั้งแจงโครงการปุ๋ยคนละครึ่ง ณ หมู่ 6 ตำบลลิ่นถิ่น
-                  อำเภอทองผาภูมิ จังหวัดกาญจนบุรี" fontSize="small" />
+                  อำเภอทองผาภูมิ จังหวัดกาญจนบุรี"
+                    fontSize="small"
+                  />
                 </p>
                 <div
                   data-aos="fade-right"
@@ -856,12 +866,14 @@ export default observer(function FirstScreenNew() {
                     data-aos-easing="ease-in-sine"
                     className="text-xs f-m-m leading-loose mt-2"
                   >
-                    <MyContent name="วันที่ 18 กรกฎาคม 2567 นายจตุพร เกษตรอำเภอทองผาภูมิ
+                    <MyContent
+                      name="วันที่ 18 กรกฎาคม 2567 นายจตุพร เกษตรอำเภอทองผาภูมิ
                     มอบหมายให้ นางสาวขนิษฐา บุญคำมา
                     นักวิชาการส่งเสริมการเกษตรชำนาญการ
                     เข้าร่วมประชุมหารือผลวิเคราะห์ข้อมูลปริมาณการผลิตสินค้าเกษตรด้านพืช
-                    ระดับจังหวัด ครั้งที่ 1/2567" fontSize="small" />
-                    
+                    ระดับจังหวัด ครั้งที่ 1/2567"
+                      fontSize="small"
+                    />
                   </p>
                   <div className="mt-4">
                     <a href="">
@@ -896,10 +908,12 @@ export default observer(function FirstScreenNew() {
                     เพื่อพัฒนาคุณภาพชีวิตฯ
                   </h1>
                   <p className="text-xs f-m-m leading-loose mt-2">
-                    <MyContent name="ณ ศูนย์พัฒนาอาชีพหนองบัว ต.หนองบัว อ.เมือง จ.กาญจนบุรี
+                    <MyContent
+                      name="ณ ศูนย์พัฒนาอาชีพหนองบัว ต.หนองบัว อ.เมือง จ.กาญจนบุรี
                     ร่วมกิจกรรมปลูกผักสวนครัว ตามโครงการพัฒนาพื้นที่ต้นแบบ
-                    เพื่อพัฒนาคุณภาพชีวิตแบบอารยเกษตรตามแนวพระราชดำริ" fontSize="small" />
-                    
+                    เพื่อพัฒนาคุณภาพชีวิตแบบอารยเกษตรตามแนวพระราชดำริ"
+                      fontSize="small"
+                    />
                   </p>
                   <div className="mt-4">
                     <a href="">
@@ -929,13 +943,15 @@ export default observer(function FirstScreenNew() {
                     ต.สหกรณ์นิคม
                   </h1>
                   <p className="text-xs f-m-m leading-loose mt-2">
-                    <MyContent name="วันที่ 10 กรกฎาคม 2567 นายจตุพร อิ่มจิตร เกษตรอำเภอทองผาภูมิ
+                    <MyContent
+                      name="วันที่ 10 กรกฎาคม 2567 นายจตุพร อิ่มจิตร เกษตรอำเภอทองผาภูมิ
                     มอบหมายให้ นางสาวรัตนาพร เปรมปรีดิ์
                     นักวิชาการส่งเสริมการเกษตร และ นายสุทัศน์ สุขศีลล้ำเลิศ
                     นักวิชาการส่งเสริมการเกษตรปฏิบัติการ
                     ลงพื้นที่รับขึ้นทะเบียนเกษตรกร ณ หมู่ 2 ตำบลสหกรณ์นิคม
-                    อำเภอทองผาภูมิ จังหวัดกาญจนบุรี พร้อมทั้งแจ้ง" fontSize="small" />
-                    
+                    อำเภอทองผาภูมิ จังหวัดกาญจนบุรี พร้อมทั้งแจ้ง"
+                      fontSize="small"
+                    />
                   </p>
                   <div className="mt-4">
                     <a href="">

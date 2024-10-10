@@ -8,6 +8,9 @@ import { Fab, Grid, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { Address } from "../../models/Address";
 import Swal from "sweetalert2";
+import Divider from "@mui/material/Divider";
+import MyLottie from "../../helper/components/MyLottie";
+import lottiteDelivery from "../../assets/lotties/delivery.json";
 
 interface OrderToReceipt {
   order: Order;
@@ -210,7 +213,9 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
                 );
               })}
 
-              <div className="rounded-sm flex flex-col px-4 xl:p-6 w-full bg-white">
+              <Divider />
+
+              <div className="rounded-sm flex flex-col px-4 w-full bg-white">
                 <div className="flex justify-between items-center w-full mb-3">
                   <p className="text-base leading-4 text-gray-800">ราคารวม</p>
                   <p className="text-base leading-4 text-gray-600">
@@ -235,37 +240,70 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
                 </div>
               </div>
 
-              <div className="flex flex-col md:flex-row md:justify-between items-center w-full space-y-4 md:space-y-0">
-                {/* <div className="flex-1">
-                  <p className="text-lg leading-4 text-gray-800 font-semibold">
-                    {item.address?.user?.fullName} เบอร์ :
-                    {item.address?.user?.phoneNumber}
-                  </p>
-                </div> */}
-                <div className="flex-1">
-                  <p className="text-xl leading-4 text-gray-800 font-medium">
-                    ชื่อ-ที่อยู่ร้านค้า : {item.address?.user?.fullName} เบอร์ :{" "}
-                    {item.address?.user?.phoneNumber} บ้านเลขที่{" "}
-                    {item.address?.detail} แขวง/ตำบล
-                    {item.address?.subDistrict} เขต/อำเภอ
-                    {item.address?.district} จังหวัด
-                    {item.address?.province} รหัสไปรษณีย์{" "}
-                    {item.address?.postCode}
-                  </p>
-                </div>
-              </div>
+              <Divider />
 
-              <div className="flex-1">
-                <p className="text-xl leading-4 text-gray-800 font-medium">
-                  ชื่อ-ที่อยู่ลูกค้า : {item?.order?.address?.user?.fullName}{" "}
-                  เบอร์ : {item?.order?.address?.user?.phoneNumber} บ้านเลขที่{" "}
-                  {item?.order?.address?.detail} แขวง/ตำบล
-                  {item?.order?.address?.subDistrict} เขต/อำเภอ
-                  {item?.order?.address?.district} จังหวัด
-                  {item?.order?.address?.province} รหัสไปรษณีย์{" "}
-                  {item?.order?.address?.postCode}
-                </p>
-              </div>
+              <Grid container>
+                <Grid alignContent="center" item xs={4}>
+                  <div>
+                    <Typography fontSize={22}>
+                      ชื่อ-ที่อยู่ร้านค้า : {item.address?.user?.fullName}
+                    </Typography>
+                    <Typography fontSize={22}>
+                      เบอร์ : {item.address?.user?.phoneNumber}
+                    </Typography>
+                    <Typography fontSize={22}>
+                      บ้านเลขที่ {item.address?.detail}
+                    </Typography>
+                    <Typography fontSize={22}>
+                      แขวง/ตำบล
+                      {item.address?.subDistrict}
+                    </Typography>
+                    <Typography fontSize={22}>
+                      เขต/อำเภอ
+                      {item.address?.district}
+                    </Typography>
+                    <Typography fontSize={22}>
+                      จังหวัด
+                      {item.address?.province}
+                    </Typography>
+                    <Typography fontSize={22}>
+                      รหัสไปรษณีย์ {item.address?.postCode}
+                    </Typography>
+                  </div>
+                </Grid>
+                <Grid item xs={4}>
+                  <MyLottie lottieFile={lottiteDelivery} />
+                </Grid>
+                <Grid alignContent="center" item xs={4}>
+                  <div>
+                    <Typography fontSize={22}>
+                      ชื่อ-ที่อยู่ลูกค้า :{" "}
+                      {item?.order?.address?.user?.fullName}
+                    </Typography>
+                    <Typography fontSize={22}>
+                      เบอร์ : {item?.order?.address?.user?.phoneNumber}
+                    </Typography>
+                    <Typography fontSize={22}>
+                      บ้านเลขที่ {item?.order?.address?.detail}
+                    </Typography>
+                    <Typography fontSize={22}>
+                      แขวง/ตำบล
+                      {item?.order?.address?.subDistrict}
+                    </Typography>
+                    <Typography fontSize={22}>
+                      เขต/อำเภอ
+                      {item?.order?.address?.district}
+                    </Typography>
+                    <Typography fontSize={22}>
+                      จังหวัด
+                      {item?.order?.address?.province}
+                    </Typography>
+                    <Typography fontSize={22}>
+                      รหัสไปรษณีย์ {item?.order?.address?.postCode}
+                    </Typography>
+                  </div>
+                </Grid>
+              </Grid>
             </div>
           </div>
         );

@@ -15,13 +15,21 @@ const OrderReceiptList = () => {
   const { order, searchOrdersWantToReceipt, loadingOrder } =
     useStore().orderStore;
 
-  const [district, setDistrict] = useState<string | null>(null);
   const [subDistrict, setSubDistrict] = useState<string | null>(null);
+  const [district, setDistrict] = useState<string | null>(null);
 
   useEffect(() => {
-    setDistrict(null);
-    setSubDistrict(null);
-    searchOrdersWantToReceipt({ district: district, subDistrict: subDistrict });
+    let params = new URLSearchParams();
+
+    if (district && district !== "") {
+      params.append("district", district);
+    }
+
+    if (subDistrict && subDistrict !== "") {
+      params.append("subDistrict", subDistrict);
+    }
+
+    searchOrdersWantToReceipt(params);
   }, []);
 
   const data = order?.map((item: any) => ({
@@ -33,10 +41,17 @@ const OrderReceiptList = () => {
     if (district === null && subDistrict === null) {
       myToast("กรุณากรอก อำเภอ หรือ ตำบล");
     } else {
-      searchOrdersWantToReceipt({
-        district: district,
-        subDistrict: subDistrict,
-      });
+      let params = new URLSearchParams();
+
+      if (district && district !== "") {
+        params.append("district", district);
+      }
+
+      if (subDistrict && subDistrict !== "") {
+        params.append("subDistrict", subDistrict);
+      }
+
+      searchOrdersWantToReceipt(params);
     }
   };
 
@@ -93,22 +108,22 @@ const OrderReceiptList = () => {
             <Grid container spacing={2}>
               <Grid item xs={5}>
                 <TextField
-                  value={district}
-                  fullWidth
-                  label="อำเภอ"
-                  margin="normal"
-                  name="district"
-                  onChange={(e) => setDistrict(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={5}>
-                <TextField
                   value={subDistrict}
                   fullWidth
                   label="ตำบล"
                   margin="normal"
                   name="subDistrict"
                   onChange={(e) => setSubDistrict(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={5}>
+                <TextField
+                  value={district}
+                  fullWidth
+                  label="อำเภอ"
+                  margin="normal"
+                  name="district"
+                  onChange={(e) => setDistrict(e.target.value)}
                 />
               </Grid>
               <Grid item xs={2}>

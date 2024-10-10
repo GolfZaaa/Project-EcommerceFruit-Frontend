@@ -172,12 +172,6 @@ export default observer(function Navbar() {
             <li>
               <NavLink
                 to={RoutePath.orderReceiptList}
-                onClick={() =>
-                  searchOrdersWantToReceipt({
-                    district: null,
-                    subDistrict: null,
-                  })
-                }
                 className={({ isActive }) =>
                   `text-sm ${
                     isActive

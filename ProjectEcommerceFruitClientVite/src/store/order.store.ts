@@ -7,6 +7,7 @@ export default class OrderStore {
   checkOrderNow: OrderNow[] = [];
   orderid: number = 0;
   loadingOrder: boolean = false;
+  ordertotal: Order[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -38,13 +39,10 @@ export default class OrderStore {
     }
   };
 
-  searchOrdersWantToReceipt = async (values: {
-    district?: string | null;
-    subDistrict?: string | null;
-  }) => {
+  searchOrdersWantToReceipt = async (params: URLSearchParams) => {
     this.setLoadingOrder(true);
     try {
-      const result = await agent.Order.searchOrdersWantToReceipt(values);
+      const result = await agent.Order.searchOrdersWantToReceipt(params);
       this.order = result;
 
       this.setLoadingOrder(false);
@@ -162,7 +160,7 @@ export default class OrderStore {
   getOrdersAll = async () => {
     try {
       const result = await agent.Order.getOrdersAll();
-      this.order = result;
+      this.ordertotal = result;
     } catch (error) {
       return error;
     }
