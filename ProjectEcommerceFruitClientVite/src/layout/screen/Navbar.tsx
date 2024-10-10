@@ -18,7 +18,6 @@ export default observer(function Navbar() {
   const { logout, user } = useStore().userStore;
   const { GetCartItemByUser, cartItems } = useStore().cartStore;
   const { token } = useStore().commonStore;
-  const { searchOrdersWantToReceipt } = useStore().orderStore;
   const { systemSetting, getSystemSetting, loadings } =
     useStore().systemSettingStore;
 

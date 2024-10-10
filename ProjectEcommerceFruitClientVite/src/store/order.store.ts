@@ -8,6 +8,7 @@ export default class OrderStore {
   orderid: number = 0;
   loadingOrder: boolean = false;
   ordertotal: Order[] = [];
+  orderWantToReceipt: Order[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -43,7 +44,7 @@ export default class OrderStore {
     this.setLoadingOrder(true);
     try {
       const result = await agent.Order.searchOrdersWantToReceipt(params);
-      this.order = result;
+      this.orderWantToReceipt = result;
 
       this.setLoadingOrder(false);
     } catch (error) {
