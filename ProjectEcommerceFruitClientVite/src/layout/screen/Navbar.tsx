@@ -11,6 +11,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
 import CircularProgress from "@mui/material/CircularProgress";
 import Backdrop from "@mui/material/Backdrop";
+import MyContent from "../../component/MyContent";
 
 export default observer(function Navbar() {
   const navigate = useNavigate();
@@ -81,10 +82,12 @@ export default observer(function Navbar() {
                         objectFit: "contain",
                       }}
                     />
-                    <p className="ml-5">{systemSetting[0]?.webName}</p>
+                    {/* <p className="ml-5">{systemSetting[0]?.webName}</p> */}
+                    <p className="ml-5"><MyContent name={systemSetting[0]?.webName} fontSize="big" /></p>
                   </div>
                 ) : (
-                  <p>กรุณาเพิ่มรูปภาพ และชื่อเว็บไซต์ ได้ที่ตั้งค่าระบบ</p>
+                  // <p>กรุณาเพิ่มรูปภาพ และชื่อเว็บไซต์ ได้ที่ตั้งค่าระบบ</p>
+                  <p><MyContent name={"กรุณาเพิ่มรูปภาพ และชื่อเว็บไซต์ ได้ที่ตั้งค่าระบบ"} fontSize="normal" /></p>
                 )}
               </>
             )}
@@ -120,7 +123,8 @@ export default observer(function Navbar() {
                   }`
                 }
               >
-                หน้าหลัก
+                
+                <MyContent name={"หน้าหลัก"} fontSize="small" />
               </NavLink>
             </li>
             <li className="text-gray-300">
@@ -150,7 +154,7 @@ export default observer(function Navbar() {
                   }`
                 }
               >
-                สินค้า
+                <MyContent name={"สินค้า"} fontSize="small" />
               </NavLink>
             </li>
             <li className="text-gray-300">
@@ -180,7 +184,8 @@ export default observer(function Navbar() {
                   }`
                 }
               >
-                สร้างรายได้
+                
+                <MyContent name={"สร้างรายได้"} fontSize="small" />
               </NavLink>
             </li>
           </ul>
@@ -189,7 +194,8 @@ export default observer(function Navbar() {
             <div>
               <ButtonMui color="secondary" onClick={handleClick}>
                 <Typography variant="body1" color="black">
-                  {user?.fullName}
+                  {/* {user?.fullName} */}
+                <MyContent name={user?.fullName} fontSize="small" />
                 </Typography>
               </ButtonMui>
               <Menu
@@ -213,14 +219,19 @@ export default observer(function Navbar() {
                     to={RoutePath.dashboardShopScreen}
                     style={{ textDecoration: "none", color: "#000" }}
                   >
-                    <MenuItem onClick={handleClose}>ร้านค้า</MenuItem>
+                    {/* <MenuItem onClick={handleClose}>ร้านค้า</MenuItem> */}
+                    <MenuItem onClick={handleClose}><MyContent name={"ร้านค้า"} fontSize="smaller" /></MenuItem>
+                    
                   </NavLink>
                 ) : (
                   <NavLink
                     to={RoutePath.createShopScreen}
                     style={{ textDecoration: "none", color: "#000" }}
                   >
-                    <MenuItem onClick={handleClose}>ลงทะเบียนร้านค้า</MenuItem>
+                    {/* <MenuItem onClick={handleClose}>ลงทะเบียนร้านค้า</MenuItem> */}
+                    <MenuItem onClick={handleClose}><MyContent name={"ลงทะเบียนร้านค้า"} fontSize="smaller" /></MenuItem>
+                
+
                   </NavLink>
                 )}
 
@@ -235,7 +246,7 @@ export default observer(function Navbar() {
                     handleClose();
                   }}
                 >
-                  ออกจากระบบ
+                  <MyContent name={"ออกจากระบบ"} fontSize="smaller" />
                 </MenuItem>
               </Menu>
 
@@ -256,7 +267,7 @@ export default observer(function Navbar() {
                 className="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-green-500 hover:bg-green-700 text-sm text-white font-bold  rounded-xl transition duration-200"
                 to={RoutePath.loginScreen}
               >
-                เข้าสู่ระบบ
+                  <MyContent name={"เข้าสู่ระบบ"} fontSize="small" />
               </NavLink>
             </div>
           )}
