@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform } from 'react-native';
-import styled from 'styled-components/native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { router } from 'expo-router';
-// import pathsPubilc from '@/path/publicpath';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import styled from "styled-components/native";
+import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Container = styled(LinearGradient).attrs({
-  colors: ['#e0f7fa', '#ffffff'],
+const Container: any = styled(LinearGradient).attrs({
+  colors: ["#e0f7fa", "#ffffff"],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
 })`
@@ -16,48 +24,48 @@ const Container = styled(LinearGradient).attrs({
   position: relative;
 `;
 
-const GraphicTopLeft = styled.View`
+const GraphicTopLeft: any = styled.View`
   position: absolute;
-  top: -60px;
-  left: -60px;
-  width: 200px;
-  height: 200px;
-  border-radius: 100px;
+  top: -30px;
+  left: -30px;
+  width: 150px;
+  height: 150px;
+  border-radius: 75px;
   background-color: rgba(255, 183, 77, 0.7);
 `;
 
-const GraphicBottomRight = styled.View`
+const GraphicBottomRight: any = styled.View`
   position: absolute;
-  bottom: -60px;
-  right: -60px;
-  width: 200px;
-  height: 200px;
-  border-radius: 100px;
+  bottom: -30px;
+  right: -30px;
+  width: 150px;
+  height: 150px;
+  border-radius: 75px;
   background-color: rgba(156, 39, 176, 0.7);
 `;
 
-const Title = styled.Text`
-  font-size: 30px;
+const Title: any = styled.Text`
+  font-size: 28px;
   font-weight: bold;
   color: #333;
   text-align: center;
   margin-bottom: 10px;
 `;
 
-const SubTitle = styled.Text`
+const SubTitle: any = styled.Text`
   font-size: 16px;
   color: #777;
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 `;
 
-const Input = styled.TextInput`
+const Input: any = styled.TextInput`
   border-width: 1px;
   border-color: #ccc;
   border-radius: 25px;
   padding: 15px;
   font-size: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   background-color: #fff;
   shadow-color: #000;
   shadow-opacity: 0.1;
@@ -65,46 +73,70 @@ const Input = styled.TextInput`
   elevation: 2;
 `;
 
-const ButtonGradient = styled(LinearGradient).attrs({
-  colors: ['#ff6f61', '#ff8965'],
-  start: { x: 0, y: 0 },
-  end: { x: 1, y: 1 },
-})`
-  padding: 15px;
-  border-radius: 30px;
-  align-items: center;
-  margin-top: 20px;
-`;
+const ButtonGradient: any = ({ children, onPress }: any) => (
+  <TouchableOpacity onPress={onPress}>
+    <LinearGradient
+      colors={["#ff6f61", "#ff8965"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={{
+        padding: 15,
+        borderRadius: 30,
+        alignItems: "center",
+        marginTop: 10,
+      }}
+    >
+      {children}
+    </LinearGradient>
+  </TouchableOpacity>
+);
 
-const ButtonText = styled.Text`
+const ButtonText: any = styled.Text`
   color: #fff;
   font-size: 18px;
   font-weight: bold;
 `;
 
-const LinkText = styled.Text`
+const LinkText: any = styled.Text`
   font-size: 16px;
   color: #007bff;
   text-align: center;
-  margin-top: 20px;
+  margin-top: 10px;
 `;
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    if (email && password) {
-      Alert.alert('เข้าสู่ระบบสำเร็จ', `ยินดีต้อนรับกลับมา, ${email}`);
+  const handleLogin = async () => {
+    if (phone && password) {
+      const loginData: any = {
+        phone: phone,
+        password: password,
+      };
+
+      const convertdata = JSON.stringify(loginData);
+
+      try {
+        await AsyncStorage.setItem("token", convertdata);
+
+        console.log("loginData", loginData);
+
+        router.replace("/(tabs)");
+      } catch (error) {
+        console.error("Error storing token:", error);
+      }
     } else {
-      Alert.alert('ข้อผิดพลาด', 'กรุณากรอกอีเมลและรหัสผ่านให้ครบถ้วน');
+      Alert.alert("ข้อมูลไม่ครบ", "กรุณากรอกเบอร์โทรศัพท์และรหัสผ่าน");
     }
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
       <Container>
-        {/* องค์ประกอบกราฟิก */}
         <GraphicTopLeft />
         <GraphicBottomRight />
 
@@ -113,8 +145,8 @@ export default function LoginScreen() {
 
         <Input
           placeholder="อีเมล"
-          value={email}
-          onChangeText={setEmail}
+          value={phone}
+          onChangeText={setPhone}
           keyboardType="email-address"
           autoCapitalize="none"
         />
@@ -129,11 +161,13 @@ export default function LoginScreen() {
           <ButtonText>เข้าสู่ระบบ</ButtonText>
         </ButtonGradient>
 
-        <TouchableOpacity onPress={() => Alert.alert('ลืมรหัสผ่าน', 'ไปที่หน้าลืมรหัสผ่าน')}>
+        <TouchableOpacity
+          onPress={() => Alert.alert("ลืมรหัสผ่าน", "ไปที่หน้าลืมรหัสผ่าน")}
+        >
           <LinkText>ลืมรหัสผ่าน?</LinkText>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push(pathsPubilc.register)}>
+        <TouchableOpacity onPress={() => router.push("/register")}>
           <LinkText>ยังไม่มีบัญชี? ลงทะเบียน</LinkText>
         </TouchableOpacity>
       </Container>

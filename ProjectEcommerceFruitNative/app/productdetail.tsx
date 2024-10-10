@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, LayoutAnimation } from 'react-native';
-import styled from 'styled-components/native';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  LayoutAnimation,
+} from "react-native";
+import styled from "styled-components/native";
+import { LinearGradient } from "expo-linear-gradient";
 
-const Container = styled(LinearGradient).attrs({
-  colors: ['#ffffff', '#f0f0f0'],
+const Container: any = styled(LinearGradient).attrs({
+  colors: ["#ffffff", "#f0f0f0"],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
 })`
@@ -12,65 +18,65 @@ const Container = styled(LinearGradient).attrs({
   padding: 20px;
 `;
 
-const ProductImage = styled.Image`
+const ProductImage: any = styled.Image`
   width: 100%;
   height: 300px;
   border-radius: 20px;
   margin-bottom: 20px;
 `;
 
-const ProductTitle = styled.Text`
+const ProductTitle: any = styled.Text`
   font-size: 26px;
   font-weight: bold;
   color: #333;
   margin-bottom: 10px;
 `;
 
-const ProductPrice = styled.Text`
+const ProductPrice: any = styled.Text`
   font-size: 22px;
   color: #e74c3c;
   font-weight: bold;
   margin-bottom: 20px;
 `;
 
-const ProductDescription = styled.Text`
+const ProductDescription: any = styled.Text`
   font-size: 16px;
   color: #777;
   margin-bottom: 20px;
   line-height: 24px;
 `;
 
-const ProductInfo = styled.View`
+const ProductInfo: any = styled.View`
   margin-bottom: 20px;
 `;
 
-const InfoText = styled.Text`
+const InfoText: any = styled.Text`
   font-size: 16px;
   color: #555;
   margin-bottom: 5px;
 `;
 
-const QuantityContainer = styled.View`
+const QuantityContainer: any = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
 `;
 
-const QuantityButton = styled.TouchableOpacity`
+const QuantityButton: any = styled.TouchableOpacity`
   background-color: #ff6f61;
   padding: 10px 20px;
   border-radius: 30px;
 `;
 
-const QuantityText = styled.Text`
+const QuantityText: any = styled.Text`
   font-size: 18px;
   font-weight: bold;
   margin: 0 20px;
 `;
 
-const AddToCartButton = styled(LinearGradient).attrs({
-  colors: ['#ff6f61', '#ff8965'],
+const AddToCartButton: any = styled(LinearGradient).attrs({
+  colors: ["#ff6f61", "#ff8965"],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
 })`
@@ -80,20 +86,20 @@ const AddToCartButton = styled(LinearGradient).attrs({
   margin-top: 20px;
 `;
 
-const ButtonText = styled.Text`
+const ButtonText: any = styled.Text`
   color: #fff;
   font-size: 18px;
   font-weight: bold;
 `;
 
-const DropdownButton = styled.TouchableOpacity`
+const DropdownButton: any = styled.TouchableOpacity`
   padding: 15px;
   background-color: #007bff;
   border-radius: 10px;
   margin-top: 20px;
 `;
 
-const DropdownText = styled.Text`
+const DropdownText: any = styled.Text`
   color: #fff;
   font-size: 18px;
   font-weight: bold;
@@ -113,68 +119,76 @@ export default function ProductDetailsScreen() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const increaseQuantity = () => {
-    setQuantity(prevQuantity => prevQuantity + 1);
+    setQuantity((prevQuantity) => prevQuantity + 1);
   };
 
   const decreaseQuantity = () => {
-    setQuantity(prevQuantity => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+    setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
   };
 
   const toggleDropdown = () => {
-    LayoutAnimation.easeInEaseOut(); // เพื่อทำให้ dropdown มีการแสดงผลแบบ animation
+    LayoutAnimation.easeInEaseOut();
     setIsDropdownOpen(!isDropdownOpen);
   };
 
   return (
     <ScrollView>
       <Container>
-        {/* รูปภาพสินค้า */}
-        <ProductImage source={{ uri: 'https://via.placeholder.com/300' }} />
+        <ProductImage
+          source={{
+            uri: "https://hdmall.co.th/blog/wp-content/uploads/2024/04/%E0%B9%80%E0%B8%87%E0%B8%B2%E0%B8%B0-Rambutan-scaled.jpg",
+          }}
+        />
 
-        {/* ชื่อสินค้า */}
-        <ProductTitle>ชื่อสินค้าสวยๆ</ProductTitle>
+        <ProductTitle>เงาะ</ProductTitle>
 
-        {/* ราคาสินค้า */}
         <ProductPrice>฿ 1,599</ProductPrice>
 
-        {/* ข้อมูลสินค้าเพิ่มเติม */}
         <ProductInfo>
           <InfoText>ขายแล้ว: 6 ชิ้น</InfoText>
           <InfoText>ราคาต่อกิโลกรัม: 55 บาท</InfoText>
           <InfoText>คงเหลือ: 25 ชิ้น</InfoText>
         </ProductInfo>
 
-        {/* คำอธิบายสินค้า */}
         <ProductDescription>
-          นี่คือคำอธิบายสินค้าซึ่งอธิบายรายละเอียดของสินค้าอย่างละเอียด รวมถึงข้อมูลที่เกี่ยวข้อง
-          เพื่อให้ผู้ใช้สามารถตัดสินใจซื้อได้ง่ายขึ้น คุณสามารถปรับเปลี่ยนข้อมูลเหล่านี้ตามสินค้าที่ต้องการได้
+          ป็นผลไม้เมืองร้อน ที่ลักษณะต้นเป็นไม้ยืนต้นขนาดกลางถึงใหญ่
+          มีถิ่นกำเนิดมาจากแถบอินโดนีเซีย
+          เจริญเติบโตได้ดีในพื้นดินที่มีความชื้นค่อนข้างสูง ประมาณ 25-30
+          องศาเซลเซียส นิยมปลูกกันมากบริเวณภาคตะวันออกและภาคใต้ของไทย
+          เป็นพืชเศรษฐกิจ มีการส่งออกผลเงาะไปยังต่างประเทศ
+          ทำรายได้ให้เกษตรกรอย่างมาก
         </ProductDescription>
 
-        {/* การเพิ่มหรือลดจำนวนสินค้า */}
         <QuantityContainer>
           <QuantityButton onPress={decreaseQuantity}>
-            <Text style={{ color: '#fff', fontSize: 24 }}>-</Text>
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 24,
+                width: 10,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              -
+            </Text>
           </QuantityButton>
           <QuantityText>{quantity}</QuantityText>
           <QuantityButton onPress={increaseQuantity}>
-            <Text style={{ color: '#fff', fontSize: 24 }}>+</Text>
+            <Text style={{ color: "#fff", fontSize: 24 }}>+</Text>
           </QuantityButton>
         </QuantityContainer>
 
-        {/* ปุ่มเพิ่มในตะกร้า */}
         <AddToCartButton>
           <ButtonText>เพิ่มในตะกร้า ({quantity})</ButtonText>
         </AddToCartButton>
 
-        {/* Dropdown ข้อมูล IG */}
-        <DropdownButton onPress={toggleDropdown}>
+        {/* <DropdownButton onPress={toggleDropdown}>
           <DropdownText>{isDropdownOpen ? 'ซ่อนข้อมูล IG' : 'แสดงข้อมูล IG'}</DropdownText>
-        </DropdownButton>
+        </DropdownButton> */}
 
         {isDropdownOpen && (
-          <IGInfoText>
-            ติดตามสินค้านี้ได้ที่ IG: @product_ig_name
-          </IGInfoText>
+          <IGInfoText>ติดตามสินค้านี้ได้ที่ IG: @product_ig_name</IGInfoText>
         )}
       </Container>
     </ScrollView>
