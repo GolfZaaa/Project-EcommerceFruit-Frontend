@@ -619,7 +619,8 @@ export default observer(function ProductDetailScreen() {
                   d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                 />
               </svg>
-              นี่คือสินค้าในร้านของคุณ
+              
+              <MyContent name={"นี่คือสินค้าในร้านของคุณ"} fontSize="small" />
             </button>
           ) : (
             <button
@@ -846,7 +847,8 @@ export default observer(function ProductDetailScreen() {
 
       <div className="bg-white mt-5">
         <div className="ml-12 pt-5 text-2xl mb-3 flex justify-between">
-          <p>สินค้าใกล้เคียงกัน</p>
+          {/* <p>สินค้าใกล้เคียงกัน</p> */}
+          <MyContent name={"สินค้าใกล้เคียงกัน"} fontSize="normal" />
         </div>
 
         <div className="relative">
@@ -872,12 +874,15 @@ export default observer(function ProductDetailScreen() {
                         className="text-base font-semibold tracking-tight text-slate-900"
                         style={{ fontSize: fontSizenormal }}
                       >
-                        {item.productGI.name}
+                        {/* {item.productGI.name} */}
+                        <MyContent name={item.productGI.name} fontSize="small" />
                       </h5>
                       <div className="flex items-center justify-between mt-10">
                         <p>
-                          <span className="text-xl font-bold text-slate-900">
-                            ฿{item.price}
+                          <span className="text-xl font-bold text-slate-900 flex">
+                            {/* ฿{item.price} */}
+                            ฿
+                            <MyContent name={item.price} fontSize="small" />
                           </span>
                         </p>
                         <button className="flex items-center rounded-md bg-slate-900 px-4 py-2.5 text-center text-xs font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
