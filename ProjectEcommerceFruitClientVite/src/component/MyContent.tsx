@@ -4,12 +4,13 @@ export default function MyContent({
   name,
   fontSize,
 }: {
-  name: string;
+  name: any;
   fontSize: string;
 }) {
 
   const ConvertSize:any = {
-    small: 15,
+    smaller: 15,
+    small: 18,
     normal:25,
     large: 50,
   };

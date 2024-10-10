@@ -637,12 +637,6 @@ export default observer(function DashboardShopScreen() {
                         สัดส่วนยอดขายตามหมวดหมู่ผลิตภัณฑ์
                       </p>
                     </div>
-                    {/* <div className="p-2">
-                      <ReactECharts
-                        option={pieOption}
-                        style={{ height: "300px", width: "100%" }}
-                      />
-                    </div> */}
                     <div className="p-2">
                 {order?.filter(x=>x.confirmReceipt === 1).length > 0 ? (
                   <ReactECharts

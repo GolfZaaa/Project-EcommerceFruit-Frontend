@@ -168,7 +168,7 @@ export default observer(function ShopDetailScreen() {
                 <span className="text-red-500 text-xl font-bold">
                   {timeAgo}
                 </span>
-                <p>เข้าร่วมเมื่อ</p>
+                <p>สร้างร้านค้าเมื่อ</p>
               </div>
             </div>
 

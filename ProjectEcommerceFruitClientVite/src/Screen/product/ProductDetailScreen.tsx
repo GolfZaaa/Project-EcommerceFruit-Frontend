@@ -20,6 +20,7 @@ import {
 } from "../../api/agent";
 import MyDescription from "../../component/MyDescription";
 import { motion } from "framer-motion";
+import MyContent from "../../component/MyContent";
 
 dayjs.extend(relativeTime);
 dayjs.locale("th");
@@ -229,7 +230,6 @@ export default observer(function ProductDetailScreen() {
     <div className="bg-gray-100 py-12 2xl:px-20 md:px-6 px-4">
       <div className="md:flex items-start justify-center py-12 2xl:px-20 md:px-6 px-4 bg-white">
         {showToast && <ToastAdd Check={checkToast} />}
-        {/* <div className="xl:w-2/6 lg:w-2/5 w-80 md:block hidden"> */}
         <div>
           <img
             className="h-96 rounded-t-lg object-cover"
@@ -268,7 +268,8 @@ export default observer(function ProductDetailScreen() {
                 className="text-sm leading-none text-gray-600"
                 style={{ fontSize: fontSizesmall }}
               >
-                {productDetail && productDetail?.productGI?.category.name}
+                {/* {productDetail && productDetail?.productGI?.category.name} */}
+                <MyContent name={productDetail && productDetail?.productGI?.category.name} fontSize="small" />
               </p>
               <h1
                 className="
@@ -282,7 +283,8 @@ export default observer(function ProductDetailScreen() {
 						"
                 style={{ fontSize: fontSizeBiglittle }}
               >
-                {productDetail && productDetail?.productGI?.name}
+                {/* {productDetail && productDetail?.productGI?.name} */}
+                <MyContent name={productDetail && productDetail?.productGI?.name} fontSize="large" />
               </h1>
             </div>
 
@@ -484,33 +486,48 @@ export default observer(function ProductDetailScreen() {
                 <div></div>
               )}
             </p>
-            <p className="text-base leading-4 mt-4 text-gray-600">
-              ขายแล้ว : {productDetail?.sold} ชิ้น
+            
+            <p className="text-base leading-4 mt-4 text-gray-600 flex">
+              {/* ขายแล้ว : {productDetail?.sold} ชิ้น */}
+              ขายแล้ว : <MyContent name={productDetail?.sold} fontSize="small" /> ชิ้น
             </p>
-            <p className="text-base leading-4 mt-4 text-gray-600 mb-5">
-              ราคาต่อกิโลกรัม : {productDetail?.price} บาท
+            <p className="text-base leading-4 mt-4 text-gray-600 mb-5 flex">
+              {/* ราคาต่อกิโลกรัม : {productDetail?.price} บาท */}
+              ราคาต่อกิโลกรัม : <MyContent name={productDetail?.price} fontSize="small" /> บาท
+              
             </p>
-            <p className="text-base leading-4 mt-4 text-gray-600 mb-5">
-              คงเหลือ : {productDetail?.quantity} ชิ้น
+            <p className="text-base leading-4 mt-4 text-gray-600 mb-5 flex">
+              {/* คงเหลือ : {productDetail?.quantity} ชิ้น */}
+              คงเหลือ : <MyContent name={productDetail?.quantity} fontSize="small" /> ชิ้น
             </p>
 
-            <Box display="flex" alignItems="center" gap={2}>
+            {user && user?.id == productDetail?.productGI?.store?.userId ? (
+              <div></div>
+            ):(
+              <Box display="flex" alignItems="center" gap={2}>
               <Button
                 variant="outlined"
                 onClick={decreaseQuantity}
                 size="medium"
               >
-                -
+                <MyContent name={"-"} fontSize="small" />
+                {/* - */}
               </Button>
-              <Typography variant="body1">{quantity}</Typography>
+              {/* <Typography variant="body1">{quantity}</Typography> */}
+              <Typography variant="body1"> <MyContent name={quantity} fontSize="small" /></Typography>
               <Button
                 variant="outlined"
                 onClick={() => increaseQuantity(productDetail?.quantity)}
                 size="medium"
               >
-                +
+                <MyContent name={"+"} fontSize="small" />
+                {/* + */}
               </Button>
             </Box>
+            )}
+            
+
+
           </div>
           <div>
             <div className="border-t border-b py-4 mt-7 border-gray-200">
@@ -519,7 +536,7 @@ export default observer(function ProductDetailScreen() {
                 className="flex justify-between items-center cursor-pointer"
               >
                 <p className="text-base leading-4 text-gray-800">
-                  ข้อมูล IG ของสินค้า
+                  <MyContent name={"ข้อมูล IG ของสินค้า"} fontSize="small" />
                 </p>
                 <button
                   className="
@@ -549,6 +566,8 @@ export default observer(function ProductDetailScreen() {
                   </svg>
                 </button>
               </div>
+
+
               <div
                 className={
                   "pt-4 text-base leading-normal pr-12 mt-4 text-gray-600 " +
@@ -563,6 +582,8 @@ export default observer(function ProductDetailScreen() {
                 )}
                 {/* <MyDescription text={productDetail?.productGI?.description} /> */}
               </div>
+
+
             </div>
           </div>
           {user && user?.id == productDetail?.productGI?.store?.userId ? (
@@ -639,7 +660,7 @@ export default observer(function ProductDetailScreen() {
                       d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                     />
                   </svg>
-                  เพิ่มลงตะกร้า
+                  <MyContent name={"เพิ่มลงตะกร้า"} fontSize="small" />
                 </div>
               )}
             </button>
@@ -660,7 +681,9 @@ export default observer(function ProductDetailScreen() {
 
             <div className="flex-grow">
               <h1 className="text-2xl font-bold">
-                {shopProductDetail?.[0]?.name}
+                {/* {shopProductDetail?.[0]?.name} */}
+                
+                <MyContent name={shopProductDetail?.[0]?.name} fontSize="normal" />
               </h1>
             </div>
 
@@ -669,36 +692,43 @@ export default observer(function ProductDetailScreen() {
                 onClick={() => handleShopDetail(shopProductDetail)}
                 className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-semibold border hover:bg-gray-200 hover:text-gray-800"
               >
-                ดูร้านค้า
+                
+                <MyContent name={"ดูร้านค้า"} fontSize="small" />
               </button>
             </div>
           </div>
 
           <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-6">
             <div>
-              <p className="text-gray-500">จำนวนสินค้าที่ถูกซื้อ</p>
+            
+              <p className="text-gray-500"><MyContent name={"จำนวนสินค้าที่ถูกซื้อ"} fontSize="small" /></p>
               <p className="text-red-500 text-xl font-bold">
-                {totalQuantity.toLocaleString()}
+                {/* {totalQuantity.toLocaleString()} */}
+                <MyContent name={totalQuantity.toLocaleString()} fontSize="small" />
               </p>
             </div>
 
             <div>
               <p className="text-gray-500">รายการสินค้า</p>
               <p className="text-red-500 text-xl font-bold">
-                {shopProductUser.length.toLocaleString()}
+                {/* {shopProductUser.length.toLocaleString()} */}
+                <MyContent name={shopProductUser.length.toLocaleString()} fontSize="small" />
               </p>
             </div>
 
             <div>
               <p className="text-gray-500">ยอดการสั่งซื้อ</p>
               <p className="text-red-500 text-xl font-bold">
-                {OrderByStore.toLocaleString()}
+                {/* {OrderByStore.toLocaleString()} */}
+                <MyContent name={OrderByStore.toLocaleString()} fontSize="small" />
+
               </p>
             </div>
 
             <div>
-              <p className="text-gray-500">เข้าร่วมเมื่อ</p>
-              <p className="text-red-500 text-xl font-bold">{timeAgo}</p>
+              <p className="text-gray-500">สร้างร้านค้าเมื่อ</p>
+              {/* <p className="text-red-500 text-xl font-bold">{timeAgo}</p> */}
+              <p className="text-red-500 text-xl font-bold"><MyContent name={timeAgo} fontSize="small" /></p>
             </div>
           </div>
         </div>
@@ -707,12 +737,15 @@ export default observer(function ProductDetailScreen() {
       {RecommendProducts.length > 0 && (
         <div className="bg-white mt-5">
           <div className="ml-12 pt-5 text-2xl mb-3 flex justify-between">
-            <p>สินค้าจากร้านเดียวกัน</p>
+            {/* <p>สินค้าจากร้านเดียวกัน</p> */}
+            <MyContent name={"สินค้าจากร้านเดียวกัน"} fontSize="normal" />
             <div
               className="mr-10 flex cursor-pointer"
               onClick={() => handleShopDetail(shopProductDetail)}
             >
-              <p className="font-semibold text-sm text-red-500">ดูทั้งหมด</p>
+              <p className="font-semibold text-sm text-red-500"><MyContent name={"ดูทั้งหมด"} fontSize="small" /></p>
+              {/* <p className="font-semibold text-sm text-red-500">ดูทั้งหมด</p> */}
+
               <GrNext className="text-red-500" />
             </div>
           </div>
@@ -729,7 +762,7 @@ export default observer(function ProductDetailScreen() {
             <motion.div
               ref={carouselRef}
               className="flex overflow-hidden"
-              transition={{ type: "tween", duration: 0.5 }} // กำหนด transition
+              transition={{ type: "tween", duration: 0.5 }} 
             >
               {RecommendProducts.slice(
                 currentIndex,
@@ -739,12 +772,11 @@ export default observer(function ProductDetailScreen() {
                   onClick={() => NavigateDetail(item)}
                   key={item.id}
                   className="m-custom-marginleft mb-9 w-64 max-w-custom-size overflow-hidden rounded-lg bg-white border relative cursor-pointer"
-                  initial={{ opacity: 0, y: 20 }} // เริ่มต้นด้วยความโปร่งใส 0 และเลื่อนขึ้นเล็กน้อย
-                  animate={{ opacity: 1, y: 0 }} // เปลี่ยนเป็นโปร่งใส 1 และกลับมาอยู่ที่ตำแหน่งเดิม
-                  exit={{ opacity: 0, y: -20 }} // เมื่อเลิกแสดงให้ลดความโปร่งใสและเลื่อนขึ้นเล็กน้อย
-                  transition={{ duration: 0.5 }} // ใช้เวลาประมาณ 0.5 วินาทีในการทำให้โปร่งใส
+                  initial={{ opacity: 0, y: 20 }} 
+                  animate={{ opacity: 1, y: 0 }} 
+                  exit={{ opacity: 0, y: -20 }} 
+                  transition={{ duration: 0.5 }} 
                 >
-                  {/* เนื้อหาสินค้า */}
                   <div className="shadow-md relative">
                     <img
                       className="h-48 w-full rounded-t-lg object-cover"
@@ -763,12 +795,15 @@ export default observer(function ProductDetailScreen() {
                         className="text-base font-semibold tracking-tight text-slate-900"
                         style={{ fontSize: fontSizenormal }}
                       >
-                        {item.productGI.name}
+                        {/* {item.productGI.name} */}
+                        <MyContent name={item.productGI.name} fontSize="small" />
                       </h5>
                       <div className="flex items-center justify-between mt-10">
                         <p>
-                          <span className="text-xl font-bold text-slate-900">
-                            ฿{item.price.toLocaleString()}
+                          <span className="text-xl font-bold text-slate-900 flex">
+                            {/* ฿{item.price.toLocaleString()} */}
+                            ฿
+                            <MyContent name={item.price.toLocaleString()} fontSize="small" />
                           </span>
                         </p>
                         <button className="flex items-center rounded-md bg-slate-900 px-4 py-2.5 text-center text-xs font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
@@ -787,7 +822,7 @@ export default observer(function ProductDetailScreen() {
                             />
                           </svg>
                           {/* เพิ่มสินค้าลงตะกร้า */}
-                          รายละเอียดสินค้า
+                          <MyContent name={"รายละเอียดสินค้า"} fontSize="smaller" />
                         </button>
                       </div>
                     </div>

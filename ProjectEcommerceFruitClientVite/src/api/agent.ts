@@ -18,7 +18,7 @@ export const pathImagepayment = "https://localhost:7168/paymentImage/";
 
 export const fontSizenormal = "20px";
 
-export const fontSizesmall = "15px";
+export const fontSizesmall = "18px";
 
 export const fontSizeBiglittle = "25px";
 

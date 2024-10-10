@@ -141,6 +141,7 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
       component="form"
       onSubmit={handleSubmit}
     >
+
       <Card
         sx={{
           width: "100%",
@@ -154,16 +155,6 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
               <ArrowBackIosIcon sx={{ mr: 1 }} />
               กลับ
             </Fab>
-            {/* <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              size="large"
-              fullWidth
-              onClick={onChangeCU}
-            > */}
-            {/* กลับ */}
-            {/* </Button> */}
           </Grid>
           <Grid item xs={11} />
         </Grid>
