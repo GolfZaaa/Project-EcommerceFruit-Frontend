@@ -14,6 +14,7 @@ import MyLottie from "../helper/components/MyLottie";
 dayjs.extend(relativeTime);
 
 import lottiteEmpty from "../assets/lotties/lf20_qh5z2fdq.json";
+import MyContent from "../component/MyContent";
 
 export default observer(function HomeScreen() {
   const navigate = useNavigate();
@@ -142,11 +143,11 @@ export default observer(function HomeScreen() {
 
             <div className="pl-14 pr-14">
               <div className="bg-white p-4 shadow-md rounded-md -mb-6 border ">
-                <h2 className="text-lg font-semibold mb-4">กรองข้อมูลสินค้า</h2>
+                <h2 className="text-lg font-semibold mb-4"> <MyContent name={"กรองข้อมูลสินค้า"} fontSize="normal" /></h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="flex items-center space-x-4">
                     <label className="text-sm font-medium text-gray-700 ">
-                      ประเภทผลไม้
+                      <MyContent name={"ประเภทผลไม้"} fontSize="small" />
                     </label>
                     <select
                       value={selectedCategory}
@@ -155,7 +156,8 @@ export default observer(function HomeScreen() {
                     >
                       {categories.map((item, i: number) => (
                         <option key={i} value={item.id}>
-                          {item.name}
+                          {/* {item.name} */}
+                          <MyContent name={item.name} fontSize="small" />
                         </option>
                       ))}
                     </select>
@@ -163,7 +165,8 @@ export default observer(function HomeScreen() {
 
                   <div className="flex items-center space-x-4">
                     <label className="text-sm font-medium text-gray-700">
-                      ช่วงราคาสินค้า
+                      {/* ช่วงราคาสินค้า */}
+                      <MyContent name={"ช่วงราคาสินค้า"} fontSize="small" />
                     </label>
                     <select
                       value={sortPrice}
@@ -171,10 +174,17 @@ export default observer(function HomeScreen() {
                       className="block w-52 bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:ring focus:ring-indigo-200"
                     >
                       <option value="" hidden>
-                        ราคา
+                      <MyContent name={"ราคา"} fontSize="small" />
+                        {/* ราคา */}
                       </option>
-                      <option value="lowToHigh">ราคา: จากน้อยไปมาก</option>
-                      <option value="highToLow">ราคา: จากมากไปน้อย</option>
+                      
+                      
+
+                      <option value="lowToHigh"><MyContent name={"ราคา: จากน้อยไปมาก"} fontSize="small" /></option>
+                      <option value="highToLow"><MyContent name={"ราคา: จากมากไปน้อย"} fontSize="small" /></option>
+
+                      {/* <option value="lowToHigh">ราคา: จากน้อยไปมาก</option>
+                      <option value="highToLow">ราคา: จากมากไปน้อย</option> */}
                     </select>
                   </div>
 
@@ -192,7 +202,9 @@ export default observer(function HomeScreen() {
                         </div>
                       ) : (
                         <div>
-                          <p>รีเซ็ตกรองข้อมูลสินค้า</p>
+                          {/* <p></p> */}
+                      <MyContent name={"รีเซ็ตกรองข้อมูลสินค้า"} fontSize="small" />
+
                         </div>
                       )}
                     </button>
@@ -374,7 +386,8 @@ export default observer(function HomeScreen() {
                       </g>
                     </svg>
                     <div className="font-semibold inline-block">
-                      รายการผลไม้ทั้งหมด
+                      
+                      <MyContent name={"รายการผลไม้ทั้งหมด"} fontSize="small" />
                     </div>
                   </div>
 
@@ -424,7 +437,7 @@ export default observer(function HomeScreen() {
                         onClick={handleMyShop}
                         className="font-semibold inline-block"
                       >
-                        สินค้าของฉัน
+                      <MyContent name={"สินค้าของฉัน"} fontSize="small" />
                       </div>
                     </div>
                   )}
@@ -473,10 +486,6 @@ export default observer(function HomeScreen() {
 
                                     <span>{product.price} บาท</span>
                                   </div>
-
-                                  {/* <p className="text-gray-500 text-sm">
-                              {product.detail.replace(/<\/?[^>]+(>|$)/g, "")}
-                            </p> */}
                                 </div>
                                 <div className="px-6 py-3 flex flex-row items-center justify-between bg-gray-100">
                                   <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
@@ -496,7 +505,7 @@ export default observer(function HomeScreen() {
                                         </g>
                                       </g>
                                     </svg>
-                                    <span className="ml-1">{timePassed}</span>
+                                    <span className="ml-1"> <MyContent name={timePassed} fontSize="smaller" /></span>
                                   </span>
 
                                   <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
@@ -513,8 +522,9 @@ export default observer(function HomeScreen() {
                                         d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
                                       ></path>
                                     </svg>
-                                    <span className="ml-1">
-                                      {product.sold} ยอดขาย
+                                    <span className="ml-1 flex">
+                                    <MyContent name={product.sold} fontSize="smaller" />
+                                       <p style={{paddingLeft:5}}><MyContent name={"ยอดขาย"} fontSize="smaller" /></p>
                                     </span>
                                   </span>
                                 </div>

@@ -158,7 +158,8 @@ export default observer(function Navbar() {
               </NavLink>
             </li>
             <li className="text-gray-300">
-              <svg
+              {user && user && (
+                <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 stroke="currentColor"
@@ -172,8 +173,12 @@ export default observer(function Navbar() {
                   d="M12 5v0m0 7v0m0 7v0m0-13a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
                 />
               </svg>
+              )}
+              
             </li>
-            <li>
+
+                {user && user && (
+                  <li>
               <NavLink
                 to={RoutePath.orderReceiptList}
                 className={({ isActive }) =>
@@ -188,6 +193,9 @@ export default observer(function Navbar() {
                 <MyContent name={"สร้างรายได้"} fontSize="small" />
               </NavLink>
             </li>
+                )}
+            
+
           </ul>
 
           {token ? (
