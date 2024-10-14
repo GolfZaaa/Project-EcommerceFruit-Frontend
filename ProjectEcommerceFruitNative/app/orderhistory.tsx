@@ -3,7 +3,7 @@ import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native"; // สำหรับการนำทาง
+import { useNavigation } from "@react-navigation/native"; 
 
 const Container: any = styled(LinearGradient).attrs({
   colors: ["#E8F0FF", "#F7F9FC"],

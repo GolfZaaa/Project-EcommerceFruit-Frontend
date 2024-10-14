@@ -5,7 +5,6 @@ import { useNavigation } from 'expo-router';
 import styled from 'styled-components/native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-// สร้าง Styled Component สำหรับหน้าจอ
 const Container: any = styled(LinearGradient).attrs({
   colors: ["#E8F0FF", "#F7F9FC"],
   start: { x: 0, y: 0 },
@@ -96,7 +95,6 @@ export default function EditAddressScreen() {
   const [province, setProvince] = useState('');
 
   const handleSave = () => {
-    // Logic for saving address goes here
     console.log('Address saved:', { address, zipcode, subdistrict, district, province });
   };
 
@@ -134,7 +132,6 @@ export default function EditAddressScreen() {
 
       <Title>แก้ไขที่อยู่</Title>
 
-      {/* ฟอร์มแก้ไขที่อยู่ */}
       <ScrollView contentContainerStyle={styles.formContainer}>
         <TextInput
           style={styles.input}

@@ -2,8 +2,10 @@ import React from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';  
+import { useNavigation } from '@react-navigation/native';
 
-const Container:any = styled(LinearGradient).attrs({
+const Container: any = styled(LinearGradient).attrs({
   colors: ['#e0f7fa', '#ffffff'],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
@@ -12,10 +14,10 @@ const Container:any = styled(LinearGradient).attrs({
   justify-content: flex-start;
   padding: 20px;
   background-color: #f8f9fa;
-  padding-top:60px;
+  padding-top: 60px;
 `;
 
-const Title:any = styled.Text`
+const Title: any = styled.Text`
   font-size: 24px;
   font-weight: bold;
   color: #333;
@@ -23,7 +25,7 @@ const Title:any = styled.Text`
   margin-bottom: 20px;
 `;
 
-const Card:any = styled(LinearGradient).attrs({
+const Card: any = styled(LinearGradient).attrs({
   colors: ['#ffffff', '#f7f9fc'],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
@@ -37,33 +39,43 @@ const Card:any = styled(LinearGradient).attrs({
   elevation: 2;
 `;
 
-const CardText:any = styled.Text`
+const CardText: any = styled.Text`
   font-size: 18px;
   color: #333;
   font-weight: bold;
   margin-bottom: 10px;
 `;
 
-const CardDescription:any = styled.Text`
+const CardDescription: any = styled.Text`
   font-size: 14px;
   color: #666;
   margin-bottom: 20px;
 `;
 
-const Button:any = styled.TouchableOpacity`
+const Button: any = styled.TouchableOpacity`
   background-color: #007bff;
   padding: 10px;
   border-radius: 8px;
   align-items: center;
 `;
 
-const ButtonText:any = styled.Text`
+const ButtonText: any = styled.Text`
   color: #fff;
   font-size: 16px;
   font-weight: bold;
 `;
 
+const BackButton: any = styled.TouchableOpacity`
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1;
+  padding: 10px;
+`;
+
 export default function TabTwoScreen() {
+  const navigation = useNavigation();
+
   const data = [
     { id: '1', title: 'KRU-1-1', description: 'ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี' },
     { id: '2', title: 'KRU-1-2', description: 'ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี' },
@@ -83,6 +95,10 @@ export default function TabTwoScreen() {
 
   return (
     <Container>
+      <BackButton onPress={() => navigation.goBack()}>
+        <Ionicons name="arrow-back-outline" size={24} color="#333" />
+      </BackButton>
+
       <Title>คำสั่งซื้อที่สามารถรับหิ้วได้</Title>
 
       <FlatList

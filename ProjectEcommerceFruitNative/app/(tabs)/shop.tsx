@@ -10,7 +10,6 @@ export default function ShopScreen() {
 
   const toggleDrawer = () => {
     if (isDrawerOpen) {
-      // สไลด์ออกไปด้านซ้าย
       Animated.timing(slideAnim, {
         toValue: -width, 
         duration: 300,
@@ -155,8 +154,8 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap', // ให้แสดงผลแบบแถวแนวนอน และให้ wrap เมื่อเกินพื้นที่
-    justifyContent: 'space-between', // กระจายการ์ดให้มีช่องว่างระหว่างกัน
+    flexWrap: 'wrap',
+    justifyContent: 'space-between', 
     marginTop: 20,
   },
 });
