@@ -176,7 +176,11 @@ export default function HomeScreen() {
           <Ionicons name="filter-outline" size={24} color="#333" />
         </IconButton>
         <IconButton onPress={toggleColumns}>
-          <Ionicons name={numColumns === 1 ? 'grid-outline' : 'list-outline'} size={24} color="#333" />
+          <Ionicons
+            name={numColumns === 1 ? "grid-outline" : "list-outline"}
+            size={24}
+            color="#333"
+          />
         </IconButton>
       </Header>
 
@@ -185,7 +189,7 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.id}
         renderItem={renderProduct}
         numColumns={numColumns}
-        key={numColumns}  
+        key={numColumns}
       />
 
       <Modal
@@ -194,15 +198,112 @@ export default function HomeScreen() {
         visible={filterModalVisible}
         onRequestClose={() => setFilterModalVisible(false)}
       >
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-          <View style={{ width: 300, padding: 20, backgroundColor: 'white', borderRadius: 10 }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 20 }}>ฟิลเตอร์สินค้า</Text>
-            <Button title="ฟิลเตอร์ตามราคา" onPress={() => alert('ฟิลเตอร์ตามราคา')} />
-            <Button title="ฟิลเตอร์ตามหมวดหมู่" onPress={() => alert('ฟิลเตอร์ตามหมวดหมู่')} />
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          }}
+        >
+          <View
+            style={{
+              width: 300,
+              padding: 20,
+              backgroundColor: "white",
+              borderRadius: 10,
+            }}
+          >
+            <Text
+              style={{ fontSize: 20, fontWeight: "bold", marginBottom: 20 }}
+            >
+              ฟิลเตอร์สินค้า
+            </Text>
+            <Button
+              title="ฟิลเตอร์ตามราคา"
+              onPress={() => alert("ฟิลเตอร์ตามราคา")}
+            />
+            <Button
+              title="ฟิลเตอร์ตามหมวดหมู่"
+              onPress={() => alert("ฟิลเตอร์ตามหมวดหมู่")}
+            />
             <Button title="ปิด" onPress={() => setFilterModalVisible(false)} />
           </View>
         </View>
       </Modal>
     </Container>
   );
-}
+});
+
+const Container: any = styled.View`
+  flex: 1;
+  padding: 10px;
+  background-color: #f8f9fa;
+  padding-top: 60px;
+`;
+
+const Header: any = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
+const HeaderText: any = styled.Text`
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  padding-left: 10px;
+`;
+
+const IconButton: any = styled.TouchableOpacity`
+  padding: 10px;
+`;
+
+const ProductCard: any = styled(TouchableOpacity)<{ numColumns: number }>`
+  background-color: #ffffff;
+  border-radius: 15px;
+  margin: 10px;
+  padding: 10px;
+  flex: ${(props) => (props.numColumns === 1 ? "1 0 100%" : "1")};
+  elevation: 2;
+  position: relative;
+`;
+
+const ProductImage: any = styled(Image)`
+  width: 100%;
+  height: 150px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+`;
+
+const ProductName: any = styled.Text`
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+`;
+
+const ProductPrice: any = styled.Text`
+  font-size: 14px;
+  color: #e74c3c;
+  font-weight: bold;
+  margin-top: 5px;
+`;
+
+const Badge: any = styled(LinearGradient).attrs({
+  colors: ["#ff6f00", "#ff8f00"],
+  start: { x: 0, y: 0 },
+  end: { x: 1, y: 1 },
+})`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+`;
+
+const BadgeText: any = styled.Text`
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+`;

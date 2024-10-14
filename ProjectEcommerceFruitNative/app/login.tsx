@@ -82,6 +82,10 @@ export default function LoginScreen() {
         <TouchableOpacity onPress={() => router.push("/register")}>
           <LinkText>ยังไม่มีบัญชี? ลงทะเบียน</LinkText>
         </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => router.back()}>
+          <LinkText>ข้ามการลงทะเบียน</LinkText>
+        </TouchableOpacity>
       </Container>
     </KeyboardAvoidingView>
   );
