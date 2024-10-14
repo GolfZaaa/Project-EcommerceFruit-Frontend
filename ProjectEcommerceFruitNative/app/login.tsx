@@ -7,11 +7,85 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  Button,
 } from "react-native";
 import styled from "styled-components/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useStore } from "@/src/store/store";
+
+export default function LoginScreen() {
+  const { login } = useStore().commonStore;
+
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    if (phone && password) {
+      const loginData: any = {
+        phoneNumber: phone,
+        password: password,
+      };
+
+      // const convertdata = JSON.stringify(loginData);
+
+      try {
+        await login(loginData);
+
+        // await AsyncStorage.setItem("token", convertdata);
+
+        // console.log("loginData", loginData);
+      } catch (error) {
+        console.error("Error storing token:", error);
+      }
+    } else {
+      Alert.alert("ข้อมูลไม่ครบ", "กรุณากรอกเบอร์โทรศัพท์และรหัสผ่าน");
+    }
+  };
+
+  return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <Container>
+        <GraphicTopLeft />
+        <GraphicBottomRight />
+
+        <Title>ยินดีต้อนรับกลับมา!</Title>
+        <SubTitle>เข้าสู่ระบบบัญชีของคุณ</SubTitle>
+
+        <Input
+          placeholder="เบอร์โทรศัพท์"
+          value={phone}
+          onChangeText={setPhone}
+          autoCapitalize="none"
+          maxLenght={10}
+        />
+        <Input
+          placeholder="รหัสผ่าน"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={true}
+        />
+
+        <ButtonGradient onPress={handleLogin}>
+          <ButtonText>เข้าสู่ระบบ</ButtonText>
+        </ButtonGradient>
+
+        <TouchableOpacity
+          onPress={() => Alert.alert("ลืมรหัสผ่าน", "ไปที่หน้าลืมรหัสผ่าน")}
+        >
+          <LinkText>ลืมรหัสผ่าน?</LinkText>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => router.push("/register")}>
+          <LinkText>ยังไม่มีบัญชี? ลงทะเบียน</LinkText>
+        </TouchableOpacity>
+      </Container>
+    </KeyboardAvoidingView>
+  );
+}
 
 const Container: any = styled(LinearGradient).attrs({
   colors: ["#e0f7fa", "#ffffff"],
@@ -103,74 +177,3 @@ const LinkText: any = styled.Text`
   text-align: center;
   margin-top: 10px;
 `;
-
-export default function LoginScreen() {
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = async () => {
-    if (phone && password) {
-      const loginData: any = {
-        phone: phone,
-        password: password,
-      };
-
-      const convertdata = JSON.stringify(loginData);
-
-      try {
-        await AsyncStorage.setItem("token", convertdata);
-
-        console.log("loginData", loginData);
-
-        router.replace("/(tabs)");
-      } catch (error) {
-        console.error("Error storing token:", error);
-      }
-    } else {
-      Alert.alert("ข้อมูลไม่ครบ", "กรุณากรอกเบอร์โทรศัพท์และรหัสผ่าน");
-    }
-  };
-
-  return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-    >
-      <Container>
-        <GraphicTopLeft />
-        <GraphicBottomRight />
-
-        <Title>ยินดีต้อนรับกลับมา!</Title>
-        <SubTitle>เข้าสู่ระบบบัญชีของคุณ</SubTitle>
-
-        <Input
-          placeholder="อีเมล"
-          value={phone}
-          onChangeText={setPhone}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        <Input
-          placeholder="รหัสผ่าน"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={true}
-        />
-
-        <ButtonGradient onPress={handleLogin}>
-          <ButtonText>เข้าสู่ระบบ</ButtonText>
-        </ButtonGradient>
-
-        <TouchableOpacity
-          onPress={() => Alert.alert("ลืมรหัสผ่าน", "ไปที่หน้าลืมรหัสผ่าน")}
-        >
-          <LinkText>ลืมรหัสผ่าน?</LinkText>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => router.push("/register")}>
-          <LinkText>ยังไม่มีบัญชี? ลงทะเบียน</LinkText>
-        </TouchableOpacity>
-      </Container>
-    </KeyboardAvoidingView>
-  );
-}
