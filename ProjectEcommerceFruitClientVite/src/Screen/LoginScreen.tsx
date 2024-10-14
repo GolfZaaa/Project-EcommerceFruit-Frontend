@@ -7,6 +7,7 @@ import ToastLoginRegister from "../layout/component/ToastLoginRegister";
 import CircularProgress from "@mui/material/CircularProgress";
 import "./css/register-style.css";
 import { resetScroll } from "../api/agent";
+import MyContent from "../component/MyContent";
 
 export default observer(function LoginScreen() {
   const navigate = useNavigate();
@@ -104,7 +105,8 @@ export default observer(function LoginScreen() {
                 />
               </div>
               <h2 className="text-xl font-semibold text-gray-600 text-center">
-                มหาวิทยาลัยราชภัฏกาญจนบุรี
+                {/* มหาวิทยาลัยราชภัฏกาญจนบุรี */}
+                <MyContent name={"มหาวิทยาลัยราชภัฏกาญจนบุรี"} fontSize="normal" />
               </h2>
               <a
                 href="#"
