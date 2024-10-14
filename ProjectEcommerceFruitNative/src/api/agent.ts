@@ -2,9 +2,10 @@ import axios, { AxiosResponse } from "axios";
 import { store } from "../store/store";
 import { Common } from "./common.api";
 import { User } from "./user.api";
+import { Product } from "./product.api";
 
 // axios.defaults.baseURL = "https://localhost:7168/api/";
-axios.defaults.baseURL = "https://37fa-202-28-123-199.ngrok-free.app/api/";
+axios.defaults.baseURL = "https://695a-202-28-123-199.ngrok-free.app/api/";
 
 const multipartForm = {
   headers: { "Content-Type": "multipart/form-data" },
@@ -53,4 +54,5 @@ export const requests = {
 export default {
   Common,
   User,
+  Product,
 };
