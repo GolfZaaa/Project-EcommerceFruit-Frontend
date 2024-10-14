@@ -6,17 +6,23 @@ import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
+import { useStore } from "@/src/store/store";
+import { LogBox } from "react-native";
+LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
+LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 export default function TabLayout() {
+  const { token, getToken, logout } = useStore().commonStore;
+  const { user } = useStore().userStore;
   const colorScheme = useColorScheme();
   const router = useRouter();
 
   useLayoutEffect(() => {
     const checkToken = async () => {
       try {
-        const tokenStorage = await AsyncStorage.getItem("token");
-        console.log("Token", tokenStorage);
-        if (tokenStorage === null || tokenStorage === undefined) {
+        const comeInStorage = await AsyncStorage.getItem("come-in-frist");
+        console.log("come-in-frist", comeInStorage);
+        if (comeInStorage === null || comeInStorage === undefined) {
           // router.replace('/login');
           router.replace("/first");
         }
@@ -25,6 +31,7 @@ export default function TabLayout() {
       }
     };
     checkToken();
+    getToken();
   }, []);
 
   return (
@@ -53,22 +60,21 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "storefront" : "storefront-outline"}
-              size={24}
-              color={color}
+              size={24} // ขนาดไอคอน
+              color={color} // สีไอคอน
             />
           ),
         }}
       />
-
       <Tabs.Screen
-        name="cart"
+        name="earn"
         options={{
-          title: "ตะกร้าสินค้า",
+          title: "สร้างรายได้",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "cart" : "cart-outline"}
+              name={focused ? "cash" : "cash-outline"}
               color={color}
-            />
+            /> // ใช้ไอคอนเงิน
           ),
         }}
       />
@@ -76,12 +82,12 @@ export default function TabLayout() {
       <Tabs.Screen
         name="setting"
         options={{
-          title: "โปรไฟล์",
+          title: "ตั้งค่า",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "person" : "person-outline"}
+              name={focused ? "settings" : "settings-outline"}
               color={color}
-            />
+            /> // ใช้ไอคอนเงิน
           ),
         }}
       />
