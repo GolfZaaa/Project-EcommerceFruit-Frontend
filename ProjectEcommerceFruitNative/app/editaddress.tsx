@@ -62,29 +62,6 @@ const OrderStatus: any = styled.Text`
   color: ${(props: any) => (props.status === "completed" ? "#28a745" : "#dc3545")};
 `;
 
-const data = [
-  {
-    id: "1",
-    title: "คำสั่งซื้อ #001",
-    date: "10 ตุลาคม 2023",
-    amount: "฿500",
-    status: "completed",
-  },
-  {
-    id: "2",
-    title: "คำสั่งซื้อ #002",
-    date: "15 ตุลาคม 2023",
-    amount: "฿1,200",
-    status: "cancelled",
-  },
-  {
-    id: "3",
-    title: "คำสั่งซื้อ #003",
-    date: "20 ตุลาคม 2023",
-    amount: "฿700",
-    status: "completed",
-  },
-];
 
 export default function EditAddressScreen() {
   const navigation = useNavigation();
@@ -98,26 +75,8 @@ export default function EditAddressScreen() {
     console.log('Address saved:', { address, zipcode, subdistrict, district, province });
   };
 
-  const renderOrderItem = ({ item }: any) => (
-    <OrderCard>
-      <OrderInfo>
-        <View>
-          <OrderTitle>{item.title}</OrderTitle>
-          <OrderDate>{item.date}</OrderDate>
-        </View>
-        <View>
-          <OrderAmount>{item.amount}</OrderAmount>
-          <OrderStatus status={item.status}>
-            {item.status === "completed" ? "สำเร็จ" : "ยกเลิก"}
-          </OrderStatus>
-        </View>
-      </OrderInfo>
-    </OrderCard>
-  );
-
   return (
     <Container>
-      {/* ปุ่มกลับ */}
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={{

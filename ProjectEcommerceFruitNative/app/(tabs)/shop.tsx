@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 const { width } = Dimensions.get('window'); 
 
@@ -24,6 +25,24 @@ export default function ShopScreen() {
     }
   };
 
+  const handleEditStoreName = () => {
+    router.push("../storeuser/editname"); 
+  }
+
+  const handleListproductgi = () => {
+    router.push("../storeuser/listproductgi"); 
+  }
+
+  const handleListproduct = () => {
+    router.push("../storeuser/listproduct"); 
+  }
+
+  const handleOrderHistoryStore = () => {
+    router.push("../storeuser/orderhistorystore"); 
+  }
+
+  
+
   const Card = ({ icon, number, label }:any) => (
     <View style={styles.card}>
       <Ionicons name={icon} size={40} color="#333" />
@@ -40,11 +59,30 @@ export default function ShopScreen() {
 
       <Animated.View style={[styles.drawer, { transform: [{ translateX: slideAnim }] }]}>
         <Text style={styles.drawerTitle}>เมนูเพิ่มเติม</Text>
-        <MenuItem icon="cart-outline" title="แก้ไขร้านค้า" />
-        <MenuItem icon="people-outline" title="เพิ่มข้อมูลสินค้า (GI)" />
-        <MenuItem icon="bar-chart-outline" title="เพิ่มสินค้า" />
-        <MenuItem icon="bar-chart-outline" title="คำสั่งซื้อ" />
-        <MenuItem icon="receipt-outline" title="ตั้งค่า" />
+
+        <TouchableOpacity onPress={handleEditStoreName} style={styles.menuItem}> 
+          <Ionicons name="cart-outline" size={30} color="#333" /> 
+          <Text style={styles.menuText}>แก้ไขร้านค้า</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={handleListproductgi} style={styles.menuItem}> 
+          <Ionicons name="people-outline" size={30} color="#333" /> 
+          <Text style={styles.menuText}>เพิ่มข้อมูลสินค้า (GI)</Text>
+        </TouchableOpacity>
+
+
+
+        <TouchableOpacity onPress={handleListproduct} style={styles.menuItem}> 
+          <Ionicons name="people-outline" size={30} color="#333" /> 
+          <Text style={styles.menuText}>เพิ่มสินค้า</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={handleOrderHistoryStore} style={styles.menuItem}> 
+          <Ionicons name="people-outline" size={30} color="#333" /> 
+          <Text style={styles.menuText}>รายการคำสั่งซื้อ</Text>
+        </TouchableOpacity>
+        
+        
         <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
           <Text style={styles.closeButtonText}>ปิด</Text>
         </TouchableOpacity>
