@@ -92,19 +92,6 @@ const ButtonText: any = styled.Text`
   font-weight: bold;
 `;
 
-const DropdownButton: any = styled.TouchableOpacity`
-  padding: 15px;
-  background-color: #007bff;
-  border-radius: 10px;
-  margin-top: 20px;
-`;
-
-const DropdownText: any = styled.Text`
-  color: #fff;
-  font-size: 18px;
-  font-weight: bold;
-`;
-
 const IGInfoText = styled.Text`
   font-size: 16px;
   color: #333;
@@ -124,11 +111,6 @@ export default function ProductDetailsScreen() {
 
   const decreaseQuantity = () => {
     setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
-  };
-
-  const toggleDropdown = () => {
-    LayoutAnimation.easeInEaseOut();
-    setIsDropdownOpen(!isDropdownOpen);
   };
 
   return (

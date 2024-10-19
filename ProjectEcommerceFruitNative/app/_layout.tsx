@@ -31,17 +31,24 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="login" options={{ headerShown: false }} />
-        <Stack.Screen name="register" options={{ headerShown: false }} />
-        <Stack.Screen name="first" options={{ headerShown: false }} />
-        <Stack.Screen name="orderhistory" options={{ headerShown: false }} />
-        <Stack.Screen name="editaddress" options={{ headerShown: false }} />
-        <Stack.Screen name="earn" options={{ headerShown: false }} />
-        <Stack.Screen name="cartdetail" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="login" />
+        <Stack.Screen name="register" />
+        <Stack.Screen name="first" />
+        <Stack.Screen name="orderhistory" />
+        <Stack.Screen name="orderhistorystore" />
+        <Stack.Screen name="editaddress" />
+        <Stack.Screen name="createproductgi" />
+        <Stack.Screen name="createproduct" />
+        <Stack.Screen name="earn" />
+        <Stack.Screen name="cartdetail" />
+        <Stack.Screen name="editname" />
+        <Stack.Screen name="listproductgi" />
+        <Stack.Screen name="listproduct" />
+        <Stack.Screen name="../(tabs)" />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
   );
+  
 }

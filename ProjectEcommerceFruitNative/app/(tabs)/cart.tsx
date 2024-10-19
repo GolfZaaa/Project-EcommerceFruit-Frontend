@@ -132,7 +132,7 @@ const CheckoutButtonText = styled.Text`
 `;
 
 export default function CartScreen() {
-  const [cartItems, setCartItems] = useState([
+  const [cartItems] = useState([
     {
       id: '1',
       name: 'เงาะ',
@@ -149,18 +149,6 @@ export default function CartScreen() {
     },
   ]);
 
-  const increaseQuantity = (itemId:any) => {
-    setCartItems(cartItems.map(item => item.id === itemId ? {...item, quantity: item.quantity + 1} : item));
-  };
-
-  const decreaseQuantity = (itemId:any) => {
-    setCartItems(cartItems.map(item => item.id === itemId && item.quantity > 1 ? {...item, quantity: item.quantity - 1} : item));
-  };
-
-  const removeItem = (itemId:any) => {
-    setCartItems(cartItems.filter(item => item.id !== itemId));
-  };
-
 
   const handleCartDetail = () => {
     router.replace("/cartdetail");
@@ -171,18 +159,18 @@ export default function CartScreen() {
       <ItemImage source={{ uri: item.image }} />
       <ItemDetails>
         <ItemName>{item.name}</ItemName>
-        <ItemPrice>{parseInt(item.price).toLocaleString()}฿</ItemPrice>
+        <ItemPrice>{"5000"}฿</ItemPrice>
         <QuantityControl>
-          <QuantityButton onPress={() => decreaseQuantity(item.id)}>
+          <QuantityButton>
             <QuantityText>-</QuantityText>
           </QuantityButton>
           <Text style={{ fontSize: 18, marginHorizontal: 10 }}>{item.quantity}</Text>
-          <QuantityButton onPress={() => increaseQuantity(item.id)}>
+          <QuantityButton>
             <QuantityText>+</QuantityText>
           </QuantityButton>
         </QuantityControl>
       </ItemDetails>
-      <RemoveButton onPress={() => removeItem(item.id)}>
+      <RemoveButton>
         <Ionicons name="trash-bin-outline" size={24} color="#e74c3c" />
       </RemoveButton>
     </CartItem>
