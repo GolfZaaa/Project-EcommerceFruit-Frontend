@@ -8,8 +8,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { useStore } from "@/src/store/store";
 import { LogBox } from "react-native";
-LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
-LogBox.ignoreAllLogs(); //Ignore all log notifications
+LogBox.ignoreLogs(["Warning: ..."]); 
+LogBox.ignoreAllLogs(); 
 
 export default function TabLayout() {
   const { token, getToken, logout } = useStore().commonStore;
@@ -60,8 +60,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "storefront" : "storefront-outline"}
-              size={24} // ขนาดไอคอน
-              color={color} // สีไอคอน
+              size={24}
+              color={color}
             />
           ),
         }}
@@ -74,7 +74,20 @@ export default function TabLayout() {
             <TabBarIcon
               name={focused ? "cash" : "cash-outline"}
               color={color}
-            /> // ใช้ไอคอนเงิน
+            /> 
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="cart"
+        options={{
+          title: "ตะกร้าสินค้า",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "cart" : "cart-outline"}
+              color={color}
+            />
           ),
         }}
       />
@@ -82,12 +95,12 @@ export default function TabLayout() {
       <Tabs.Screen
         name="setting"
         options={{
-          title: "ตั้งค่า",
+          title: "โปรไฟล์",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "settings" : "settings-outline"}
+              name={focused ? "person" : "person-outline"}
               color={color}
-            /> // ใช้ไอคอนเงิน
+            />
           ),
         }}
       />

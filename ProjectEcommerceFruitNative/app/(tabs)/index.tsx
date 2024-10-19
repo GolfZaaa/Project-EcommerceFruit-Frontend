@@ -111,7 +111,7 @@ export default function HomeScreen() {
   const [numColumns, setNumColumns] = useState(2);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState(''); // State สำหรับประเภทสินค้า
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   const products = [
     { id: '1', name: 'เงาะ', price: '200฿', image: 'https://hdmall.co.th/blog/wp-content/uploads/2024/04/%E0%B9%80%E0%B8%87%E0%B8%B2%E0%B8%B0-Rambutan-scaled.jpg', isNew: true, category: 'ผลไม้' },
@@ -139,10 +139,6 @@ export default function HomeScreen() {
     </ProductCard>
   );
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-    (selectedCategory === 'ทั้งหมด' || selectedCategory === '' || product.category === selectedCategory)
-  );
 
   return (
     <Container>
@@ -185,7 +181,7 @@ export default function HomeScreen() {
       </Header>
 
       <FlatList
-        data={filteredProducts}
+        data={products}
         keyExtractor={(item) => item.id}
         renderItem={renderProduct}
         numColumns={numColumns}
@@ -233,77 +229,4 @@ export default function HomeScreen() {
       </Modal>
     </Container>
   );
-});
-
-const Container: any = styled.View`
-  flex: 1;
-  padding: 10px;
-  background-color: #f8f9fa;
-  padding-top: 60px;
-`;
-
-const Header: any = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-
-const HeaderText: any = styled.Text`
-  font-size: 28px;
-  font-weight: bold;
-  color: #333;
-  padding-left: 10px;
-`;
-
-const IconButton: any = styled.TouchableOpacity`
-  padding: 10px;
-`;
-
-const ProductCard: any = styled(TouchableOpacity)<{ numColumns: number }>`
-  background-color: #ffffff;
-  border-radius: 15px;
-  margin: 10px;
-  padding: 10px;
-  flex: ${(props) => (props.numColumns === 1 ? "1 0 100%" : "1")};
-  elevation: 2;
-  position: relative;
-`;
-
-const ProductImage: any = styled(Image)`
-  width: 100%;
-  height: 150px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-`;
-
-const ProductName: any = styled.Text`
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-`;
-
-const ProductPrice: any = styled.Text`
-  font-size: 14px;
-  color: #e74c3c;
-  font-weight: bold;
-  margin-top: 5px;
-`;
-
-const Badge: any = styled(LinearGradient).attrs({
-  colors: ["#ff6f00", "#ff8f00"],
-  start: { x: 0, y: 0 },
-  end: { x: 1, y: 1 },
-})`
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  padding: 5px 10px;
-  border-radius: 5px;
-`;
-
-const BadgeText: any = styled.Text`
-  color: #fff;
-  font-size: 12px;
-  font-weight: bold;
-`;
+};

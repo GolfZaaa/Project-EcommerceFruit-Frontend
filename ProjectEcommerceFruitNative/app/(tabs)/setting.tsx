@@ -15,151 +15,6 @@ import { Link, router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useStore } from "@/src/store/store";
 
-const logout = async () => {
-  try {
-    await AsyncStorage.removeItem("token");
-    router.push("/login");
-  } catch (error) {
-    console.error("Error removing token", error);
-  }
-};
-
-const gotoLogin = async () => {
-  router.push("/login");
-};
-
-const handleOrderhistory = async () => {
-  router.push("/orderhistory");
-};
-
-const handleAddress = async () => {
-  router.push("/editaddress");
-};
-
-export default function SettingScreen() {
-  const { user } = useStore().userStore;
-
-  const [modalVisible, setModalVisible] = useState(false);
-  const [userName, setUserName] = useState("John Doe");
-  const [newUserName, setNewUserName] = useState("");
-
-  const handleSaveUserName = () => {
-    if (newUserName) {
-      setUserName(newUserName);
-      setModalVisible(false);
-    }
-  };
-
-  return (
-    <Container>
-      {!!user ? (
-        <>
-          <UserInfoSection>
-            <UserAvatar>
-              <Ionicons name="person" size={50} color="#fff" />
-            </UserAvatar>
-            <UserNameContainer>
-              <UserName>{user.fullName}</UserName>
-              <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <Ionicons
-                  name="create-outline"
-                  size={24}
-                  color="#007bff"
-                  style={{ marginLeft: 10 }}
-                />
-              </TouchableOpacity>
-            </UserNameContainer>
-          </UserInfoSection>
-
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => setModalVisible(false)}
-          >
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "rgba(0,0,0,0.5)",
-              }}
-            >
-              <View
-                style={{
-                  width: 300,
-                  backgroundColor: "#fff",
-                  borderRadius: 10,
-                  padding: 20,
-                  alignItems: "center",
-                }}
-              >
-                <Text style={{ fontSize: 18, marginBottom: 10 }}>
-                  เปลี่ยนชื่อผู้ใช้งาน
-                </Text>
-                <TextInput
-                  style={{
-                    width: "100%",
-                    borderColor: "#ccc",
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    padding: 10,
-                    marginBottom: 15,
-                  }}
-                  placeholder="ใส่ชื่อใหม่"
-                  value={newUserName}
-                  onChangeText={setNewUserName}
-                />
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#007bff",
-                    padding: 10,
-                    borderRadius: 5,
-                    width: "100%",
-                    alignItems: "center",
-                  }}
-                  onPress={handleSaveUserName}
-                >
-                  <Text style={{ color: "#fff", fontSize: 16 }}>บันทึก</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-
-          <FadeInView>
-            <ButtonCard onPress={handleAddress}>
-              <Ionicons name="location-outline" size={28} color="#333" />
-              <ButtonText>เปลี่ยนที่อยู่</ButtonText>
-            </ButtonCard>
-          </FadeInView>
-
-          <FadeInView>
-            <ButtonCard onPress={handleOrderhistory}>
-              <Ionicons name="receipt-outline" size={28} color="#333" />
-              <ButtonText>ประวัติคำสั่งซื้อ</ButtonText>
-            </ButtonCard>
-          </FadeInView>
-
-          {/* <FadeInView>
-      <ButtonCard>
-        <Ionicons name="cash-outline" size={28} color="#333" />
-        <ButtonText>สร้างรายได้</ButtonText>
-      </ButtonCard>
-    </FadeInView> */}
-
-          <SaveButton onPress={logout}>
-            <SaveButtonText>ออกจากระบบ</SaveButtonText>
-          </SaveButton>
-        </>
-      ) : (
-        <SaveButton onPress={gotoLogin}>
-          <SaveButtonText>เข้าสู่ระบบ</SaveButtonText>
-        </SaveButton>
-      )}
-    </Container>
-  );
-}
-
 const Container: any = styled(View)`
   flex: 1;
   background-color: #f7f9fc;
@@ -270,7 +125,7 @@ const DropdownButtonText = styled(Text)`
   font-size: 16px;
   font-weight: bold;
   color: #333;
-  margin-left: 10px; /* เพิ่มระยะห่างระหว่างไอคอนกับข้อความ */
+  margin-left: 10px;
 `;
 
 const logout = async () => {
@@ -319,8 +174,8 @@ export default function SettingScreen() {
   const handleCart = async () => {
     router.push("/(tabs)/cart");
   };
-  
-  return ( 
+
+  return (
     <Container>
       <HeaderSection
         source={{ uri: "https://your-background-image-url.com" }}
@@ -379,7 +234,6 @@ export default function SettingScreen() {
               <Ionicons name="receipt-outline" size={24} color="#333" />
               <DropdownButtonText>ประวัติคำสั่งซื้อ</DropdownButtonText>
             </StyledDropdownButton>
-
           </Animated.View>
         )}
         <ButtonCard onPress={handleEarn}>
