@@ -6,9 +6,10 @@ import { useNavigate } from "react-router-dom";
 import { pathImages, RoutePath } from "../constants/RoutePath";
 import DropZoneImageComponent from "../layout/component/DropZoneImageComponent";
 import dayjs from "dayjs";
-import { myToast } from "../helper/components";
+import { formatDateThai, myToast } from "../helper/components";
 import { resetScroll } from "../api/agent";
 import CircularProgress from "@mui/material/CircularProgress";
+import MyContent from "../component/MyContent";
 
 interface CartItem {
   id: string;
@@ -161,7 +162,7 @@ export default observer(function SummaryScreen() {
                 <circle cx="12" cy="10" r="3" />
               </svg>
               <h3 className="text-xl font-medium leading-5 text-gray-700">
-                ที่อยู่ในการจัดส่ง
+                <MyContent name="ที่อยู่ในการจัดส่ง" fontSize="normal" />
               </h3>
             </div>
 
@@ -169,17 +170,23 @@ export default observer(function SummaryScreen() {
               <div className="flex flex-col md:flex-row md:justify-between items-center w-full space-y-4 md:space-y-0">
                 <div className="flex-1">
                   <p className="text-lg leading-4 text-gray-800 font-semibold">
-                    {myAddressgotoOrder?.user?.fullName} เบอร์ :
-                    {myAddressgotoOrder?.user?.phoneNumber}
+                    <MyContent
+                      name={`${myAddressgotoOrder?.user?.fullName} เบอร์ :
+                    ${myAddressgotoOrder?.user?.phoneNumber}`}
+                      fontSize="small"
+                    />
                   </p>
                 </div>
                 <div className="flex-1 -ml-96">
                   <p className="text-lg leading-4 text-gray-800 font-medium">
-                    {myAddressgotoOrder?.detail} แขวง/ตำบล
-                    {myAddressgotoOrder?.subDistrict} เขต/อำเภอ
-                    {myAddressgotoOrder?.district} จังหวัด
-                    {myAddressgotoOrder?.province} รหัสไปรษณีย์{" "}
-                    {myAddressgotoOrder?.postCode}
+                    <MyContent
+                      name={`${myAddressgotoOrder?.detail} แขวง/ตำบล
+                    ${myAddressgotoOrder?.subDistrict} เขต/อำเภอ
+                    ${myAddressgotoOrder?.district} จังหวัด
+                    ${myAddressgotoOrder?.province} รหัสไปรษณีย์
+                    ${myAddressgotoOrder?.postCode}`}
+                      fontSize="small"
+                    />
                   </p>
                 </div>
                 <div className="flex items-center justify-center md:justify-end">
@@ -190,7 +197,7 @@ export default observer(function SummaryScreen() {
                     }}
                     className="text-lg leading-4 text-blue-700 font-medium"
                   >
-                    เปลี่ยน
+                    <MyContent name="เปลี่ยน" fontSize="small" />
                   </button>
                 </div>
               </div>
@@ -206,25 +213,28 @@ export default observer(function SummaryScreen() {
               <div className=" shadow-md rounded-smflex flex-col justify-start items-start bg-white px-4 py-4 md:py-6 md:p-6 xl:p-8 w-full">
                 <div className="flex justify-start item-start space-y-2 flex-col mb-6">
                   <a className="text-3xl lg:text-4xl font-semibold leading-7 lg:leading-9  text-gray-800">
-                    การชำระเงิน
+                    <MyContent name="การชำระเงิน" fontSize="large" />
                   </a>
                   <p className="text-base font-medium leading-6 text-gray-600">
-                    {dayjs(new Date()).add(543, "year").format("DD/MM/YYYY")}
+                    <MyContent
+                      name={formatDateThai(new Date(), 0, 2)}
+                      fontSize="small"
+                    />
                   </p>
                 </div>
 
                 <div className="flex justify-between w-full px-4">
                   <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800 w-1/4">
-                    ตะกร้าสินค้า
+                    <MyContent name="ตะกร้าสินค้า" fontSize="small" />
                   </p>
                   <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800 w-1/4 text-center">
-                    ราคาสินค้า
+                    <MyContent name="ราคาสินค้า" fontSize="small" />
                   </p>
                   <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800 w-1/4 text-center">
-                    จำนวน
+                    <MyContent name="จำนวน" fontSize="small" />
                   </p>
                   <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800 w-1/4 text-right">
-                    ราคารวม
+                    <MyContent name="ราคารวม" fontSize="small" />
                   </p>
                 </div>
 
@@ -243,31 +253,50 @@ export default observer(function SummaryScreen() {
                               {/* ตะกร้าสินค้า */}
                               <div className="w-1/4 flex items-center space-x-4">
                                 <img
-                                  className="w-20 h-20"
                                   src={pathImages.product + item.images}
                                   alt={item.images || "product image"}
+                                  onClick={() => {
+                                    navigate(RoutePath.productDetail(item.id));
+                                    resetScroll();
+                                  }}
+                                  style={{
+                                    width: "50%",
+                                    cursor: "pointer",
+                                  }}
                                 />
                                 <h3 className="text-base xl:text-lg font-semibold leading-6 text-gray-800">
-                                  {items.productName}
+                                  <MyContent
+                                    name={items.productName}
+                                    fontSize="small"
+                                  />
                                 </h3>
                               </div>
 
                               {/* ราคาสินค้า */}
                               <div className="w-1/4 text-center">
                                 <p className="text-base xl:text-lg leading-6">
-                                  {item.price.toLocaleString()} บาท
+                                  <MyContent
+                                    name={`${item.price.toLocaleString()} บาท`}
+                                    fontSize="small"
+                                  />
                                 </p>
                               </div>
                               {/* จำนวน */}
                               <div className="w-1/4 text-center">
                                 <p className="text-base xl:text-lg leading-6 text-gray-800">
-                                  {item.quantityInCartItem}
+                                  <MyContent
+                                    name={item.quantityInCartItem}
+                                    fontSize="small"
+                                  />
                                 </p>
                               </div>
                               {/* ราคารวม */}
                               <div className="w-1/4 text-right">
                                 <p className="text-base xl:text-lg font-semibold leading-6 text-gray-800">
-                                  {formatTotalPriceForProduct} บาท
+                                  <MyContent
+                                    name={`${formatTotalPriceForProduct} บาท`}
+                                    fontSize="small"
+                                  />
                                 </p>
                               </div>
                             </div>
@@ -281,7 +310,7 @@ export default observer(function SummaryScreen() {
               <div className="flex justify-center md:flex-row flex-col items-start w-full space-y-4 md:space-y-0 md:space-x-6 xl:space-x-8">
                 <div className="flex flex-col px-4 py-6 md:p-6 xl:p-8 w-full bg-white space-y-6 shadow-lg rounded-lg relative">
                   <h3 className="text-xl font-semibold leading-5 text-gray-800">
-                    วิธีการชำระเงิน
+                    <MyContent name="วิธีการชำระเงิน" fontSize="normal" />
                   </h3>
                   <div className="flex justify-center flex-wrap gap-4 items-center">
                     <label
@@ -306,7 +335,7 @@ export default observer(function SummaryScreen() {
                             : "text-gray-800"
                         }`}
                       >
-                        บัตรเครดิต
+                        <MyContent name="บัตรเครดิต" fontSize="small" />
                       </span>
                     </label>
                     <label
@@ -336,7 +365,7 @@ export default observer(function SummaryScreen() {
                             : "text-gray-800"
                         }`}
                       >
-                        สลีปการโอน
+                        <MyContent name="สลีปการโอน" fontSize="small" />
                       </span>
                     </label>
                   </div>
@@ -366,55 +395,70 @@ export default observer(function SummaryScreen() {
                             }}
                             className="text-red-500 text-sm mt-2"
                           >
-                            กรุณาอัปโหลดรูปภาพสลีปการโอน
+                            <MyContent
+                              name="กรุณาอัปโหลดรูปภาพสลีปการโอน"
+                              fontSize="small"
+                            />
                           </div>
                         )}
                       </div>
                     </div>
                   ) : (
                     <div>
-                      <p>กรอกบัตรเครดิต</p>
+                      <MyContent name="กรอกบัตรเครดิต" fontSize="small" />
                     </div>
                   )}
                 </div>
 
                 <div className=" shadow-md rounded-sm  flex flex-col px-4 py-6 md:p-6 xl:p-8 w-full bg-white space-y-6">
                   <h3 className="text-xl font-semibold leading-5 text-gray-800">
-                    สรุปการสั่งซื้อ
+                    <MyContent name="สรุปการสั่งซื้อ" fontSize="normal" />
                   </h3>
                   <div className="flex justify-center items-center w-full space-y-4 flex-col border-gray-200 border-b pb-4">
                     <div className="flex justify-between items-center w-full">
                       <p className="text-base leading-4 text-gray-800">
-                        รายการทั้งหมด
+                        <MyContent name="รายการทั้งหมด" fontSize="small" />
                       </p>
                       <p className="text-base leading-4 text-gray-600">
-                        {selectMyCart.length} รายการ
+                        <MyContent
+                          name={`${selectMyCart.length} รายการ`}
+                          fontSize="small"
+                        />
                       </p>
                     </div>
                     <div className="flex justify-between items-center w-full">
                       <p className="text-base leading-4 text-gray-800">
-                        ราคารวม
+                        <MyContent name="ราคารวม" fontSize="small" />
                       </p>
                       <p className="text-base leading-4 text-gray-600">
-                        {totalPrice.toLocaleString()} บาท
+                        <MyContent
+                          name={`${totalPrice.toLocaleString()} บาท`}
+                          fontSize="small"
+                        />
                       </p>
                     </div>
 
                     <div className="flex justify-between items-center w-full">
                       <p className="text-base leading-4 text-gray-800">
-                        ค่าจัดส่ง
+                        <MyContent name="ค่าจัดส่ง" fontSize="small" />
                       </p>
                       <p className="text-base leading-4 text-gray-600">
-                        {systemSetting[0]?.shippingCost} บาท
+                        <MyContent
+                          name={`${systemSetting[0]?.shippingCost} บาท`}
+                          fontSize="small"
+                        />
                       </p>
                     </div>
                   </div>
                   <div className="flex justify-between items-center w-full">
                     <p className="text-base font-semibold leading-4 text-gray-800">
-                      ราคารวมทั้งหมด
+                      <MyContent name="ราคารวมทั้งหมด" fontSize="small" />
                     </p>
                     <p className="text-base font-semibold leading-4 text-gray-600">
-                      {formattedTotalPrice} บาท
+                      <MyContent
+                        name={`${formattedTotalPrice} บาท`}
+                        fontSize="small"
+                      />
                     </p>
                   </div>
 
@@ -431,7 +475,9 @@ export default observer(function SummaryScreen() {
                         </div>
                       ) : (
                         <div>
-                          <p>ชำระเงิน</p>
+                          <p>
+                            <MyContent name="ชำระเงิน" fontSize="small" />
+                          </p>
                         </div>
                       )}
                     </button>

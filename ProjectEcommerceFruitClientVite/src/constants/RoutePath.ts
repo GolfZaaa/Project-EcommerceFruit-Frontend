@@ -1,3 +1,4 @@
+import { baseUrlImage } from "../api/agent";
 import { config } from "../helper/config";
 
 const HOST = config.baseURL ?? "/";
@@ -22,7 +23,6 @@ export const RoutePath = {
   addressScreen: `${HOST}Address-screen`,
   summaryScreen: `${HOST}summary-screen`,
 
-
   dashboardforuser: `${HOST}dashboard-for-user`,
 
   orderReceiptList: `${HOST}order-receipt-list`,
@@ -30,7 +30,6 @@ export const RoutePath = {
   productDetail: (id: string) => `${HOST}product-detail-screen/${id}`,
   shopDetail: (id: string) => `${HOST}shop-detail-screen/${id}`,
   // shopdetailScreen: `${HOST}shop-detail-screen`,
-
 
   createshop: `${HOST}create-shop`,
   cartScreen: `${HOST}cart-screen`,
@@ -42,7 +41,7 @@ export const RoutePath = {
   dashboardAdminHomePageScreen: `${HOST}dashboard-admin-homePage-screen`,
 };
 
-const path = config.baseURL ?? "https://localhost:7168/";
+const path = config.baseURL ?? baseUrlImage;
 
 export const pathImages = {
   paymentImage: `${path}paymentImage/`,

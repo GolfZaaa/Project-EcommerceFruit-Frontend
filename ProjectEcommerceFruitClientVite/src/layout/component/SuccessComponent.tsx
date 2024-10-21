@@ -5,8 +5,10 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
 
 // import { Player, Controls } from '@lottiefiles/react-lottie-player';
-import animationData from '../../assets/successorder.mp4'
+import animationData from "../../assets/successorder.mp4";
 import { resetScroll } from "../../api/agent";
+import MyContent from "../../component/MyContent";
+import { formatDateThai } from "../../helper/components";
 
 export default observer(function SuccessComponent() {
   const navigate = useNavigate();
@@ -52,61 +54,84 @@ export default observer(function SuccessComponent() {
 
         <div className="mx-auto max-w-2xl px-4 2xl:px-0">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-black sm:text-2xl mb-2">
-            ขอบคุณสำหรับการสั่งซื้อครับ!
+            <MyContent name="ขอบคุณสำหรับการสั่งซื้อครับ!" fontSize="large" />
           </h2>
           <p className="text-gray-500 dark:text-gray-400 mb-6 md:mb-8">
-            คำสั่งซื้อ{" "}
+            <MyContent
+              name="คำสั่งซื้อของคุณจะถูกดำเนินการภายใน 24 ชั่วโมงในวันทำการ"
+              fontSize="normal"
+            />{" "}
             {/* <a
               href="#"
               className="font-medium text-gray-900 dark:text-black hover:underline"
             >
               #7564804
             </a>{" "} */}
-            ของคุณจะถูกดำเนินการภายใน 24 ชั่วโมงในวันทำการ
           </p>
           <div className="space-y-4 sm:space-y-2 rounded-lg border border-gray-100 bg-gray-50 p-6 dark:border-gray-700 dark:bg-white mb-6 md:mb-8">
             <dl className="sm:flex items-center justify-between gap-4">
               <dt className="font-normal mb-1 sm:mb-0 text-gray-500 dark:text-gray-400">
-                เวลาในการชำระสินค้า :
+                <MyContent name="เวลาในการชำระสินค้า :" fontSize="small" />
               </dt>
               <dd className="font-medium text-gray-900 dark:text-black sm:text-end">
-                {currentTime.toLocaleDateString("th-TH", {
+                <MyContent
+                  name={formatDateThai(currentTime, +543, 1)}
+                  fontSize="small"
+                />
+                {/* {currentTime.toLocaleDateString("th-TH", {
                   day: "numeric",
                   month: "long",
                   year: "numeric",
-                })}
+                })} */}
               </dd>
             </dl>
             <dl className="sm:flex items-center justify-between gap-4">
               <dt className="font-normal mb-1 sm:mb-0 text-gray-500 dark:text-gray-400">
-                ชื่อผู้ซื้อ :
+                <MyContent name="ชื่อผู้ซื้อ :" fontSize="small" />
               </dt>
               <dd className="font-medium text-gray-900 dark:text-black sm:text-end">
-                {myAddressgotoOrder?.user?.fullName}
+                <MyContent
+                  name={myAddressgotoOrder?.user?.fullName}
+                  fontSize="small"
+                />
               </dd>
             </dl>
             <dl className="sm:flex items-center justify-between gap-4">
               <dt className="font-normal mb-1 sm:mb-0 text-gray-500 dark:text-gray-400">
-                ที่อยู่ :
+                <MyContent name="ที่อยู่ :" fontSize="small" />
               </dt>
               <dd className="font-medium text-gray-900 dark:text-black sm:text-end w-52">
                 <div className="flex-1">
                   <p className="text-base leading-4 text-gray-800 font-normal">
-                    {myAddressgotoOrder?.detail}{" "}
-                    {myAddressgotoOrder?.subDistrict}, &nbsp;
-                    {myAddressgotoOrder?.district}, &nbsp;
-                    {myAddressgotoOrder?.province}
-                    {myAddressgotoOrder?.postCode}
+                    <MyContent
+                      name={`${myAddressgotoOrder?.detail} ${myAddressgotoOrder?.subDistrict}`}
+                      fontSize="small"
+                    />
+                  </p>
+                  <p>
+                    <MyContent
+                      name={myAddressgotoOrder?.district}
+                      fontSize="small"
+                    />
+                  </p>
+                  <p>
+                    <MyContent
+                      name={`${myAddressgotoOrder?.province} ${myAddressgotoOrder?.postCode}`}
+                      fontSize="small"
+                    />
                   </p>
                 </div>
               </dd>
             </dl>
             <dl className="sm:flex items-center justify-between gap-4">
               <dt className="font-normal mb-1 sm:mb-0 text-gray-500 dark:text-gray-400">
-                เบอร์โทรศัพท์ :
+                <MyContent name="เบอร์โทรศัพท์ :" fontSize="small" />
               </dt>
               <dd className="font-medium text-gray-900 dark:text-black sm:text-end">
-                {myAddressgotoOrder?.user?.phoneNumber}
+                <MyContent
+                  name={myAddressgotoOrder?.user?.phoneNumber}
+                  fontSize="small"
+                />
               </dd>
             </dl>
           </div>
@@ -122,7 +147,7 @@ export default observer(function SuccessComponent() {
               onClick={handleToProductScreen}
               className="text-white bg-blue-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
             >
-              กลับไปยังหน้าเลือกสินค้า
+              <MyContent name="กลับไปยังหน้าเลือกสินค้า" fontSize="small" />
             </button>
 
             {/* <button

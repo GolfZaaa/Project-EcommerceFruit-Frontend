@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { Order } from "../../../models/Order";
 import { OrderItem } from "../../../models/OrderItem";
 import { formatNumberWithCommas } from "../../../helper/components";
-import { pathImages } from "../../../constants/RoutePath";
+import { pathImages, RoutePath } from "../../../constants/RoutePath";
 // @ts-ignore
 import html2pdf from "html2pdf.js";
 import { BsFillPrinterFill } from "react-icons/bs";
@@ -12,6 +12,8 @@ import Swal from "sweetalert2";
 import TotalPrice from "./TotalPrice";
 import { useStore } from "../../../store/store";
 import AddressForCard from "../../../components/AddressForCard";
+import { useNavigate } from "react-router-dom";
+import { resetScroll } from "../../../api/agent";
 
 interface props {
   order: Order[];
@@ -20,6 +22,7 @@ interface props {
 }
 
 const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
+  const navigate = useNavigate();
   const { iWantToTakeOrdertoSend } = useStore().orderStore;
   const componentRef = useRef(null);
 
@@ -238,7 +241,20 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
                         className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6"
                       >
                         <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
-                          <a href="#" className="shrink-0 md:order-1">
+                          <a
+                            onClick={() => {
+                              navigate(
+                                RoutePath.productDetail(
+                                  String(item?.product?.id)
+                                )
+                              );
+                              resetScroll();
+                            }}
+                            style={{
+                              cursor: "pointer",
+                            }}
+                            className="shrink-0 md:order-1"
+                          >
                             <img
                               className="hidden h-20 w-20 dark:block"
                               src={pathImages.product + item.product.images}

@@ -1,38 +1,48 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { PublicRoute } from "./route/PublicRoute";
-import { PrivateRoute } from "./route/PrivateRoute";
+import { AdminRoute, PrivateRoute } from "./route/PrivateRoute";
 import Navbar from "./layout/screen/Navbar";
 import Footer from "./layout/screen/Footer";
 import { useEffect, useState } from "react";
 import { useStore } from "./store/store";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { observer } from "mobx-react-lite";
 
 function App() {
   const Routers = [...PublicRoute, ...PrivateRoute];
 
   const { token } = useStore().commonStore;
-  const { getUserDetailbyId, logout } = useStore().userStore;
+  const { getUserDetailbyId, logout, isLoggedIn, user } = useStore().userStore;
 
   useEffect(() => {
-    if (token !== null) {
-      getUserDetailbyId();
-      getUserDetailbyId().then((result) => {
-        if (result?.response?.request?.status !== undefined) {
-          if (result.response.request.status === 401) {
-            logout();
-          }
-        }
-      });
-    }
+    getUserDetailbyId();
+    // if (token !== null) {
+    //   getUserDetailbyId();
+    //   getUserDetailbyId().then((result) => {
+    //     if (result?.response?.request?.status !== undefined) {
+    //       if (result.response.request.status === 401) {
+    //         logout();
+    //       }
+    //     }
+    //   });
+    // }
   }, []);
+
+  const route = isLoggedIn
+    ? user?.roleId === 1
+      ? [...PublicRoute, ...PrivateRoute, AdminRoute]
+      : [...PublicRoute, ...PrivateRoute]
+    : PublicRoute;
+
+  console.log("isLoggedIn", isLoggedIn);
 
   return (
     <BrowserRouter>
       <Navbar />
       <Routes>
-        {Routers.map((item: any) => (
+        {route.map((item: any) => (
           <Route key={item.id} element={item.element} path={item.path} />
         ))}
       </Routes>
@@ -42,4 +52,4 @@ function App() {
   );
 }
 
-export default App;
+export default observer(App);

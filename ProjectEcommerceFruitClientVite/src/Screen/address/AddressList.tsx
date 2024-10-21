@@ -21,6 +21,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import MyLottie from "../../helper/components/MyLottie";
 import lottiteEmptyList from "../../assets/lotties/emptyList.json";
 import CircularProgress from "@mui/material/CircularProgress";
+import MyContent from "../../component/MyContent";
 
 const InputThaiAddress = CreateInput();
 
@@ -120,7 +121,7 @@ const AddressList = ({ confirmChangeAddress }: any) => {
               onClick={confirmChangeAddress}
             >
               <ArrowBackIosIcon sx={{ mr: 1 }} />
-              กลับ
+              <MyContent name="กลับ" fontSize="small" />
             </Fab>
           )}
         </Grid>
@@ -142,7 +143,7 @@ const AddressList = ({ confirmChangeAddress }: any) => {
             }}
           >
             <AddIcon sx={{ mr: 1 }} />
-            เพิ่ม
+            <MyContent name="เพิ่ม" fontSize="small" />
           </Fab>
         </Grid>
       </Grid>
@@ -152,31 +153,52 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           <div key={i}>
             <Card style={{ marginBottom: "20px" }} key={i}>
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <CardContent>
-                    {item?.detail}
-                    <br />
-                    แขวง/ตำบล
-                    {item?.subDistrict}
-                    <br />
-                    เขต/อำเภอ
-                    {item?.district}
-                    <br />
-                    จังหวัด
-                    {item?.province}
-                    <br />
-                    รหัสไปรษณีย์ {item?.postCode}
+                    <MyContent name={item?.detail} fontSize="small" />
+                    <MyContent
+                      name={`แขวง/ตำบล ${item?.subDistrict}`}
+                      fontSize="small"
+                    />
+                    <MyContent
+                      name={`เขต/อำเภอ ${item?.district}`}
+                      fontSize="small"
+                    />
+                    <MyContent
+                      name={`จังหวัด ${item?.province}`}
+                      fontSize="small"
+                    />
+                    <MyContent
+                      name={`รหัสไปรษณีย์ ${item?.postCode}`}
+                      fontSize="small"
+                    />
                   </CardContent>
                 </Grid>
-                <Grid item xs={2}>
-                  ตั้งเป็นที่อยู่ร้านค้า
+                <Grid
+                  item
+                  xs={3}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <MyContent name="ตั้งเป็นที่อยู่ร้านค้า" fontSize="small" />
                   <Switch
                     checked={item.isUsed_Store}
                     onClick={() => handleAddressUpdate(item.id, true)}
                   />
                 </Grid>
-                <Grid item xs={2}>
-                  ตั้งเป็นที่อยู่สั่งซื้อ
+                <Grid
+                  item
+                  xs={3}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <MyContent name="ตั้งเป็นที่อยู่สั่งซื้อ" fontSize="small" />
                   <Switch
                     checked={item.isUsed}
                     onClick={() => {
@@ -189,7 +211,15 @@ const AddressList = ({ confirmChangeAddress }: any) => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={2}>
+                <Grid
+                  item
+                  xs={2}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
                   <Fab
                     style={{
                       margin: 15,
@@ -209,7 +239,7 @@ const AddressList = ({ confirmChangeAddress }: any) => {
                     }}
                   >
                     <EditIcon sx={{ mr: 1 }} />
-                    แก้ไข
+                    <MyContent name="แก้ไข" fontSize="small" />
                   </Fab>
                 </Grid>
               </Grid>

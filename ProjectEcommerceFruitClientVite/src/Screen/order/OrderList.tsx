@@ -41,6 +41,8 @@ import { RiFileExcel2Line } from "react-icons/ri";
 import { VscFilePdf } from "react-icons/vsc";
 import html2pdf from "html2pdf.js";
 import ExcelJS from "exceljs";
+import MyContent from "../../component/MyContent";
+import { formatDateThai } from "../../helper/components";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -225,7 +227,7 @@ const OrderList = () => {
   const generateExcel = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Order Data");
-  
+
     // กำหนดหัวตารางให้ตรงกับข้อมูลที่แสดงในตาราง
     worksheet.columns = [
       { header: "รหัสคำสั่งซื้อ", key: "orderId", width: 20 },
@@ -235,7 +237,7 @@ const OrderList = () => {
       { header: "สถานะคำสั่งซื้อ", key: "status", width: 30 },
       { header: "สถานะพัสดุ", key: "confirmReceipt", width: 30 },
     ];
-  
+
     // วนลูปผ่านรายการ order เพื่อเพิ่มข้อมูลลงใน Excel
     for (const row of order) {
       const statusText =
@@ -246,7 +248,7 @@ const OrderList = () => {
           : row.status === 2
           ? "ยกเลิกคำสั่งซื้อแล้ว"
           : "เพิ่มสถานะด้วย";
-  
+
       const confirmReceiptText =
         row.confirmReceipt === 0
           ? "กำลังดำเนินการ"
@@ -255,11 +257,11 @@ const OrderList = () => {
           : row.confirmReceipt === 2
           ? "ไม่ได้รับพัสดุ"
           : "เพิ่มสถานะด้วย";
-  
+
       const createdAtFormatted = dayjs(row.createdAt)
         .add(543, "year")
         .format("DD/MM/YYYY");
-  
+
       // เพิ่มข้อมูลข้อความ
       const addedRow = worksheet.addRow({
         orderId: row.orderId,
@@ -269,7 +271,7 @@ const OrderList = () => {
         status: statusText,
         confirmReceipt: confirmReceiptText,
       });
-  
+
       // ถ้ามีรูปภาพ ให้เพิ่มลงใน Excel
       if (row.paymentImage) {
         try {
@@ -277,13 +279,13 @@ const OrderList = () => {
           const imageUrl = pathImages.paymentImage + row.paymentImage;
           const response = await fetch(imageUrl);
           const arrayBuffer = await response.arrayBuffer();
-  
+
           // เพิ่มรูปภาพใน workbook
           const imageId = workbook.addImage({
             buffer: arrayBuffer, // ใช้บัฟเฟอร์ของรูปภาพ
             extension: "jpeg", // ใช้ "png" หรือ "jpeg" ตามประเภทของไฟล์ภาพ
           });
-  
+
           // กำหนดให้แสดงรูปภาพในเซลล์ที่ตรงกับแถวที่เพิ่มข้อมูล
           worksheet.addImage(imageId, {
             tl: { col: 1, row: addedRow.number - 1 }, // ตำแหน่งเริ่มต้น (col: 1 คือ column ที่ 2)
@@ -294,12 +296,11 @@ const OrderList = () => {
         }
       }
     }
-  
+
     // บันทึกไฟล์ Excel และทำให้ดาวน์โหลดได้
     workbook.xlsx.writeBuffer().then((data) => {
       const blob = new Blob([data], {
-        type:
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -309,10 +310,6 @@ const OrderList = () => {
       URL.revokeObjectURL(url);
     });
   };
-  
-  
-  
-  
 
   return (
     <div className="-mt-16">
@@ -328,41 +325,46 @@ const OrderList = () => {
             mt={4}
           >
             <Typography variant="h4" component="h1" gutterBottom align="center">
-              คำสั่งซื้อ
+              <MyContent name="คำสั่งซื้อ" fontSize="large" />
             </Typography>
 
             <div className="flex justify-end w-full mb-5">
-            <button
-            onClick={toggleDropdown}
-            className=" p-2 bg-blue-500 text-white rounded-md"
-          >
-            <BiDownload />
-          </button>
+              <button
+                onClick={toggleDropdown}
+                className=" p-2 bg-blue-500 text-white rounded-md"
+              >
+                <BiDownload />
+              </button>
             </div>
 
             {openDropdown && (
-            <div className="absolute right-16 top-52 mt-2 bg-white border rounded shadow-md w-20">
-              <ul>
-                <li
-                  className="p-2 hover:bg-gray-200 cursor-pointer flex items-center "
-                  onClick={generatePDF}
-                >
-                  <VscFilePdf className="mr-2" /> PDF
-                </li>
-                <li
-                  className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
-                  onClick={generateExcel}
-                >
-                  <RiFileExcel2Line className="mr-2" /> Excel
-                </li>
-              </ul>
-            </div>
-          )}
+              <div className="absolute right-16 top-52 mt-2 bg-white border rounded shadow-md w-20">
+                <ul>
+                  <li
+                    className="p-2 hover:bg-gray-200 cursor-pointer flex items-center "
+                    onClick={generatePDF}
+                  >
+                    <VscFilePdf className="mr-2" /> PDF
+                  </li>
+                  <li
+                    className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
+                    onClick={generateExcel}
+                  >
+                    <RiFileExcel2Line className="mr-2" /> Excel
+                  </li>
+                </ul>
+              </div>
+            )}
 
-
-            <TableContainer ref={componentRef} component={Paper}>
+            <TableContainer
+              sx={{
+                width: 1200,
+              }}
+              ref={componentRef}
+              component={Paper}
+            >
               <Table
-                sx={{ minWidth: 500 }}
+                sx={{ width: "100%" }}
                 aria-label="custom pagination table"
               >
                 <TableHead>
@@ -373,7 +375,7 @@ const OrderList = () => {
                         // align={i > 2 ? "center" : "left"}
                         align="center"
                       >
-                        {column.label}
+                        <MyContent name={column.label} fontSize="small" />
                       </TableCell>
                     ))}
                   </TableRow>
@@ -388,7 +390,7 @@ const OrderList = () => {
                   ).map((row) => (
                     <TableRow key={row.id}>
                       <TableCell component="th" scope="row" align="center">
-                        {row.orderId}
+                        <MyContent name={row.orderId} fontSize="smaller" />
                       </TableCell>
                       <TableCell component="th" scope="row" align="center">
                         {row.paymentImage ? (
@@ -400,7 +402,7 @@ const OrderList = () => {
                             width={100}
                           />
                         ) : (
-                          "ไม่มีรูปภาพ"
+                          <MyContent name="ไม่มีรูปภาพ" fontSize="small" />
                         )}
                       </TableCell>
                       <TableCell
@@ -416,17 +418,30 @@ const OrderList = () => {
                               : ""
                           }
                         >
-                          {row.status === 2
-                            ? "ยกเลิกคำสั่งซื้อแล้ว"
-                            : !!row.tag
-                            ? row.tag
-                            : "ยังไม่ได้กรอกหมายเลขพัสดุ"}
+                          {row.status === 2 ? (
+                            <MyContent
+                              name="ยกเลิกคำสั่งซื้อแล้ว"
+                              fontSize="small"
+                            />
+                          ) : !!row.tag ? (
+                            <MyContent name={row.tag} fontSize="small" />
+                          ) : (
+                            <MyContent
+                              name="ยังไม่ได้กรอกหมายเลขพัสดุ"
+                              fontSize="smaller"
+                            />
+                          )}
                         </div>
                       </TableCell>
                       <TableCell align="center">
-                        {dayjs(row.createdAt)
+                        <MyContent
+                          name={formatDateThai(row.createdAt, +543, 1)}
+                          fontSize="small"
+                        />
+
+                        {/* {dayjs(row.createdAt)
                           .add(543, "year")
-                          .format("DD/MM/YYYY")}
+                          .format("DD/MM/YYYY")} */}
                       </TableCell>
                       <TableCell align="center">
                         <div
@@ -440,23 +455,39 @@ const OrderList = () => {
                               : "") + " px-3 py-1 rounded-full font-semibold"
                           }
                         >
-                          {row.status === 0
-                            ? "กำลังรออนุมัติ"
-                            : row.status === 1
-                            ? "ยืนยันคำสั่งซื้อแล้ว"
-                            : row.status === 2
-                            ? "ยกเลิกคำสั่งซื้อแล้ว"
-                            : "เพิ่มสถานะด้วย"}
+                          {row.status === 0 ? (
+                            <MyContent
+                              name="กำลังรออนุมัติ"
+                              fontSize="smaller"
+                            />
+                          ) : row.status === 1 ? (
+                            <MyContent
+                              name="ยืนยันคำสั่งซื้อแล้ว"
+                              fontSize="smaller"
+                            />
+                          ) : row.status === 2 ? (
+                            <MyContent
+                              name="ยกเลิกคำสั่งซื้อแล้ว"
+                              fontSize="smaller"
+                            />
+                          ) : (
+                            <MyContent
+                              name="เพิ่มสถานะด้วย"
+                              fontSize="smaller"
+                            />
+                          )}
                         </div>
                       </TableCell>
                       <TableCell align="center">
-                        {row.confirmReceipt === 0
-                          ? "กำลังดำเนินการ"
-                          : row.confirmReceipt === 1
-                          ? "ได้รับพัสดุแล้ว"
-                          : row.confirmReceipt === 2
-                          ? "ไม่ได้รับพัสดุ"
-                          : "เพิ่มสถานะด้วย"}
+                        {row.confirmReceipt === 0 ? (
+                          <MyContent name="กำลังดำเนินการ" fontSize="small" />
+                        ) : row.confirmReceipt === 1 ? (
+                          "ได้รับพัสดุแล้ว"
+                        ) : row.confirmReceipt === 2 ? (
+                          "ไม่ได้รับพัสดุ"
+                        ) : (
+                          "เพิ่มสถานะด้วย"
+                        )}
                       </TableCell>
                       <TableCell align="center">
                         <Fab
@@ -468,7 +499,7 @@ const OrderList = () => {
                           }}
                         >
                           {/* <EditIcon sx={{ mr: 1 }} /> */}
-                          เพิ่มเติม
+                          <MyContent name="เพิ่มเติม" fontSize="small" />
                         </Fab>
                       </TableCell>
                       {/* <TableCell style={{ width: 100 }}>

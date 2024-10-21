@@ -40,6 +40,7 @@ import { RiFileExcel2Line } from "react-icons/ri";
 import ExcelJS from "exceljs";
 
 import "moment/locale/th";
+import MyContent from "../../component/MyContent";
 moment.locale("th");
 const drawerWidth = 240;
 
@@ -123,14 +124,18 @@ export default observer(function DashboardShopScreen() {
       }, 0);
     setTotalQuantity(totalProduct);
 
-    const totalOrderSuccess = order.filter(x=>x.confirmReceipt === 1).reduce((acc, currentOrder) => {
-      return currentOrder.status === 1 ? acc + 1 : acc;
-    }, 0);
+    const totalOrderSuccess = order
+      .filter((x) => x.confirmReceipt === 1)
+      .reduce((acc, currentOrder) => {
+        return currentOrder.status === 1 ? acc + 1 : acc;
+      }, 0);
     setTotalOrderSuccess(totalOrderSuccess);
 
-    const totalOrderFailed = order.filter(x=>x.confirmReceipt === 1).reduce((acc, currentOrder) => {
-      return currentOrder.status === 2 ? acc + 1 : acc;
-    }, 0);
+    const totalOrderFailed = order
+      .filter((x) => x.confirmReceipt === 1)
+      .reduce((acc, currentOrder) => {
+        return currentOrder.status === 2 ? acc + 1 : acc;
+      }, 0);
     setTotalOrderFailed(totalOrderFailed);
 
     const years: any = [
@@ -469,7 +474,10 @@ export default observer(function DashboardShopScreen() {
                   </div>
 
                   <div className="mt-2 text-sm text-gray-400">
-                    รายได้รวมการจำหน่ายสินค้า
+                    <MyContent
+                      name="รายได้รวมการจำหน่ายสินค้า"
+                      fontSize="smaller"
+                    />
                   </div>
                 </a>
 
@@ -495,7 +503,7 @@ export default observer(function DashboardShopScreen() {
                   </div>
 
                   <div className="mt-2 text-sm text-gray-400">
-                    จำนวนสินค้าที่ซื้อ
+                    <MyContent name="จำนวนสินค้าที่ซื้อ" fontSize="smaller" />
                   </div>
                 </a>
 
@@ -521,7 +529,10 @@ export default observer(function DashboardShopScreen() {
                   </div>
 
                   <div className="mt-2 text-sm text-gray-400">
-                    ยอดคำสั่งซื้อที่สำเร็จ
+                    <MyContent
+                      name="ยอดคำสั่งซื้อที่สำเร็จ"
+                      fontSize="smaller"
+                    />
                   </div>
                 </a>
 
@@ -547,7 +558,10 @@ export default observer(function DashboardShopScreen() {
                   </div>
 
                   <div className="mt-2 text-sm text-gray-400">
-                    ยอดคำสั่งซื้อที่ยกเลิก
+                    <MyContent
+                      name="ยอดคำสั่งซื้อที่ยกเลิก"
+                      fontSize="smaller"
+                    />
                   </div>
                 </a>
 
@@ -583,29 +597,28 @@ export default observer(function DashboardShopScreen() {
                 <div className="gap-4 mt-5 flex">
                   <div className="w-9/12 bg-white border rounded-sm overflow-hidden shadow">
                     <div className="p-2 flex justify-between items-center">
-                      <p className="font-semibold">
-                        กราฟแสดงยอดขายในแต่ละเดือน
-                      </p>
-
-                      {order.filter(x=>x.confirmReceipt === 1).length > 0 ?
-                      (
-                        <div className="flex items-center">
-                      <p className="mr-2">ปี :</p>
-                      <Select
-                        options={yearOptions}
-                        value={yearOptions.find(
-                          (option: any) => option.value === selectedYear
-                        )}
-                        onChange={handleYearChange}
-                        placeholder="Select Year"
-                        className="w-32 z-20"
+                      <MyContent
+                        name="กราฟแสดงยอดขายในแต่ละเดือน"
+                        fontSize="normal"
                       />
-                    </div>
-                      ):(
-                        <div>
-                  </div>
-                      )}
 
+                      {order.filter((x) => x.confirmReceipt === 1).length >
+                      0 ? (
+                        <div className="flex items-center">
+                          <p className="mr-2">ปี :</p>
+                          <Select
+                            options={yearOptions}
+                            value={yearOptions.find(
+                              (option: any) => option.value === selectedYear
+                            )}
+                            onChange={handleYearChange}
+                            placeholder="Select Year"
+                            className="w-32 z-20"
+                          />
+                        </div>
+                      ) : (
+                        <div></div>
+                      )}
                     </div>
                     {/* <div className="p-2 -mt-10">
 
@@ -615,40 +628,42 @@ export default observer(function DashboardShopScreen() {
                       />
                     </div> */}
                     <div className="p-2 -mt-10">
-                {order?.filter(x=>x.confirmReceipt === 1).length > 0 ? (
-                  <div>
-                  <ReactECharts
-                  option={option}
-                  style={{ height: "300px", width: "100%" }}
-                />
-                </div>
-                ):(
-                  <div className="flex justify-center items-center h-80">
-                    <p className="text-4xl font-medium">ไม่มีข้อมูล</p>
-                  </div>
-                )}
-              </div>
-
+                      {order?.filter((x) => x.confirmReceipt === 1).length >
+                      0 ? (
+                        <div>
+                          <ReactECharts
+                            option={option}
+                            style={{ height: "300px", width: "100%" }}
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex justify-center items-center h-80">
+                          <p className="text-4xl font-medium">ไม่มีข้อมูล</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <div className="w-5/12 bg-white border rounded-sm overflow-hidden shadow ">
                     <div className="p-2 -mb-3">
-                      <p className="font-semibold">
-                        สัดส่วนยอดขายตามหมวดหมู่ผลิตภัณฑ์
-                      </p>
+                      <MyContent
+                        name="สัดส่วนยอดขายตามหมวดหมู่ผลิตภัณฑ์"
+                        fontSize="normal"
+                      />
                     </div>
                     <div className="p-2">
-                {order?.filter(x=>x.confirmReceipt === 1).length > 0 ? (
-                  <ReactECharts
-                  option={pieOption}
-                  style={{ height: "300px", width: "100%" }}
-                />
-                ):(
-                  <div className="flex justify-center items-center h-80 -mt-5">
-                    <p className="text-4xl font-medium">ไม่มีข้อมูล</p>
-                  </div>
-                )}
-              </div>
+                      {order?.filter((x) => x.confirmReceipt === 1).length >
+                      0 ? (
+                        <ReactECharts
+                          option={pieOption}
+                          style={{ height: "300px", width: "100%" }}
+                        />
+                      ) : (
+                        <div className="flex justify-center items-center h-80 -mt-5">
+                          <p className="text-4xl font-medium">ไม่มีข้อมูล</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -672,7 +687,9 @@ export default observer(function DashboardShopScreen() {
           <ListItemIcon>
             <DashboardIcon />
           </ListItemIcon>
-          <ListItemText primary="แดชบอร์ด" />
+          <ListItemText
+            primary={<MyContent name="แดชบอร์ด" fontSize="small" />}
+          />
         </ListItem>
         <Collapse timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
@@ -685,26 +702,34 @@ export default observer(function DashboardShopScreen() {
           <ListItemIcon>
             <ShoppingCartIcon />
           </ListItemIcon>
-          <ListItemText primary="แก้ไขร้านค้า" />
+          <ListItemText
+            primary={<MyContent name="แก้ไขร้านค้า" fontSize="small" />}
+          />
         </ListItem>
         <ListItem onClick={() => setScreenComponent("ProductGIList")}>
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
-          <ListItemText primary="เพิ่มข้อมูลสินค้า (GI)" />
+          <ListItemText
+            primary={<MyContent name="เพิ่มข้อมูลสินค้า" fontSize="small" />}
+          />
         </ListItem>
 
         <ListItem onClick={() => setScreenComponent("ProductList")}>
           <ListItemIcon>
             <BarChartIcon />
           </ListItemIcon>
-          <ListItemText primary="เพิ่มสินค้า" />
+          <ListItemText
+            primary={<MyContent name="เพิ่มสินค้า" fontSize="small" />}
+          />
         </ListItem>
         <ListItem onClick={() => setScreenComponent("OrderList")}>
           <ListItemIcon>
             <ReceiptLongIcon />
           </ListItemIcon>
-          <ListItemText primary="คำสั่งซื้อ" />
+          <ListItemText
+            primary={<MyContent name="คำสั่งซื้อ" fontSize="small" />}
+          />
         </ListItem>
         {/* <ListItem   component={Link} to="/integrations">
           <ListItemIcon>
@@ -716,8 +741,6 @@ export default observer(function DashboardShopScreen() {
       <Divider />
     </div>
   );
-
-  console.log("order", order);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -739,14 +762,19 @@ export default observer(function DashboardShopScreen() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
-            ร้านค้า {usershop && usershop.name}
+            {
+              <MyContent
+                name={`ร้านค้า ${usershop && usershop.name}`}
+                fontSize="normal"
+              />
+            }
           </Typography>
           <div>
             <NavLink
               to={RoutePath.homeScreen}
               style={{ textDecoration: "none", color: "#fff" }}
             >
-              กลับหน้าหลัก
+              <MyContent name="กลับหน้าหลัก" fontSize="normal" />
             </NavLink>
           </div>
           <div
@@ -754,7 +782,10 @@ export default observer(function DashboardShopScreen() {
               marginLeft: 20,
             }}
           >
-            {usershop && usershop.user.fullName}
+            <MyContent
+              name={usershop && usershop.user.fullName}
+              fontSize="normal"
+            />
           </div>
         </Toolbar>
       </AppBar>
@@ -786,7 +817,6 @@ export default observer(function DashboardShopScreen() {
             display: { xs: "none", sm: "block" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
-              width: drawerWidth,
             },
           }}
           open

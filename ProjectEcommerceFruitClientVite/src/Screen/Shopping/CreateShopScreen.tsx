@@ -16,6 +16,7 @@ import { RoutePath } from "../../constants/RoutePath";
 import { myToast } from "../../helper/components";
 import { Address } from "../../models/Address";
 import { CreateInput } from "thai-address-autocomplete-react";
+import MyContent from "../../component/MyContent";
 
 const InputThaiAddress = CreateInput();
 
@@ -42,9 +43,6 @@ export default observer(function CreateShopScreen({
   }, []);
 
   const dataId = !!dataEdit ? dataEdit : usershop;
-
-  console.log("dataEdit", dataEdit);
-  console.log("usershop", usershop);
 
   const addresss = !!dataEdit ? dataEdit : addressed;
 
@@ -131,9 +129,13 @@ export default observer(function CreateShopScreen({
           <CardContent>
             <Typography variant="h4" component="h1" gutterBottom align="center">
               {dataId && dataId?.id ? (
-                <p>แก้ไขรายละเอียด</p>
+                <p>
+                  <MyContent name="แก้ไขรายละเอียด" fontSize="large" />
+                </p>
               ) : (
-                <p>สร้างร้านค้า</p>
+                <p>
+                  <MyContent name="สร้างร้านค้า" fontSize="large" />
+                </p>
               )}
             </Typography>
             <Box mt={2} component="form" onSubmit={handleSubmit}>
@@ -213,7 +215,7 @@ export default observer(function CreateShopScreen({
                 size="large"
                 fullWidth
               >
-                บันทึก
+                <MyContent name="บันทึก" fontSize="small" />
               </Button>
             </Box>
           </CardContent>

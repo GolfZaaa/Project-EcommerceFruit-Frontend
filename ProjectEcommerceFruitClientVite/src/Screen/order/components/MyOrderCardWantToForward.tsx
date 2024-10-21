@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { DriverHistory, Order } from "../../../models/Order";
 import { OrderItem } from "../../../models/OrderItem";
 import { formatNumberWithCommas } from "../../../helper/components";
-import { pathImages } from "../../../constants/RoutePath";
+import { pathImages, RoutePath } from "../../../constants/RoutePath";
 // @ts-ignore
 import html2pdf from "html2pdf.js";
 import { BsFillPrinterFill } from "react-icons/bs";
@@ -14,6 +14,9 @@ import { useStore } from "../../../store/store";
 import Divider from "@mui/material/Divider";
 import CheckIcon from "@mui/icons-material/Check";
 import AddressForCard from "../../../components/AddressForCard";
+import MyContent from "../../../component/MyContent";
+import { useNavigate } from "react-router-dom";
+import { resetScroll } from "../../../api/agent";
 
 interface props {
   order: Order[];
@@ -21,6 +24,7 @@ interface props {
 }
 
 const MyOrderCardWantToForward = ({ order }: props) => {
+  const navigate = useNavigate();
   const { user } = useStore().userStore;
   const { confirmOrderToForward } = useStore().orderStore;
   const componentRef = useRef(null);
@@ -102,7 +106,7 @@ const MyOrderCardWantToForward = ({ order }: props) => {
     <div ref={componentRef}>
       <div className="flex justify-between">
         <div>
-          <Typography variant="h5">จำนวน {order.length}</Typography>
+          <Typography variant="h5">จำนวน {order?.length}</Typography>
         </div>
         <div>
           <button
@@ -115,21 +119,21 @@ const MyOrderCardWantToForward = ({ order }: props) => {
         </div>
       </div>
 
-      {order.length ? (
+      {order?.length ? (
         <>
-          {order.map((item) => {
+          {order?.map((item) => {
             const status = item?.shippings[0]?.shippingStatus;
 
             const calculateTotalPrice = () => {
               return item?.orderItems?.reduce((total, item: OrderItem) => {
-                total = item.product.price * item.quantity + total;
+                total = item?.product?.price * item?.quantity + total;
 
                 return total;
               }, 0);
             };
 
-            const myDriverFee = item.shippings[0].driverHistories.find(
-              (x) => x.userId === user?.id
+            const myDriverFee = item?.shippings[0]?.driverHistories?.find(
+              (x) => x?.userId === user?.id
             );
 
             const totalPrice: any = calculateTotalPrice();
@@ -140,7 +144,7 @@ const MyOrderCardWantToForward = ({ order }: props) => {
                 <div className="space-y-4">
                   <div className="md:flex md:justify-between">
                     <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
-                      รหัสคำสั่งซื้อ : {item.orderId}
+                      รหัสคำสั่งซื้อ : {item?.orderId}
                     </span>
                     <div className="flex justify-between items-center mb-3">
                       <p className="text-base leading-4 text-gray-800">
@@ -172,30 +176,43 @@ const MyOrderCardWantToForward = ({ order }: props) => {
                     </span>
                   </div>
 
-                  {item.orderItems.map((item: OrderItem) => {
+                  {item?.orderItems?.map((item: OrderItem) => {
                     const TotalPriceForProduct =
-                      item.product.price * item.quantity;
+                      item?.product?.price * item?.quantity;
                     const formatTotalPriceForProduct =
                       formatNumberWithCommas(TotalPriceForProduct);
 
                     return (
                       <div
-                        key={item.product.id}
+                        key={item?.product?.id}
                         className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6"
                       >
                         <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
-                          <a href="#" className="shrink-0 md:order-1">
+                          <a
+                            onClick={() => {
+                              navigate(
+                                RoutePath.productDetail(
+                                  String(item?.product?.id)
+                                )
+                              );
+                              resetScroll();
+                            }}
+                            style={{
+                              cursor: "pointer",
+                            }}
+                            className="shrink-0 md:order-1"
+                          >
                             <img
                               className="hidden h-20 w-20 dark:block"
-                              src={pathImages.product + item.product.images}
-                              alt={item.product.images || "product image"}
+                              src={pathImages?.product + item?.product?.images}
+                              alt={item?.product?.images || "product image"}
                             />
                           </a>
                           <label className="sr-only">Choose quantity:</label>
                           <div className="flex items-center justify-between md:order-3 md:justify-end">
                             <div className="flex items-center">
                               <p className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-gray-800">
-                                {item.quantity}
+                                {item?.quantity}
                               </p>
                             </div>
                             <div className="text-end md:order-4 md:w-32">
@@ -207,13 +224,13 @@ const MyOrderCardWantToForward = ({ order }: props) => {
 
                           <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
                             <p className="text-sm text-gray-500 font-bold">
-                              {item.product.productGI.category.name}
+                              {item?.product?.productGI?.category?.name}
                             </p>
                             <a
                               href="#"
                               className="text-base font-medium text-gray-900 hover:underline dark:text-gray-800"
                             >
-                              {item.product.productGI.name}
+                              {item?.product?.productGI?.name}
                             </a>
                           </div>
                         </div>
@@ -254,31 +271,36 @@ const MyOrderCardWantToForward = ({ order }: props) => {
                 />
 
                 <div>
-                  <b className="text-xl">ผู้จัดส่งที่ร้องขอการจัดส่งต่อ</b>
-                  {item?.shippings[0].driverHistories.map((driver) => {
+                  <b className="text-xl">
+                    <MyContent
+                      name="ผู้จัดส่งที่ร้องขอการจัดส่งต่อ"
+                      fontSize="small"
+                    />
+                  </b>
+                  {item?.shippings[0]?.driverHistories?.map((driver) => {
                     const mydriver: any =
-                      item?.shippings[0].driverHistories.find(
-                        (x) => x.userId === user?.id
+                      item?.shippings[0]?.driverHistories?.find(
+                        (x) => x?.userId === user?.id
                       );
 
                     return (
-                      driver.userId !== user?.id &&
-                      driver.statusDriver === 4 && (
+                      driver?.userId !== user?.id &&
+                      driver?.statusDriver === 4 && (
                         <Card
                           style={{
                             margin: "30px 0 30px 0",
                             padding: "30px 30px 25px 30px",
                           }}
                         >
-                          <Grid key={driver.id} container spacing={2}>
+                          <Grid key={driver?.id} container spacing={2}>
                             <Grid item xs={4}>
                               <Typography variant="h5">
-                                ชื่อ : {driver.user.fullName}
+                                ชื่อ : {driver?.user?.fullName}
                               </Typography>
                             </Grid>
                             <Grid item xs={4}>
                               <Typography variant="h5">
-                                เบอร์ : {driver.user.phoneNumber}
+                                เบอร์ : {driver?.user?.phoneNumber}
                               </Typography>
                             </Grid>
                             <Grid item xs={4} textAlign="end">
@@ -287,14 +309,14 @@ const MyOrderCardWantToForward = ({ order }: props) => {
                                 color="primary"
                                 onClick={() =>
                                   handleConfirm(
-                                    driver.id,
-                                    item?.shippings[0].id,
-                                    mydriver.shippingFee
+                                    driver?.id,
+                                    item?.shippings[0]?.id,
+                                    mydriver?.shippingFee
                                   )
                                 }
                               >
                                 <CheckIcon sx={{ mr: 1 }} />
-                                ส่งต่อ
+                                <MyContent name="ส่งต่อ" fontSize="small" />
                               </Fab>
                             </Grid>
                           </Grid>
@@ -317,7 +339,7 @@ const MyOrderCardWantToForward = ({ order }: props) => {
             color: "red",
           }}
         >
-          ไม่มีคำร้องขอส่งต่อคำสั่งซื้อ
+          <MyContent name="ไม่มีคำร้องขอส่งต่อคำสั่งซื้อ" fontSize="large" />
         </div>
       )}
     </div>

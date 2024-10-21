@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { Order } from "../../../models/Order";
 import { OrderItem } from "../../../models/OrderItem";
 import { formatNumberWithCommas } from "../../../helper/components";
-import { pathImages } from "../../../constants/RoutePath";
+import { pathImages, RoutePath } from "../../../constants/RoutePath";
 // @ts-ignore
 import html2pdf from "html2pdf.js";
 import { BsFillPrinterFill } from "react-icons/bs";
@@ -15,6 +15,9 @@ import ExcelJS from "exceljs";
 import { BiDownload } from "react-icons/bi";
 import { VscFilePdf } from "react-icons/vsc";
 import { RiFileExcel2Line } from "react-icons/ri";
+import MyContent from "../../../component/MyContent";
+import { useNavigate } from "react-router-dom";
+import { resetScroll } from "../../../api/agent";
 
 interface props {
   order: Order[];
@@ -22,6 +25,8 @@ interface props {
 }
 
 const MyOrderCardToSend = ({ order, index }: props) => {
+  const navigate = useNavigate();
+
   const componentRef = useRef(null);
   const { changeConfirmSendOrder } = useStore().orderStore;
   const { user } = useStore().userStore;
@@ -83,67 +88,69 @@ const MyOrderCardToSend = ({ order, index }: props) => {
     });
   };
 
-
   const generateExcel = () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Order Data");
-  
+
     worksheet.columns = [
       { header: "รหัสคำสั่งซื้อ", key: "orderId", width: 30 },
       { header: "รายการ", key: "item", width: 30 },
       { header: "ข้อมูล", key: "value", width: 30 },
       { header: "หน่วย", key: "unit", width: 30 },
     ];
-  
+
     let totalPrice = 0;
     let totalQuantity = 0;
     let totalOrderSuccess = 0;
     let totalOrderCancel = 0;
     let totalShippingFee = 0;
-  
+
     worksheet.addRow({
       item: "จำนวนรายการ",
       value: order.length,
       unit: "รายการ",
     });
-  
+
     order.forEach((item) => {
       const orderTotalPrice = item.orderItems.reduce((sum, item: OrderItem) => {
         return sum + item.product.price * item.quantity;
       }, 0);
-  
-      const orderTotalQuantity = item.orderItems.reduce((sum, item: OrderItem) => {
-        return sum + item.quantity;
-      }, 0);
-  
+
+      const orderTotalQuantity = item.orderItems.reduce(
+        (sum, item: OrderItem) => {
+          return sum + item.quantity;
+        },
+        0
+      );
+
       totalPrice += orderTotalPrice;
       totalQuantity += orderTotalQuantity;
-  
-      const myDriverFee = item.shippings[0]?.driverHistories.find(
-        (x) => x.userId === user?.id
-      )?.shippingFee || 0;
-      totalShippingFee += myDriverFee;  
-  
+
+      const myDriverFee =
+        item.shippings[0]?.driverHistories.find((x) => x.userId === user?.id)
+          ?.shippingFee || 0;
+      totalShippingFee += myDriverFee;
+
       if (item.shippings[0]?.shippingStatus === 1) {
         totalOrderSuccess += 1;
       } else if (item.shippings[0]?.shippingStatus === 2) {
         totalOrderCancel += 1;
       }
-  
+
       worksheet.addRow({
-        orderId: item.orderId, 
+        orderId: item.orderId,
         item: "ค่าจัดส่งจากผู้จัดส่ง",
-        value: myDriverFee,  
+        value: myDriverFee,
         unit: "บาท",
       });
-  
+
       worksheet.addRow({
         item: "จำนวนสินค้าที่หิ้วทั้งหมด",
         value: totalQuantity,
         unit: "ชิ้น",
       });
     });
-  
+
     workbook.xlsx.writeBuffer().then((data) => {
       const blob = new Blob([data], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -151,15 +158,11 @@ const MyOrderCardToSend = ({ order, index }: props) => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "order_data.xlsx"; 
+      a.download = "order_data.xlsx";
       a.click();
       URL.revokeObjectURL(url);
     });
   };
-  
-  
-  
-  
 
   const [openDropdown, setOpenDropdown] = useState(false);
   const toggleDropdown = () => {
@@ -170,39 +173,41 @@ const MyOrderCardToSend = ({ order, index }: props) => {
     <div ref={componentRef}>
       <div className="flex justify-between">
         <div>
-          <Typography variant="h5">จำนวน {order.length}</Typography>
+          <Typography variant="h5">
+            <MyContent name={`จำนวน ${order.length}`} fontSize="normal" />
+          </Typography>
         </div>
 
-        {order.length > 0 &&
-        <div>
-        <button
-            onClick={toggleDropdown}
-            className="p-2 bg-blue-500 text-white rounded-md"
-          >
-            <BiDownload />
-          </button>
-      </div> 
-      }
+        {order.length > 0 && (
+          <div>
+            <button
+              onClick={toggleDropdown}
+              className="p-2 bg-blue-500 text-white rounded-md"
+            >
+              <BiDownload />
+            </button>
+          </div>
+        )}
       </div>
 
       {openDropdown && (
-            <div className="absolute right-12 -mt-1 bg-white border rounded shadow-md w-20">
-              <ul>
-                <li
-                  className="p-2 hover:bg-gray-200 cursor-pointer flex items-center "
-                  onClick={generatePDF}
-                >
-                  <VscFilePdf className="mr-2" /> PDF
-                </li>
-                <li
-                  className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
-                  onClick={generateExcel}
-                >
-                  <RiFileExcel2Line className="mr-2" /> Excel
-                </li>
-              </ul>
-            </div>
-          )}
+        <div className="absolute right-12 -mt-1 bg-white border rounded shadow-md w-20">
+          <ul>
+            <li
+              className="p-2 hover:bg-gray-200 cursor-pointer flex items-center "
+              onClick={generatePDF}
+            >
+              <VscFilePdf className="mr-2" /> PDF
+            </li>
+            <li
+              className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
+              onClick={generateExcel}
+            >
+              <RiFileExcel2Line className="mr-2" /> Excel
+            </li>
+          </ul>
+        </div>
+      )}
 
       {select.length ? (
         <Grid
@@ -214,7 +219,12 @@ const MyOrderCardToSend = ({ order, index }: props) => {
           }}
         >
           <Grid item xs={7.6}>
-            <Typography variant="h5">จำนวนที่เลือก {select.length}</Typography>
+            <Typography variant="h5">
+              <MyContent
+                name={`จำนวนที่เลือก ${select.length}`}
+                fontSize="normal"
+              />
+            </Typography>
           </Grid>
           <Grid item xs={2.7}>
             <div
@@ -246,7 +256,7 @@ const MyOrderCardToSend = ({ order, index }: props) => {
           <Grid item xs={1.7}>
             <Fab variant="extended" color="primary" onClick={handleConfirm}>
               <EditIcon sx={{ mr: 1 }} />
-              ยืนยันการส่ง
+              <MyContent name="ยืนยันการส่ง" fontSize="smaller" />
             </Fab>
           </Grid>
         </Grid>
@@ -310,7 +320,10 @@ const MyOrderCardToSend = ({ order, index }: props) => {
                 <div className="flex justify-between items-center mb-3">
                   <p className="text-base leading-4 text-gray-800">
                     {/* ได้รับค่าจัดส่ง : {item?.shippings[0]?.shippingFee} บาท */}
-                    ได้รับค่าจัดส่ง : {myDriverFee?.shippingFee} บาท
+                    <MyContent
+                      name={`ได้รับค่าจัดส่ง : ${myDriverFee?.shippingFee} บาท`}
+                      fontSize="small"
+                    />
                   </p>
                 </div>
 
@@ -347,10 +360,21 @@ const MyOrderCardToSend = ({ order, index }: props) => {
                 return (
                   <div
                     key={item.product.id}
-                    className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6"
+                    className="rounded-lg border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-white"
                   >
                     <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
-                      <a href="#" className="shrink-0 md:order-1">
+                      <a
+                        onClick={() => {
+                          navigate(
+                            RoutePath.productDetail(String(item.product.id))
+                          );
+                          resetScroll();
+                        }}
+                        style={{
+                          cursor: "pointer",
+                        }}
+                        className="shrink-0 md:order-1"
+                      >
                         <img
                           className="hidden h-20 w-20 dark:block"
                           src={pathImages.product + item.product.images}
@@ -387,10 +411,12 @@ const MyOrderCardToSend = ({ order, index }: props) => {
                 );
               })}
             </div>
+
             <TotalPrice
               formattedTotalPrice={parseFloat(formattedTotalPrice)}
               ShippingFee={item?.shippings[0]?.shippingFee}
             />
+
             <div className="flex-1">
               <p className="text-xl leading-4 text-gray-800 font-medium">
                 ชื่อ-ที่อยู่ลูกค้า : {item?.address?.user?.fullName} เบอร์ :{" "}

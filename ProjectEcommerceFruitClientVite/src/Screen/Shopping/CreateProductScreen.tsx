@@ -24,6 +24,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import DropZoneImageComponent from "../../layout/component/DropZoneImageComponent";
 import { pathImages } from "../../constants/RoutePath";
 import { formats, modules, myToast } from "../../helper/components";
+import MyContent from "../../component/MyContent";
 
 interface props {
   onChangeCU?: any | null;
@@ -112,7 +113,7 @@ export default observer(function CreateProductScreen({
           <Grid item xs={1}>
             <Fab variant="extended" color="primary" onClick={onChangeCU}>
               <ArrowBackIosIcon sx={{ mr: 1 }} />
-              กลับ
+              <MyContent name="กลับ" fontSize="small" />
             </Fab>
           </Grid>
           <Grid item xs={11} />
@@ -120,7 +121,7 @@ export default observer(function CreateProductScreen({
 
         <CardContent>
           <Typography variant="h4" component="h1" gutterBottom align="center">
-            สร้างสินค้า
+            <MyContent name="สร้างสินค้า" fontSize="large" />
           </Typography>
 
           <Grid container spacing={2}>
@@ -150,7 +151,7 @@ export default observer(function CreateProductScreen({
                       color: "red",
                     }}
                   >
-                    กรุณาใส่รูปภาพสินค้า
+                    <MyContent name="กรุณาใส่รูปภาพสินค้า" fontSize="small" />
                   </div>
                 )}
               </div>

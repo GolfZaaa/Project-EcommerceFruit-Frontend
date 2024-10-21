@@ -12,6 +12,7 @@ import ExcelJS from "exceljs";
 import dayjs from "dayjs";
 import "dayjs/locale/th";
 import localeData from "dayjs/plugin/localeData";
+import MyContent from "../../component/MyContent";
 
 dayjs.extend(localeData);
 dayjs.locale("th");
@@ -327,8 +328,6 @@ export default observer(function DashboardForUser() {
     setmodal(false);
   };
 
-  
-  console.log("แสดงจำนวนคำสั่งซื้อในแต่ละเดือน",order)
   return (
     <div className="-ml-10 -mt-16">
       <div>
@@ -355,7 +354,7 @@ export default observer(function DashboardForUser() {
             </div>
 
             <div className="mt-2 text-sm text-gray-400">
-              ยอดเงินทั้งหมดที่ซื้อ
+              <MyContent name="ยอดเงินทั้งหมดที่ซื้อ" fontSize="small" />
             </div>
           </a>
 
@@ -378,7 +377,9 @@ export default observer(function DashboardForUser() {
               <span className="font-bold text-gray-600">{totalQuantity}</span>
             </div>
 
-            <div className="mt-2 text-sm text-gray-400">จำนวนสินค้าที่ซื้อ</div>
+            <div className="mt-2 text-sm text-gray-400">
+              <MyContent name="จำนวนสินค้าที่ซื้อ" fontSize="small" />
+            </div>
           </a>
 
           <a
@@ -403,7 +404,7 @@ export default observer(function DashboardForUser() {
             </div>
 
             <div className="mt-2 text-sm text-gray-400">
-              ยอดคำสั่งซื้อที่สำเร็จ
+              <MyContent name="ยอดคำสั่งซื้อที่สำเร็จ" fontSize="small" />
             </div>
           </a>
 
@@ -429,19 +430,18 @@ export default observer(function DashboardForUser() {
             </div>
 
             <div className="mt-2 text-sm text-gray-400">
-              ยอดคำสั่งซื้อที่ยกเลิก
+              <MyContent name="ยอดคำสั่งซื้อที่ยกเลิก" fontSize="small" />
             </div>
           </a>
 
-          {order?.filter(x=>x.confirmReceipt === 1).length ? 
-          (
+          {order?.filter((x) => x.confirmReceipt === 1).length ? (
             <button
-            onClick={toggleDropdown}
-            className="absolute top-0 right-0 p-2 bg-blue-500 text-white rounded-md"
-          >
-            <BiDownload />
-          </button>
-          ):(
+              onClick={toggleDropdown}
+              className="absolute top-0 right-0 p-2 bg-blue-500 text-white rounded-md"
+            >
+              <BiDownload />
+            </button>
+          ) : (
             <div></div>
           )}
 
@@ -657,35 +657,36 @@ export default observer(function DashboardForUser() {
           <div className="grid grid-cols-4 gap-4 mt-5">
             <div className="col-span-2 bg-white border rounded-sm overflow-hidden shadow">
               <div className="p-2 flex justify-between items-center">
-                <p className="font-semibold">แสดงจำนวนคำสั่งซื้อในแต่ละเดือน</p>
-                {order?.filter(x=>x.confirmReceipt === 1).length > 0 ? (
+                <MyContent
+                  name="แสดงจำนวนคำสั่งซื้อในแต่ละเดือน"
+                  fontSize="small"
+                />
+                {order?.filter((x) => x.confirmReceipt === 1).length > 0 ? (
                   <div className="flex items-center">
-                  <p className="mr-2">ปี :</p>
-                  <Select
-                    options={yearOptions}
-                    value={yearOptions.find(
-                      (option: any) => option.value === selectedYear
-                    )}
-                    onChange={handleYearChange}
-                    placeholder="Select Year"
-                    className="w-32 z-40"
-                  />
-                </div>
-                ):(
-                  <div>
+                    <p className="mr-2">ปี :</p>
+                    <Select
+                      options={yearOptions}
+                      value={yearOptions.find(
+                        (option: any) => option.value === selectedYear
+                      )}
+                      onChange={handleYearChange}
+                      placeholder="Select Year"
+                      className="w-32 z-40"
+                    />
                   </div>
+                ) : (
+                  <div></div>
                 )}
-                
               </div>
               <div className="p-2 -mt-10">
-                {order?.filter(x=>x.confirmReceipt === 1).length > 0 ? (
+                {order?.filter((x) => x.confirmReceipt === 1).length > 0 ? (
                   <div>
-                  <ReactECharts
-                  option={option}
-                  style={{ height: "300px", width: "100%" }}
-                />
-                </div>
-                ):(
+                    <ReactECharts
+                      option={option}
+                      style={{ height: "300px", width: "100%" }}
+                    />
+                  </div>
+                ) : (
                   <div className="flex justify-center items-center h-80">
                     <p className="text-4xl font-medium">ไม่มีข้อมูล</p>
                   </div>
@@ -695,17 +696,18 @@ export default observer(function DashboardForUser() {
 
             <div className="col-span-2 bg-white border rounded-sm overflow-hidden shadow">
               <div className="p-2 -mb-3">
-                <p className="font-semibold">
-                  สัดส่วนการใช้จ่ายในแต่ละหมวดหมู่สินค้า
-                </p>
+                <MyContent
+                  name="สัดส่วนการใช้จ่ายในแต่ละหมวดหมู่สินค้า"
+                  fontSize="small"
+                />
               </div>
               <div className="p-2">
-                {order?.filter(x=>x.confirmReceipt === 1).length > 0 ? (
+                {order?.filter((x) => x.confirmReceipt === 1).length > 0 ? (
                   <ReactECharts
-                  option={pieOption}
-                  style={{ height: "300px", width: "100%" }}
-                />
-                ):(
+                    option={pieOption}
+                    style={{ height: "300px", width: "100%" }}
+                  />
+                ) : (
                   <div className="flex justify-center items-center h-80 -mt-5">
                     <p className="text-4xl font-medium">ไม่มีข้อมูล</p>
                   </div>

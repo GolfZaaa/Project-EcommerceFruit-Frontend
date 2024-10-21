@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { User } from "../models/User";
 import { store } from "./store";
@@ -20,16 +20,27 @@ export default class UserStore {
     makeAutoObservable(this);
   }
 
+  get isLoggedIn() {
+    return !!this.user;
+  }
+
   setLoadingUser = (state: boolean) => (this.loadingUser = state);
 
-  register = async ({ Password, FullName, PhoneNumber }: RegisterInterface) => {
+  register = async ({
+    Password,
+    FullName,
+    PhoneNumber,
+    RoleId,
+  }: RegisterInterface) => {
     this.setLoadingUser(true);
+
     const data = {
       password: Password,
       fullName: FullName,
       phoneNumber: PhoneNumber,
-      roleId: 1,
+      roleId: RoleId,
     };
+
     try {
       const user = await agent.User.Register(data);
       this.setLoadingUser(false);
@@ -43,8 +54,12 @@ export default class UserStore {
   login = async ({ PhoneNumber, Password }: RegisterInterface) => {
     this.setLoadingUser(true);
     const data = { phoneNumber: PhoneNumber, password: Password };
+
     try {
       const user = await agent.User.Login(data);
+
+      this.user = user;
+
       this.setLoadingUser(false);
       return user;
     } catch (error) {
@@ -68,12 +83,25 @@ export default class UserStore {
 
   getUserDetailbyId = async () => {
     store.systemSettingStore.setLoading(true);
-    try {
-      const user = await agent.User.getUserDetailbyId();
-      this.user = user;
-      store.systemSettingStore.setLoading(false);
 
-      return user;
+    try {
+      if (store.commonStore.token !== null) {
+        await agent.User.getUserDetailbyId().then((result) => {
+          if (result?.response?.request?.status !== undefined) {
+            if (result.response.request.status === 401) {
+              this.logout();
+            }
+          } else {
+            runInAction(() => {
+              this.user = result;
+            });
+
+            store.systemSettingStore.setLoading(false);
+
+            return result;
+          }
+        });
+      }
     } catch (error) {
       store.systemSettingStore.setLoading(false);
       return error;

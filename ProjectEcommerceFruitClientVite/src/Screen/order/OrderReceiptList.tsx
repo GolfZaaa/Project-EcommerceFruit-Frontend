@@ -9,6 +9,7 @@ import Lottie from "react-lottie";
 import lottiteEmpty from "../../assets/lotties/lf20_qh5z2fdq.json";
 import MyLottie from "../../helper/components/MyLottie";
 import { myToast } from "../../helper/components";
+import MyContent from "../../component/MyContent";
 
 const OrderReceiptList = () => {
   const { token } = useStore().commonStore;
@@ -65,7 +66,7 @@ const OrderReceiptList = () => {
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom align="center">
-          คำสั่งซื้อที่สามารถรับหิ้วได้
+          <MyContent name="คำสั่งซื้อที่สามารถรับหิ้วได้" fontSize="large" />
         </Typography>
       </div>
 
@@ -94,7 +95,7 @@ const OrderReceiptList = () => {
             color={"red"}
             marginBottom={-1}
           >
-            ค้นหาพื้นที่ที่คุณกำลังจะไป
+            <MyContent name="ค้นหาพื้นที่ที่คุณกำลังจะไป" fontSize="normal" />
           </Typography>
           <div
             style={{

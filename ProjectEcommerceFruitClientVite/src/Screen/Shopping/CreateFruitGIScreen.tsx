@@ -28,6 +28,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Badge from "@mui/material/Badge";
+import MyContent from "../../component/MyContent";
 
 interface props {
   onChangeCU: any;
@@ -140,14 +141,14 @@ export default observer(function CreateFruitGIScreen({
           <Grid item xs={1}>
             <Fab variant="extended" color="primary" onClick={onChangeCU}>
               <ArrowBackIosIcon sx={{ mr: 1 }} />
-              กลับ
+              <MyContent name="กลับ" fontSize="small" />
             </Fab>
           </Grid>
           <Grid item xs={11} />
         </Grid>
         <CardContent>
-          <Typography variant="h5" component="h2" gutterBottom>
-            สร้างข้อมูล GI
+          <Typography variant="h5" component="h2" gutterBottom align="center">
+            <MyContent name="สร้างข้อมูล GI" fontSize="large" />
           </Typography>
 
           <div style={{ marginBottom: 20 }}>
@@ -304,7 +305,7 @@ export default observer(function CreateFruitGIScreen({
             size="large"
             fullWidth
           >
-            บันทึก
+            <MyContent name="บันทึก" fontSize="small" />
           </Button>
         </CardContent>
       </Card>

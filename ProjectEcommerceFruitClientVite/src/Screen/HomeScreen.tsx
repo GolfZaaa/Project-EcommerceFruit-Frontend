@@ -22,15 +22,13 @@ export default observer(function HomeScreen() {
   const { product, getProduct, category, getCategory } =
     useStore().productStore;
 
-  const { user, setLoadingUser, loadingUser, getUserDetailbyId } =
-    useStore().userStore;
+  const { user, setLoadingUser, loadingUser } = useStore().userStore;
 
   const { GetStoreProductUser, shopProductUser } = useStore().shopuserStore;
 
   useEffect(() => {
     getProduct(0);
     getCategory();
-    getUserDetailbyId();
     if (user?.id !== undefined) {
       GetStoreProductUser(user?.id);
     }
@@ -56,12 +54,10 @@ export default observer(function HomeScreen() {
     setSortPrice(e.target.value);
   };
 
-  
   const NavigateDetail = (product: any) => {
     navigate(RoutePath.productDetail(product.id));
     resetScroll();
   };
-
 
   if (!Array.isArray(product) || !Array.isArray(category)) {
     return <Loading />;
@@ -111,7 +107,6 @@ export default observer(function HomeScreen() {
     }, 700);
   };
 
-
   return (
     <>
       <>
@@ -143,7 +138,10 @@ export default observer(function HomeScreen() {
 
             <div className="pl-14 pr-14">
               <div className="bg-white p-4 shadow-md rounded-md -mb-6 border ">
-                <h2 className="text-lg font-semibold mb-4"> <MyContent name={"กรองข้อมูลสินค้า"} fontSize="normal" /></h2>
+                <h2 className="text-lg font-semibold mb-4">
+                  {" "}
+                  <MyContent name={"กรองข้อมูลสินค้า"} fontSize="normal" />
+                </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="flex items-center space-x-4">
                     <label className="text-sm font-medium text-gray-700 ">
@@ -174,14 +172,22 @@ export default observer(function HomeScreen() {
                       className="block w-52 bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:ring focus:ring-indigo-200"
                     >
                       <option value="" hidden>
-                      <MyContent name={"ราคา"} fontSize="small" />
+                        <MyContent name={"ราคา"} fontSize="small" />
                         {/* ราคา */}
                       </option>
-                      
-                      
 
-                      <option value="lowToHigh"><MyContent name={"ราคา: จากน้อยไปมาก"} fontSize="small" /></option>
-                      <option value="highToLow"><MyContent name={"ราคา: จากมากไปน้อย"} fontSize="small" /></option>
+                      <option value="lowToHigh">
+                        <MyContent
+                          name={"ราคา: จากน้อยไปมาก"}
+                          fontSize="small"
+                        />
+                      </option>
+                      <option value="highToLow">
+                        <MyContent
+                          name={"ราคา: จากมากไปน้อย"}
+                          fontSize="small"
+                        />
+                      </option>
 
                       {/* <option value="lowToHigh">ราคา: จากน้อยไปมาก</option>
                       <option value="highToLow">ราคา: จากมากไปน้อย</option> */}
@@ -191,20 +197,24 @@ export default observer(function HomeScreen() {
                   <div className="flex items-center space-x-4 ml-11">
                     <button
                       onClick={handleResetSort}
-                      className="w-52 text-base rounded-md bg-green-600 py-2 px-4 border border-transparent text-center text-white transition-all shadow-md hover:shadow-lg active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:opacity-50 disabled:shadow-none ml-2"
+                      className="text-base rounded-md bg-green-600 py-2 px-4 border border-transparent text-center text-white transition-all shadow-md hover:shadow-lg active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:opacity-50 disabled:shadow-none ml-2"
+                      style={{
+                        width: "100%",
+                      }}
                       type="button"
                       disabled={loadingUser}
                     >
                       {loadingUser ? (
                         <div>
-                          {" "}
                           <CircularProgress size={17} color="inherit" />
                         </div>
                       ) : (
                         <div>
                           {/* <p></p> */}
-                      <MyContent name={"รีเซ็ตกรองข้อมูลสินค้า"} fontSize="small" />
-
+                          <MyContent
+                            name={"รีเซ็ตกรองข้อมูลสินค้า"}
+                            fontSize="small"
+                          />
                         </div>
                       )}
                     </button>
@@ -386,7 +396,6 @@ export default observer(function HomeScreen() {
                       </g>
                     </svg>
                     <div className="font-semibold inline-block">
-                      
                       <MyContent name={"รายการผลไม้ทั้งหมด"} fontSize="small" />
                     </div>
                   </div>
@@ -437,11 +446,10 @@ export default observer(function HomeScreen() {
                         onClick={handleMyShop}
                         className="font-semibold inline-block"
                       >
-                      <MyContent name={"สินค้าของฉัน"} fontSize="small" />
+                        <MyContent name={"สินค้าของฉัน"} fontSize="small" />
                       </div>
                     </div>
                   )}
-
                 </div>
 
                 {taps === "taps1" && (
@@ -470,13 +478,19 @@ export default observer(function HomeScreen() {
                                   />
                                   <div className="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
                                   <div className="text-xs absolute top-0 right-0 bg-indigo-600 px-4 py-2 text-white mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                                    {product.productGI.category.name}
+                                    <MyContent
+                                      name={product.productGI.category.name}
+                                      fontSize="smaller"
+                                    />
                                   </div>
 
                                   {userid ==
                                     product?.productGI?.store?.user?.id && (
                                     <div className="absolute top-0 left-0 bg-green-600 px-4 py-2 text-white mt-3 ml-3 text-xs font-bold rounded">
-                                      สินค้าของคุณ
+                                      <MyContent
+                                        name="สินค้าของคุณ"
+                                        fontSize="smaller"
+                                      />
                                     </div>
                                   )}
                                 </div>
@@ -505,7 +519,13 @@ export default observer(function HomeScreen() {
                                         </g>
                                       </g>
                                     </svg>
-                                    <span className="ml-1"> <MyContent name={timePassed} fontSize="smaller" /></span>
+                                    <span className="ml-1">
+                                      {" "}
+                                      <MyContent
+                                        name={timePassed}
+                                        fontSize="small"
+                                      />
+                                    </span>
                                   </span>
 
                                   <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
@@ -523,8 +543,16 @@ export default observer(function HomeScreen() {
                                       ></path>
                                     </svg>
                                     <span className="ml-1 flex">
-                                    <MyContent name={product.sold} fontSize="smaller" />
-                                       <p style={{paddingLeft:5}}><MyContent name={"ยอดขาย"} fontSize="smaller" /></p>
+                                      <MyContent
+                                        name={product.sold}
+                                        fontSize="small"
+                                      />
+                                      <p style={{ paddingLeft: 5 }}>
+                                        <MyContent
+                                          name={"ยอดขาย"}
+                                          fontSize="small"
+                                        />
+                                      </p>
                                     </span>
                                   </span>
                                 </div>
@@ -576,7 +604,10 @@ export default observer(function HomeScreen() {
 
                             {userid == myProduct?.productGI?.store?.userId && (
                               <div className="absolute top-0 left-0 bg-green-600 px-4 py-2 text-white mt-3 ml-3 text-xs font-bold rounded">
-                                สินค้าของคุณ
+                                <MyContent
+                                  name={"สินค้าของคุณ"}
+                                  fontSize="small"
+                                />
                               </div>
                             )}
 

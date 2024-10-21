@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import AddressScreen from "../AddressScreen";
 import SummaryScreen from "../SummaryScreen";
 import { useStore } from "../../store/store";
+import MyContent from "../../component/MyContent";
 
 const OrderSummary = () => {
   const { getAddressgotoOrderByUserId } = useStore().addressStore;
@@ -20,7 +21,7 @@ const OrderSummary = () => {
       }
     });
   };
- 
+
   useEffect(() => {
     getData();
   }, []);
@@ -92,7 +93,7 @@ const OrderSummary = () => {
                         : "text-white")
                     }
                   >
-                    {item.name}
+                    <MyContent name={item.name} fontSize="small" />
                   </p>
                   <p
                     className={
@@ -105,7 +106,7 @@ const OrderSummary = () => {
                         : "text-white")
                     }
                   >
-                    {item.description}
+                    <MyContent name={item.description} fontSize="smaller" />
                   </p>
                 </div>
               </div>

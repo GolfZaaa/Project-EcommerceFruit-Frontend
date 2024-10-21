@@ -8,6 +8,7 @@ import { CustomTabPanel } from "./MyOrderToSendList";
 import CircularProgress from "@mui/material/CircularProgress";
 import MyOrderCardSearch from "./components/MyOrderCardSearch";
 import MyOrderCardWantToForward from "./components/MyOrderCardWantToForward";
+import MyContent from "../../component/MyContent";
 
 const SearchOrderToSendList = () => {
   const {
@@ -84,7 +85,7 @@ const SearchOrderToSendList = () => {
       <CustomTabPanel value={value} index={0}>
         <div>
           <Typography variant="h4" component="h1" gutterBottom align="center">
-            ค้นหาคำสั่งซื้อที่ต้องการรับ
+            <MyContent name="ค้นหาคำสั่งซื้อที่ต้องการรับ" fontSize="large" />
           </Typography>
 
           <div

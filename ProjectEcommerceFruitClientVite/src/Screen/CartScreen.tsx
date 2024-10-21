@@ -7,6 +7,7 @@ import { pathImages, RoutePath } from "../constants/RoutePath";
 import BannerComponent from "../layout/component/BannerComponent";
 import { resetScroll } from "../api/agent";
 import CircularProgress from "@mui/material/CircularProgress";
+import MyContent from "../component/MyContent";
 
 // Define types for cart items and products
 interface Product {
@@ -205,8 +206,12 @@ export default observer(function CartScreen() {
       <section className="bg-white py-8 antialiased md:py-16">
         <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
           <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">
-            จำนวนสินค้า {cartItems.length} ชิ้น จาก{" "}
-            {Object.entries(groupedCartItems).length} ร้านค้า
+            <MyContent
+              name={`จำนวนสินค้า ${cartItems.length} ชิ้น จาก ${
+                Object.entries(groupedCartItems).length
+              } ร้านค้า`}
+              fontSize="normal"
+            />
           </h2>
 
           <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
@@ -226,7 +231,10 @@ export default observer(function CartScreen() {
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
                           <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
-                            ชื่อร้านค้า : {storeName}
+                            <MyContent
+                              name={`ชื่อร้านค้า : ${storeName}`}
+                              fontSize="small"
+                            />
                           </span>
 
                           <input
@@ -259,7 +267,17 @@ export default observer(function CartScreen() {
                                     <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                                       <div className="flex items-center">
                                         <a
-                                          href="#"
+                                          onClick={() => {
+                                            navigate(
+                                              RoutePath.productDetail(
+                                                product.id
+                                              )
+                                            );
+                                            resetScroll();
+                                          }}
+                                          style={{
+                                            cursor: "pointer",
+                                          }}
                                           className="shrink-0 md:order-1"
                                         >
                                           <img
@@ -303,7 +321,10 @@ export default observer(function CartScreen() {
                                             </svg>
                                           </button>
                                           <p className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-gray-800">
-                                            {product.quantityInCartItem}
+                                            <MyContent
+                                              name={product.quantityInCartItem}
+                                              fontSize="small"
+                                            />
                                           </p>
                                           <button
                                             type="button"
@@ -333,20 +354,29 @@ export default observer(function CartScreen() {
                                         </div>
                                         <div className="text-end md:order-4 md:w-32">
                                           <p className="text-base font-bold text-gray-900 dark:text-gray-900">
-                                            {formatTotalPriceForProduct} บาท
+                                            <MyContent
+                                              name={`${formatTotalPriceForProduct} บาท`}
+                                              fontSize="small"
+                                            />
                                           </p>
                                         </div>
                                       </div>
 
                                       <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
                                         <p className="text-sm text-gray-500 font-bold">
-                                          {item.categoryName}
+                                          <MyContent
+                                            name={item.categoryName}
+                                            fontSize="small"
+                                          />
                                         </p>
                                         <a
                                           href="#"
                                           className="text-base font-medium text-gray-900 hover:underline dark:text-gray-800"
                                         >
-                                          {item.productName}
+                                          <MyContent
+                                            name={item.productName}
+                                            fontSize="small"
+                                          />
                                         </a>
                                         <div className="flex items-center gap-4">
                                           <button
@@ -393,16 +423,21 @@ export default observer(function CartScreen() {
               <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
                 <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white sm:p-6">
                   <p className="text-xl font-semibold text-gray-900 dark:text-gray-800">
-                    สรุปการสั่งซื้อ
+                    <MyContent name="สรุปการสั่งซื้อ" fontSize="normal" />
                   </p>
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <dl className="flex items-center justify-between gap-4">
                         <dt className="text-base font-bold text-gray-800 dark:text-gray-800">
-                          ราคารวม
+                          <MyContent name="ราคารวม" fontSize="small" />
                         </dt>
                         <dd className="text-base font-medium text-green-600">
-                          {!checkedItem ? 0 : formattedTotalPrice} บาท
+                          <MyContent
+                            name={`${
+                              !checkedItem ? 0 : formattedTotalPrice
+                            } บาท`}
+                            fontSize="small"
+                          />
                         </dd>
                       </dl>
                     </div>
@@ -410,7 +445,7 @@ export default observer(function CartScreen() {
                   </div>
                   <button
                     onClick={handleToOrderSummary}
-                    disabled={!checkedItem && loadingUser}
+                    disabled={!checkedItem}
                     className={`flex w-full items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium text-white focus:outline-none focus:ring-4 ${
                       !checkedItem
                         ? "bg-gray-400 cursor-not-allowed"
@@ -423,21 +458,21 @@ export default observer(function CartScreen() {
                       </div>
                     ) : (
                       <div>
-                        <p>ดำเนินการชำระเงิน</p>
+                        <MyContent name="ดำเนินการชำระเงิน" fontSize="small" />
                       </div>
                     )}
                   </button>
                   <div className="flex items-center justify-center gap-2">
                     <span className="text-sm font-normal text-gray-800 dark:text-gray-800">
-                      {" "}
-                      หรือ{" "}
+                      <MyContent name="หรือ" fontSize="small" />
                     </span>
                     <button
                       title=""
                       onClick={handleBackHomeScreen}
                       className="inline-flex items-center gap-2 text-sm font-medium text-primary-700 underline hover:no-underline dark:text-primary-500"
                     >
-                      ช้อปปิ้งต่อ
+                      <MyContent name="ช้อปปิ้งต่อ" fontSize="small" />
+
                       <svg
                         className="h-5 w-5"
                         aria-hidden="true"

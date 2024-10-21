@@ -23,8 +23,6 @@ function DropZoneImageComponent({ image = null, onImageUpload }: any) {
     onDrop,
   });
 
-  console.log("image", image);
-
   return (
     <div {...getRootProps()} className="dropzoneStyle">
       <input {...getInputProps()} />
@@ -32,13 +30,13 @@ function DropZoneImageComponent({ image = null, onImageUpload }: any) {
         <img
           src={image}
           alt="image"
-          style={{ width: "250px", height: "200px", objectFit: "contain" }}
+          style={{ width: "250px", height: "400px", objectFit: "contain" }}
         />
       ) : imageUri ? (
         <img
           src={imageUri.uri}
           alt="Selected"
-          style={{ width: "250px", height: "200px", objectFit: "contain" }}
+          style={{ width: "250px", height: "400px", objectFit: "contain" }}
         />
       ) : (
         <div
@@ -49,7 +47,7 @@ function DropZoneImageComponent({ image = null, onImageUpload }: any) {
             height: "100%",
           }}
         >
-          <IoCloudUploadOutline size={60} style={{ color: "gray" }} />
+          <IoCloudUploadOutline size={160} style={{ color: "gray" }} />
         </div>
       )}
     </div>

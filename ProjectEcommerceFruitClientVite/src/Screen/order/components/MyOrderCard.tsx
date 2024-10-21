@@ -3,7 +3,7 @@ import { Order } from "../../../models/Order";
 import { OrderItem } from "../../../models/OrderItem";
 import { formatNumberWithCommas } from "../../../helper/components";
 import { Typography, CardActions, Button, Grid } from "@mui/material";
-import { pathImages } from "../../../constants/RoutePath";
+import { pathImages, RoutePath } from "../../../constants/RoutePath";
 // @ts-ignore
 import html2pdf from "html2pdf.js";
 import { BsFillPrinterFill } from "react-icons/bs";
@@ -14,6 +14,9 @@ import { RiFileExcel2Line } from "react-icons/ri";
 import { BiDownload } from "react-icons/bi";
 import { VscFilePdf } from "react-icons/vsc";
 import ExcelJS from "exceljs";
+import MyContent from "../../../component/MyContent";
+import { useNavigate } from "react-router-dom";
+import { resetScroll } from "../../../api/agent";
 
 interface props {
   order: Order[];
@@ -21,10 +24,11 @@ interface props {
 }
 
 const MyOrderCard = ({ order, index }: props) => {
+  const navigate = useNavigate();
+
   const { changeConfirmReceiptOrder } = useStore().orderStore;
   const { systemSetting } = useStore().systemSettingStore;
   const componentRef = useRef(null);
-
 
   function generatePDF() {
     const opt = {
@@ -56,7 +60,7 @@ const MyOrderCard = ({ order, index }: props) => {
   const generateExcel = () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Order Data");
-  
+
     // กำหนดหัวตาราง
     worksheet.columns = [
       { header: "รหัสคำสั่งซื้อ", key: "orderId", width: 20 },
@@ -68,10 +72,10 @@ const MyOrderCard = ({ order, index }: props) => {
       { header: "ราคา", key: "price", width: 15 },
       { header: "ราคารวม", key: "totalPrice", width: 15 },
     ];
-  
+
     let grandTotalPrice = 0;
     let grandTotalQuantity = 0;
-  
+
     // วนลูปผ่านรายการสั่งซื้อ
     order.forEach((orderItem) => {
       // กำหนดสถานะ
@@ -87,7 +91,7 @@ const MyOrderCard = ({ order, index }: props) => {
       } else {
         statusText = "สถานะไม่ระบุ";
       }
-  
+
       if (orderItem.confirmReceipt === 1) {
         statusText += " | ได้รับสินค้าแล้ว";
       }
@@ -96,14 +100,14 @@ const MyOrderCard = ({ order, index }: props) => {
       } else if (orderItem.confirmReceipt === 2) {
         statusText += " | ยกเลิกแล้ว โดยคุณ";
       }
-  
+
       // วนลูปผ่านรายการสินค้าในคำสั่งซื้อ
       orderItem.orderItems.forEach((orderProductItem) => {
         const totalProductPrice =
           orderProductItem.product.price * orderProductItem.quantity + 50;
         grandTotalPrice += totalProductPrice;
         grandTotalQuantity += orderProductItem.quantity;
-  
+
         worksheet.addRow({
           orderId: orderItem.orderId,
           status: statusText,
@@ -116,22 +120,21 @@ const MyOrderCard = ({ order, index }: props) => {
         });
       });
     });
-  
+
     worksheet.addRow({});
     worksheet.addRow({
       productName: "รวมทั้งหมด",
       quantity: grandTotalQuantity,
       totalPrice: grandTotalPrice,
     });
-  
+
     // ทำการจัดรูปแบบเซลล์สรุปยอดให้เป็นตัวหนา
-    const lastRow:any = worksheet.lastRow;
+    const lastRow: any = worksheet.lastRow;
     lastRow.font = { bold: true };
-  
+
     workbook.xlsx.writeBuffer().then((data) => {
       const blob = new Blob([data], {
-        type:
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -142,7 +145,6 @@ const MyOrderCard = ({ order, index }: props) => {
     });
   };
 
-  
   const handleConfirm = (values: any) => {
     Swal.fire({
       title: "ท่านแน่ใจหรือไม่ว่าต้องการรับหิ้ว?",
@@ -175,19 +177,20 @@ const MyOrderCard = ({ order, index }: props) => {
     <div ref={componentRef}>
       <div className="flex justify-between">
         <div>
-          <Typography variant="h5">จำนวน {order.length}</Typography>
+          <Typography variant="h5">
+            <MyContent name={`จำนวน ${order.length}`} fontSize="normal" />
+          </Typography>
         </div>
         <div>
-
-          {order.length > 0 &&
-          <button
-          onClick={toggleDropdown}
-          id="downloadButton"
-          className=" p-2 bg-blue-500 text-white rounded-md"
-        >
-          <BiDownload />
-        </button>
-          }
+          {order.length > 0 && (
+            <button
+              onClick={toggleDropdown}
+              id="downloadButton"
+              className=" p-2 bg-blue-500 text-white rounded-md"
+            >
+              <BiDownload />
+            </button>
+          )}
 
           {openDropdown && (
             <div className="absolute right-12 -mt-2 bg-white border rounded shadow-md w-20">
@@ -207,7 +210,6 @@ const MyOrderCard = ({ order, index }: props) => {
               </ul>
             </div>
           )}
-
         </div>
       </div>
 
@@ -271,40 +273,57 @@ const MyOrderCard = ({ order, index }: props) => {
                 return (
                   <div
                     key={item.product.id}
-                    className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6"
+                    className="rounded-lg border border-gray-200 bg-white p-2 shadow-sm dark:border-gray-700 dark:bg-white"
                   >
                     <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
-                      <a href="#" className="shrink-0 md:order-1">
+                      <a
+                        onClick={() => {
+                          navigate(
+                            RoutePath.productDetail(String(item.product.id))
+                          );
+                          resetScroll();
+                        }}
+                        className="shrink-0 md:order-1"
+                      >
                         <img
                           className="hidden h-20 w-20 dark:block"
                           src={pathImages.product + item.product.images}
                           alt={item.product.images || "product image"}
+                          style={{
+                            cursor: "pointer",
+                          }}
                         />
                       </a>
                       <label className="sr-only">Choose quantity:</label>
                       <div className="flex items-center justify-between md:order-3 md:justify-end">
                         <div className="flex items-center">
                           <p className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-gray-800">
-                            {item.quantity}
+                            <MyContent name={item.quantity} fontSize="small" />
                           </p>
                         </div>
                         <div className="text-end md:order-4 md:w-32">
                           <p className="text-base font-bold text-gray-900 dark:text-gray-900">
-                            {formatTotalPriceForProduct} บาท
+                            <MyContent
+                              name={`${formatTotalPriceForProduct} บาท`}
+                              fontSize="small"
+                            />
                           </p>
                         </div>
                       </div>
 
                       <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
                         <p className="text-sm text-gray-500 font-bold">
-                          {item.product.productGI.category.name}
+                          <MyContent
+                            name={item.product.productGI.category.name}
+                            fontSize="small"
+                          />
                         </p>
-                        <a
-                          href="#"
-                          className="text-base font-medium text-gray-900 hover:underline dark:text-gray-800"
-                        >
-                          {item.product.productGI.name}
-                        </a>
+                        <p className="text-base font-medium text-gray-900 dark:text-gray-800">
+                          <MyContent
+                            name={item.product.productGI.name}
+                            fontSize="small"
+                          />
+                        </p>
                       </div>
                     </div>
                   </div>

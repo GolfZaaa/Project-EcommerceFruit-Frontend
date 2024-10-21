@@ -82,11 +82,23 @@ export default observer(function Navbar() {
                       }}
                     />
                     {/* <p className="ml-5">{systemSetting[0]?.webName}</p> */}
-                    <p className="ml-5"><MyContent name={systemSetting[0]?.webName} fontSize="big" /></p>
+                    <p className="ml-5">
+                      <MyContent
+                        name={systemSetting[0]?.webName}
+                        fontSize="large"
+                      />
+                    </p>
                   </div>
                 ) : (
                   // <p>กรุณาเพิ่มรูปภาพ และชื่อเว็บไซต์ ได้ที่ตั้งค่าระบบ</p>
-                  <p><MyContent name={"กรุณาเพิ่มรูปภาพ และชื่อเว็บไซต์ ได้ที่ตั้งค่าระบบ"} fontSize="normal" /></p>
+                  <p>
+                    <MyContent
+                      name={
+                        "กรุณาเพิ่มรูปภาพ และชื่อเว็บไซต์ ได้ที่ตั้งค่าระบบ"
+                      }
+                      fontSize="normal"
+                    />
+                  </p>
                 )}
               </>
             )}
@@ -122,7 +134,6 @@ export default observer(function Navbar() {
                   }`
                 }
               >
-                
                 <MyContent name={"หน้าหลัก"} fontSize="small" />
               </NavLink>
             </li>
@@ -159,42 +170,38 @@ export default observer(function Navbar() {
             <li className="text-gray-300">
               {user && user && (
                 <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                stroke="currentColor"
-                className="w-4 h-4 current-fill"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 5v0m0 7v0m0 7v0m0-13a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                />
-              </svg>
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  stroke="currentColor"
+                  className="w-4 h-4 current-fill"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 5v0m0 7v0m0 7v0m0-13a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                  />
+                </svg>
               )}
-              
             </li>
 
-                {user && user && (
-                  <li>
-              <NavLink
-                to={RoutePath.orderReceiptList}
-                className={({ isActive }) =>
-                  `text-sm ${
-                    isActive
-                      ? "text-blue-600 font-bold"
-                      : "text-gray-400 hover:text-gray-500"
-                  }`
-                }
-              >
-                
-                <MyContent name={"สร้างรายได้"} fontSize="small" />
-              </NavLink>
-            </li>
-                )}
-            
-
+            {user && user && (
+              <li>
+                <NavLink
+                  to={RoutePath.orderReceiptList}
+                  className={({ isActive }) =>
+                    `text-sm ${
+                      isActive
+                        ? "text-blue-600 font-bold"
+                        : "text-gray-400 hover:text-gray-500"
+                    }`
+                  }
+                >
+                  <MyContent name={"สร้างรายได้"} fontSize="small" />
+                </NavLink>
+              </li>
+            )}
           </ul>
 
           {token ? (
@@ -202,7 +209,7 @@ export default observer(function Navbar() {
               <ButtonMui color="secondary" onClick={handleClick}>
                 <Typography variant="body1" color="black">
                   {/* {user?.fullName} */}
-                <MyContent name={user?.fullName} fontSize="small" />
+                  <MyContent name={user?.fullName} fontSize="small" />
                 </Typography>
               </ButtonMui>
               <Menu
@@ -218,7 +225,9 @@ export default observer(function Navbar() {
                   to={RoutePath.myaccountScreen}
                   style={{ textDecoration: "none", color: "#000" }}
                 >
-                  <MenuItem onClick={handleClose}>ข้อมูลส่วนตัว</MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <MyContent name="ข้อมูลส่วนตัว" fontSize="small" />
+                  </MenuItem>
                 </NavLink>
 
                 {user?.stores?.length ? (
@@ -227,8 +236,9 @@ export default observer(function Navbar() {
                     style={{ textDecoration: "none", color: "#000" }}
                   >
                     {/* <MenuItem onClick={handleClose}>ร้านค้า</MenuItem> */}
-                    <MenuItem onClick={handleClose}><MyContent name={"ร้านค้า"} fontSize="smaller" /></MenuItem>
-                    
+                    <MenuItem onClick={handleClose}>
+                      <MyContent name={"ร้านค้า"} fontSize="small" />
+                    </MenuItem>
                   </NavLink>
                 ) : (
                   <NavLink
@@ -236,9 +246,9 @@ export default observer(function Navbar() {
                     style={{ textDecoration: "none", color: "#000" }}
                   >
                     {/* <MenuItem onClick={handleClose}>ลงทะเบียนร้านค้า</MenuItem> */}
-                    <MenuItem onClick={handleClose}><MyContent name={"ลงทะเบียนร้านค้า"} fontSize="smaller" /></MenuItem>
-                
-
+                    <MenuItem onClick={handleClose}>
+                      <MyContent name={"ลงทะเบียนร้านค้า"} fontSize="small" />
+                    </MenuItem>
                   </NavLink>
                 )}
 
@@ -253,7 +263,7 @@ export default observer(function Navbar() {
                     handleClose();
                   }}
                 >
-                  <MyContent name={"ออกจากระบบ"} fontSize="smaller" />
+                  <MyContent name={"ออกจากระบบ"} fontSize="small" />
                 </MenuItem>
               </Menu>
 
@@ -274,7 +284,7 @@ export default observer(function Navbar() {
                 className="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-green-500 hover:bg-green-700 text-sm text-white font-bold  rounded-xl transition duration-200"
                 to={RoutePath.loginScreen}
               >
-                  <MyContent name={"เข้าสู่ระบบ"} fontSize="small" />
+                <MyContent name={"เข้าสู่ระบบ"} fontSize="small" />
               </NavLink>
             </div>
           )}

@@ -106,7 +106,10 @@ export default observer(function LoginScreen() {
               </div>
               <h2 className="text-xl font-semibold text-gray-600 text-center">
                 {/* มหาวิทยาลัยราชภัฏกาญจนบุรี */}
-                <MyContent name={"มหาวิทยาลัยราชภัฏกาญจนบุรี"} fontSize="normal" />
+                <MyContent
+                  name={"มหาวิทยาลัยราชภัฏกาญจนบุรี"}
+                  fontSize="normal"
+                />
               </h2>
               <a
                 href="#"
@@ -121,7 +124,7 @@ export default observer(function LoginScreen() {
               </div>
               <div className="mt-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
-                  เบอร์โทรศัพท์
+                  <MyContent name="เบอร์โทรศัพท์" fontSize="small" />
                 </label>
                 <input
                   id="PhoneNumber"
@@ -141,14 +144,14 @@ export default observer(function LoginScreen() {
                 />
                 {phoneNumberError && (
                   <p className="text-red-500 text-xs italic">
-                    {phoneNumberError}
+                    <MyContent name={phoneNumberError} fontSize="small" />
                   </p>
                 )}
               </div>
               <div className="mt-4">
                 <div className="flex justify-between">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
-                    รหัสผ่าน
+                    <MyContent name="รหัสผ่าน" fontSize="small" />
                   </label>
                 </div>
                 <input
@@ -158,19 +161,21 @@ export default observer(function LoginScreen() {
                   className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
                 />
                 {passwordError && (
-                  <p className="text-red-500 text-xs italic">{passwordError}</p>
+                  <p className="text-red-500 text-xs italic">
+                    <MyContent name={passwordError} fontSize="small" />
+                  </p>
                 )}
               </div>
 
               <div className="mt-4 flex justify-end items-center">
                 <p className="text-sm text-gray-500 uppercase mr-2">
-                  ไม่มีสมาชิก?
+                  <MyContent name="ไม่มีสมาชิก?" fontSize="small" />
                 </p>
                 <NavLink
                   to={RoutePath.registerScreen}
                   className="text-blue-500 hover:underline"
                 >
-                  สมัครเลย
+                  <MyContent name="สมัครเลย" fontSize="small" />
                 </NavLink>
               </div>
 
@@ -182,11 +187,11 @@ export default observer(function LoginScreen() {
                 >
                   {loadingUser ? (
                     <div>
-                      <CircularProgress size={17} color="inherit" />
+                      <CircularProgress color="inherit" />
                     </div>
                   ) : (
                     <div>
-                      <p>เข้าสู่ระบบ</p>
+                      <MyContent name="เข้าสู่ระบบ" fontSize="normal" />
                     </div>
                   )}
                 </button>

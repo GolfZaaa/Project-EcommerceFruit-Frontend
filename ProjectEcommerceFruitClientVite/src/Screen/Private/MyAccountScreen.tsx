@@ -28,6 +28,7 @@ import MyOrderToSendList from "../order/MyOrderToSendList";
 import SearchOrderToSendList from "../order/SearchOrderToSendList";
 import EmailIcon from "@mui/icons-material/Email";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import MyContent from "../../component/MyContent";
 
 const drawerWidth = 240;
 
@@ -72,7 +73,9 @@ const MyAccountScreen = () => {
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
-          <ListItemText primary="แดชบอร์ด" />
+          <ListItemText
+            primary={<MyContent name="แดชบอร์ด" fontSize="small" />}
+          />
         </ListItem>
 
         <ListItem
@@ -84,7 +87,9 @@ const MyAccountScreen = () => {
           <ListItemIcon>
             <DashboardIcon />
           </ListItemIcon>
-          <ListItemText primary="ข้อมูลส่วนตัว" />
+          <ListItemText
+            primary={<MyContent name="ข้อมูลส่วนตัว" fontSize="small" />}
+          />
         </ListItem>
         <Collapse timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
@@ -102,7 +107,9 @@ const MyAccountScreen = () => {
           <ListItemIcon>
             <ShoppingCartIcon />
           </ListItemIcon>
-          <ListItemText primary="ที่อยู่" />
+          <ListItemText
+            primary={<MyContent name="ที่อยู่" fontSize="small" />}
+          />
         </ListItem>
         <ListItem
           style={{
@@ -116,7 +123,9 @@ const MyAccountScreen = () => {
           <ListItemIcon>
             <ListAltIcon />
           </ListItemIcon>
-          <ListItemText primary="คำสั่งซื้อ" />
+          <ListItemText
+            primary={<MyContent name="คำสั่งซื้อ" fontSize="small" />}
+          />
         </ListItem>
 
         <ListItem
@@ -131,7 +140,9 @@ const MyAccountScreen = () => {
           <ListItemIcon>
             <MonetizationOnIcon />
           </ListItemIcon>
-          <ListItemText primary="สร้างรายได้" />
+          <ListItemText
+            primary={<MyContent name="สร้างรายได้" fontSize="small" />}
+          />
         </ListItem>
 
         <ListItem
@@ -146,7 +157,11 @@ const MyAccountScreen = () => {
           <ListItemIcon>
             <EmailIcon />
           </ListItemIcon>
-          <ListItemText primary="รับ-ส่งต่อ คำสั่งซื้อ" />
+          <ListItemText
+            primary={
+              <MyContent name="รับ-ส่งต่อ คำสั่งซื้อ" fontSize="small" />
+            }
+          />
         </ListItem>
       </List>
       <Divider orientation="vertical" flexItem sx={{ height: "100vh" }} />
@@ -158,7 +173,7 @@ const MyAccountScreen = () => {
       <Box
         component="nav"
         sx={{
-          width: { sm: drawerWidth },
+          width: { sm: drawerWidth + 8 },
           flexShrink: { sm: 0 },
         }}
         aria-label="mailbox folders"

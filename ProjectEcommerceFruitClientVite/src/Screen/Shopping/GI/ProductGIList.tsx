@@ -41,6 +41,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import HTMLReactParser from "html-react-parser/lib/index";
 import CircularProgress from "@mui/material/CircularProgress";
 import { myToast } from "../../../helper/components";
+import MyContent from "../../../component/MyContent";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -196,7 +197,7 @@ const ProductGIList = () => {
                 gutterBottom
                 align="center"
               >
-                เพิ่มข้อมูล (GI) สินค้า
+                <MyContent name="เพิ่มข้อมูล (GI) สินค้า" fontSize="large" />
               </Typography>
               <Grid
                 container
@@ -216,7 +217,7 @@ const ProductGIList = () => {
                     }}
                   >
                     <AddIcon sx={{ mr: 1 }} />
-                    เพิ่ม
+                    <MyContent name="เพิ่ม" fontSize="small" />
                   </Fab>
                 </Grid>
               </Grid>
@@ -238,7 +239,7 @@ const ProductGIList = () => {
                             key={column.id}
                             align={i > 2 ? "center" : "left"}
                           >
-                            {column.label}
+                            <MyContent name={column.label} fontSize="small" />
                           </TableCell>
                         ))}
                       </TableRow>
@@ -253,9 +254,14 @@ const ProductGIList = () => {
                       ).map((row) => (
                         <TableRow key={row.name}>
                           <TableCell component="th" scope="row">
-                            {row.name}
+                            <MyContent name={row.name} fontSize="small" />
                           </TableCell>
-                          <TableCell>{row?.category?.name}</TableCell>
+                          <TableCell>
+                            <MyContent
+                              name={row?.category?.name}
+                              fontSize="small"
+                            />
+                          </TableCell>
                           <TableCell style={{ width: 100 }}>
                             <Fab
                               variant="extended"
@@ -266,7 +272,7 @@ const ProductGIList = () => {
                               }}
                             >
                               <EditIcon sx={{ mr: 1 }} />
-                              แก้ไข
+                              <MyContent name="แก้ไข" fontSize="small" />
                             </Fab>
                           </TableCell>
                           <TableCell style={{ width: 100 }}>
@@ -276,7 +282,7 @@ const ProductGIList = () => {
                               onClick={handleClickOpen}
                             >
                               <RemoveIcon sx={{ mr: 1 }} />
-                              ลบ
+                              <MyContent name="ลบ" fontSize="small" />
                             </Fab>
                             {/* <Button
                         variant="contained"

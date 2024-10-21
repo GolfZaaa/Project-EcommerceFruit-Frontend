@@ -1,20 +1,24 @@
-import React from "react";
+interface fontSizeOptions {
+  smaller: string;
+  small: string;
+  normal: string;
+  large: string;
+  larger: string;
+}
 
-export default function MyContent({
-  name,
-  fontSize,
-}: {
-  name: any;
-  fontSize: string;
-}) {
+interface MyContentProps {
+  name: string | number | undefined | null;
+  fontSize: keyof fontSizeOptions;
+}
 
-  const ConvertSize:any = {
+export default function MyContent({ name, fontSize }: MyContentProps) {
+  const ConvertSize: any = {
     smaller: 15,
-    small: 18,
-    normal:25,
-    big:35,
-    large: 50,
+    small: 19,
+    normal: 25,
+    large: 35,
+    larger: 50,
   };
- 
+
   return <div style={{ fontSize: ConvertSize[fontSize] }}>{name}</div>;
 }

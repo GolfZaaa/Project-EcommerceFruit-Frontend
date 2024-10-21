@@ -7,6 +7,7 @@ import ToastLoginRegister from "../layout/component/ToastLoginRegister";
 import CircularProgress from "@mui/material/CircularProgress";
 import "./css/register-style.css";
 import { resetScroll } from "../api/agent";
+import MyContent from "../component/MyContent";
 
 export default observer(function RegisterScreen() {
   const { register, loadingUser } = useStore().userStore;
@@ -56,7 +57,8 @@ export default observer(function RegisterScreen() {
     if (!valid) {
       return;
     }
-    const response: any = await register(formData);
+
+    const response: any = await register({ ...formData, RoleId: 2 });
     if (response && response.response && response.response.status === 400) {
       setShowToast(true);
       setCheckToast("Register Failed");
@@ -94,7 +96,10 @@ export default observer(function RegisterScreen() {
               />
             </div>
             <h2 className="text-xl font-semibold text-gray-600 text-center">
-              มหาวิทยาลัยราชภัฏกาญจนบุรี
+              <MyContent
+                name={"มหาวิทยาลัยราชภัฏกาญจนบุรี"}
+                fontSize="normal"
+              />
             </h2>
             {/* <p className="text-xl text-gray-600 text-center">ยินดีต้อนรับ</p> */}
             <a
@@ -104,13 +109,13 @@ export default observer(function RegisterScreen() {
             <div className="mt-4 flex items-center justify-between">
               <span className="border-b w-1/5 lg:w-1/4"></span>
               <p className="text-2xl text-center text-gray-700 uppercase">
-                สมัครสมาชิก
+                <MyContent name="สมัครสมาชิก" fontSize="normal" />
               </p>
               <span className="border-b w-1/5 lg:w-1/4"></span>
             </div>
             <div className="mt-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">
-                ชื่อ - นามสกุล
+                <MyContent name="ชื่อ - นามสกุล" fontSize="small" />
               </label>
               <input
                 id="FullName"
@@ -119,12 +124,14 @@ export default observer(function RegisterScreen() {
                 className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
               />
               {fullName && (
-                <p className="text-red-500 text-xs italic">{fullName}</p>
+                <p className="text-red-500 text-xs italic">
+                  <MyContent name={fullName} fontSize="small" />
+                </p>
               )}
             </div>
             <div className="mt-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">
-                เบอร์โทรศัพท์
+                <MyContent name="เบอร์โทรศัพท์" fontSize="small" />
               </label>
               <input
                 id="PhoneNumber"
@@ -141,14 +148,14 @@ export default observer(function RegisterScreen() {
               />
               {phoneNumberError && (
                 <p className="text-red-500 text-xs italic">
-                  {phoneNumberError}
+                  <MyContent name={phoneNumberError} fontSize="small" />
                 </p>
               )}
             </div>
             <div className="mt-4">
               <div className="flex justify-between">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
-                  รหัสผ่าน
+                  <MyContent name="รหัสผ่าน" fontSize="small" />
                 </label>
               </div>
               <input
@@ -158,19 +165,21 @@ export default observer(function RegisterScreen() {
                 className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
               />
               {passwordError && (
-                <p className="text-red-500 text-xs italic">{passwordError}</p>
+                <p className="text-red-500 text-xs italic">
+                  <MyContent name={passwordError} fontSize="small" />
+                </p>
               )}
             </div>
 
             <div className="mt-4 flex justify-end items-center">
               <p className="text-sm text-gray-500 uppercase mr-2">
-                มีสมาชิกแล้ว?
+                <MyContent name="มีสมาชิกแล้ว?" fontSize="small" />
               </p>
               <NavLink
                 to={RoutePath.loginScreen}
                 className="text-blue-500 hover:underline"
               >
-                เข้าสู่ระบบ
+                <MyContent name="เข้าสู่ระบบ" fontSize="small" />
               </NavLink>
             </div>
 
@@ -182,11 +191,13 @@ export default observer(function RegisterScreen() {
               >
                 {loadingUser ? (
                   <div>
-                    <CircularProgress size={17} color="inherit" />
+                    <CircularProgress color="inherit" />
                   </div>
                 ) : (
                   <div>
-                    <p>สมัครสมาชิก</p>
+                    <p>
+                      <MyContent name="สมัครสมาชิก" fontSize="normal" />
+                    </p>
                   </div>
                 )}
               </button>

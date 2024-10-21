@@ -1,19 +1,20 @@
+import { RoutePath } from "../constants/RoutePath";
 import DashboardAdminHomePageScreen from "../Screen/Private/DashboardAdmin/DashboardAdminHomePageScreen";
 import DashboardShopScreen from "../Screen/Private/DashboardShopScreen";
 
 export const PrivateRoute: any = [
-
   // ShopUser
   {
-    id: 0,
-    path: "/dashboard-shop-screen",
+    id: 22,
+    path: RoutePath.dashboardShopScreen,
     element: <DashboardShopScreen />,
   },
+];
 
-  // Admin
+export const AdminRoute: any = [
   {
-    id: 1,
-    path: "/dashboard-admin-homePage-screen",
+    id: 23,
+    path: RoutePath.dashboardAdminHomePageScreen,
     element: <DashboardAdminHomePageScreen />,
   },
 ];

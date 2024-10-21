@@ -7,6 +7,7 @@ import { Order } from "../../models/Order";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import MyOrderCard from "./components/MyOrderCard";
+import MyContent from "../../component/MyContent";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -62,7 +63,7 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
         mt={4}
       >
         <Typography variant="h4" component="h1" gutterBottom align="center">
-          คำสั่งซื้อของฉัน
+          <MyContent name="คำสั่งซื้อของฉัน" fontSize="large" />
         </Typography>
         <Tabs
           value={value}
@@ -76,43 +77,43 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
           }}
         >
           <Tab
-            label="ทั้งหมด"
+            label={<MyContent name="ทั้งหมด" fontSize="small" />}
             style={{
               width: "20%",
             }}
           />
           <Tab
-            label="ที่ต้องชำระ"
+            label={<MyContent name="ที่ต้องชำระ" fontSize="small" />}
             style={{
               width: "20%",
             }}
           />
           <Tab
-            label="กำลังรออนุมัติ"
+            label={<MyContent name="กำลังรออนุมัติ" fontSize="small" />}
             style={{
               width: "20%",
             }}
           />
           <Tab
-            label="อนุมัติแล้ว"
+            label={<MyContent name="อนุมัติแล้ว" fontSize="small" />}
             style={{
               width: "20%",
             }}
           />
           <Tab
-            label="ที่ต้องได้รับ"
+            label={<MyContent name="ที่ต้องได้รับ" fontSize="small" />}
             style={{
               width: "20%",
             }}
           />
           <Tab
-            label="สำเร็จแล้ว"
+            label={<MyContent name="สำเร็จแล้ว" fontSize="small" />}
             style={{
               width: "20%",
             }}
           />
           <Tab
-            label="ยกเลิกแล้ว"
+            label={<MyContent name="ยกเลิกแล้ว" fontSize="small" />}
             style={{
               width: "20%",
             }}

@@ -10,11 +10,15 @@ import { SystemSetting } from "./systemsetting.api";
 
 // axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_API_URL;
 
-axios.defaults.baseURL = "https://localhost:7168/api/";
+const baseUr = "https://localhost:8168/";
 
-export const pathImageProduct = "https://localhost:7168/product/";
+axios.defaults.baseURL = baseUr + "api/";
 
-export const pathImagepayment = "https://localhost:7168/paymentImage/";
+export const pathImageProduct = baseUr + "product/";
+
+export const pathImagepayment = baseUr + "paymentImage/";
+
+export const baseUrlImage = baseUr;
 
 export const fontSizenormal = "20px";
 

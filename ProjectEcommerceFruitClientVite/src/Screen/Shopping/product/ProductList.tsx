@@ -39,6 +39,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { pathImages } from "../../../constants/RoutePath";
 import { MySwitch } from "../../../helper/components/MySwitch";
+import MyContent from "../../../component/MyContent";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -193,7 +194,7 @@ const ProductList = () => {
             mt={4}
           >
             <Typography variant="h4" component="h1" gutterBottom align="center">
-              เพิ่มสินค้า
+              <MyContent name="เพิ่มสินค้า" fontSize="large" />
             </Typography>
             <Grid
               container
@@ -213,7 +214,7 @@ const ProductList = () => {
                   }}
                 >
                   <AddIcon sx={{ mr: 1 }} />
-                  เพิ่ม
+                  <MyContent name="เพิ่ม" fontSize="small" />
                 </Fab>
               </Grid>
             </Grid>
@@ -225,12 +226,9 @@ const ProductList = () => {
               >
                 <TableHead>
                   <TableRow>
-                    {columns.map((column, i) => (
-                      <TableCell
-                        key={column.id}
-                        align={i > 4 ? "center" : "left"}
-                      >
-                        {column.label}
+                    {columns.map((column) => (
+                      <TableCell key={column.id} align="center">
+                        <MyContent name={column.label} fontSize="small" />
                       </TableCell>
                     ))}
                   </TableRow>
@@ -243,14 +241,16 @@ const ProductList = () => {
                       )
                     : product
                   ).map((row) => {
-                    console.log("row", JSON.stringify(row.status));
-
                     return (
                       <TableRow key={row.id}>
                         <TableCell component="th" scope="row">
-                          {row.productGI.name}
+                          <MyContent
+                            name={row.productGI.name}
+                            fontSize="small"
+                          />
                         </TableCell>
                         <TableCell
+                          align="center"
                           style={{ color: "red" }}
                           //   align="right"
                         >
@@ -268,10 +268,21 @@ const ProductList = () => {
                             "ไม่มีรูปภาพ"
                           )}
                         </TableCell>
-                        <TableCell>{row?.productGI?.category.name}</TableCell>
-                        <TableCell>{row?.price}</TableCell>
-                        <TableCell>{row?.weight}</TableCell>
-                        <TableCell>{row?.quantity}</TableCell>
+                        <TableCell align="center">
+                          <MyContent
+                            name={row?.productGI?.category.name}
+                            fontSize="small"
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          <MyContent name={row?.price} fontSize="small" />
+                        </TableCell>
+                        <TableCell align="center">
+                          <MyContent name={row?.weight} fontSize="small" />
+                        </TableCell>
+                        <TableCell>
+                          <MyContent name={row?.quantity} fontSize="small" />
+                        </TableCell>
                         <TableCell>
                           <MySwitch
                             handleChange={async () =>
@@ -292,7 +303,7 @@ const ProductList = () => {
                             }}
                           >
                             <EditIcon sx={{ mr: 1 }} />
-                            แก้ไข
+                            <MyContent name="แก้ไข" fontSize="small" />
                           </Fab>
                         </TableCell>
                         <TableCell style={{ width: 100 }}>
@@ -302,7 +313,7 @@ const ProductList = () => {
                             onClick={handleClickOpen}
                           >
                             <RemoveIcon sx={{ mr: 1 }} />
-                            ลบ
+                            <MyContent name="ลบ" fontSize="small" />
                           </Fab>
                           {/* <Button
                           variant="contained"
