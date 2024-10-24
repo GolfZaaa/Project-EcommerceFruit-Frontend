@@ -7,12 +7,15 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { useStore } from "@/src/store/store";
-import { LogBox } from "react-native";
-LogBox.ignoreLogs(["Warning: ..."]); 
-LogBox.ignoreAllLogs(); 
+import { LogBox, Text, TouchableOpacity, View } from "react-native";
+import { observer } from "mobx-react-lite";
+LogBox.ignoreLogs(["Warning: ..."]);
+LogBox.ignoreAllLogs();
 
-export default function TabLayout() {
+export default observer(function TabLayout() {
   const { token, getToken, logout } = useStore().commonStore;
+  const { getSystemSetting } = useStore().systemSettingStore;
+  const { cartItemsStore } = useStore().cartStore;
   const { user } = useStore().userStore;
   const colorScheme = useColorScheme();
   const router = useRouter();
@@ -21,7 +24,7 @@ export default function TabLayout() {
     const checkToken = async () => {
       try {
         const comeInStorage = await AsyncStorage.getItem("come-in-frist");
-        console.log("come-in-frist", comeInStorage);
+        // console.log("come-in-frist", comeInStorage);
         if (comeInStorage === null || comeInStorage === undefined) {
           // router.replace('/login');
           router.replace("/first");
@@ -32,6 +35,7 @@ export default function TabLayout() {
     };
     checkToken();
     getToken();
+    getSystemSetting();
   }, []);
 
   return (
@@ -74,24 +78,43 @@ export default function TabLayout() {
             <TabBarIcon
               name={focused ? "cash" : "cash-outline"}
               color={color}
-            /> 
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="cart"
-        options={{
-          title: "ตะกร้าสินค้า",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "cart" : "cart-outline"}
-              color={color}
             />
           ),
         }}
       />
+      <Tabs.Screen
+        name="cart"
+        options={{
+          tabBarIcon: ({ color, focused }) => (
+            <View style={{ position: "relative" }}>
+              <TabBarIcon
+                name={focused ? "cart" : "cart-outline"}
+                color={color}
+              />
 
+              {cartItemsStore.length > 0 && (
+                <View
+                  style={{
+                    position: "absolute",
+                    right: -6,
+                    top: -3,
+                    backgroundColor: "red",
+                    borderRadius: 8,
+                    width: 16,
+                    height: 16,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={{ color: "white", fontSize: 10 }}>
+                    {cartItemsStore.length}
+                  </Text>
+                </View>
+              )}
+            </View>
+          ),
+        }}
+      />
       <Tabs.Screen
         name="setting"
         options={{
@@ -106,4 +129,4 @@ export default function TabLayout() {
       />
     </Tabs>
   );
-}
+});

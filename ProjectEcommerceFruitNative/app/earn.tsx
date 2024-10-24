@@ -1,12 +1,65 @@
-import React from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
-import styled from 'styled-components/native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';  
-import { useNavigation } from '@react-navigation/native';
+import React from "react";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import styled from "styled-components/native";
+import { LinearGradient } from "expo-linear-gradient";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+
+export default function TabTwoScreen() {
+  const navigation = useNavigation();
+
+  const data = [
+    {
+      id: "1",
+      title: "KRU-1-1",
+      description: "ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี",
+    },
+    {
+      id: "2",
+      title: "KRU-1-2",
+      description: "ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี",
+    },
+    {
+      id: "3",
+      title: "KRU-1-3",
+      description: "ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี",
+    },
+    {
+      id: "4",
+      title: "KRU-1-4",
+      description: "ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี",
+    },
+  ];
+
+  const renderItem = ({ item }: any) => (
+    <Card>
+      <CardText>{item.title}</CardText>
+      <CardDescription>{item.description}</CardDescription>
+      <Button onPress={() => alert(`${item.title} Button Pressed`)}>
+        <ButtonText>รับหิ้ว</ButtonText>
+      </Button>
+    </Card>
+  );
+
+  return (
+    <Container>
+      <BackButton onPress={() => navigation.goBack()}>
+        <Ionicons name="arrow-back-outline" size={24} color="#333" />
+      </BackButton>
+
+      <Title>คำสั่งซื้อที่สามารถรับหิ้วได้</Title>
+
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+      />
+    </Container>
+  );
+}
 
 const Container: any = styled(LinearGradient).attrs({
-  colors: ['#e0f7fa', '#ffffff'],
+  colors: ["#e0f7fa", "#ffffff"],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
 })`
@@ -26,7 +79,7 @@ const Title: any = styled.Text`
 `;
 
 const Card: any = styled(LinearGradient).attrs({
-  colors: ['#ffffff', '#f7f9fc'],
+  colors: ["#ffffff", "#f7f9fc"],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
 })`
@@ -72,40 +125,3 @@ const BackButton: any = styled.TouchableOpacity`
   z-index: 1;
   padding: 10px;
 `;
-
-export default function TabTwoScreen() {
-  const navigation = useNavigation();
-
-  const data = [
-    { id: '1', title: 'KRU-1-1', description: 'ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี' },
-    { id: '2', title: 'KRU-1-2', description: 'ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี' },
-    { id: '3', title: 'KRU-1-3', description: 'ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี' },
-    { id: '4', title: 'KRU-1-4', description: 'ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี' },
-  ];
-
-  const renderItem = ({ item }: any) => (
-    <Card>
-      <CardText>{item.title}</CardText>
-      <CardDescription>{item.description}</CardDescription>
-      <Button onPress={() => alert(`${item.title} Button Pressed`)}>
-        <ButtonText>รับหิ้ว</ButtonText>
-      </Button>
-    </Card>
-  );
-
-  return (
-    <Container>
-      <BackButton onPress={() => navigation.goBack()}>
-        <Ionicons name="arrow-back-outline" size={24} color="#333" />
-      </BackButton>
-
-      <Title>คำสั่งซื้อที่สามารถรับหิ้วได้</Title>
-
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-      />
-    </Container>
-  );
-}

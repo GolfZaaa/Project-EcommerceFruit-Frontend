@@ -1,114 +1,72 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform } from 'react-native';
-import styled from 'styled-components/native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { router } from 'expo-router';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import styled from "styled-components/native";
+import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
+import { useStore } from "@/src/store/store";
+import { ButtonGradient } from "./login";
+import axios from "axios";
 // import pathsPubilc from '@/path/publicpath';
 
-const Container:any = styled(LinearGradient).attrs({
-  colors: ['#e0f7fa', '#ffffff'],
-  start: { x: 0, y: 0 },
-  end: { x: 1, y: 1 },
-})`
-  flex: 1;
-  justify-content: center;
-  padding: 20px;
-  position: relative;
-`;
-
-const GraphicTopLeft:any = styled.View`
-  position: absolute;
-  top: -60px;
-  left: -60px;
-  width: 200px;
-  height: 200px;
-  border-radius: 100px;
-  background-color: rgba(255, 183, 77, 0.7);
-`;
-
-const GraphicBottomRight:any = styled.View`
-  position: absolute;
-  bottom: -60px;
-  right: -60px;
-  width: 200px;
-  height: 200px;
-  border-radius: 100px;
-  background-color: rgba(156, 39, 176, 0.7);
-`;
-
-const Title:any = styled.Text`
-  font-size: 30px;
-  font-weight: bold;
-  color: #333;
-  text-align: center;
-  margin-bottom: 10px;
-`;
-
-const SubTitle:any = styled.Text`
-  font-size: 16px;
-  color: #777;
-  text-align: center;
-  margin-bottom: 30px;
-`;
-
-const Input:any = styled.TextInput`
-  border-width: 1px;
-  border-color: #ccc;
-  border-radius: 25px;
-  padding: 15px;
-  font-size: 16px;
-  margin-bottom: 20px;
-  background-color: #fff;
-  shadow-color: #000;
-  shadow-opacity: 0.1;
-  shadow-radius: 10px;
-  elevation: 2;
-`;
-
-const ButtonGradient:any = styled(LinearGradient).attrs({
-  colors: ['#ff6f61', '#ff8965'],
-  start: { x: 0, y: 0 },
-  end: { x: 1, y: 1 },
-})`
-  padding: 15px;
-  border-radius: 30px;
-  align-items: center;
-  margin-top: 20px;
-`;
-
-const ButtonText:any = styled.Text`
-  color: #fff;
-  font-size: 18px;
-  font-weight: bold;
-`;
-
-const LinkText:any = styled.Text`
-  font-size: 16px;
-  color: #007bff;
-  text-align: center;
-  margin-top: 20px;
-`;
-
 export default function RegisterScreen() {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const { register, login } = useStore().commonStore;
 
-  const handleRegister = () => {
-    if (username && email && password && confirmPassword) {
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleRegister = async () => {
+    if (fullName && phone && password && confirmPassword) {
       if (password !== confirmPassword) {
-        Alert.alert('ข้อผิดพลาด', 'รหัสผ่านไม่ตรงกัน');
+        Alert.alert("ข้อผิดพลาด", "รหัสผ่านไม่ตรงกัน");
       } else {
-        Alert.alert('ลงทะเบียนสำเร็จ', `ยินดีต้อนรับ, ${username}!`);
+        const result = await onRegister();
+        console.log("result register : ", result);
+
+        if (result === 400) {
+          Alert.alert("ไม่สามารถลงทะเบียนได้", "มีเบอร์โทรศัพท์นี้แล้ว");
+        } else {
+          Alert.alert("ลงทะเบียนสำเร็จ", `ยินดีต้อนรับ, ${phone}!`, [
+            {
+              text: "ตกลง",
+              onPress: () => {
+                login({
+                  phoneNumber: phone,
+                  password: password,
+                });
+              },
+            },
+          ]);
+        }
       }
     } else {
-      Alert.alert('ข้อผิดพลาด', 'กรุณากรอกข้อมูลให้ครบถ้วน');
+      Alert.alert("ข้อผิดพลาด", "กรุณากรอกข้อมูลให้ครบถ้วน");
     }
   };
 
+  const onRegister = async () => {
+    return await register({
+      fullName,
+      phoneNumber: phone,
+      password,
+      roleId: 2,
+    });
+  };
+
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
       <Container>
         <GraphicTopLeft />
         <GraphicBottomRight />
@@ -118,17 +76,24 @@ export default function RegisterScreen() {
 
         <Input
           placeholder="ชื่อผู้ใช้"
-          value={username}
-          onChangeText={setUsername}
+          value={fullName}
+          onChangeText={setFullName}
           autoCapitalize="none"
         />
         <Input
-          placeholder="อีเมล"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
+          placeholder="เบอร์โทรศัพท์"
+          value={phone}
+          onChangeText={(text: string) => {
+            // ตรวจสอบให้รับเฉพาะตัวเลข และจำกัดความยาวไม่เกิน 10 ตัวอักษร
+            const numericText = text.replace(/[^0-9]/g, "");
+            if (numericText.length <= 10) {
+              setPhone(numericText);
+            }
+          }}
           autoCapitalize="none"
+          keyboardType="phone-pad"
         />
+
         <Input
           placeholder="รหัสผ่าน"
           value={password}
@@ -153,3 +118,76 @@ export default function RegisterScreen() {
     </KeyboardAvoidingView>
   );
 }
+
+const Container: any = styled(LinearGradient).attrs({
+  colors: ["#e0f7fa", "#ffffff"],
+  start: { x: 0, y: 0 },
+  end: { x: 1, y: 1 },
+})`
+  flex: 1;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+`;
+
+const GraphicTopLeft: any = styled.View`
+  position: absolute;
+  top: -60px;
+  left: -60px;
+  width: 200px;
+  height: 200px;
+  border-radius: 100px;
+  background-color: rgba(255, 183, 77, 0.7);
+`;
+
+const GraphicBottomRight: any = styled.View`
+  position: absolute;
+  bottom: -60px;
+  right: -60px;
+  width: 200px;
+  height: 200px;
+  border-radius: 100px;
+  background-color: rgba(156, 39, 176, 0.7);
+`;
+
+const Title: any = styled.Text`
+  font-size: 30px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 10px;
+`;
+
+const SubTitle: any = styled.Text`
+  font-size: 16px;
+  color: #777;
+  text-align: center;
+  margin-bottom: 30px;
+`;
+
+const Input: any = styled.TextInput`
+  border-width: 1px;
+  border-color: #ccc;
+  border-radius: 25px;
+  padding: 15px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  shadow-color: #000;
+  shadow-opacity: 0.1;
+  shadow-radius: 10px;
+  elevation: 2;
+`;
+
+const ButtonText: any = styled.Text`
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+`;
+
+const LinkText: any = styled.Text`
+  font-size: 16px;
+  color: #007bff;
+  text-align: center;
+  margin-top: 20px;
+`;

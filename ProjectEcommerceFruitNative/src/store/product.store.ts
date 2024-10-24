@@ -17,9 +17,21 @@ export default class ProductStore {
 
   setLoadingPGI = (state: boolean) => (this.loadingPGI = state);
 
+  setProductDetail = (state: Product | null) => (this.productDetail = state);
+
   getProduct = async (categoryId: number) => {
     try {
       const result = await agent.Product.getProduct(categoryId);
+      this.product = result;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  getFilterProduct = async (values: any) => {
+    try {
+      const result = await agent.Product.getFilterProduct(values);
+
       this.product = result;
     } catch (error) {
       return error;

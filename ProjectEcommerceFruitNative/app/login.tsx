@@ -52,15 +52,21 @@ export default function LoginScreen() {
         <GraphicTopLeft />
         <GraphicBottomRight />
 
-        <Title>ยินดีต้อนรับกลับมา!</Title>
+        <Title>ยินดีต้อนรับ!</Title>
         <SubTitle>เข้าสู่ระบบบัญชีของคุณ</SubTitle>
 
         <Input
           placeholder="เบอร์โทรศัพท์"
           value={phone}
-          onChangeText={setPhone}
+          onChangeText={(text: string) => {
+            // ตรวจสอบให้รับเฉพาะตัวเลข และจำกัดความยาวไม่เกิน 10 ตัวอักษร
+            const numericText = text.replace(/[^0-9]/g, "");
+            if (numericText.length <= 10) {
+              setPhone(numericText);
+            }
+          }}
           autoCapitalize="none"
-          maxLenght={10}
+          keyboardType="phone-pad"
         />
         <Input
           placeholder="รหัสผ่าน"
@@ -83,7 +89,7 @@ export default function LoginScreen() {
           <LinkText>ยังไม่มีบัญชี? ลงทะเบียน</LinkText>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity onPress={() => router.push("/(tabs)")}>
           <LinkText>ข้ามการลงทะเบียน</LinkText>
         </TouchableOpacity>
       </Container>
@@ -151,7 +157,7 @@ const Input: any = styled.TextInput`
   elevation: 2;
 `;
 
-const ButtonGradient: any = ({ children, onPress }: any) => (
+export const ButtonGradient: any = ({ children, onPress }: any) => (
   <TouchableOpacity onPress={onPress}>
     <LinearGradient
       colors={["#ff6f61", "#ff8965"]}

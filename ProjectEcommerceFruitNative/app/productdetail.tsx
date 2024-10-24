@@ -1,13 +1,138 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   ScrollView,
   LayoutAnimation,
+  Dimensions,
+  ToastAndroid,
 } from "react-native";
 import styled from "styled-components/native";
 import { LinearGradient } from "expo-linear-gradient";
+import { useLocalSearchParams } from "expo-router";
+import { useStore } from "@/src/store/store";
+import { pathImagesApp } from "@/src/constants/RoutePath";
+import RenderHTML from "react-native-render-html";
+import { htmlToText } from "html-to-text";
+
+export default function ProductDetailsScreen() {
+  const { productDetail, getProductById } = useStore().productStore;
+  const { AddToCart } = useStore().cartStore;
+  const { user } = useStore().userStore;
+
+  const params = useLocalSearchParams();
+  const { id } = params;
+
+  const [quantity, setQuantity] = useState(1);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const increaseQuantity = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+  };
+
+  const decreaseQuantity = () => {
+    setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+  };
+
+  const plainText = htmlToText(
+    productDetail?.productGI.description || "<p></p>",
+    {
+      wordwrap: false, // Optional: Prevents wrapping text
+    }
+  );
+
+  const onAddtoCart = () => {
+    if (!!user) {
+      AddToCart({
+        ProductId: productDetail?.id,
+        Quantity: quantity,
+      });
+      showToastWithGravityAndOffset();
+      // console.log("add - ", {
+      //   ProductId: productDetail?.id,
+      //   Quantity: quantity,
+      // });
+    } else {
+      alert("กรุณาเข้าสู่ระบบก่อนทำการเพิ่มสินค้าลงตะกร้า");
+    }
+  };
+
+  const showToastWithGravityAndOffset = () => {
+    ToastAndroid.showWithGravityAndOffset(
+      "เพิ่มสินค้าลงตะกร้าสำเร็จ!",
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      50
+    );
+  };
+
+  return (
+    <ScrollView>
+      <Container>
+        <ProductImage
+          source={{
+            uri: pathImagesApp.product + productDetail?.images,
+          }}
+        />
+
+        <ProductTitle>{productDetail?.productGI.name}</ProductTitle>
+
+        <ProductPrice>฿ {productDetail?.price}</ProductPrice>
+
+        <ProductInfo>
+          <InfoText>ขายแล้ว: {productDetail?.sold} ชิ้น</InfoText>
+          <InfoText>ราคาต่อกิโลกรัม: {productDetail?.price} บาท</InfoText>
+          <InfoText>คงเหลือ: {productDetail?.quantity} ชิ้น</InfoText>
+        </ProductInfo>
+
+        <ProductDescription>{plainText}</ProductDescription>
+
+        <QuantityContainer>
+          <QuantityButton onPress={decreaseQuantity}>
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 24,
+                width: 10,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              -
+            </Text>
+          </QuantityButton>
+          <QuantityText>{quantity}</QuantityText>
+          <QuantityButton onPress={increaseQuantity}>
+            <Text style={{ color: "#fff", fontSize: 24 }}>+</Text>
+          </QuantityButton>
+        </QuantityContainer>
+
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#ff6f61",
+            padding: 15,
+            borderRadius: 30,
+            alignItems: "center",
+            marginTop: 20,
+          }}
+          onPress={() => onAddtoCart()}
+        >
+          <ButtonText>เพิ่มในตะกร้า ({quantity})</ButtonText>
+        </TouchableOpacity>
+
+        {/* <DropdownButton onPress={toggleDropdown}>
+          <DropdownText>{isDropdownOpen ? 'ซ่อนข้อมูล IG' : 'แสดงข้อมูล IG'}</DropdownText>
+        </DropdownButton> */}
+
+        {isDropdownOpen && (
+          <IGInfoText>ติดตามสินค้านี้ได้ที่ IG: @product_ig_name</IGInfoText>
+        )}
+      </Container>
+    </ScrollView>
+  );
+}
 
 const Container: any = styled(LinearGradient).attrs({
   colors: ["#ffffff", "#f0f0f0"],
@@ -100,79 +225,3 @@ const IGInfoText = styled.Text`
   background-color: #f1f1f1;
   border-radius: 10px;
 `;
-
-export default function ProductDetailsScreen() {
-  const [quantity, setQuantity] = useState(1);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const increaseQuantity = () => {
-    setQuantity((prevQuantity) => prevQuantity + 1);
-  };
-
-  const decreaseQuantity = () => {
-    setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
-  };
-
-  return (
-    <ScrollView>
-      <Container>
-        <ProductImage
-          source={{
-            uri: "https://hdmall.co.th/blog/wp-content/uploads/2024/04/%E0%B9%80%E0%B8%87%E0%B8%B2%E0%B8%B0-Rambutan-scaled.jpg",
-          }}
-        />
-
-        <ProductTitle>เงาะ</ProductTitle>
-
-        <ProductPrice>฿ 1,599</ProductPrice>
-
-        <ProductInfo>
-          <InfoText>ขายแล้ว: 6 ชิ้น</InfoText>
-          <InfoText>ราคาต่อกิโลกรัม: 55 บาท</InfoText>
-          <InfoText>คงเหลือ: 25 ชิ้น</InfoText>
-        </ProductInfo>
-
-        <ProductDescription>
-          ป็นผลไม้เมืองร้อน ที่ลักษณะต้นเป็นไม้ยืนต้นขนาดกลางถึงใหญ่
-          มีถิ่นกำเนิดมาจากแถบอินโดนีเซีย
-          เจริญเติบโตได้ดีในพื้นดินที่มีความชื้นค่อนข้างสูง ประมาณ 25-30
-          องศาเซลเซียส นิยมปลูกกันมากบริเวณภาคตะวันออกและภาคใต้ของไทย
-          เป็นพืชเศรษฐกิจ มีการส่งออกผลเงาะไปยังต่างประเทศ
-          ทำรายได้ให้เกษตรกรอย่างมาก
-        </ProductDescription>
-
-        <QuantityContainer>
-          <QuantityButton onPress={decreaseQuantity}>
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 24,
-                width: 10,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              -
-            </Text>
-          </QuantityButton>
-          <QuantityText>{quantity}</QuantityText>
-          <QuantityButton onPress={increaseQuantity}>
-            <Text style={{ color: "#fff", fontSize: 24 }}>+</Text>
-          </QuantityButton>
-        </QuantityContainer>
-
-        <AddToCartButton>
-          <ButtonText>เพิ่มในตะกร้า ({quantity})</ButtonText>
-        </AddToCartButton>
-
-        {/* <DropdownButton onPress={toggleDropdown}>
-          <DropdownText>{isDropdownOpen ? 'ซ่อนข้อมูล IG' : 'แสดงข้อมูล IG'}</DropdownText>
-        </DropdownButton> */}
-
-        {isDropdownOpen && (
-          <IGInfoText>ติดตามสินค้านี้ได้ที่ IG: @product_ig_name</IGInfoText>
-        )}
-      </Container>
-    </ScrollView>
-  );
-}

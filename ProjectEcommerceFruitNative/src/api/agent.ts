@@ -3,9 +3,14 @@ import { store } from "../store/store";
 import { Common } from "./common.api";
 import { User } from "./user.api";
 import { Product } from "./product.api";
+import { Cart } from "./cart.api";
+import { SystemSetting } from "./systemsetting.api";
 
 // axios.defaults.baseURL = "https://localhost:7168/api/";
-axios.defaults.baseURL = "https://695a-202-28-123-199.ngrok-free.app/api/";
+
+export const port = "https://3d9e-202-28-123-199.ngrok-free.app/";
+
+axios.defaults.baseURL = port + "api/";
 
 const multipartForm = {
   headers: { "Content-Type": "multipart/form-data" },
@@ -15,8 +20,6 @@ const responseBody = <T>(res: AxiosResponse<T>) => res.data;
 
 axios.interceptors.request.use((config) => {
   const token = store.commonStore.token;
-
-  console.log("Request token", token);
 
   if (token) config.headers!.Authorization = `Bearer ${token}`;
   return config;
@@ -55,4 +58,6 @@ export default {
   Common,
   User,
   Product,
+  Cart,
+  SystemSetting,
 };

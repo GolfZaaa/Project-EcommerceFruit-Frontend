@@ -1,13 +1,299 @@
-import React, { useState } from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity, ScrollView } from 'react-native';
-import styled from 'styled-components/native';
-import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import styled from "styled-components/native";
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { useStore } from "@/src/store/store";
+import { pathImagesApp } from "@/src/constants/RoutePath";
+import { observer } from "mobx-react-lite";
+import { Checkbox, IconButton } from "react-native-paper";
+import { LoginButton, SaveButtonText } from "./setting";
+
+const formatNumberWithCommas = (number: number) => {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+export default observer(function CartScreen() {
+  const {
+    GetCartItemByUser,
+    cartItems,
+    GetCartItemByUserOrderStore,
+    cartItemsStore,
+    RemoveToCart,
+    AddToCart,
+    selectMyCart,
+    setselectMyCart,
+  } = useStore().cartStore;
+  const { systemSetting } = useStore().systemSettingStore;
+  const { user } = useStore().userStore;
+
+  const [checkedItem, setCheckedItem] = useState<string | null>(null);
+
+  const [totalPrice, setTotalPrice] = useState<string>("");
+  const [formattedTotalPrice, setFormattedTotalPrice] = useState<string>("");
+
+  // const [cartItems] = useState([
+  //   {
+  //     id: "1",
+  //     name: "เงาะ",
+  //     price: "200",
+  //     image:
+  //       "https://hdmall.co.th/blog/wp-content/uploads/2024/04/%E0%B9%80%E0%B8%87%E0%B8%B2%E0%B8%B0-Rambutan-scaled.jpg",
+  //     quantity: 2,
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "ทุเรียน",
+  //     price: "500",
+  //     image:
+  //       "https://s.isanook.com/wo/0/ud/50/250005/250005-thumbnail.jpg?ip/crop/w670h402/q80/jpg",
+  //     quantity: 1,
+  //   },
+  // ]);
+
+  const calculateTotalPrice = () => {
+    return selectMyCart.reduce((total, item: any) => {
+      const storeTotal = item.products.reduce(
+        (storeSum: number, product: any) => {
+          return storeSum + product.quantityInCartItem * product.price;
+        },
+        0
+      );
+      return total + storeTotal;
+    }, 0);
+  };
+
+  useEffect(() => {
+    setTotalPrice(formatNumberWithCommas(calculateTotalPrice()));
+    setFormattedTotalPrice(
+      formatNumberWithCommas(
+        calculateTotalPrice() + systemSetting[0]?.shippingCost
+      )
+    );
+  }, [selectMyCart]);
+
+  const handleCartDetail = () => {
+    if (selectMyCart.length === 0) {
+      alert("กรุณาเลือกร้านค้าที่ท่านจะซื้อก่อน");
+    } else {
+      router.replace("/cartdetail");
+    }
+  };
+
+  const handleCheckboxChange = (items: any, storeName: string) => {
+    setCheckedItem((prevCheckedItem) =>
+      prevCheckedItem === storeName ? null : storeName
+    );
+    setselectMyCart(items);
+  };
+
+  const RenderCartItem = ({ item }: any) => {
+    return (
+      <CartItem
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginVertical: 10,
+        }}
+      >
+        <ItemImage
+          source={{ uri: pathImagesApp.product + `${item.products[0].images}` }}
+          style={{ width: 100, height: 100, borderRadius: 8 }}
+        />
+        <ItemDetails style={{ flex: 1, marginLeft: 10 }}>
+          <ItemName style={{ fontSize: 16, fontWeight: "bold" }}>
+            {item.productName}
+          </ItemName>
+          <ItemPrice style={{ color: "#2ecc71", marginVertical: 5 }}>
+            {item.products[0].price} ฿
+          </ItemPrice>
+          <QuantityControl
+            style={{ flexDirection: "row", alignItems: "center" }}
+          >
+            <QuantityButton
+              onPress={() =>
+                RemoveToCart({
+                  CartItemId: item.cartItemId,
+                  Quantity: 1,
+                })
+              }
+            >
+              <QuantityText>-</QuantityText>
+            </QuantityButton>
+            <Text style={{ fontSize: 18, marginHorizontal: 10 }}>
+              {item.products[0].quantityInCartItem}
+            </Text>
+            <QuantityButton
+              onPress={() =>
+                AddToCart({
+                  ProductId: item.products[0].id,
+                  Quantity: 1,
+                })
+              }
+            >
+              <QuantityText>+</QuantityText>
+            </QuantityButton>
+          </QuantityControl>
+        </ItemDetails>
+        <RemoveButton
+          onPress={() =>
+            RemoveToCart({
+              CartItemId: item.cartItemId,
+              Quantity: item.products[0].quantityInCartItem,
+            })
+          }
+        >
+          <Ionicons name="trash-bin-outline" size={24} color="#e74c3c" />
+        </RemoveButton>
+      </CartItem>
+    );
+  };
+
+  const RenderShop = ({ storeName, products }: any) => {
+    return (
+      <CardStore>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text
+            style={{
+              fontWeight: "bold",
+              fontSize: 25,
+              marginLeft: 25,
+              marginTop: 10,
+            }}
+          >
+            {storeName}
+          </Text>
+          {/* <ChackBox
+            type="checkbox"
+            className="mr-2"
+            style={{
+              width: 50,
+              height: 50,
+            }}
+            checked={checkedItem === storeName}
+            onChange={() => handleCheckboxChange(products, storeName)}
+          /> */}
+          {/* 
+          <Checkbox
+            status={checked ? "checked" : "unchecked"}
+            onPress={() => {
+              setChecked(!checked);
+            }}
+          /> */}
+          <IconButton
+            icon={
+              checkedItem === storeName
+                ? "checkbox-marked"
+                : "checkbox-blank-outline"
+            }
+            size={50} // Set custom size
+            onPress={() => handleCheckboxChange(products, storeName)}
+          />
+        </View>
+
+        <FlatList
+          data={products}
+          keyExtractor={(product) => product.id}
+          renderItem={RenderCartItem}
+        />
+      </CardStore>
+    );
+  };
+
+  // const totalAmount = selectMyCart.reduce((total, store: any) => {
+  //   const storeTotal = store.products.reduce(
+  //     (storeSum: any, product: any) =>
+  //       storeSum + parseInt(product.price) * product.quantityInCartItem,
+  //     0
+  //   );
+
+  //   return total + storeTotal;
+  // }, 0);
+
+  const groupedCartItems: Record<string, any> = cartItemsStore.reduce(
+    (acc: Record<string, any>, item: any) => {
+      if (!acc[item.storeName]) {
+        acc[item.storeName] = [];
+      }
+      acc[item.storeName].push(item);
+      return acc;
+    },
+    {}
+  );
+
+  console.log("selectMyCart", selectMyCart);
+
+  return !!user ? (
+    <CartContainer>
+      <Header>
+        <Ionicons name="cart-outline" size={28} color="#fff" />
+        <HeaderTitle>ตะกร้าสินค้า</HeaderTitle>
+      </Header>
+
+      <FlatList
+        data={Object.entries(groupedCartItems)} // [['Store A', [product1, product2]], ...]
+        keyExtractor={([storeName], index) => storeName + index}
+        contentContainerStyle={{ paddingBottom: 20 }}
+        renderItem={({ item: [storeName, products] }) => (
+          <RenderShop storeName={storeName} products={products} />
+        )}
+      />
+
+      <TotalContainer>
+        <TotalRow>
+          <TotalText>ยอดรวมสินค้า</TotalText>
+          <TotalAmount>{!checkedItem ? 0 : totalPrice} ฿</TotalAmount>
+        </TotalRow>
+        <TotalRow>
+          <TotalText>ค่าจัดส่ง</TotalText>
+          <TotalAmount>{systemSetting[0].shippingCost} ฿</TotalAmount>
+        </TotalRow>
+        <TotalRow>
+          <TotalText style={{ fontWeight: "bold", fontSize: 22 }}>
+            ยอดรวมสุทธิ
+          </TotalText>
+          <TotalAmount style={{ fontWeight: "bold", fontSize: 22 }}>
+            {!checkedItem ? 0 : formattedTotalPrice} ฿
+          </TotalAmount>
+        </TotalRow>
+        <CheckoutButton onPress={handleCartDetail}>
+          <CheckoutButtonText>ชำระเงิน</CheckoutButtonText>
+        </CheckoutButton>
+      </TotalContainer>
+    </CartContainer>
+  ) : (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        backgroundColor: "white",
+      }}
+    >
+      <LoginButton onPress={() => router.push("/login")}>
+        <SaveButtonText>เข้าสู่ระบบ</SaveButtonText>
+      </LoginButton>
+    </View>
+  );
+});
 
 const CartContainer = styled.View`
   flex: 1;
-  background-color: #f8f9fa;
+  background-color: #f4f6ff;
 `;
+//background-color: #f8f9fa;
 
 const Header = styled.View`
   padding: 25px;
@@ -39,6 +325,12 @@ const CartItem = styled.View`
   shadow-radius: 10px;
 `;
 
+const CardStore = styled.View`
+  background-color: #ffffff;
+  border-radius: 15px;
+  margin: 15px 20px;
+`;
+
 const ItemImage = styled.Image`
   width: 90px;
   height: 90px;
@@ -66,7 +358,7 @@ const ItemPrice = styled.Text`
 const QuantityControl = styled.View`
   flex-direction: row;
   align-items: center;
-padding-top: 10px;
+  padding-top: 10px;
 `;
 
 const QuantityButton = styled.TouchableOpacity`
@@ -131,84 +423,8 @@ const CheckoutButtonText = styled.Text`
   font-weight: bold;
 `;
 
-export default function CartScreen() {
-  const [cartItems] = useState([
-    {
-      id: '1',
-      name: 'เงาะ',
-      price: '200',
-      image: 'https://hdmall.co.th/blog/wp-content/uploads/2024/04/%E0%B9%80%E0%B8%87%E0%B8%B2%E0%B8%B0-Rambutan-scaled.jpg',
-      quantity: 2,
-    },
-    {
-      id: '2',
-      name: 'ทุเรียน',
-      price: '500',
-      image: 'https://s.isanook.com/wo/0/ud/50/250005/250005-thumbnail.jpg?ip/crop/w670h402/q80/jpg',
-      quantity: 1,
-    },
-  ]);
-
-
-  const handleCartDetail = () => {
-    router.replace("/cartdetail");
-  }
-
-  const renderCartItem = ({ item }:any) => (
-    <CartItem>
-      <ItemImage source={{ uri: item.image }} />
-      <ItemDetails>
-        <ItemName>{item.name}</ItemName>
-        <ItemPrice>{"5000"}฿</ItemPrice>
-        <QuantityControl>
-          <QuantityButton>
-            <QuantityText>-</QuantityText>
-          </QuantityButton>
-          <Text style={{ fontSize: 18, marginHorizontal: 10 }}>{item.quantity}</Text>
-          <QuantityButton>
-            <QuantityText>+</QuantityText>
-          </QuantityButton>
-        </QuantityControl>
-      </ItemDetails>
-      <RemoveButton>
-        <Ionicons name="trash-bin-outline" size={24} color="#e74c3c" />
-      </RemoveButton>
-    </CartItem>
-  );
-
-  const totalAmount = cartItems.reduce((total, item) => total + parseInt(item.price) * item.quantity, 0);
-
-  return (
-    <CartContainer>
-      <Header>
-        <Ionicons name="cart-outline" size={28} color="#fff" />
-        <HeaderTitle>ตะกร้าสินค้า</HeaderTitle>
-      </Header>
-
-      <FlatList
-        data={cartItems}
-        renderItem={renderCartItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={{ paddingBottom: 20 }}
-      />
-
-      <TotalContainer>
-        <TotalRow>
-          <TotalText>ยอดรวมสินค้า</TotalText>
-          <TotalAmount>{totalAmount.toLocaleString()}฿</TotalAmount>
-        </TotalRow>
-        <TotalRow>
-          <TotalText>ค่าจัดส่ง</TotalText>
-          <TotalAmount>0฿</TotalAmount>
-        </TotalRow>
-        <TotalRow>
-          <TotalText style={{ fontWeight: 'bold', fontSize: 22 }}>ยอดรวมสุทธิ</TotalText>
-          <TotalAmount style={{ fontWeight: 'bold', fontSize: 22 }}>{totalAmount.toLocaleString()}฿</TotalAmount>
-        </TotalRow>
-        <CheckoutButton onPress={handleCartDetail}>
-          <CheckoutButtonText>ชำระเงิน</CheckoutButtonText>
-        </CheckoutButton>
-      </TotalContainer>
-    </CartContainer>
-  );
-}
+const ChackBox: any = styled.TextInput`
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+`;

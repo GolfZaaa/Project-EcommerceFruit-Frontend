@@ -11,3 +11,12 @@ export interface CartItem {
   productId: number;
   product: Product;
 }
+
+export interface CartItemByStore {
+  storeId: number;
+  storeName: string;
+  productName: string;
+  cartItemId: number;
+  categoryName: string;
+  products: Product[];
+}

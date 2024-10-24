@@ -6,6 +6,8 @@ import { Alert } from "react-native";
 import { router } from "expo-router";
 import { Mytoast } from "@/components/MyToast";
 import { store } from "./store";
+import { register } from "../interfaces/user/register";
+import axios from "axios";
 
 export default class CommonStore {
   token: string | null = null;
@@ -18,17 +20,19 @@ export default class CommonStore {
   getToken = async () => {
     const result = await AsyncStorage.getItem("token");
     this.token = result ? JSON.parse(result) : null;
-
+    console.log("res result", result);
     if (result !== null) {
-      store.userStore.getUserDetailbyId().then((res) => {
-        console.log("res getUserDetailbyId", res);
-
-        // if (res?.response?.request?.status !== undefined) {
-        //   if (res.response.request.status === 401) {
-        //     logout();
-        //   }
-        // }
+      const res = await store.userStore.getUserDetailbyId().catch(() => {
+        this.logout();
       });
+
+      console.log("res getUserDetailbyId", res);
+
+      // if (res?.response?.request?.status !== undefined) {
+      //   if (res.response.request.status === 401) {
+      //     logout();
+      //   }
+      // }
     }
   };
 
@@ -68,8 +72,40 @@ export default class CommonStore {
     }
   };
 
+  register = async (values: register) => {
+    runInAction(() => this.setLoadingCommon(true));
+
+    try {
+      const user = await agent.Common.register(values);
+
+      console.log("user : ", user);
+
+      runInAction(() => this.setLoadingCommon(false));
+
+      return user;
+    } catch (error) {
+      runInAction(() => this.setLoadingCommon(false));
+
+      if (axios.isAxiosError(error)) {
+        // ตรวจสอบว่าสถานะเป็น 400 หรือไม่
+        if (error.response && error.response.status === 400) {
+          // console.log("Error: Bad Request (400)", error.response.data);
+
+          return 400;
+        } else {
+          console.log("Error:", error.message);
+        }
+      } else {
+        // จัดการ error ที่ไม่ใช่ AxiosError
+        console.log("Unexpected Error:", error);
+      }
+    }
+  };
+
   logout = async () => {
     await AsyncStorage.removeItem("token");
+    this.token = null;
+    store.userStore.setUser(null);
     router.push("/login");
   };
 }
