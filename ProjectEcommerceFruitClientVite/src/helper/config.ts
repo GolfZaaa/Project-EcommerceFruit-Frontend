@@ -1,4 +1,3 @@
 export const config = {
-    baseURL: null,
-  };
-  
+  baseURL: null,
+};
