@@ -25,7 +25,6 @@ export default class UserStore {
     } catch (error) {
       runInAction(() => this.setLoadingUser(false));
       console.log("error", error);
-
       throw error;
     }
   };

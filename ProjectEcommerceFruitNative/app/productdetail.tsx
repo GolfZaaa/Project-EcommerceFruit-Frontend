@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import styled from "styled-components/native";
 import { LinearGradient } from "expo-linear-gradient";
+import { useNavigation } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 const Container: any = styled(LinearGradient).attrs({
   colors: ["#ffffff", "#f0f0f0"],
@@ -69,6 +71,14 @@ const QuantityButton: any = styled.TouchableOpacity`
   border-radius: 30px;
 `;
 
+const BackButton: any = styled.TouchableOpacity`
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1;
+  padding: 10px;
+`;
+
 const QuantityText: any = styled.Text`
   font-size: 18px;
   font-weight: bold;
@@ -104,6 +114,7 @@ const IGInfoText = styled.Text`
 export default function ProductDetailsScreen() {
   const [quantity, setQuantity] = useState(1);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigation = useNavigation();
 
   const increaseQuantity = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
@@ -115,7 +126,16 @@ export default function ProductDetailsScreen() {
 
   return (
     <ScrollView>
+
+      
+
+
       <Container>
+
+      <BackButton onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back-outline" size={24} color="#333" />
+        </BackButton>
+        
         <ProductImage
           source={{
             uri: "https://hdmall.co.th/blog/wp-content/uploads/2024/04/%E0%B9%80%E0%B8%87%E0%B8%B2%E0%B8%B0-Rambutan-scaled.jpg",
