@@ -194,6 +194,14 @@ const QuantityButton: any = styled.TouchableOpacity`
   border-radius: 30px;
 `;
 
+const BackButton: any = styled.TouchableOpacity`
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1;
+  padding: 10px;
+`;
+
 const QuantityText: any = styled.Text`
   font-size: 18px;
   font-weight: bold;

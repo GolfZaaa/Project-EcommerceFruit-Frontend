@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,10 @@ import {
   Button,
   TextInput,
   ScrollView,
+  StyleSheet,
+  Animated,
+  Dimensions,
+  TouchableWithoutFeedback,
 } from "react-native";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -19,66 +23,24 @@ import { observer } from "mobx-react-lite";
 import { port } from "@/src/api/agent";
 import { Product } from "@/src/models/Product";
 import { pathImagesApp } from "@/src/constants/RoutePath";
-
-export default observer(function HomeScreen() {
   const {
     product,
     getProduct,
     category,
     getCategory,
-    getFilterProduct,
     getProductById,
+    getFilterProduct,
   } = useStore().productStore;
   const { user } = useStore().userStore;
   const { GetCartItemByUserOrderStore } = useStore().cartStore;
-
+const { width } = Dimensions.get("window");
   const router = useRouter();
   const [numColumns, setNumColumns] = useState(2);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(0);
-
   const [sortPrice, setSortPrice] = useState(0); //sortPrice 1 === เรียงจากน้อยไปมาก, 2 === เรียงจากมากไปน้อย
   const [sortName, setSortName] = useState("ทั้งหมด");
-
-  // const products = [
-  //   {
-  //     id: "1",
-  //     name: "เงาะ",
-  //     price: "200฿",
-  //     image:
-  //       "https://hdmall.co.th/blog/wp-content/uploads/2024/04/%E0%B9%80%E0%B8%87%E0%B8%B2%E0%B8%B0-Rambutan-scaled.jpg",
-  //     isNew: true,
-  //     category: "ผลไม้",
-  //   },
-  //   {
-  //     id: "2",
-  //     name: "ทุเรียน",
-  //     price: "500฿",
-  //     image:
-  //       "https://s.isanook.com/wo/0/ud/50/250005/250005-thumbnail.jpg?ip/crop/w670h402/q80/jpg",
-  //     isSale: true,
-  //     category: "ผลไม้",
-  //   },
-  //   {
-  //     id: "3",
-  //     name: "มังคุด",
-  //     price: "50฿",
-  //     image: "https://medthai.com/wp-content/uploads/2013/07/Mangosteen-1.jpg",
-  //     category: "ผลไม้",
-  //   },
-  //   {
-  //     id: "4",
-  //     name: "ส้ม",
-  //     price: "40฿",
-  //     image:
-  //       "https://image.makewebeasy.net/makeweb/m_1920x0/qeb9oj2Lg/Ingradian/shutterstock_2053015835.jpg?v=202012190947",
-  //     category: "ผลไม้",
-  //   },
-  // ];
-
-  // const categories = ["ทั้งหมด", "ผลไม้สด", "ผลไม้สำเร็จรูป"];
-
   const categories = [
     {
       id: 0,
@@ -86,29 +48,51 @@ export default observer(function HomeScreen() {
     },
     ...category,
   ];
+  const handleProfile = async () => {
+    router.push("/(tabs)/setting");
+  };
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const slideAnim = useRef(new Animated.Value(-width)).current;
+
+  const toggleDrawer = () => {
+    if (isDrawerOpen) {
+      Animated.timing(slideAnim, {
+        toValue: -width,
+        duration: 300,
+      }).start(() => setIsDrawerOpen(false));
+        useNativeDriver: true,
+    } else {
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => setIsDrawerOpen(true));
+    }
+  };
+
 
   const onSearchProduct = (text: string) => {
     const queryParams = new URLSearchParams({
       productName: text || "",
       categoryId: selectedCategory.toString(),
       sortPrice: sortPrice.toString(),
-    });
 
+    });
     getFilterProduct(queryParams);
   };
 
+      categoryId: selectedCategory.toString(),
   const onFilterProduct = () => {
     const queryParams = new URLSearchParams({
       productName: searchQuery || "",
-      categoryId: selectedCategory.toString(),
       sortPrice: sortPrice.toString(),
     });
     getFilterProduct(queryParams);
   };
 
   useEffect(() => {
-    onFilterProduct();
     getCategory();
+    onFilterProduct();
   }, []);
 
   useEffect(() => {
@@ -156,88 +140,119 @@ export default observer(function HomeScreen() {
 
   return (
     <Container>
-      <HeaderText>รายการสินค้า</HeaderText>
+      <View style={styles.navbar}>
+        <TouchableOpacity onPress={toggleDrawer}>
+          <Ionicons name="menu-outline" size={30} color="#333" />
+        </TouchableOpacity>
 
-      <SearchContainer>
-        <Ionicons name="search-outline" size={20} color="#333" />
-        <SearchInput
-          placeholder="ค้นหาสินค้า"
-          value={searchQuery}
-          onChangeText={(text: string) => {
-            setSearchQuery(text);
+        <Text style={styles.textNavbar}>ข้อมูลสินค้า</Text>
+        <TouchableOpacity onPress={handleProfile}>
+          <Image
+            source={{
+              uri: "https://s359.kapook.com/r/600/auto/pagebuilder/9efc1817-eca5-4a83-9fee-8222ba8fcc55.jpg",
+            }}
+            style={styles.circleImage}
+          />
+        </TouchableOpacity>
+      </View>
 
-            onSearchProduct(text);
-          }}
-        />
-      </SearchContainer>
+      {isDrawerOpen && (
+        <TouchableWithoutFeedback onPress={toggleDrawer}>
+          <View style={styles.overlay} />
+        </TouchableWithoutFeedback>
+      )}
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={{
-          height: 60,
-        }}
+      <Animated.View
+        style={[styles.drawer, { transform: [{ translateX: slideAnim }] }]}
       >
-        {categories.map((category) => {
-          return (
+        <Text style={styles.drawerTitle}>เมนูเพิ่มเติม</Text>
+
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name="cart-outline" size={30} color="#333" />
+          <Text style={styles.menuText}>แก้ไขร้านค้า</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name="people-outline" size={30} color="#333" />
+          <Text style={styles.menuText}>เพิ่มข้อมูลสินค้า (GI)</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name="people-outline" size={30} color="#333" />
+          <Text style={styles.menuText}>เพิ่มสินค้า</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.menuItem}>
+          <Ionicons name="people-outline" size={30} color="#333" />
+          <Text style={styles.menuText}>รายการคำสั่งซื้อ</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
+          <Text style={styles.closeButtonText}>ปิด</Text>
+        </TouchableOpacity>
+      </Animated.View>
+
+      <View>
+        <SearchContainer>
+          <Ionicons name="search-outline" size={20} color="#333" />
+          <SearchInput
+            placeholder="ค้นหาสินค้า"
+            value={searchQuery}
+            onChangeText={(text: any) => setSearchQuery(text)}
+          />
+        </SearchContainer>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ marginBottom: 15 }}
+        >
+          {categories.map((category) => (
             <CategoryButton
-              key={category.id}
-              selected={selectedCategory === category.id}
-              onPress={() => onSelectCate(category.id)}
+              key={category}
+              selected={selectedCategory === category}
+              onPress={() => setSelectedCategory(category)}
             >
-              <CategoryButtonText selected={selectedCategory === category.id}>
-                {category.name}
+              <CategoryButtonText selected={selectedCategory === category}>
+                {category}
               </CategoryButtonText>
             </CategoryButton>
-          );
-        })}
-      </ScrollView>
+          ))}
+        </ScrollView>
 
-      <Header>
-        <IconButton onPress={() => setFilterModalVisible(true)}>
-          <Ionicons name="filter-outline" size={24} color="#333" />
-        </IconButton>
-        <Text>{sortName}</Text>
-        <IconButton onPress={toggleColumns}>
-          <Ionicons
-            name={numColumns === 1 ? "grid-outline" : "list-outline"}
-            size={24}
-            color="#333"
-          />
-        </IconButton>
-      </Header>
+        <Header>
+          <IconButton onPress={() => setFilterModalVisible(true)}>
+            <Ionicons name="filter-outline" size={24} color="#333" />
+          </IconButton>
+          <IconButton onPress={toggleColumns}>
+            <Ionicons
+              name={numColumns === 1 ? "grid-outline" : "list-outline"}
+              size={24}
+              color="#333"
+            />
+          </IconButton>
+        </Header>
 
-      <FlatList
-        data={product}
-        keyExtractor={(item) => item.productGI.name + item.id}
-        renderItem={({ item }) => renderProduct(item)}
-        numColumns={numColumns}
-        key={numColumns}
-        style={{
-          minHeight: 460,
-        }}
-      />
+        <FlatList
+          data={products}
+          keyExtractor={(item) => item.id}
+          renderItem={renderProduct}
+          numColumns={numColumns}
+          key={numColumns}
+        />
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={filterModalVisible}
-        onRequestClose={() => setFilterModalVisible(false)}
-      >
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-          }}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={filterModalVisible}
+          onRequestClose={() => setFilterModalVisible(false)}
         >
           <View
             style={{
-              width: 300,
-              padding: 20,
-              backgroundColor: "white",
-              borderRadius: 10,
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
             }}
           >
             <Text
@@ -310,10 +325,88 @@ export default observer(function HomeScreen() {
               />
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      </View>
     </Container>
   );
+}
+
+const styles = StyleSheet.create({
+  navbar: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingLeft: 10,
+    paddingRight: 10,
+    marginTop: -15,
+    marginBottom: 20,
+  },
+  circleImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+  textNavbar: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  closeButtonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+  drawerTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  menuItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: "#fff",
+    marginBottom: 15,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  menuText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+    marginLeft: 15,
+  },
+  drawer: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: width * 0.75,
+    backgroundColor: "#fff",
+    padding: 20,
+    elevation: 5,
+    zIndex: 2,
+    paddingTop: 60,
+  },
+  overlay: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    zIndex: 1,
+  },
+  closeButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: "#007bff",
+    borderRadius: 5,
+    alignItems: "center",
+  },
+});
 });
 
 const Container: any = styled.View`

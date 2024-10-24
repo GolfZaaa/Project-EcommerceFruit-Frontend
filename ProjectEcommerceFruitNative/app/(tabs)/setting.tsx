@@ -1,302 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
-  ImageBackground,
   Image,
   ScrollView,
-  Animated,
+  StyleSheet,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import styled from "styled-components/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Link, router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useStore } from "@/src/store/store";
-
-const logout = async () => {
-  try {
-    await AsyncStorage.removeItem("token");
-    router.push("/login");
-  } catch (error) {
-    console.error("Error removing token", error);
-  }
-};
-
-const gotoLogin = async () => {
-  router.push("/login");
-};
-
-const handleOrderhistory = async () => {
-  router.push("/orderhistory");
-};
-
-const handleAddress = async () => {
-  router.push("/editaddress");
-};
+import { router } from "expo-router";
 
 export default function SettingScreen() {
-  const { user } = useStore().userStore;
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [userName, setUserName] = useState("John Doe");
-  const [newUserName, setNewUserName] = useState("");
-
-  const handleSaveUserName = () => {
-    if (newUserName) {
-      setUserName(newUserName);
-      setModalVisible(false);
-    }
-  };
-
-  return (
-    <Container>
-      {!!user ? (
-        <>
-          <UserInfoSection>
-            <UserAvatar>
-              <Ionicons name="person" size={50} color="#fff" />
-            </UserAvatar>
-            <UserNameContainer>
-              <UserName>{user.fullName}</UserName>
-              <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <Ionicons
-                  name="create-outline"
-                  size={24}
-                  color="#007bff"
-                  style={{ marginLeft: 10 }}
-                />
-              </TouchableOpacity>
-            </UserNameContainer>
-          </UserInfoSection>
-
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => setModalVisible(false)}
-          >
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "rgba(0,0,0,0.5)",
-              }}
-            >
-              <View
-                style={{
-                  width: 300,
-                  backgroundColor: "#fff",
-                  borderRadius: 10,
-                  padding: 20,
-                  alignItems: "center",
-                }}
-              >
-                <Text style={{ fontSize: 18, marginBottom: 10 }}>
-                  เปลี่ยนชื่อผู้ใช้งาน
-                </Text>
-                <TextInput
-                  style={{
-                    width: "100%",
-                    borderColor: "#ccc",
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    padding: 10,
-                    marginBottom: 15,
-                  }}
-                  placeholder="ใส่ชื่อใหม่"
-                  value={newUserName}
-                  onChangeText={setNewUserName}
-                />
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#007bff",
-                    padding: 10,
-                    borderRadius: 5,
-                    width: "100%",
-                    alignItems: "center",
-                  }}
-                  onPress={handleSaveUserName}
-                >
-                  <Text style={{ color: "#fff", fontSize: 16 }}>บันทึก</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-
-          <FadeInView>
-            <ButtonCard onPress={handleAddress}>
-              <Ionicons name="location-outline" size={28} color="#333" />
-              <ButtonText>เปลี่ยนที่อยู่</ButtonText>
-            </ButtonCard>
-          </FadeInView>
-
-          <FadeInView>
-            <ButtonCard onPress={handleOrderhistory}>
-              <Ionicons name="receipt-outline" size={28} color="#333" />
-              <ButtonText>ประวัติคำสั่งซื้อ</ButtonText>
-            </ButtonCard>
-          </FadeInView>
-
-          {/* <FadeInView>
-      <ButtonCard>
-        <Ionicons name="cash-outline" size={28} color="#333" />
-        <ButtonText>สร้างรายได้</ButtonText>
-      </ButtonCard>
-    </FadeInView> */}
-
-          <SaveButton onPress={logout}>
-            <SaveButtonText>ออกจากระบบ</SaveButtonText>
-          </SaveButton>
-        </>
-      ) : (
-        <SaveButton onPress={gotoLogin}>
-          <SaveButtonText>เข้าสู่ระบบ</SaveButtonText>
-        </SaveButton>
-      )}
-    </Container>
-  );
-}
-
-const Container: any = styled(View)`
-  flex: 1;
-  background-color: #f7f9fc;
-`;
-
-const HeaderSection: any = styled(ImageBackground)`
-  height: 250px;
-  justify-content: center;
-  align-items: center;
-`;
-
-const UserInfoSection: any = styled.View`
-  align-items: center;
-  margin-top: -50px;
-`;
-
-const UserAvatar: any = styled(Image)`
-  width: 100px;
-  height: 100px;
-  border-radius: 50px;
-`;
-
-const UserNameContainer: any = styled.View`
-  flex-direction: column;
-  align-items: center;
-  margin-top: 10px;
-`;
-
-const UserName: any = styled.Text`
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
-`;
-
-const UserRole: any = styled.View`
-  background-color: #f0f0f0;
-  padding: 5px 10px;
-  border-radius: 15px;
-  margin-top: 5px;
-`;
-
-const UserRoleText: any = styled.Text`
-  font-size: 12px;
-  color: #666;
-`;
-
-const MenuContainer: any = styled(ScrollView)`
-  padding: 20px;
-`;
-
-const ButtonCard = styled(TouchableOpacity)`
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  flex-direction: row;
-  align-items: center;
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-`;
-
-const ButtonText = styled.Text`
-  color: #333;
-  font-size: 16px;
-  font-weight: bold;
-  margin-left: 10px;
-`;
-
-const SaveButton: any = ({ children, onPress }: any) => (
-  <TouchableOpacity onPress={onPress}>
-    <LinearGradient
-      colors={["#007bff", "#00d2ff"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={{
-        padding: 15,
-        borderRadius: 30,
-        alignItems: "center",
-        marginTop: 30,
-        elevation: 5,
-      }}
-    >
-      {children}
-    </LinearGradient>
-  </TouchableOpacity>
-);
-
-export const LoginButton: any = ({ children, onPress }: any) => (
-  <TouchableOpacity onPress={onPress}>
-    <LinearGradient
-      colors={["#007bff", "#00d2ff"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={{
-        padding: 15,
-        borderRadius: 30,
-        alignItems: "center",
-        marginTop: 30,
-        elevation: 5,
-        marginHorizontal: 20,
-      }}
-    >
-      {children}
-    </LinearGradient>
-  </TouchableOpacity>
-);
-
-// const logout = async () => {
-//   try {
-//     await AsyncStorage.removeItem("token");
-//     router.push("/login");
-//   } catch (error) {
-//     console.error("Error removing token", error);
-//   }
-// };
-
-export default function SettingScreen() {
-  const { user } = useStore().userStore;
-  const { logout } = useStore().commonStore;
-  const [userName, setUserName] = useState("TT");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [dropdownAnim] = useState(new Animated.Value(0));
-
-  const toggleDropdown = () => {
-    if (isDropdownOpen) {
-      Animated.timing(dropdownAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start(() => setIsDropdownOpen(false));
-    } else {
-      setIsDropdownOpen(true);
-      Animated.timing(dropdownAnim, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-    }
+  const handlePress = (screenName: string) => {
+    console.log("Navigating to:", screenName);
   };
 
   const handleOrderhistory = async () => {
@@ -315,316 +33,180 @@ export default function SettingScreen() {
     router.push("/(tabs)/cart");
   };
 
-  return !!user ? (
-    <Container>
-      <HeaderSection
-        source={{
-          uri: "https://i0.wp.com/picjumbo.com/wp-content/uploads/autumn-background-with-space-for-text-and-leaves-around-free-image.jpeg?w=600&quality=80",
-        }}
-        resizeMode="cover"
+  const handleDashboardAdmin = async () => {
+    // router.push("../admin/dashboardadmin");
+    router.push("/(tabs)/admin");
+  };
+
+  return (
+    <View style={styles.container}>
+      <LinearGradient
+        colors={["#6D5FFD", "#7A81FF"]}
+        style={styles.headerContainer}
       >
-        <UserInfoSection>
-          <UserAvatar
+        <View style={styles.userInfo}>
+          <Image
             source={{
-              uri: "https://play-lh.googleusercontent.com/jA5PwYqtmoFS7StajBe2EawN4C8WDdltO68JcsrvYKSuhjcTap5QMETkloXSq5soqRBqFjuTAhh28AYrA6A",
+              uri: "https://png.pngtree.com/png-vector/20210708/ourmid/pngtree-packed-meal-kawaii-illustration-png-image_3568607.jpg",
             }}
+            style={styles.avatar}
           />
-          <UserNameContainer>
-            <UserName>{user?.fullName}</UserName>
-            <UserRole>
-              <UserRoleText>{user?.role?.name}</UserRoleText>
-            </UserRole>
-          </UserNameContainer>
-        </UserInfoSection>
-      </HeaderSection>
+          <Text style={styles.userName}>Test</Text>
+          <Text style={styles.userDetails}>
+            11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี
+          </Text>
+        </View>
+      </LinearGradient>
 
-      <MenuContainer>
-        <ButtonCard onPress={toggleDropdown}>
-          <Ionicons name="home-outline" size={24} color="#333" />
-          <ButtonText>ข้อมูลส่วนตัว</ButtonText>
-          <Ionicons
-            name={
-              isDropdownOpen ? "chevron-up-outline" : "chevron-down-outline"
-            }
-            size={24}
-            color="#333"
-            style={{ marginLeft: "auto" }}
-          />
-        </ButtonCard>
-
-        {isDropdownOpen && (
-          <Animated.View
-            style={{
-              height: dropdownAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 220],
-              }),
-              overflow: "hidden",
-            }}
+      <ScrollView contentContainerStyle={styles.menuContainer}>
+        <View style={styles.menuRow}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={handleCart}
           >
-            <StyledDropdownButton>
-              <Ionicons name="bar-chart-outline" size={24} color="#333" />
-              <DropdownButtonText>สรุปข้อมูลการซื้อ</DropdownButtonText>
-            </StyledDropdownButton>
+            <View style={styles.iconWrapper}>
+              <Ionicons name="cart-outline" size={30} color="#5A67F2" />
+            </View>
+            <Text style={styles.menuItemText}>ตะกร้าสินค้า</Text>
+          </TouchableOpacity>
 
-            <StyledDropdownButton onPress={handleAddress}>
-              <Ionicons name="location-outline" size={24} color="#333" />
-              <DropdownButtonText>ที่อยู่ผู้ใช้งาน</DropdownButtonText>
-            </StyledDropdownButton>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={handleEarn}
+          >
+            <View style={styles.iconWrapper}>
+              <Ionicons name="car-outline" size={30} color="#5A67F2" />
+            </View>
+            <Text style={styles.menuItemText}>สร้างรายได้</Text>
+          </TouchableOpacity>
+        </View>
 
-            <StyledDropdownButton onPress={handleOrderhistory}>
-              <Ionicons name="receipt-outline" size={24} color="#333" />
-              <DropdownButtonText>ประวัติคำสั่งซื้อ</DropdownButtonText>
-            </StyledDropdownButton>
-          </Animated.View>
-        )}
-        <ButtonCard onPress={handleEarn}>
-          <Ionicons name="cash-outline" size={24} color="#333" />
-          <ButtonText>สร้างรายได้</ButtonText>
-        </ButtonCard>
+        <View style={styles.menuRow}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={handleOrderhistory}
+          >
+            <View style={styles.iconWrapper}>
+              <Ionicons name="basket-outline" size={30} color="#5A67F2" />
+            </View>
+            <Text style={styles.menuItemText}>ประวัติคำสั่งซื้อ</Text>
+          </TouchableOpacity>
 
-        <ButtonCard onPress={handleCart}>
-          <Ionicons name="cart-outline" size={24} color="#333" />
-          <ButtonText>ตะกร้าสินค้า</ButtonText>
-        </ButtonCard>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={handleAddress}
+          >
+            <View style={styles.iconWrapper}>
+              <Ionicons name="location-outline" size={30} color="#5A67F2" />
+            </View>
+            <Text style={styles.menuItemText}>ที่อยู่ผู้ใช้งาน</Text>
+          </TouchableOpacity>
+        </View>
 
-        <SaveButton onPress={logout}>
-          <SaveButtonText>Logout</SaveButtonText>
-        </SaveButton>
-      </MenuContainer>
-    </Container>
-  ) : (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        backgroundColor: "white",
-      }}
-    >
-      <LoginButton onPress={() => router.push("/login")}>
-        <SaveButtonText>เข้าสู่ระบบ</SaveButtonText>
-      </LoginButton>
+        <View style={styles.menuRow}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => handlePress("Stats")}
+          >
+            <View style={styles.iconWrapper}>
+              <Ionicons name="stats-chart-outline" size={30} color="#5A67F2" />
+            </View>
+            <Text style={styles.menuItemText}>สรุปข้อมูลการซื้อ</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={handleDashboardAdmin}
+          >
+            <View style={styles.iconWrapper}>
+              <Ionicons name="settings-outline" size={30} color="#5A67F2" />
+            </View>
+            <Text style={styles.menuItemText}>ผู้ดูแลระบบ</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+
+      <View style={styles.containercolor}></View>
     </View>
   );
 }
 
-const Container: any = styled(View)`
-  flex: 1;
-  background-color: #f7f9fc;
-`;
-
-const HeaderSection: any = styled(ImageBackground)`
-  height: 250px;
-  justify-content: center;
-  align-items: center;
-`;
-
-const UserInfoSection: any = styled.View`
-  align-items: center;
-  margin-top: -50px;
-`;
-
-const UserAvatar: any = styled(Image)`
-  width: 100px;
-  height: 100px;
-  border-radius: 50px;
-`;
-
-const UserNameContainer: any = styled.View`
-  flex-direction: column;
-  align-items: center;
-  margin-top: 10px;
-`;
-
-const UserName: any = styled.Text`
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
-`;
-
-const UserRole: any = styled.View`
-  background-color: #f0f0f0;
-  padding: 5px 10px;
-  border-radius: 15px;
-  margin-top: 5px;
-`;
-
-const UserRoleText: any = styled.Text`
-  font-size: 12px;
-  color: #666;
-`;
-
-const MenuContainer: any = styled(ScrollView)`
-  padding: 20px;
-`;
-
-const ButtonCard = styled(TouchableOpacity)`
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  flex-direction: row;
-  align-items: center;
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-`;
-
-const ButtonText = styled.Text`
-  color: #333;
-  font-size: 16px;
-  font-weight: bold;
-  margin-left: 10px;
-`;
-
-export const SaveButtonText: any = styled.Text`
-  color: #fff;
-  font-size: 20px;
-  font-weight: bold;
-`;
-
-const StyledDropdownButton = styled(TouchableOpacity)`
-  background-color: #ffffff;
-  padding: 15px;
-  border-radius: 10px;
-  margin-top: 10px;
-  align-items: center;
-  justify-content: flex-start;
-  shadow-color: #000;
-  shadow-opacity: 0.1;
-  shadow-radius: 10px;
-  elevation: 2;
-  flex-direction: row;
-`;
-
-const DropdownButtonText = styled(Text)`
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  margin-left: 10px; /* เพิ่มระยะห่างระหว่างไอคอนกับข้อความ */
-`;
-
-const logout = async () => {
-  try {
-    await AsyncStorage.removeItem("token");
-    router.push("/login");
-  } catch (error) {
-    console.error("Error removing token", error);
-  }
-};
-
-export default function SettingScreen() {
-  const [userName, setUserName] = useState("TT");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [dropdownAnim] = useState(new Animated.Value(0));
-
-  const toggleDropdown = () => {
-    if (isDropdownOpen) {
-      Animated.timing(dropdownAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start(() => setIsDropdownOpen(false));
-    } else {
-      setIsDropdownOpen(true);
-      Animated.timing(dropdownAnim, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-    }
-  };
-
-  const handleOrderhistory = async () => {
-    router.push("/orderhistory");
-  };
-
-  const handleAddress = async () => {
-    router.push("/editaddress");
-  };
-
-  const handleEarn = async () => {
-    router.push("/earn");
-  };
-
-  const handleCart = async () => {
-    router.push("/(tabs)/cart");
-  };
-  
-  return ( 
-    <Container>
-      <HeaderSection
-        source={{ uri: "https://your-background-image-url.com" }}
-        resizeMode="cover"
-      >
-        <UserInfoSection>
-          <UserAvatar
-            source={{
-              uri: "https://your-avatar-url.com",
-            }}
-          />
-          <UserNameContainer>
-            <UserName>{userName}</UserName>
-            <UserRole>
-              <UserRoleText>admin</UserRoleText>
-            </UserRole>
-          </UserNameContainer>
-        </UserInfoSection>
-      </HeaderSection>
-
-      <MenuContainer>
-        <ButtonCard onPress={toggleDropdown}>
-          <Ionicons name="home-outline" size={24} color="#333" />
-          <ButtonText>ข้อมูลส่วนตัว</ButtonText>
-          <Ionicons
-            name={
-              isDropdownOpen ? "chevron-up-outline" : "chevron-down-outline"
-            }
-            size={24}
-            color="#333"
-            style={{ marginLeft: "auto" }}
-          />
-        </ButtonCard>
-
-        {isDropdownOpen && (
-          <Animated.View
-            style={{
-              height: dropdownAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 220],
-              }),
-              overflow: "hidden",
-            }}
-          >
-            <StyledDropdownButton>
-              <Ionicons name="bar-chart-outline" size={24} color="#333" />
-              <DropdownButtonText>สรุปข้อมูลการซื้อ</DropdownButtonText>
-            </StyledDropdownButton>
-
-            <StyledDropdownButton onPress={handleAddress}>
-              <Ionicons name="location-outline" size={24} color="#333" />
-              <DropdownButtonText>ที่อยู่ผู้ใช้งาน</DropdownButtonText>
-            </StyledDropdownButton>
-
-            <StyledDropdownButton onPress={handleOrderhistory}>
-              <Ionicons name="receipt-outline" size={24} color="#333" />
-              <DropdownButtonText>ประวัติคำสั่งซื้อ</DropdownButtonText>
-            </StyledDropdownButton>
-
-          </Animated.View>
-        )}
-        <ButtonCard onPress={handleEarn}>
-          <Ionicons name="cash-outline" size={24} color="#333" />
-          <ButtonText>สร้างรายได้</ButtonText>
-        </ButtonCard>
-
-        <ButtonCard onPress={handleCart}>
-          <Ionicons name="cart-outline" size={24} color="#333" />
-          <ButtonText>ตะกร้าสินค้า</ButtonText>
-        </ButtonCard>
-
-        <SaveButton onPress={logout}>
-          <SaveButtonText>Logout</SaveButtonText>
-        </SaveButton>
-      </MenuContainer>
-    </Container>
-  );
-}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  containercolor: {
+    flex: 1,
+    backgroundColor: "#F7F9FC",
+    position: "absolute",
+    top: 325,
+    left: 0,
+    right: 0,
+    height: 454,
+    zIndex: -1,
+    borderTopLeftRadius: 19,
+    borderTopRightRadius: 19,
+  },
+  headerContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 340,
+    zIndex: -1,
+  },
+  userInfo: {
+    alignItems: "center",
+    marginTop: 50,
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  userName: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#FFF",
+    marginTop: 10,
+  },
+  userDetails: {
+    color: "#FFF",
+    fontSize: 14,
+  },
+  menuContainer: {
+    padding: 20,
+    marginTop: 250,
+  },
+  menuRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20,
+    zIndex: 5,
+  },
+  menuItem: {
+    width: "48%",
+    backgroundColor: "#FFF",
+    padding: 20,
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+    zIndex: 5, // ทำให้การ์ดอยู่ด้านบนสุด
+  },
+  menuItemText: {
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  iconWrapper: {
+    backgroundColor: "#F0F4FF",
+    borderRadius: 50,
+    padding: 15,
+  },
+});
