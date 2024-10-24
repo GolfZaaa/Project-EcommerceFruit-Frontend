@@ -12,6 +12,7 @@ LogBox.ignoreAllLogs();
 
 export default function TabLayout() {
   const { getToken } = useStore().commonStore;
+  const { getSystemSetting } = useStore().systemSettingStore;
   const { user } = useStore().userStore;
   const colorScheme = useColorScheme();
   const router = useRouter();
@@ -138,4 +139,4 @@ export default function TabLayout() {
       />
     </Tabs>
   );
-});
+};

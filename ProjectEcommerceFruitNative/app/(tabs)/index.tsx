@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -23,6 +23,9 @@ import { observer } from "mobx-react-lite";
 import { port } from "@/src/api/agent";
 import { Product } from "@/src/models/Product";
 import { pathImagesApp } from "@/src/constants/RoutePath";
+const { width } = Dimensions.get("window");
+
+export default observer(function homeScreen() {
   const {
     product,
     getProduct,
@@ -33,7 +36,6 @@ import { pathImagesApp } from "@/src/constants/RoutePath";
   } = useStore().productStore;
   const { user } = useStore().userStore;
   const { GetCartItemByUserOrderStore } = useStore().cartStore;
-const { width } = Dimensions.get("window");
   const router = useRouter();
   const [numColumns, setNumColumns] = useState(2);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
@@ -41,6 +43,7 @@ const { width } = Dimensions.get("window");
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [sortPrice, setSortPrice] = useState(0); //sortPrice 1 === เรียงจากน้อยไปมาก, 2 === เรียงจากมากไปน้อย
   const [sortName, setSortName] = useState("ทั้งหมด");
+
   const categories = [
     {
       id: 0,
@@ -59,8 +62,8 @@ const { width } = Dimensions.get("window");
       Animated.timing(slideAnim, {
         toValue: -width,
         duration: 300,
+        useNativeDriver: true,  // Add this line
       }).start(() => setIsDrawerOpen(false));
-        useNativeDriver: true,
     } else {
       Animated.timing(slideAnim, {
         toValue: 0,
@@ -69,6 +72,7 @@ const { width } = Dimensions.get("window");
       }).start(() => setIsDrawerOpen(true));
     }
   };
+  
 
 
   const onSearchProduct = (text: string) => {
@@ -81,7 +85,7 @@ const { width } = Dimensions.get("window");
     getFilterProduct(queryParams);
   };
 
-      categoryId: selectedCategory.toString(),
+      // categoryId: selectedCategory.toString(),
   const onFilterProduct = () => {
     const queryParams = new URLSearchParams({
       productName: searchQuery || "",
@@ -161,6 +165,7 @@ const { width } = Dimensions.get("window");
           <View style={styles.overlay} />
         </TouchableWithoutFeedback>
       )}
+      
 
       <Animated.View
         style={[styles.drawer, { transform: [{ translateX: slideAnim }] }]}
@@ -194,52 +199,64 @@ const { width } = Dimensions.get("window");
 
       <View>
         <SearchContainer>
-          <Ionicons name="search-outline" size={20} color="#333" />
-          <SearchInput
-            placeholder="ค้นหาสินค้า"
-            value={searchQuery}
-            onChangeText={(text: any) => setSearchQuery(text)}
-          />
-        </SearchContainer>
+        <Ionicons name="search-outline" size={20} color="#333" />
+        <SearchInput
+          placeholder="ค้นหาสินค้า"
+          value={searchQuery}
+          onChangeText={(text: string) => {
+            setSearchQuery(text);
 
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{ marginBottom: 15 }}
-        >
-          {categories.map((category) => (
+            onSearchProduct(text);
+          }}
+        />
+      </SearchContainer>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{
+          height: 60,
+        }}
+      >
+        {categories.map((category) => {
+          return (
             <CategoryButton
-              key={category}
-              selected={selectedCategory === category}
-              onPress={() => setSelectedCategory(category)}
+              key={category.id}
+              selected={selectedCategory === category.id}
+              onPress={() => onSelectCate(category.id)}
             >
-              <CategoryButtonText selected={selectedCategory === category}>
-                {category}
+              <CategoryButtonText selected={selectedCategory === category.id}>
+                {category.name}
               </CategoryButtonText>
             </CategoryButton>
-          ))}
-        </ScrollView>
+          );
+        })}
+      </ScrollView>
 
-        <Header>
-          <IconButton onPress={() => setFilterModalVisible(true)}>
-            <Ionicons name="filter-outline" size={24} color="#333" />
-          </IconButton>
-          <IconButton onPress={toggleColumns}>
-            <Ionicons
-              name={numColumns === 1 ? "grid-outline" : "list-outline"}
-              size={24}
-              color="#333"
-            />
-          </IconButton>
-        </Header>
+      <Header>
+        <IconButton onPress={() => setFilterModalVisible(true)}>
+          <Ionicons name="filter-outline" size={24} color="#333" />
+        </IconButton>
+        <Text>{sortName}</Text>
+        <IconButton onPress={toggleColumns}>
+          <Ionicons
+            name={numColumns === 1 ? "grid-outline" : "list-outline"}
+            size={24}
+            color="#333"
+          />
+        </IconButton>
+      </Header>
 
-        <FlatList
-          data={products}
-          keyExtractor={(item) => item.id}
-          renderItem={renderProduct}
-          numColumns={numColumns}
-          key={numColumns}
-        />
+      <FlatList
+        data={product}
+        keyExtractor={(item) => item.productGI.name + item.id}
+        renderItem={({ item }) => renderProduct(item)}
+        numColumns={numColumns}
+        key={numColumns}
+        style={{
+          minHeight: 460,
+        }}
+      />
 
         <Modal
           animationType="slide"
@@ -329,7 +346,7 @@ const { width } = Dimensions.get("window");
       </View>
     </Container>
   );
-}
+});
 
 const styles = StyleSheet.create({
   navbar: {
@@ -406,7 +423,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
   },
-});
 });
 
 const Container: any = styled.View`

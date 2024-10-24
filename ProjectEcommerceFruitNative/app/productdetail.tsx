@@ -15,8 +15,11 @@ import { useStore } from "@/src/store/store";
 import { pathImagesApp } from "@/src/constants/RoutePath";
 import RenderHTML from "react-native-render-html";
 import { htmlToText } from "html-to-text";
+import { useNavigation } from "@react-navigation/native"; 
+import { Ionicons } from "@expo/vector-icons";
 
 export default function ProductDetailsScreen() {
+  const navigation = useNavigation(); 
   const { productDetail, getProductById } = useStore().productStore;
   const { AddToCart } = useStore().cartStore;
   const { user } = useStore().userStore;
@@ -69,8 +72,22 @@ export default function ProductDetailsScreen() {
   };
 
   return (
-    <ScrollView>
-      <Container>
+    <View>
+
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={{
+          position: "absolute",
+          top: 40,
+          left: 20,
+          zIndex: 1,
+        }}
+      >
+        <Ionicons name="arrow-back" size={30} color="#007bff" />
+      </TouchableOpacity>
+
+        <ScrollView>
+        <Container>
         <ProductImage
           source={{
             uri: pathImagesApp.product + productDetail?.images,
@@ -130,7 +147,9 @@ export default function ProductDetailsScreen() {
           <IGInfoText>ติดตามสินค้านี้ได้ที่ IG: @product_ig_name</IGInfoText>
         )}
       </Container>
-    </ScrollView>
+        </ScrollView>
+      
+    </View>
   );
 }
 
@@ -148,6 +167,7 @@ const ProductImage: any = styled.Image`
   height: 300px;
   border-radius: 20px;
   margin-bottom: 20px;
+  margin-top: 70px;
 `;
 
 const ProductTitle: any = styled.Text`

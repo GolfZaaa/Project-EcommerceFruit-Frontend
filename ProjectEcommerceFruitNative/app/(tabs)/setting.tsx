@@ -10,6 +10,28 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
+import styled from "styled-components/native";
+
+
+export const LoginButton: any = ({ children, onPress }: any) => (
+  <TouchableOpacity onPress={onPress}>
+    <LinearGradient
+      colors={["#007bff", "#00d2ff"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={{
+        padding: 15,
+        borderRadius: 30,
+        alignItems: "center",
+        marginTop: 30,
+        elevation: 5,
+        marginHorizontal: 20,
+      }}
+    >
+      {children}
+    </LinearGradient>
+  </TouchableOpacity>
+);
 
 export default function SettingScreen() {
 
@@ -210,3 +232,9 @@ const styles = StyleSheet.create({
     padding: 15,
   },
 });
+
+export const SaveButtonText: any = styled.Text`
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+`;
