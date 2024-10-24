@@ -11,6 +11,8 @@ import { resetScroll } from "../api/agent";
 import CircularProgress from "@mui/material/CircularProgress";
 import MyContent from "../component/MyContent";
 
+import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+
 interface CartItem {
   id: string;
   storeName: string;
@@ -32,6 +34,8 @@ const formatNumberWithCommas = (number: number) => {
 
 export default observer(function SummaryScreen() {
   const navigate = useNavigate();
+  const stripe = useStripe();
+  const elements = useElements();
   const [dropZoneImage, setDropZoneImage] = useState(null);
   const [tag, setTag] = useState("");
 

@@ -10,7 +10,7 @@ import { SystemSetting } from "./systemsetting.api";
 
 // axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_API_URL;
 
-const baseUr = "https://localhost:8168/";
+const baseUr = "https://localhost:7168/";
 
 axios.defaults.baseURL = baseUr + "api/";
 
