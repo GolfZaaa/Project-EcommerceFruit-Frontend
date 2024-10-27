@@ -32,11 +32,11 @@ function App() {
 
   const route = isLoggedIn
     ? user?.roleId === 1
-      ? [...PublicRoute, ...PrivateRoute, AdminRoute]
+      ? [...PublicRoute, ...PrivateRoute, ...AdminRoute]
       : [...PublicRoute, ...PrivateRoute]
     : PublicRoute;
 
-  console.log("isLoggedIn", isLoggedIn);
+  console.log("user", user);
 
   return (
     <BrowserRouter>

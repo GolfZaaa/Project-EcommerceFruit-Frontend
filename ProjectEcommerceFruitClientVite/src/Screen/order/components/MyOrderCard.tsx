@@ -225,6 +225,7 @@ const MyOrderCard = ({ order, index }: props) => {
         const totalPrice: any = calculateTotalPrice();
         const formattedTotalPrice = formatNumberWithCommas(totalPrice);
 
+        console.log("itemeeeee",item)
         return (
           <div className="mt-5 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6">
             <div className="space-y-4">
@@ -232,6 +233,16 @@ const MyOrderCard = ({ order, index }: props) => {
                 <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
                   รหัสคำสั่งซื้อ : {item.orderId}
                 </span>
+                <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
+                     ชำระเงินโดย : {item.paymentImage ? "การโอนเงิน" : "เครดิตการ์ด"}
+                 </span>
+              </div>
+
+              <div className="md:flex md:justify-between">
+                <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
+                 
+                </span>
+
                 <span
                   className={
                     "text-lg font-semibold text-gray-900 text-" +
@@ -245,7 +256,6 @@ const MyOrderCard = ({ order, index }: props) => {
                       ? "red-500"
                       : "gray-500")
                   }
-                  // className="text-lg font-semibold text-gray-900 dark:text-red-500"
                 >
                   สถานะ :{" "}
                   {item.confirmReceipt === 2
@@ -263,6 +273,8 @@ const MyOrderCard = ({ order, index }: props) => {
                       (item.confirmReceipt === 2 && "ยกเลิกแล้ว โดยคุณ")}
                   </div>
                 </span>
+
+                
               </div>
 
               {item.orderItems.map((item: OrderItem) => {

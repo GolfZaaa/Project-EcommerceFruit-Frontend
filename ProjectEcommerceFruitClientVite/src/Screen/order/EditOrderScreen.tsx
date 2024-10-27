@@ -24,7 +24,8 @@ import { Product } from "../../models/Product";
 import { CartItem } from "../../models/CartItem";
 import { formatNumberWithCommas } from "../../helper/components";
 import { OrderItem } from "../../models/OrderItem";
-
+import MyContent from "../../component/MyContent";
+import imagecraditcart from "../../image/craditcard.png"
 interface props {
   onChangeCU?: any | null;
   dataEdit?: Order | null;
@@ -180,7 +181,13 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                   width={200}
                 />
               ) : (
-                "ไม่มีรูปภาพ"
+                // <MyContent name="เครดิตการ์ด" fontSize="large" />
+                <img
+                  src={imagecraditcart}
+                  alt="เครดิตการ์ด"
+                  height={200}
+                  width={200}
+                />
               )}
             </Grid>
             <Grid item xs={6}>
