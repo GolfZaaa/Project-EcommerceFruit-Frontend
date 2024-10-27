@@ -81,7 +81,6 @@ export default observer(function Navbar() {
                         objectFit: "contain",
                       }}
                     />
-                    {/* <p className="ml-5">{systemSetting[0]?.webName}</p> */}
                     <p className="ml-5">
                       <MyContent
                         name={systemSetting[0]?.webName}
@@ -90,7 +89,6 @@ export default observer(function Navbar() {
                     </p>
                   </div>
                 ) : (
-                  // <p>กรุณาเพิ่มรูปภาพ และชื่อเว็บไซต์ ได้ที่ตั้งค่าระบบ</p>
                   <p>
                     <MyContent
                       name={
@@ -202,6 +200,46 @@ export default observer(function Navbar() {
                 </NavLink>
               </li>
             )}
+
+{user?.roleId == 1 && (
+          <li className="text-gray-300">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  stroke="currentColor"
+                  className="w-4 h-4 current-fill"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 5v0m0 7v0m0 7v0m0-13a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                  />
+                </svg>
+            </li>
+          )}
+          
+{user?.roleId == 1 && (
+          <li>
+                <NavLink
+                  to={RoutePath.dashboardAdminHomePageScreen}
+                  className={({ isActive }) =>
+                    `text-sm ${
+                      isActive
+                        ? "text-blue-600 font-bold"
+                        : "text-gray-400 hover:text-gray-500"
+                    }`
+                  }
+                >
+                  <MyContent name={"ตั้งค่าระบบ"} fontSize="small" />
+                </NavLink>
+              </li>
+            )}
+
+
+             
+
           </ul>
 
           {token ? (
