@@ -82,12 +82,12 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
               width: "20%",
             }}
           />
-          <Tab
+          {/* <Tab
             label={<MyContent name="ที่ต้องชำระ" fontSize="small" />}
             style={{
               width: "20%",
             }}
-          />
+          /> */}
           <Tab
             label={<MyContent name="กำลังรออนุมัติ" fontSize="small" />}
             style={{
@@ -123,19 +123,20 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
         <CustomTabPanel value={value} index={0}>
           <MyOrderCard
             order={order}
-            index={0} //ทั้งหมด
+            index={0}
           />
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
+        {/* <CustomTabPanel value={value} index={1}>
           <MyOrderCard
             order={order?.filter((item) => item?.paymentImage === null)} //ที่ต้องชำระ
             index={1}
           />
-        </CustomTabPanel>
+        </CustomTabPanel> */}
         <CustomTabPanel value={value} index={2}>
           <MyOrderCard
             order={order.filter(
-              (item) => item?.paymentImage !== null && item?.status === 0 //กำลังรออนุมัติ
+              // (item) => item?.paymentImage !== null && item?.status === 0 //กำลังรออนุมัติ
+              (item) =>  item?.status === 0 //กำลังรออนุมัติ
             )}
             index={2}
           />

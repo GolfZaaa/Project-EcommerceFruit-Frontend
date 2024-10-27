@@ -11,7 +11,12 @@ import { resetScroll } from "../api/agent";
 import CircularProgress from "@mui/material/CircularProgress";
 import MyContent from "../component/MyContent";
 
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { CardCvcElement } from "@stripe/react-stripe-js";
+import { CardExpiryElement } from "@stripe/react-stripe-js";
+import { CardNumberElement } from "@stripe/react-stripe-js";
+import { PaymentElement } from "@stripe/react-stripe-js";
+import { AddressElement } from "@stripe/react-stripe-js";
 
 interface CartItem {
   id: string;
@@ -31,6 +36,7 @@ interface Product {
 const formatNumberWithCommas = (number: number) => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
+
 
 export default observer(function SummaryScreen() {
   const navigate = useNavigate();
@@ -60,7 +66,7 @@ export default observer(function SummaryScreen() {
   const { CreateUpdateOrderById } = useStore().orderStore;
   const { systemSetting } = useStore().systemSettingStore;
 
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("slip");
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(0);
 
   const [onChangeAddress, setOnChangeAddress] = useState(false);
 
@@ -75,9 +81,9 @@ export default observer(function SummaryScreen() {
   }, []);
 
   const handleChange = (e: any) => {
-    setSelectedPaymentMethod(e.target.value);
+    setSelectedPaymentMethod(Number(e.target.value));
 
-    if (e.target.value !== "slip") {
+    if (Number(e.target.value) !== 0) {
       setIsImageValid(true);
     }
   };
@@ -110,39 +116,90 @@ export default observer(function SummaryScreen() {
   };
 
   const handleSubmit = async (value: any) => {
-    if (selectedPaymentMethod === "slip" && !dropZoneImage) {
+    if (selectedPaymentMethod === 0 && !dropZoneImage) {
       setIsImageValid(false);
-
       myToast("กรุณาเพิ่มรูปภาพสลิป");
-
       return;
     }
-
+  
     setLoadingUser(true);
-
     setTimeout(() => {
       setLoadingUser(false);
     }, 700);
-
+  
     const Data = {
       PaymentImage: dropZoneImage,
       Tag: tag,
       StoreId: value[0].storeId,
+      PaymentMethod: selectedPaymentMethod,
     };
-
+  
     const test = await CreateUpdateOrderById(Data);
-
-    if (!!test) {
+  
+    console.log("test", test);
+  
+    if (selectedPaymentMethod == 1) {
+      if (!stripe || !elements) {
+        return;
+      }
+  
+      try {
+        const { paymentMethod, error } = await stripe.createPaymentMethod({
+          type: "card",
+          card: elements.getElement(CardNumberElement,CardExpiryElement, CardCvcElement),
+        });
+  
+        if (error) {
+          console.error("Error creating payment method:", error);
+        } else {
+          const paymentMethodId = paymentMethod.id;
+  
+          const { paymentIntent, error: confirmError } =
+            await stripe.confirmCardPayment(test.clientSecret, {
+              payment_method: paymentMethodId,
+            });
+  
+          if (confirmError) {
+            console.error("Error confirming card payment:", confirmError);
+          } else if (paymentIntent.status === "succeeded") {
+            console.log("Payment succeeded:", paymentIntent);
+            navigate(RoutePath.successScreen);
+            resetScroll();
+          }
+        }
+      } catch (error) {
+        console.error("Error making API request:", error);
+      }
+    } else if (test) {
       navigate(RoutePath.successScreen);
       resetScroll();
     } else {
       alert("error");
     }
   };
+  
 
   if (!selectMyCart.length) {
     navigate(RoutePath.cartScreen);
   }
+
+  const cardStyle = {
+    style: {
+      base: {
+        fontSize: "16px",
+        color: "#424770",
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        "::placeholder": {
+          color: "#a0aec0",
+        },
+        padding: "12px 16px",
+        backgroundColor: "#ffffff",
+      },
+      invalid: {
+        color: "#fa755a",
+      },
+    },
+  };
 
   return (
     <div className="bg-gray-50 -mt-8">
@@ -319,7 +376,7 @@ export default observer(function SummaryScreen() {
                   <div className="flex justify-center flex-wrap gap-4 items-center">
                     <label
                       className={`flex items-center space-x-3 p-3 ${
-                        selectedPaymentMethod === "credit-card"
+                        selectedPaymentMethod === 1
                           ? "bg-green-400"
                           : "bg-gray-200"
                       }  rounded-lg shadow-sm cursor-pointer w-44 h-16 justify-center`}
@@ -327,14 +384,14 @@ export default observer(function SummaryScreen() {
                       <input
                         type="radio"
                         name="payment-method"
-                        value="credit-card"
-                        checked={selectedPaymentMethod === "credit-card"}
+                        value={1}
+                        checked={selectedPaymentMethod === 1}
                         onChange={handleChange}
                         className={`form-radio text-blue-500 w-4 h-4 `}
                       />
                       <span
                         className={`text-base font-medium text-gray-800 ml-2 ${
-                          selectedPaymentMethod === "credit-card"
+                          selectedPaymentMethod === 1
                             ? "text-white font-bold"
                             : "text-gray-800"
                         }`}
@@ -344,7 +401,7 @@ export default observer(function SummaryScreen() {
                     </label>
                     <label
                       className={`flex items-center space-x-3 p-3 ${
-                        selectedPaymentMethod === "slip"
+                        selectedPaymentMethod === 0
                           ? "bg-green-400"
                           : "bg-gray-200"
                       }  rounded-lg shadow-sm cursor-pointer w-44 h-16 justify-center `}
@@ -352,11 +409,11 @@ export default observer(function SummaryScreen() {
                       <input
                         type="radio"
                         name="payment-method"
-                        value="slip"
-                        checked={selectedPaymentMethod === "slip"}
+                        value={0}
+                        checked={selectedPaymentMethod === 0}
                         onChange={handleChange}
                         className={`form-radio text-blue-500 w-4 h-4 ${
-                          selectedPaymentMethod === "slip"
+                          selectedPaymentMethod === 0
                             ? "bg-green-500"
                             : "bg-gray-200"
                         }`}
@@ -364,7 +421,7 @@ export default observer(function SummaryScreen() {
 
                       <span
                         className={`text-base font-medium ml-2 ${
-                          selectedPaymentMethod === "slip"
+                          selectedPaymentMethod === 0
                             ? "text-white font-bold"
                             : "text-gray-800"
                         }`}
@@ -374,7 +431,7 @@ export default observer(function SummaryScreen() {
                     </label>
                   </div>
 
-                  {selectedPaymentMethod === "slip" ? (
+                  {selectedPaymentMethod === 0 ? (
                     <div>
                       <div
                         style={{ paddingLeft: "0px", marginTop: "20px" }}
@@ -409,7 +466,43 @@ export default observer(function SummaryScreen() {
                     </div>
                   ) : (
                     <div>
-                      <MyContent name="กรอกบัตรเครดิต" fontSize="small" />
+                      
+                      <div className="">
+
+
+
+                      <div className="max-w-md mx-auto p-6">
+  <div className="flex flex-col space-y-1">
+    <label className="text-gray-600"> <MyContent name="หมายเลขบัตร" fontSize="small" /></label>
+    <CardNumberElement
+      options={cardStyle}
+      className="p-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-500 transition-shadow duration-300 shadow-sm hover:shadow-md bg-white focus:bg-gray-100"
+    />
+  </div>
+
+  <div className="flex space-x-4 mt-4">
+    <div className="flex flex-col space-y-1 flex-1">
+      <label className="text-gray-600 "><MyContent name="วันหมดอายุ" fontSize="small" /></label>
+      <CardExpiryElement
+        options={cardStyle}
+        className="p-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-500 transition-shadow duration-300 shadow-sm hover:shadow-md bg-white focus:bg-gray-100"
+      />
+    </div>
+
+    <div className="flex flex-col space-y-1 flex-1">
+      <label className="text-gray-600"><MyContent name="รหัส CVC" fontSize="small" /></label>
+      <CardCvcElement
+        options={cardStyle}
+        className="p-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-500 transition-shadow duration-300 shadow-sm hover:shadow-md bg-white focus:bg-gray-100"
+      />
+    </div>
+  </div>
+</div>
+
+
+    
+
+                     </div>
                     </div>
                   )}
                 </div>

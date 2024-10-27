@@ -35,16 +35,26 @@ export default observer(function DashboardForUser() {
   useEffect(() => {
     if (order) {
       const total = order
-        .filter((x) => x.confirmReceipt === 1)
-        .reduce((acc, currentOrder) => {
-          const orderTotal = currentOrder.orderItems.reduce(
-            (itemAcc, orderItem) =>
-              itemAcc + orderItem.quantity * orderItem.product.price,
-            0
-          );
-          return acc + orderTotal;
-        }, 0);
-      setTotalPrice(total);
+      .filter((x) => x.confirmReceipt === 1)
+      .reduce((acc, currentOrder) => {
+        const orderTotal = currentOrder.orderItems.reduce(
+          (itemAcc, orderItem) =>
+            itemAcc + orderItem.quantity * orderItem.product.price,
+          0
+        );
+    
+        const totalFee = currentOrder.shippings
+          ? currentOrder.shippings.reduce(
+              (feeAcc, shipping) => feeAcc + shipping.shippingFee,
+              0
+            )
+          : 0;
+    
+        return acc + orderTotal + totalFee;
+      }, 0);
+    setTotalPrice(total);
+    
+    
 
       const totalProduct = order
         .filter((x) => x.confirmReceipt === 1)
@@ -109,6 +119,8 @@ export default observer(function DashboardForUser() {
       setMonthlyOrderData(monthlyData);
     }
   }, [order, selectedYear]);
+
+  console.log("Ordersss",order)
 
   const handleYearChange = (selectedOption: any) => {
     setSelectedYear(selectedOption.value);
