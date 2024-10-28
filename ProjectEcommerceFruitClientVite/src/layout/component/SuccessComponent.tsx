@@ -3,26 +3,27 @@ import { useNavigate } from "react-router-dom";
 import { RoutePath } from "../../constants/RoutePath";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
-
-// import { Player, Controls } from '@lottiefiles/react-lottie-player';
 import animationData from "../../assets/successorder.mp4";
 import { resetScroll } from "../../api/agent";
 import MyContent from "../../component/MyContent";
 import { formatDateThai } from "../../helper/components";
 
+const OrderDetail = ({ title, content }) => (
+  <dl className="flex items-center justify-between gap-4">
+    <dt className="font-normal text-gray-500 dark:text-gray-400">
+      <MyContent name={title} fontSize="small" />
+    </dt>
+    <dd className="font-medium text-gray-900 dark:text-black text-end">
+      <MyContent name={content} fontSize="small" />
+    </dd>
+  </dl>
+);
+
 export default observer(function SuccessComponent() {
   const navigate = useNavigate();
-
-  const handleToProductScreen = () => {
-    navigate(RoutePath.homeScreen);
-    resetScroll();
-  };
-
   const [currentTime, setCurrentTime] = useState(new Date());
-
   const { myAddressgotoOrder, getAddressgotoOrderByUserId } =
     useStore().addressStore;
-
   const { GetCartItemByUser, GetCartItemByUserOrderStore } =
     useStore().cartStore;
 
@@ -32,130 +33,61 @@ export default observer(function SuccessComponent() {
     GetCartItemByUserOrderStore();
   }, []);
 
+  const handleToProductScreen = () => {
+    navigate(RoutePath.homeScreen);
+    resetScroll();
+  };
+
   const handleCheckOrder = () => {
     navigate(RoutePath.checkorderScreen);
   };
 
   return (
-    <div>
-      <section className="bg-white py-8 antialiased dark:bg-white md:py-16">
-        <div className="flex items-center justify-center min-w-screen -mt-16 mb-5">
-          {/* <Player
-        autoplay
-        loop
-        src={animationData}
-        style={{ height: '250px', width: '200px' }}
-      >
-      </Player> */}
-          <video width="250" height="250" autoPlay muted loop>
+    <div className="container mx-auto p-4">
+      <section className="bg-white py-8 antialiased dark:bg-white md:py-16 rounded-lg">
+        <div className="flex items-center justify-center mb-8">
+          <video width="230" height="230" autoPlay muted loop>
             <source src={animationData} type="video/mp4" />
           </video>
         </div>
 
-        <div className="mx-auto max-w-2xl px-4 2xl:px-0">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-black sm:text-2xl mb-2">
+        <div className="mx-auto max-w-2xl px-4">
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-black mb-4 text-center">
             <MyContent name="ขอบคุณสำหรับการสั่งซื้อครับ!" fontSize="large" />
           </h2>
-          <p className="text-gray-500 dark:text-gray-400 mb-6 md:mb-8">
+          <p className="text-gray-500 dark:text-gray-400 text-center mb-8">
             <MyContent
               name="คำสั่งซื้อของคุณจะถูกดำเนินการภายใน 24 ชั่วโมงในวันทำการ"
               fontSize="normal"
-            />{" "}
-            {/* <a
-              href="#"
-              className="font-medium text-gray-900 dark:text-black hover:underline"
-            >
-              #7564804
-            </a>{" "} */}
+            />
           </p>
-          <div className="space-y-4 sm:space-y-2 rounded-lg border border-gray-100 bg-gray-50 p-6 dark:border-gray-700 dark:bg-white mb-6 md:mb-8">
-            <dl className="sm:flex items-center justify-between gap-4">
-              <dt className="font-normal mb-1 sm:mb-0 text-gray-500 dark:text-gray-400">
-                <MyContent name="เวลาในการชำระสินค้า :" fontSize="small" />
-              </dt>
-              <dd className="font-medium text-gray-900 dark:text-black sm:text-end">
-                <MyContent
-                  name={formatDateThai(currentTime, +543, 1)}
-                  fontSize="small"
-                />
-                {/* {currentTime.toLocaleDateString("th-TH", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })} */}
-              </dd>
-            </dl>
-            <dl className="sm:flex items-center justify-between gap-4">
-              <dt className="font-normal mb-1 sm:mb-0 text-gray-500 dark:text-gray-400">
-                <MyContent name="ชื่อผู้ซื้อ :" fontSize="small" />
-              </dt>
-              <dd className="font-medium text-gray-900 dark:text-black sm:text-end">
-                <MyContent
-                  name={myAddressgotoOrder?.user?.fullName}
-                  fontSize="small"
-                />
-              </dd>
-            </dl>
-            <dl className="sm:flex items-center justify-between gap-4">
-              <dt className="font-normal mb-1 sm:mb-0 text-gray-500 dark:text-gray-400">
-                <MyContent name="ที่อยู่ :" fontSize="small" />
-              </dt>
-              <dd className="font-medium text-gray-900 dark:text-black sm:text-end w-52">
-                <div className="flex-1">
-                  <p className="text-base leading-4 text-gray-800 font-normal">
-                    <MyContent
-                      name={`${myAddressgotoOrder?.detail} ${myAddressgotoOrder?.subDistrict}`}
-                      fontSize="small"
-                    />
-                  </p>
-                  <p>
-                    <MyContent
-                      name={myAddressgotoOrder?.district}
-                      fontSize="small"
-                    />
-                  </p>
-                  <p>
-                    <MyContent
-                      name={`${myAddressgotoOrder?.province} ${myAddressgotoOrder?.postCode}`}
-                      fontSize="small"
-                    />
-                  </p>
-                </div>
-              </dd>
-            </dl>
-            <dl className="sm:flex items-center justify-between gap-4">
-              <dt className="font-normal mb-1 sm:mb-0 text-gray-500 dark:text-gray-400">
-                <MyContent name="เบอร์โทรศัพท์ :" fontSize="small" />
-              </dt>
-              <dd className="font-medium text-gray-900 dark:text-black sm:text-end">
-                <MyContent
-                  name={myAddressgotoOrder?.user?.phoneNumber}
-                  fontSize="small"
-                />
-              </dd>
-            </dl>
-          </div>
-          <div className="flex items-center space-x-4">
-            {/* <button
-              onClick={handleCheckOrder}
-              className="text-white bg-blue-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
-            >
-              ตรวจสอบคำสั่งซื้อ
-            </button> */}
 
+          <div className="space-y-4 p-6 bg-gray-50 border border-gray-50 rounded-lg  dark:border-gray-500">
+            <OrderDetail
+              title="เวลาในการชำระสินค้า :"
+              content={formatDateThai(currentTime, +543, 1)}
+            />
+            <OrderDetail
+              title="ชื่อผู้ซื้อ :"
+              content={myAddressgotoOrder?.user?.fullName || "N/A"}
+            />
+            <OrderDetail
+              title="ที่อยู่ :"
+              content={`${myAddressgotoOrder?.detail || ""}, ${myAddressgotoOrder?.subDistrict || ""}, ${myAddressgotoOrder?.district || ""}, ${myAddressgotoOrder?.province || ""}, ${myAddressgotoOrder?.postCode || ""}`}
+            />
+            <OrderDetail
+              title="เบอร์โทรศัพท์ :"
+              content={myAddressgotoOrder?.user?.phoneNumber || "N/A"}
+            />
+          </div>
+
+          <div className="flex justify-center mt-8">
             <button
               onClick={handleToProductScreen}
-              className="text-white bg-blue-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+              className="bg-blue-700 text-white rounded-lg px-6 py-2.5 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300"
             >
               <MyContent name="กลับไปยังหน้าเลือกสินค้า" fontSize="small" />
             </button>
-
-            {/* <button
-              onClick={handleToProductScreen}
-              className="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-            >
-              กลับไปยังหน้าเลือกสินค้า
-            </button> */}
           </div>
         </div>
       </section>

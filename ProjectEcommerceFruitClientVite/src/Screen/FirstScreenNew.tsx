@@ -223,7 +223,6 @@ export default observer(function FirstScreenNew() {
               </div>
             </motion.div>
 
-            {/* Mobile Image */}
             <motion.div
               data-aos="zoom-in"
               className="absolute top-0 left-0 bg-gray-100 w-full hidden md:block lg:hidden"
@@ -235,13 +234,7 @@ export default observer(function FirstScreenNew() {
                 boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
                 opacity: 0.9,
               }}
-            >
-              <img
-                src="https://i.ibb.co/YQjkqWr/juan-burgos-FIy-XGZ1q0mc-unsplash-1.png"
-                alt="image with decent chairs"
-                className="w-full h-full object-cover"
-              />
-            </motion.div>
+            ></motion.div>
           </div>
 
           {/* Text Section */}
@@ -967,8 +960,6 @@ export default observer(function FirstScreenNew() {
         </div>
         <div />
       </div>
-
-      {/* ข่าวสาร End */}
       <Footer />
     </div>
   );

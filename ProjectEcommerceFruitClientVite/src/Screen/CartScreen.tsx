@@ -8,8 +8,8 @@ import BannerComponent from "../layout/component/BannerComponent";
 import { resetScroll } from "../api/agent";
 import CircularProgress from "@mui/material/CircularProgress";
 import MyContent from "../component/MyContent";
-
-// Define types for cart items and products
+import MyLottie from "../helper/components/MyLottie";
+import LottieCart from "../assets/lotties/cartisemty.json";
 interface Product {
   id: string;
   price: number;
@@ -81,7 +81,6 @@ export default observer(function CartScreen() {
     await GetCartItemByUser();
     await GetCartItemByUserOrderStore();
 
-    // อัปเดตราคารวมใหม่หลังจากลบสินค้า
     const updatedSelectMyCart = selectMyCart.map((cartItem: CartItem) => {
       if (cartItem.id === item.id) {
         const updatedProducts = cartItem.products.map((product: Product) =>
@@ -94,14 +93,12 @@ export default observer(function CartScreen() {
       return cartItem;
     });
 
-    // กรองสินค้าออกถ้าจำนวนสินค้าในตะกร้าเป็น 0
     const filteredCart = updatedSelectMyCart.filter((cartItem) =>
       cartItem.products.some((product) => product.quantityInCartItem > 0)
     );
 
     setselectMyCart(filteredCart);
 
-    // คำนวณราคารวมใหม่
     const calculateTotalPrice = () => {
       return filteredCart.reduce((total, item: CartItem) => {
         const storeTotal = item.products.reduce(
@@ -206,14 +203,36 @@ export default observer(function CartScreen() {
       <BannerComponent />
       <section className="bg-white py-8 antialiased md:py-16">
         <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
-          <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">
-            <MyContent
-              name={`จำนวนสินค้า ${cartItems.length} ชิ้น จาก ${
-                Object.entries(groupedCartItems).length
-              } ร้านค้า`}
-              fontSize="normal"
-            />
-          </h2>
+          {cartItems.length <= 0 ? (
+            <div></div>
+          ) : (
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">
+                <MyContent
+                  name={`จำนวนสินค้า ${cartItems.length} ชิ้น จาก ${
+                    Object.entries(groupedCartItems).length
+                  } ร้านค้า`}
+                  fontSize="normal"
+                />
+              </h2>
+            </div>
+          )}
+
+          {cartItems.length <= 0 && (
+            <div>
+              <MyLottie lottieFile={LottieCart} />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  fontSize: 30,
+                }}
+              >
+                ไม่มีสินค้าในตะกร้า
+              </div>
+            </div>
+          )}
 
           <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
             <div className="w-8/12 flex flex-col space-y-6">
