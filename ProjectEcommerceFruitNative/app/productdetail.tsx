@@ -15,13 +15,13 @@ import { useStore } from "@/src/store/store";
 import { pathImagesApp } from "@/src/constants/RoutePath";
 import RenderHTML from "react-native-render-html";
 import { htmlToText } from "html-to-text";
-import { useNavigation } from "@react-navigation/native"; 
+import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function ProductDetailsScreen() {
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
   const { productDetail, getProductById } = useStore().productStore;
-  const { AddToCart } = useStore().cartStore;
+  const { AddToCart, setselectMyCart } = useStore().cartStore;
   const { user } = useStore().userStore;
 
   const params = useLocalSearchParams();
@@ -51,6 +51,7 @@ export default function ProductDetailsScreen() {
         ProductId: productDetail?.id,
         Quantity: quantity,
       });
+      setselectMyCart([]);
       showToastWithGravityAndOffset();
       // console.log("add - ", {
       //   ProductId: productDetail?.id,
@@ -73,7 +74,6 @@ export default function ProductDetailsScreen() {
 
   return (
     <View>
-
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={{
@@ -86,69 +86,68 @@ export default function ProductDetailsScreen() {
         <Ionicons name="arrow-back" size={30} color="#007bff" />
       </TouchableOpacity>
 
-        <ScrollView>
+      <ScrollView>
         <Container>
-        <ProductImage
-          source={{
-            uri: pathImagesApp.product + productDetail?.images,
-          }}
-        />
+          <ProductImage
+            source={{
+              uri: pathImagesApp.product + productDetail?.images,
+            }}
+          />
 
-        <ProductTitle>{productDetail?.productGI.name}</ProductTitle>
+          <ProductTitle>{productDetail?.productGI.name}</ProductTitle>
 
-        <ProductPrice>฿ {productDetail?.price}</ProductPrice>
+          <ProductPrice>฿ {productDetail?.price}</ProductPrice>
 
-        <ProductInfo>
-          <InfoText>ขายแล้ว: {productDetail?.sold} ชิ้น</InfoText>
-          <InfoText>ราคาต่อกิโลกรัม: {productDetail?.price} บาท</InfoText>
-          <InfoText>คงเหลือ: {productDetail?.quantity} ชิ้น</InfoText>
-        </ProductInfo>
+          <ProductInfo>
+            <InfoText>ขายแล้ว: {productDetail?.sold} ชิ้น</InfoText>
+            <InfoText>ราคาต่อกิโลกรัม: {productDetail?.price} บาท</InfoText>
+            <InfoText>คงเหลือ: {productDetail?.quantity} ชิ้น</InfoText>
+          </ProductInfo>
 
-        <ProductDescription>{plainText}</ProductDescription>
+          <ProductDescription>{plainText}</ProductDescription>
 
-        <QuantityContainer>
-          <QuantityButton onPress={decreaseQuantity}>
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 24,
-                width: 10,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              -
-            </Text>
-          </QuantityButton>
-          <QuantityText>{quantity}</QuantityText>
-          <QuantityButton onPress={increaseQuantity}>
-            <Text style={{ color: "#fff", fontSize: 24 }}>+</Text>
-          </QuantityButton>
-        </QuantityContainer>
+          <QuantityContainer>
+            <QuantityButton onPress={decreaseQuantity}>
+              <Text
+                style={{
+                  color: "#fff",
+                  fontSize: 24,
+                  width: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                -
+              </Text>
+            </QuantityButton>
+            <QuantityText>{quantity}</QuantityText>
+            <QuantityButton onPress={increaseQuantity}>
+              <Text style={{ color: "#fff", fontSize: 24 }}>+</Text>
+            </QuantityButton>
+          </QuantityContainer>
 
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#ff6f61",
-            padding: 15,
-            borderRadius: 30,
-            alignItems: "center",
-            marginTop: 20,
-          }}
-          onPress={() => onAddtoCart()}
-        >
-          <ButtonText>เพิ่มในตะกร้า ({quantity})</ButtonText>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#ff6f61",
+              padding: 15,
+              borderRadius: 30,
+              alignItems: "center",
+              marginTop: 20,
+            }}
+            onPress={() => onAddtoCart()}
+          >
+            <ButtonText>เพิ่มในตะกร้า ({quantity})</ButtonText>
+          </TouchableOpacity>
 
-        {/* <DropdownButton onPress={toggleDropdown}>
+          {/* <DropdownButton onPress={toggleDropdown}>
           <DropdownText>{isDropdownOpen ? 'ซ่อนข้อมูล IG' : 'แสดงข้อมูล IG'}</DropdownText>
         </DropdownButton> */}
 
-        {isDropdownOpen && (
-          <IGInfoText>ติดตามสินค้านี้ได้ที่ IG: @product_ig_name</IGInfoText>
-        )}
-      </Container>
-        </ScrollView>
-      
+          {isDropdownOpen && (
+            <IGInfoText>ติดตามสินค้านี้ได้ที่ IG: @product_ig_name</IGInfoText>
+          )}
+        </Container>
+      </ScrollView>
     </View>
   );
 }

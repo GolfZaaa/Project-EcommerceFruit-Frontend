@@ -15,6 +15,7 @@ import { pathImagesApp } from "@/src/constants/RoutePath";
 import { observer } from "mobx-react-lite";
 import { Checkbox, IconButton } from "react-native-paper";
 import { LoginButton, SaveButtonText } from "./setting";
+import { Product } from "@/src/models/Product";
 
 const formatNumberWithCommas = (number: number) => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -33,6 +34,8 @@ export default observer(function CartScreen() {
   } = useStore().cartStore;
   const { systemSetting } = useStore().systemSettingStore;
   const { user } = useStore().userStore;
+  const { myAddressgotoOrder, getAddressgotoOrderByUserId } =
+    useStore().addressStore;
 
   const [checkedItem, setCheckedItem] = useState<string | null>(null);
 
@@ -77,13 +80,24 @@ export default observer(function CartScreen() {
         calculateTotalPrice() + systemSetting[0]?.shippingCost
       )
     );
+    if (selectMyCart.length === 0) {
+      setCheckedItem(null);
+    }
   }, [selectMyCart]);
 
-  const handleCartDetail = () => {
+  const handleCartDetail = async () => {
     if (selectMyCart.length === 0) {
       alert("กรุณาเลือกร้านค้าที่ท่านจะซื้อก่อน");
     } else {
-      router.replace("/cartdetail");
+      await getAddressgotoOrderByUserId().then((res) => {
+        console.log("res", res);
+
+        if (!!res) {
+          router.push("/cartdetail");
+        } else {
+          router.push("/editaddress");
+        }
+      });
     }
   };
 
@@ -92,6 +106,97 @@ export default observer(function CartScreen() {
       prevCheckedItem === storeName ? null : storeName
     );
     setselectMyCart(items);
+  };
+
+  const handleRemoveItem = async (item: any) => {
+    const CartItemId = item.cartItemId;
+    const Quantity = 1;
+
+    await RemoveToCart({ CartItemId, Quantity });
+    await GetCartItemByUser();
+    await GetCartItemByUserOrderStore();
+
+    // อัปเดตราคารวมใหม่หลังจากลบสินค้า
+    const updatedSelectMyCart = selectMyCart.map((cartItem: any) => {
+      if (cartItem.id === item.id) {
+        const updatedProducts = cartItem.products.map((product: any) =>
+          product.id === item.products[0].id
+            ? { ...product, quantityInCartItem: product.quantityInCartItem - 1 }
+            : product
+        );
+        return { ...cartItem, products: updatedProducts };
+      }
+      return cartItem;
+    });
+
+    // กรองสินค้าออกถ้าจำนวนสินค้าในตะกร้าเป็น 0
+    const filteredCart = updatedSelectMyCart.filter((cartItem) =>
+      cartItem.products.some((product: any) => product.quantityInCartItem > 0)
+    );
+
+    setselectMyCart(filteredCart);
+
+    // คำนวณราคารวมใหม่
+    const calculateTotalPrice = () => {
+      return filteredCart.reduce((total, item: any) => {
+        const storeTotal = item.products.reduce(
+          (storeSum: number, product: any) => {
+            return storeSum + product.quantityInCartItem * product.price;
+          },
+          0
+        );
+        return total + storeTotal;
+      }, 0);
+    };
+
+    const totalPrice = calculateTotalPrice();
+    setFormattedTotalPrice(formatNumberWithCommas(totalPrice));
+  };
+
+  const handleRemoveItemAll = async (item: any, Quantity: any) => {
+    const CartItemId = item.cartItemId;
+    await RemoveToCart({ CartItemId, Quantity });
+
+    await GetCartItemByUser();
+    await GetCartItemByUserOrderStore();
+  };
+
+  const handleAddItem = async (product: any) => {
+    const ProductId = product.id;
+    const Quantity = 1;
+    await AddToCart({ ProductId, Quantity });
+    if (checkedItem) {
+      const updatedCart = selectMyCart.map((cartItem: any) => {
+        if (cartItem.storeName === checkedItem) {
+          const updatedProducts = cartItem.products.map((prod: any) => {
+            return prod.id === ProductId &&
+              product.quantityInCartItem < product.quantity
+              ? { ...prod, quantityInCartItem: prod.quantityInCartItem + 1 }
+              : prod;
+          });
+          return { ...cartItem, products: updatedProducts };
+        }
+        return cartItem;
+      });
+
+      const productInExistingCart = updatedCart.find((item) =>
+        item.products.some((prod: any) => prod.id === ProductId)
+      );
+      if (!productInExistingCart) {
+        updatedCart.push({
+          id: `${Date.now()}`,
+          storeName: checkedItem,
+          productName: product.id,
+          products: [{ ...product, quantityInCartItem: 1 }],
+          cartItemId: null,
+        });
+      }
+
+      setselectMyCart(updatedCart);
+    }
+
+    await GetCartItemByUser();
+    await GetCartItemByUserOrderStore();
   };
 
   const RenderCartItem = ({ item }: any) => {
@@ -117,37 +222,20 @@ export default observer(function CartScreen() {
           <QuantityControl
             style={{ flexDirection: "row", alignItems: "center" }}
           >
-            <QuantityButton
-              onPress={() =>
-                RemoveToCart({
-                  CartItemId: item.cartItemId,
-                  Quantity: 1,
-                })
-              }
-            >
+            <QuantityButton onPress={() => handleRemoveItem(item)}>
               <QuantityText>-</QuantityText>
             </QuantityButton>
             <Text style={{ fontSize: 18, marginHorizontal: 10 }}>
               {item.products[0].quantityInCartItem}
             </Text>
-            <QuantityButton
-              onPress={() =>
-                AddToCart({
-                  ProductId: item.products[0].id,
-                  Quantity: 1,
-                })
-              }
-            >
+            <QuantityButton onPress={() => handleAddItem(item.products[0])}>
               <QuantityText>+</QuantityText>
             </QuantityButton>
           </QuantityControl>
         </ItemDetails>
         <RemoveButton
           onPress={() =>
-            RemoveToCart({
-              CartItemId: item.cartItemId,
-              Quantity: item.products[0].quantityInCartItem,
-            })
+            handleRemoveItemAll(item, item.products[0].quantityInCartItem)
           }
         >
           <Ionicons name="trash-bin-outline" size={24} color="#e74c3c" />
@@ -234,8 +322,6 @@ export default observer(function CartScreen() {
     {}
   );
 
-  console.log("selectMyCart", selectMyCart);
-
   return !!user ? (
     <CartContainer>
       <Header>
@@ -243,14 +329,26 @@ export default observer(function CartScreen() {
         <HeaderTitle>ตะกร้าสินค้า</HeaderTitle>
       </Header>
 
-      <FlatList
-        data={Object.entries(groupedCartItems)} // [['Store A', [product1, product2]], ...]
-        keyExtractor={([storeName], index) => storeName + index}
-        contentContainerStyle={{ paddingBottom: 20 }}
-        renderItem={({ item: [storeName, products] }) => (
-          <RenderShop storeName={storeName} products={products} />
-        )}
-      />
+      {cartItemsStore.length ? (
+        <FlatList
+          data={Object.entries(groupedCartItems)} // [['Store A', [product1, product2]], ...]
+          keyExtractor={([storeName], index) => storeName + index}
+          contentContainerStyle={{ paddingBottom: 20 }}
+          renderItem={({ item: [storeName, products] }) => (
+            <RenderShop storeName={storeName} products={products} />
+          )}
+        />
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <TotalText>ไม่มีสินค้าในตะกร้า</TotalText>
+        </View>
+      )}
 
       <TotalContainer>
         <TotalRow>
@@ -269,8 +367,14 @@ export default observer(function CartScreen() {
             {!checkedItem ? 0 : formattedTotalPrice} ฿
           </TotalAmount>
         </TotalRow>
-        <CheckoutButton onPress={handleCartDetail}>
-          <CheckoutButtonText>ชำระเงิน</CheckoutButtonText>
+        <CheckoutButton
+          onPress={() =>
+            cartItemsStore.length ? handleCartDetail() : router.push("/")
+          }
+        >
+          <CheckoutButtonText>
+            {cartItemsStore.length ? "ชำระเงิน" : "ซื้อสินค้าเลย!"}
+          </CheckoutButtonText>
         </CheckoutButton>
       </TotalContainer>
     </CartContainer>

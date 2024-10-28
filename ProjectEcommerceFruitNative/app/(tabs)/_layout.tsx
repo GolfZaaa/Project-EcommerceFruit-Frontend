@@ -6,14 +6,15 @@ import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useStore } from "@/src/store/store";
-import { LogBox } from "react-native";
+import { LogBox, Text, View } from "react-native";
+import { observer } from "mobx-react-lite";
 LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
 
-export default function TabLayout() {
+export default observer(function TabLayout() {
   const { getToken } = useStore().commonStore;
   const { getSystemSetting } = useStore().systemSettingStore;
-  const { user } = useStore().userStore;
+  const { cartItemsStore } = useStore().cartStore;
   const colorScheme = useColorScheme();
   const router = useRouter();
 
@@ -38,11 +39,11 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        tabBarInactiveTintColor: "#888", 
+        tabBarInactiveTintColor: "#888",
         tabBarStyle: {
-          backgroundColor: '#f8f9fa',
+          backgroundColor: "#f8f9fa",
           paddingVertical: 10,
-          height: 70, 
+          height: 70,
           borderTopWidth: 3,
         },
         tabBarLabelStyle: {
@@ -112,14 +113,35 @@ export default function TabLayout() {
       <Tabs.Screen
         name="cart"
         options={{
-          title: "ตะกร้าสินค้า",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "cart" : "cart-outline"}
-              size={focused ? 28 : 24}
-              color={color}
-              style={{ transform: [{ scale: focused ? 1.2 : 1 }] }}
-            />
+            <View style={{ position: "relative" }}>
+              <Ionicons
+                name={focused ? "cart" : "cart-outline"}
+                size={focused ? 28 : 24}
+                color={color}
+                style={{ transform: [{ scale: focused ? 1.2 : 1 }] }}
+              />
+
+              {cartItemsStore.length > 0 && (
+                <View
+                  style={{
+                    position: "absolute",
+                    right: -6,
+                    top: -3,
+                    backgroundColor: "red",
+                    borderRadius: 8,
+                    width: 16,
+                    height: 16,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={{ color: "white", fontSize: 10 }}>
+                    {cartItemsStore.length}
+                  </Text>
+                </View>
+              )}
+            </View>
           ),
         }}
       />
@@ -139,4 +161,4 @@ export default function TabLayout() {
       />
     </Tabs>
   );
-};
+});

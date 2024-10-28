@@ -30,6 +30,8 @@ export default class CartStore {
   setMyCartItems = (state: any) => (this.myCartItems = state);
   setselectMyCart = (state: any) => (this.selectMyCart = state);
 
+  setSartItemsStore = (state: any) => (this.cartItemsStore = state);
+
   AddToCart = async ({ ProductId, Quantity }: AddProduct) => {
     this.setLoadingCart(true);
     const data = { quantity: Quantity, productId: ProductId };

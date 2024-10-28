@@ -23,7 +23,7 @@ export default class CommonStore {
     console.log("res result", result);
     if (result !== null) {
       const res = await store.userStore.getUserDetailbyId().catch(() => {
-        this.logout();
+        // this.logout();
       });
 
       console.log("res getUserDetailbyId", res);
@@ -106,6 +106,7 @@ export default class CommonStore {
     await AsyncStorage.removeItem("token");
     this.token = null;
     store.userStore.setUser(null);
+    store.cartStore.setSartItemsStore([]);
     router.push("/login");
   };
 }

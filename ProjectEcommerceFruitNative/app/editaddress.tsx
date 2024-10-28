@@ -1,9 +1,20 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from 'expo-router';
-import styled from 'styled-components/native';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { router, useNavigation } from "expo-router";
+import styled from "styled-components/native";
+import { LinearGradient } from "expo-linear-gradient";
+import mockAddress from "../assets/json/new_data.json";
+import SelectDropdown from "react-native-select-dropdown";
+import { useStore } from "@/src/store/store";
+import { Mytoast } from "@/components/MyToast";
 
 const Container: any = styled(LinearGradient).attrs({
   colors: ["#E8F0FF", "#F7F9FC"],
@@ -23,57 +34,82 @@ const Title: any = styled.Text`
   margin-bottom: 20px;
 `;
 
-const OrderCard: any = styled(TouchableOpacity)`
-  background-color: #fff;
-  border-radius: 15px;
-  padding: 20px;
-  margin-bottom: 15px;
-  shadow-color: #000;
-  shadow-opacity: 0.15;
-  shadow-radius: 10px;
-  elevation: 5;
-`;
-
-const OrderInfo: any = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const OrderTitle: any = styled.Text`
-  font-size: 18px;
-  font-weight: bold;
-  color: #333;
-`;
-
-const OrderDate: any = styled.Text`
-  font-size: 14px;
-  color: #666;
-`;
-
-const OrderAmount: any = styled.Text`
-  font-size: 16px;
-  font-weight: bold;
-  color: #007bff;
-`;
-
-const OrderStatus: any = styled.Text`
-  font-size: 14px;
-  color: ${(props: any) => (props.status === "completed" ? "#28a745" : "#dc3545")};
-`;
-
-
 export default function EditAddressScreen() {
-  const navigation = useNavigation();
-  const [address, setAddress] = useState('');
-  const [zipcode, setZipcode] = useState('');
-  const [subdistrict, setSubdistrict] = useState('');
-  const [district, setDistrict] = useState('');
-  const [province, setProvince] = useState('');
+  const { createUpdateAddress, getAddressByUserId } = useStore().addressStore;
 
-  const handleSave = () => {
-    console.log('Address saved:', { address, zipcode, subdistrict, district, province });
+  const navigation = useNavigation();
+  const [address, setAddress] = useState("");
+  const [postCode, setPostCode] = useState("");
+
+  const [data, setData]: any = useState([]);
+  const [dataSelect, setdataSelect]: any = useState([]);
+
+  const handleSave = async () => {
+    if (
+      address &&
+      postCode &&
+      dataSelect?.subDistrict &&
+      dataSelect?.district &&
+      dataSelect?.province
+    ) {
+      console.log("บันทึกได้ !!");
+
+      const dataAddress = {
+        id: 0,
+        subDistrict: dataSelect.subDistrict,
+        district: dataSelect.district,
+        province: dataSelect.province,
+        postCode: postCode,
+        detail: address,
+        isUsed_Store: false,
+        isUsed: true,
+        gps: "",
+      };
+
+      await createUpdateAddress(dataAddress).then((result) => {
+        console.log("dataAddress", dataAddress);
+        console.log("result", result);
+
+        if (!!result) {
+          Mytoast("เพิ่มที่อยู่สำเร็จ");
+          getAddressByUserId();
+
+          router.replace("/cartdetail");
+        }
+      });
+    } else {
+      alert("กรอกข้อมูลไม่ถูกต้อง หรือ ไม่ครบทุกช่อง");
+
+      console.log("Address saved:", {
+        address,
+        postCode,
+        subDistrict: dataSelect?.subDistrict,
+        district: dataSelect?.district,
+        province: dataSelect?.province,
+      });
+    }
   };
+
+  function searchByZipCode(zipCode: any) {
+    const results = [];
+    for (const [province, districts] of mockAddress) {
+      for (const [district, subDistricts] of districts) {
+        for (const [subDistrict, codes] of subDistricts) {
+          for (const code of codes) {
+            if (code === zipCode) {
+              results.push({ zipCode, province, district, subDistrict });
+            }
+          }
+        }
+      }
+    }
+
+    setData(results);
+  }
+
+  useEffect(() => {
+    searchByZipCode(Number(postCode));
+  }, [postCode]);
 
   return (
     <Container>
@@ -89,7 +125,7 @@ export default function EditAddressScreen() {
         <Ionicons name="arrow-back" size={30} color="#007bff" />
       </TouchableOpacity>
 
-      <Title>แก้ไขที่อยู่</Title>
+      <Title>เพิ่มที่อยู่</Title>
 
       <ScrollView contentContainerStyle={styles.formContainer}>
         <TextInput
@@ -98,30 +134,75 @@ export default function EditAddressScreen() {
           value={address}
           onChangeText={setAddress}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="รหัสไปรษณีย์"
-          value={zipcode}
-          onChangeText={setZipcode}
-          keyboardType="numeric"
-        />
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          <TextInput
+            style={[styles.input, data.length ? {} : { width: "100%" }]}
+            placeholder="รหัสไปรษณีย์"
+            value={postCode}
+            onChangeText={setPostCode}
+            keyboardType="numeric"
+          />
+
+          {data.length ? (
+            <SelectDropdown
+              data={data}
+              onSelect={(selectedItem, index) => {
+                // console.log(selectedItem, index);
+                setdataSelect(selectedItem);
+              }}
+              renderButton={(selectedItem, isOpened) => {
+                return (
+                  <View style={styles.dropdownButtonStyle}>
+                    <Text style={styles.dropdownButtonTxtStyle}>
+                      {(selectedItem && selectedItem.subDistrict) ||
+                        "เลือกที่อยู่"}
+                    </Text>
+                  </View>
+                );
+              }}
+              renderItem={(item, index, isSelected) => {
+                return (
+                  <View
+                    style={{
+                      ...styles.dropdownItemStyle,
+                      ...(isSelected && { backgroundColor: "#D2D9DF" }),
+                    }}
+                  >
+                    <Text style={styles.dropdownItemTxtStyle}>
+                      {item.subDistrict}
+                    </Text>
+                  </View>
+                );
+              }}
+              showsVerticalScrollIndicator={false}
+              dropdownStyle={styles.dropdownMenuStyle}
+            />
+          ) : (
+            <View></View>
+          )}
+        </View>
+
         <TextInput
           style={styles.input}
           placeholder="แขวง/ตำบล"
-          value={subdistrict}
-          onChangeText={setSubdistrict}
+          value={dataSelect ? dataSelect.subDistrict : ""}
+          // onChangeText={setSubDistrict}
         />
         <TextInput
           style={styles.input}
           placeholder="เขต/อำเภอ"
-          value={district}
-          onChangeText={setDistrict}
+          value={dataSelect ? dataSelect.district : ""}
+          // onChangeText={setDistrict}
         />
         <TextInput
           style={styles.input}
           placeholder="จังหวัด"
-          value={province}
-          onChangeText={setProvince}
+          value={dataSelect ? dataSelect.province : ""}
+          // onChangeText={setProvince}
         />
 
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
@@ -140,24 +221,73 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
-    borderColor: '#c0c0c0',
+    borderColor: "#c0c0c0",
     borderWidth: 1,
     borderRadius: 10,
     marginBottom: 15,
     paddingHorizontal: 15,
     fontSize: 16,
-    backgroundColor:'#fff'
+    backgroundColor: "#fff",
   },
   saveButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: "#007bff",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 20,
   },
   saveButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
+  },
+  dropdownButtonStyle: {
+    width: 180,
+    height: 50,
+    // backgroundColor: "#E9ECEF",
+    backgroundColor: "red",
+    borderRadius: 12,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    textAlign: "center",
+    marginLeft: 10,
+  },
+  dropdownButtonTxtStyle: {
+    flex: 1,
+    fontSize: 20,
+    fontWeight: "500",
+    // color: "#151E26",
+    color: "white",
+  },
+  dropdownButtonArrowStyle: {
+    fontSize: 28,
+  },
+  dropdownButtonIconStyle: {
+    fontSize: 28,
+    marginRight: 8,
+  },
+  dropdownMenuStyle: {
+    backgroundColor: "#E9ECEF",
+    borderRadius: 8,
+  },
+  dropdownItemStyle: {
+    width: "100%",
+    flexDirection: "row",
+    paddingHorizontal: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 8,
+  },
+  dropdownItemTxtStyle: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#151E26",
+  },
+  dropdownItemIconStyle: {
+    fontSize: 28,
+    marginRight: 8,
   },
 });

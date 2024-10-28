@@ -36,7 +36,9 @@ export default observer(function homeScreen() {
   } = useStore().productStore;
   const { user } = useStore().userStore;
   const { GetCartItemByUserOrderStore } = useStore().cartStore;
+
   const router = useRouter();
+
   const [numColumns, setNumColumns] = useState(2);
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -51,9 +53,11 @@ export default observer(function homeScreen() {
     },
     ...category,
   ];
+
   const handleProfile = async () => {
     router.push("/(tabs)/setting");
   };
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const slideAnim = useRef(new Animated.Value(-width)).current;
 
@@ -62,7 +66,7 @@ export default observer(function homeScreen() {
       Animated.timing(slideAnim, {
         toValue: -width,
         duration: 300,
-        useNativeDriver: true,  // Add this line
+        useNativeDriver: true, // Add this line
       }).start(() => setIsDrawerOpen(false));
     } else {
       Animated.timing(slideAnim, {
@@ -72,23 +76,21 @@ export default observer(function homeScreen() {
       }).start(() => setIsDrawerOpen(true));
     }
   };
-  
-
 
   const onSearchProduct = (text: string) => {
     const queryParams = new URLSearchParams({
       productName: text || "",
       categoryId: selectedCategory.toString(),
       sortPrice: sortPrice.toString(),
-
     });
     getFilterProduct(queryParams);
   };
 
-      // categoryId: selectedCategory.toString(),
+  // categoryId: selectedCategory.toString(),
   const onFilterProduct = () => {
     const queryParams = new URLSearchParams({
       productName: searchQuery || "",
+      categoryId: selectedCategory.toString(),
       sortPrice: sortPrice.toString(),
     });
     getFilterProduct(queryParams);
@@ -143,208 +145,216 @@ export default observer(function homeScreen() {
   };
 
   return (
-    <Container>
-      <View style={styles.navbar}>
-        <TouchableOpacity onPress={toggleDrawer}>
-          <Ionicons name="menu-outline" size={30} color="#333" />
-        </TouchableOpacity>
+    <ScrollView>
+      <Container>
+        <View style={styles.navbar}>
+          <TouchableOpacity onPress={toggleDrawer}>
+            <Ionicons name="menu-outline" size={30} color="#333" />
+          </TouchableOpacity>
 
-        <Text style={styles.textNavbar}>ข้อมูลสินค้า</Text>
-        <TouchableOpacity onPress={handleProfile}>
-          <Image
-            source={{
-              uri: "https://s359.kapook.com/r/600/auto/pagebuilder/9efc1817-eca5-4a83-9fee-8222ba8fcc55.jpg",
-            }}
-            style={styles.circleImage}
-          />
-        </TouchableOpacity>
-      </View>
+          <Text style={styles.textNavbar}>ข้อมูลสินค้า</Text>
 
-      {isDrawerOpen && (
-        <TouchableWithoutFeedback onPress={toggleDrawer}>
-          <View style={styles.overlay} />
-        </TouchableWithoutFeedback>
-      )}
-      
+          {!!user ? (
+            <TouchableOpacity onPress={handleProfile}>
+              <Image
+                source={{
+                  uri: "https://s359.kapook.com/r/600/auto/pagebuilder/9efc1817-eca5-4a83-9fee-8222ba8fcc55.jpg",
+                }}
+                style={styles.circleImage}
+              />
+            </TouchableOpacity>
+          ) : (
+            <View></View>
+          )}
+        </View>
 
-      <Animated.View
-        style={[styles.drawer, { transform: [{ translateX: slideAnim }] }]}
-      >
-        <Text style={styles.drawerTitle}>เมนูเพิ่มเติม</Text>
+        {isDrawerOpen && (
+          <TouchableWithoutFeedback onPress={toggleDrawer}>
+            <View style={styles.overlay} />
+          </TouchableWithoutFeedback>
+        )}
 
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name="cart-outline" size={30} color="#333" />
-          <Text style={styles.menuText}>แก้ไขร้านค้า</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name="people-outline" size={30} color="#333" />
-          <Text style={styles.menuText}>เพิ่มข้อมูลสินค้า (GI)</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name="people-outline" size={30} color="#333" />
-          <Text style={styles.menuText}>เพิ่มสินค้า</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name="people-outline" size={30} color="#333" />
-          <Text style={styles.menuText}>รายการคำสั่งซื้อ</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
-          <Text style={styles.closeButtonText}>ปิด</Text>
-        </TouchableOpacity>
-      </Animated.View>
-
-      <View>
-        <SearchContainer>
-        <Ionicons name="search-outline" size={20} color="#333" />
-        <SearchInput
-          placeholder="ค้นหาสินค้า"
-          value={searchQuery}
-          onChangeText={(text: string) => {
-            setSearchQuery(text);
-
-            onSearchProduct(text);
-          }}
-        />
-      </SearchContainer>
-
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={{
-          height: 60,
-        }}
-      >
-        {categories.map((category) => {
-          return (
-            <CategoryButton
-              key={category.id}
-              selected={selectedCategory === category.id}
-              onPress={() => onSelectCate(category.id)}
-            >
-              <CategoryButtonText selected={selectedCategory === category.id}>
-                {category.name}
-              </CategoryButtonText>
-            </CategoryButton>
-          );
-        })}
-      </ScrollView>
-
-      <Header>
-        <IconButton onPress={() => setFilterModalVisible(true)}>
-          <Ionicons name="filter-outline" size={24} color="#333" />
-        </IconButton>
-        <Text>{sortName}</Text>
-        <IconButton onPress={toggleColumns}>
-          <Ionicons
-            name={numColumns === 1 ? "grid-outline" : "list-outline"}
-            size={24}
-            color="#333"
-          />
-        </IconButton>
-      </Header>
-
-      <FlatList
-        data={product}
-        keyExtractor={(item) => item.productGI.name + item.id}
-        renderItem={({ item }) => renderProduct(item)}
-        numColumns={numColumns}
-        key={numColumns}
-        style={{
-          minHeight: 460,
-        }}
-      />
-
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={filterModalVisible}
-          onRequestClose={() => setFilterModalVisible(false)}
+        <Animated.View
+          style={[styles.drawer, { transform: [{ translateX: slideAnim }] }]}
         >
-          <View
+          <Text style={styles.drawerTitle}>เมนูเพิ่มเติม</Text>
+
+          <TouchableOpacity style={styles.menuItem}>
+            <Ionicons name="cart-outline" size={30} color="#333" />
+            <Text style={styles.menuText}>แก้ไขร้านค้า</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.menuItem}>
+            <Ionicons name="people-outline" size={30} color="#333" />
+            <Text style={styles.menuText}>เพิ่มข้อมูลสินค้า (GI)</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.menuItem}>
+            <Ionicons name="people-outline" size={30} color="#333" />
+            <Text style={styles.menuText}>เพิ่มสินค้า</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.menuItem}>
+            <Ionicons name="people-outline" size={30} color="#333" />
+            <Text style={styles.menuText}>รายการคำสั่งซื้อ</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
+            <Text style={styles.closeButtonText}>ปิด</Text>
+          </TouchableOpacity>
+        </Animated.View>
+
+        <View>
+          <SearchContainer>
+            <Ionicons name="search-outline" size={20} color="#333" />
+            <SearchInput
+              placeholder="ค้นหาสินค้า"
+              value={searchQuery}
+              onChangeText={(text: string) => {
+                setSearchQuery(text);
+
+                onSearchProduct(text);
+              }}
+            />
+          </SearchContainer>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
             style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              height: 40,
             }}
           >
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: "bold",
-                marginBottom: 20,
-                textAlign: "center",
-              }}
-            >
-              ฟิลเตอร์สินค้า
-            </Text>
-            <Text
-              style={{
-                fontSize: 15,
-                marginBottom: 20,
-              }}
-            >
-              ฟิลเตอร์สินค้า
-            </Text>
+            {categories.map((category) => {
+              return (
+                <CategoryButton
+                  key={category.id}
+                  selected={selectedCategory === category.id}
+                  onPress={() => onSelectCate(category.id)}
+                >
+                  <CategoryButtonText
+                    selected={selectedCategory === category.id}
+                  >
+                    {category.name}
+                  </CategoryButtonText>
+                </CategoryButton>
+              );
+            })}
+          </ScrollView>
+
+          <Header>
+            <IconButton onPress={() => setFilterModalVisible(true)}>
+              <Ionicons name="filter-outline" size={24} color="#333" />
+            </IconButton>
+            <Text>{sortName}</Text>
+            <IconButton onPress={toggleColumns}>
+              <Ionicons
+                name={numColumns === 1 ? "grid-outline" : "list-outline"}
+                size={24}
+                color="#333"
+              />
+            </IconButton>
+          </Header>
+
+          <FlatList
+            data={product}
+            keyExtractor={(item) => item.productGI.name + item.id}
+            renderItem={({ item }) => renderProduct(item)}
+            numColumns={numColumns}
+            key={numColumns}
+            // style={{
+            //   minHeight: 460,
+            // }}
+          />
+
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={filterModalVisible}
+            onRequestClose={() => setFilterModalVisible(false)}
+          >
             <View
               style={{
-                marginBottom: 10,
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
               }}
             >
-              <Button
-                title="เรียงจากน้อยไปมาก"
-                onPress={() => {
-                  setSortPrice(1);
-                  setFilterModalVisible(false);
-                  setSortName("เรียงจากน้อยไปมาก");
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  marginBottom: 20,
+                  textAlign: "center",
                 }}
-                color={"green"}
-              />
-            </View>
-            <View
-              style={{
-                marginBottom: 10,
-              }}
-            >
-              <Button
-                title="เรียงจากมากไปน้อย"
-                onPress={() => {
-                  setSortPrice(2);
-                  setFilterModalVisible(false);
-                  setSortName("เรียงจากมากไปน้อย");
+              >
+                ฟิลเตอร์สินค้า
+              </Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  marginBottom: 20,
                 }}
-              />
+              >
+                ฟิลเตอร์สินค้า
+              </Text>
+              <View
+                style={{
+                  marginBottom: 10,
+                }}
+              >
+                <Button
+                  title="เรียงจากน้อยไปมาก"
+                  onPress={() => {
+                    setSortPrice(1);
+                    setFilterModalVisible(false);
+                    setSortName("เรียงจากน้อยไปมาก");
+                  }}
+                  color={"green"}
+                />
+              </View>
+              <View
+                style={{
+                  marginBottom: 10,
+                }}
+              >
+                <Button
+                  title="เรียงจากมากไปน้อย"
+                  onPress={() => {
+                    setSortPrice(2);
+                    setFilterModalVisible(false);
+                    setSortName("เรียงจากมากไปน้อย");
+                  }}
+                />
+              </View>
+              <View
+                style={{
+                  marginBottom: 10,
+                }}
+              >
+                <Button
+                  title="ฟิลเตอร์ตามหมวดหมู่"
+                  onPress={() => alert("ฟิลเตอร์ตามหมวดหมู่")}
+                  color={"orange"}
+                />
+              </View>
+              <View
+                style={{
+                  marginBottom: 10,
+                }}
+              >
+                <Button
+                  title="ปิด"
+                  onPress={() => setFilterModalVisible(false)}
+                  color="red"
+                />
+              </View>
             </View>
-            <View
-              style={{
-                marginBottom: 10,
-              }}
-            >
-              <Button
-                title="ฟิลเตอร์ตามหมวดหมู่"
-                onPress={() => alert("ฟิลเตอร์ตามหมวดหมู่")}
-                color={"orange"}
-              />
-            </View>
-            <View
-              style={{
-                marginBottom: 10,
-              }}
-            >
-              <Button
-                title="ปิด"
-                onPress={() => setFilterModalVisible(false)}
-                color="red"
-              />
-            </View>
-          </View>
-        </Modal>
-      </View>
-    </Container>
+          </Modal>
+        </View>
+      </Container>
+    </ScrollView>
   );
 });
 

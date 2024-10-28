@@ -11,7 +11,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import styled from "styled-components/native";
-
+import { observer } from "mobx-react-lite";
+import { useStore } from "@/src/store/store";
 
 export const LoginButton: any = ({ children, onPress }: any) => (
   <TouchableOpacity onPress={onPress}>
@@ -23,7 +24,6 @@ export const LoginButton: any = ({ children, onPress }: any) => (
         padding: 15,
         borderRadius: 30,
         alignItems: "center",
-        marginTop: 30,
         elevation: 5,
         marginHorizontal: 20,
       }}
@@ -33,7 +33,27 @@ export const LoginButton: any = ({ children, onPress }: any) => (
   </TouchableOpacity>
 );
 
-export default function SettingScreen() {
+export const LogoutButton: any = ({ children, onPress }: any) => (
+  <TouchableOpacity onPress={onPress}>
+    <LinearGradient
+      colors={["#007bff", "#00d2ff"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={{
+        padding: 15,
+        borderRadius: 30,
+        alignItems: "center",
+        elevation: 5,
+      }}
+    >
+      {children}
+    </LinearGradient>
+  </TouchableOpacity>
+);
+
+export default observer(function SettingScreen() {
+  const { logout } = useStore().commonStore;
+  const { user } = useStore().userStore;
 
   const handlePress = (screenName: string) => {
     console.log("Navigating to:", screenName);
@@ -60,8 +80,8 @@ export default function SettingScreen() {
     router.push("/(tabs)/admin");
   };
 
-  return (
-    <View style={styles.container}>
+  return !!user ? (
+    <ScrollView style={styles.container}>
       <LinearGradient
         colors={["#6D5FFD", "#7A81FF"]}
         style={styles.headerContainer}
@@ -82,20 +102,14 @@ export default function SettingScreen() {
 
       <ScrollView contentContainerStyle={styles.menuContainer}>
         <View style={styles.menuRow}>
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={handleCart}
-          >
+          <TouchableOpacity style={styles.menuItem} onPress={handleCart}>
             <View style={styles.iconWrapper}>
               <Ionicons name="cart-outline" size={30} color="#5A67F2" />
             </View>
             <Text style={styles.menuItemText}>ตะกร้าสินค้า</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={handleEarn}
-          >
+          <TouchableOpacity style={styles.menuItem} onPress={handleEarn}>
             <View style={styles.iconWrapper}>
               <Ionicons name="car-outline" size={30} color="#5A67F2" />
             </View>
@@ -114,10 +128,7 @@ export default function SettingScreen() {
             <Text style={styles.menuItemText}>ประวัติคำสั่งซื้อ</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={handleAddress}
-          >
+          <TouchableOpacity style={styles.menuItem} onPress={handleAddress}>
             <View style={styles.iconWrapper}>
               <Ionicons name="location-outline" size={30} color="#5A67F2" />
             </View>
@@ -146,12 +157,28 @@ export default function SettingScreen() {
             <Text style={styles.menuItemText}>ผู้ดูแลระบบ</Text>
           </TouchableOpacity>
         </View>
+
+        <LogoutButton onPress={() => logout()}>
+          <SaveButtonText>ออกจากระบบ</SaveButtonText>
+        </LogoutButton>
       </ScrollView>
 
       <View style={styles.containercolor}></View>
+    </ScrollView>
+  ) : (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        backgroundColor: "white",
+      }}
+    >
+      <LoginButton onPress={() => router.push("/login")}>
+        <SaveButtonText>เข้าสู่ระบบ</SaveButtonText>
+      </LoginButton>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {

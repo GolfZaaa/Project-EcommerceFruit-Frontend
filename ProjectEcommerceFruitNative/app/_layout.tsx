@@ -46,8 +46,7 @@ export default function RootLayout() {
         <Stack.Screen name="listproductgi" />
         <Stack.Screen name="listproduct" />
         <Stack.Screen name="../(tabs)" />
-        <Stack.Screen name="+not-found" />
-        <Stack.Screen name="address-list" />
+        <Stack.Screen name="successscreen" />
       </Stack>
     </ThemeProvider>
   );

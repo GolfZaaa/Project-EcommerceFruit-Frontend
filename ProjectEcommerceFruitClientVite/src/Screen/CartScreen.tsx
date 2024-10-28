@@ -53,6 +53,7 @@ export default observer(function CartScreen() {
     GetCartItemByUser();
     GetCartItemByUserOrderStore();
     getAddressgotoOrderByUserId();
+    setselectMyCart([]);
   }, []);
 
   useEffect(() => {
