@@ -191,7 +191,7 @@ export default observer(function RegisterScreen() {
               >
                 {loadingUser ? (
                   <div>
-                    <CircularProgress color="inherit" />
+                    <CircularProgress color="inherit" size={32}/>
                   </div>
                 ) : (
                   <div>
