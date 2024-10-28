@@ -317,70 +317,76 @@ export default observer(function FirstScreenNew() {
       </div>
       {/* ข้อมูลหลัก End */}
 
+
+
       {/* สินค้าสุ่ม Start */}
       <div className="xl:mx-auto xl:container">
-        <div className="lg:px-20 md:px-6 px-4 md:py-12 py-8">
-          <div className="flex flex-col-reverse lg:flex-row items-center">
-            <motion.div
-              ref={ref}
-              className="w-full lg:w-1/2 md:py-9 py-6"
-              data-aos="fade-left"
-            >
-              <img
-                src={randomProduct && pathImages.product + randomProduct.images}
-                alt="product"
-                className="lg:w-96 h-96 object-cover object-center w-full transition-transform duration-500"
-              />
-            </motion.div>
-            <motion.div
-              ref={ref}
-              initial={{ opacity: 0, x: -50, scale: 0.95, rotate: -5 }}
-              animate={controls}
-              className="lg:w-1/2 lg:pl-12 lg:pr-24"
-            >
-              <p
-                className="text-sm leading-none text-gray-600 pb-2"
-                style={{ fontSize: fontSizesmall }}
-              >
-                {randomProduct && randomProduct.productGI.category.name}
-              </p>
-              <p
-                className="md:text-3xl lg:text-4xl text-2xl font-semibold lg:leading-9 text-gray-800 lg:pb-6 md:pb-4 pb-2"
-                style={{ fontSize: fontSizeBiglittle }}
-              >
-                {randomProduct && randomProduct.productGI.name}
-              </p>
-              <p
-                className="text-sm leading-5 text-gray-600 md:pb-10 pb-8"
-                style={{ fontSize: fontSizesmall }}
-              >
-                {randomProduct && randomProduct && (
-                  <MyDescription text={randomProduct.productGI.description} />
-                )}
-              </p>
-              <div
-                className="md:block flex items-center justify-center"
-                style={{ fontSize: fontSizesmall }}
-              >
-                <motion.button
-                  onClick={() => NavigateDetail(randomProduct)}
-                  className="lg:w-auto w-full border border-gray-800 hover:text-gray-50 hover:bg-gray-800 focus:outline-none lg:px-10 px-7 lg:py-4 py-3 text-sm leading-none text-gray-800"
-                  whileHover={{ scale: 1.1, rotate: 2 }}
-                  whileTap={{ scale: 0.95, rotate: -1 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                >
-                  <MyContent name="ดูรายละเอียดเพิ่มเติม" fontSize="small" />
-                </motion.button>
-              </div>
-            </motion.div>
-          </div>
+  <div className="lg:px-20 md:px-6 px-4 md:py-12 py-8">
+    <div className="flex flex-col xl:flex-row items-center">
+      <motion.div
+        ref={ref}
+        className="w-full xl:w-1/2 md:py-9 py-6"
+        data-aos="fade-left"
+      >
+        <img
+          src={randomProduct && pathImages.product + randomProduct.images}
+          alt="product"
+          className="w-full h-96 object-cover object-center transition-transform duration-500"
+        />
+      </motion.div>
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, x: -50, scale: 0.95, rotate: -5 }}
+        animate={controls}
+        className="w-full xl:w-1/2 xl:pl-12 xl:pr-24 mt-6 xl:mt-0 sm:pl-32 md:pl-28"
+      >
+        <p
+          className="text-sm leading-none text-gray-600 pb-2 xl:pl-16"
+          style={{ fontSize: fontSizesmall }}
+        >
+          {randomProduct && randomProduct.productGI.category.name}
+        </p>
+        <p
+          className="md:text-3xl xl:text-4xl text-2xl font-semibold xl:leading-9 text-gray-800 xl:pb-6 md:pb-4 pb-2 xl:pl-16"
+          style={{ fontSize: fontSizeBiglittle }}
+        >
+          {randomProduct && randomProduct.productGI.name}
+        </p>
+        <p
+          className="text-sm leading-5 text-gray-600 md:pb-10 pb-8 xl:pl-16"
+          style={{ fontSize: fontSizesmall }}
+        >
+          {randomProduct && randomProduct && (
+            <MyDescription text={randomProduct.productGI.description} />
+          )}
+        </p>
+        <div
+          className="md:block flex items-center justify-center xl:pl-16"
+          style={{ fontSize: fontSizesmall }}
+        >
+          <motion.button
+            onClick={() => NavigateDetail(randomProduct)}
+            className="lg:w-auto w-full border border-gray-800 hover:text-gray-50 hover:bg-gray-800 focus:outline-none lg:px-10 px-7 lg:py-4 py-3 text-sm leading-none text-gray-800"
+            whileHover={{ scale: 1.1, rotate: 2 }}
+            whileTap={{ scale: 0.95, rotate: -1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          >
+            <MyContent name="ดูรายละเอียดเพิ่มเติม" fontSize="small" />
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
+    </div>
+  </div>
+</div>
+
       {/* สินค้าสุ่ม End */}
 
+
+
       {/* สินค้าขายดี Start */}
-      <div className="2xl:mx-auto 2xl:container px-4 md:px-6 2xl:px-0 py-16 flex justify-center overflow-hidden">
+      <div className=" 2xl:container 2xl:mx-auto px-4 md:px-6 2xl:px-6 py-16 flex justify-center overflow-hidden">
         <div className="flex flex-col justify-center items-center">
+          
           <div className="flex justify-start items-start">
             <p
               data-aos="fade-up"
@@ -389,6 +395,7 @@ export default observer(function FirstScreenNew() {
               สินค้าที่โดดเด่น
             </p>
           </div>
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 justify-items-between mt-8 gap-y-8 lg:gap-y-0 gap-x-8">
             {topProducts.map((productItem, _) => {
               const userid = user?.id;
@@ -494,7 +501,6 @@ export default observer(function FirstScreenNew() {
       {/* Card Start */}
       <div className="2xl:container 2xl:mx-auto lg:px-20 md:py-12 md:px-6 py-9 px-4">
         <div className=" grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 lg:gap-8 gap-6 ">
-          {/* Safe Shopping Grid Card */}
           <div className=" p-6 bg-gray-50">
             <svg
               width="24"
@@ -834,6 +840,7 @@ export default observer(function FirstScreenNew() {
                 </div>
               </div>
             </div>
+            
             <div className="lg:w-1/2 lg:ml-8 ">
               <div className="lg:flex items-start mb-8">
                 <img
@@ -841,7 +848,7 @@ export default observer(function FirstScreenNew() {
                   data-aos-offset="300"
                   data-aos-easing="ease-in-sine"
                   src={News2}
-                  className="w-40"
+                  className="sm:w-4/4 md:w-4/4 lg:w-40"
                 />
                 <div className="lg:ml-6">
                   <h1
@@ -888,7 +895,7 @@ export default observer(function FirstScreenNew() {
                   data-aos-offset="300"
                   data-aos-easing="ease-in-sine"
                   src={News3}
-                  className="w-40"
+                  className="sm:w-4/4 md:w-4/4 lg:w-40"
                 />
                 <div
                   data-aos="fade-left"
@@ -923,7 +930,7 @@ export default observer(function FirstScreenNew() {
                   data-aos-offset="300"
                   data-aos-easing="ease-in-sine"
                   src={News4}
-                  className="w-40"
+                  className="sm:w-4/4 md:w-4/4 lg:w-40"
                 />
                 <div
                   data-aos="fade-left"
@@ -956,6 +963,7 @@ export default observer(function FirstScreenNew() {
                 </div>
               </div>
             </div>
+
           </div>
         </div>
         <div />
