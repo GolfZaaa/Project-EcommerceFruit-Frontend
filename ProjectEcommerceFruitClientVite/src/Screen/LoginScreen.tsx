@@ -8,6 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import "./css/register-style.css";
 import { resetScroll } from "../api/agent";
 import MyContent from "../component/MyContent";
+import LogoKru from "../image/krulogo.png"
 
 export default observer(function LoginScreen() {
   const navigate = useNavigate();
@@ -101,7 +102,7 @@ export default observer(function LoginScreen() {
               <div className="align-middle justify-center flex items-center">
                 <img
                   className="w-16 h-24"
-                  src="https://www.kru.ac.th/kru/assets/img/kru/logo/kru_color.png"
+                  src={LogoKru}
                 />
               </div>
               <h2 className="text-xl font-semibold text-gray-600 text-center">
