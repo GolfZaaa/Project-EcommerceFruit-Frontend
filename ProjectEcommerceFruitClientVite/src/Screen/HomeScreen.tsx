@@ -194,7 +194,7 @@ export default observer(function HomeScreen() {
                     </select>
                   </div>
 
-                  <div className="flex items-center space-x-4  sm:w-full md:ml-11 md:w-36">
+                  <div className="flex items-center space-x-4  sm:w-full md:ml-11 md:w-36 lg:w-60">
                   {/* <div className="flex items-center space-x-4 ml-11 sm:w-full sm:ml-11"> */}
                     <button
                       onClick={handleResetSort}
