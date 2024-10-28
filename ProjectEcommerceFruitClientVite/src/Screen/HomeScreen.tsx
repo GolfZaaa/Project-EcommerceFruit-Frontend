@@ -194,7 +194,8 @@ export default observer(function HomeScreen() {
                     </select>
                   </div>
 
-                  <div className="flex items-center space-x-4 ml-11">
+                  <div className="flex items-center space-x-4  sm:w-full md:ml-11 md:w-36">
+                  {/* <div className="flex items-center space-x-4 ml-11 sm:w-full sm:ml-11"> */}
                     <button
                       onClick={handleResetSort}
                       className="text-base rounded-md bg-green-600 py-2 px-4 border border-transparent text-center text-white transition-all shadow-md hover:shadow-lg active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:opacity-50 disabled:shadow-none ml-2"
