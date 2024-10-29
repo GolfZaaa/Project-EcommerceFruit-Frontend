@@ -21,8 +21,15 @@ interface props {
 
 const AddressTwoForCard = ({ Astore, ACustomer }: props) => {
   return (
-    <Grid container justifyContent="space-evenly">
-      <Grid alignContent="center" item>
+    <Grid container justifyContent="space-evenly" spacing={4}>
+      <Grid
+        item
+        xs={12}
+        md={4}
+        container
+        alignItems="center"
+        justifyContent="center"
+      >
         <div>
           <Typography fontSize={22}>
             ชื่อ-ที่อยู่ร้านค้า : {Astore?.address?.user?.fullName}
@@ -34,26 +41,39 @@ const AddressTwoForCard = ({ Astore, ACustomer }: props) => {
             บ้านเลขที่ {Astore?.address?.detail}
           </Typography>
           <Typography fontSize={22}>
-            แขวง/ตำบล
-            {Astore?.address?.subDistrict}
+            แขวง/ตำบล {Astore?.address?.subDistrict}
           </Typography>
           <Typography fontSize={22}>
-            เขต/อำเภอ
-            {Astore?.address?.district}
+            เขต/อำเภอ {Astore?.address?.district}
           </Typography>
           <Typography fontSize={22}>
-            จังหวัด
-            {Astore?.address?.province}
+            จังหวัด {Astore?.address?.province}
           </Typography>
           <Typography fontSize={22}>
             รหัสไปรษณีย์ {Astore?.address?.postCode}
           </Typography>
         </div>
       </Grid>
-      <Grid item>
+
+      <Grid
+        item
+        xs={12}
+        md={4}
+        container
+        alignItems="center"
+        justifyContent="center"
+      >
         <MyLottie lottieFile={lottiteDelivery} />
       </Grid>
-      <Grid alignContent="center">
+
+      <Grid
+        item
+        xs={12}
+        md={4}
+        container
+        alignItems="center"
+        justifyContent="center"
+      >
         <div>
           <Typography fontSize={22}>
             ชื่อ-ที่อยู่ลูกค้า : {ACustomer?.order?.address?.user?.fullName}
@@ -65,16 +85,13 @@ const AddressTwoForCard = ({ Astore, ACustomer }: props) => {
             บ้านเลขที่ {ACustomer?.order?.address?.detail}
           </Typography>
           <Typography fontSize={22}>
-            แขวง/ตำบล
-            {ACustomer?.order?.address?.subDistrict}
+            แขวง/ตำบล {ACustomer?.order?.address?.subDistrict}
           </Typography>
           <Typography fontSize={22}>
-            เขต/อำเภอ
-            {ACustomer?.order?.address?.district}
+            เขต/อำเภอ {ACustomer?.order?.address?.district}
           </Typography>
           <Typography fontSize={22}>
-            จังหวัด
-            {ACustomer?.order?.address?.province}
+            จังหวัด {ACustomer?.order?.address?.province}
           </Typography>
           <Typography fontSize={22}>
             รหัสไปรษณีย์ {ACustomer?.order?.address?.postCode}
