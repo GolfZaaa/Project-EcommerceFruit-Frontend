@@ -104,6 +104,8 @@ const AddressList = ({ confirmChangeAddress }: any) => {
 
   return !form ? (
     <>
+
+    
       <Grid
         container
         spacing={2}
@@ -111,7 +113,7 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           marginBottom: 15,
         }}
       >
-        <Grid item xs={10}></Grid>
+        <Grid item xs={9}></Grid>
 
         <Grid item xs={1}>
           {confirmChangeAddress !== undefined && (
@@ -126,124 +128,134 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           )}
         </Grid>
 
-        <Grid item xs={1}>
-          <Fab
-            variant="extended"
-            color="primary"
-            onClick={() => {
-              setDataEdit(null);
-              onChangeCU();
-              setAddress({
-                district: "",
-                amphoe: "",
-                province: "",
-                zipcode: "",
-                detail: "",
-              });
-            }}
-          >
-            <AddIcon sx={{ mr: 1 }} />
-            <MyContent name="เพิ่ม" fontSize="small" />
-          </Fab>
-        </Grid>
+        <Grid  item xs={12} sm={6} md={2} style={{ display: "flex", justifyContent: "flex-start" }}>
+  <Fab
+    variant="extended"
+    color="primary"
+    onClick={() => {
+      setDataEdit(null);
+      onChangeCU();
+      setAddress({
+        district: "",
+        amphoe: "",
+        province: "",
+        zipcode: "",
+        detail: "",
+      });
+    }}
+    sx={{
+      minWidth: '95%',
+      maxWidth: '250px',  // ปรับขนาดสูงสุดหากต้องการ
+      boxShadow: 3,
+      "&:hover": {
+        backgroundColor: 'primary.dark',
+      },
+      transition: 'all 0.3s ease-in-out',
+      ml: 1,
+    }}
+  >
+    <AddIcon sx={{ mr: 1 }} />
+    <MyContent name="เพิ่ม" fontSize="small" />
+  </Fab>
+</Grid>
+
+        
       </Grid>
+
 
       {myAddress?.length ? (
         myAddress?.map((item, i) => (
           <div key={i}>
-            <Card style={{ marginBottom: "20px" }} key={i}>
-              <Grid container spacing={2}>
-                <Grid item xs={4}>
-                  <CardContent>
-                    <MyContent name={item?.detail} fontSize="small" />
-                    <MyContent
-                      name={`แขวง/ตำบล ${item?.subDistrict}`}
-                      fontSize="small"
-                    />
-                    <MyContent
-                      name={`เขต/อำเภอ ${item?.district}`}
-                      fontSize="small"
-                    />
-                    <MyContent
-                      name={`จังหวัด ${item?.province}`}
-                      fontSize="small"
-                    />
-                    <MyContent
-                      name={`รหัสไปรษณีย์ ${item?.postCode}`}
-                      fontSize="small"
-                    />
-                  </CardContent>
-                </Grid>
-                <Grid
-                  item
-                  xs={3}
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <MyContent name="ตั้งเป็นที่อยู่ร้านค้า" fontSize="small" />
-                  <Switch
-                    checked={item.isUsed_Store}
-                    onClick={() => handleAddressUpdate(item.id, true)}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  xs={3}
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <MyContent name="ตั้งเป็นที่อยู่สั่งซื้อ" fontSize="small" />
-                  <Switch
-                    checked={item.isUsed}
-                    onClick={() => {
-                      handleAddressUpdate(item.id, false);
-                      getAddressgotoOrderByUserId();
 
-                      if (confirmChangeAddress !== undefined) {
-                        confirmChangeAddress();
-                      }
-                    }}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  xs={2}
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Fab
-                    style={{
-                      margin: 15,
-                    }}
-                    variant="extended"
-                    color="primary"
-                    onClick={() => {
-                      setAddress({
-                        district: item?.subDistrict,
-                        amphoe: item?.district,
-                        province: item?.province,
-                        zipcode: item?.postCode,
-                        detail: item?.detail,
-                      });
-                      setDataEdit(item);
-                      onChangeCU();
-                    }}
-                  >
-                    <EditIcon sx={{ mr: 1 }} />
-                    <MyContent name="แก้ไข" fontSize="small" />
-                  </Fab>
-                </Grid>
-              </Grid>
-            </Card>
+<Card style={{ marginBottom: "20px" }} key={i}>
+  <Grid container spacing={2} alignItems="center">
+    {/* ข้อมูลที่อยู่ */}
+    <Grid item xs={12} md={5}>
+      <CardContent>
+        <MyContent name={item?.detail} fontSize="small" />
+        <MyContent name={`แขวง/ตำบล ${item?.subDistrict}`} fontSize="small" />
+        <MyContent name={`เขต/อำเภอ ${item?.district}`} fontSize="small" />
+        <MyContent name={`จังหวัด ${item?.province}`} fontSize="small" />
+        <MyContent name={`รหัสไปรษณีย์ ${item?.postCode}`} fontSize="small" />
+      </CardContent>
+    </Grid>
+
+    {/* สวิตช์ที่อยู่ร้านค้า */}
+    <Grid item xs={12} sm={6} md={2} className="flex-center">
+      <div className="text-center">
+        <MyContent name="ตั้งเป็นที่อยู่ร้านค้า" fontSize="small" />
+        <Switch
+          checked={item.isUsed_Store}
+          onClick={() => handleAddressUpdate(item.id, true)}
+          color="primary"
+        />
+      </div>
+    </Grid>
+
+    {/* สวิตช์ที่อยู่สั่งซื้อ */}
+    <Grid item xs={12} sm={6} md={3} className="flex-center">
+      <div className="text-center">
+        <MyContent name="ตั้งเป็นที่อยู่สั่งซื้อ" fontSize="small" />
+        <Switch
+          checked={item.isUsed}
+          onClick={() => {
+            handleAddressUpdate(item.id, false);
+            getAddressgotoOrderByUserId();
+            if (confirmChangeAddress !== undefined) confirmChangeAddress();
+          }}
+          color="primary"
+        />
+      </div>
+    </Grid>
+
+    {/* ปุ่มแก้ไขที่อยู่ */}
+    <Grid 
+  item 
+  xs={12} 
+  sm={6} 
+  md={2} 
+  display="flex" 
+  justifyContent="center" 
+  alignItems="center"
+>
+  <Fab
+    variant="extended"
+    color="primary"
+    onClick={() => {
+      setAddress({
+        district: item?.subDistrict,
+        amphoe: item?.district,
+        province: item?.province,
+        zipcode: item?.postCode,
+        detail: item?.detail,
+      });
+      setDataEdit(item);
+      onChangeCU();
+    }}
+    sx={{
+      minWidth: { xs: '80%', sm: '60%', md: '80%' },
+      maxWidth: '200px',
+      boxShadow: 3,
+      "&:hover": {
+        backgroundColor: 'primary.dark',
+      },
+      transition: 'all 0.3s ease-in-out',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}
+  >
+    <EditIcon sx={{ mr: 1 }} />
+    <MyContent name="แก้ไข" fontSize="small" />
+  </Fab>
+</Grid>
+
+
+
+  </Grid>
+</Card>
+
+            
           </div>
         ))
       ) : (
