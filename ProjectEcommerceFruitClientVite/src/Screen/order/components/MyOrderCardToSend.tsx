@@ -355,6 +355,7 @@ const MyOrderCardToSend = ({ order, index }: props) => {
             {item?.address?.postCode}
           </p>
         </div>
+        
       </div>
     );
   })}
