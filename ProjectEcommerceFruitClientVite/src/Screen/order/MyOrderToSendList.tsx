@@ -912,16 +912,19 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="flex justify-between">
-              <div className="absolute -top-5 right-10 p-2 z-40">
-                <label htmlFor="yearSelect" className="mr-2 font-bold ">
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+              <div className="text-center sm:text-left font-semibold mb-2 sm:mb-0">
+                <MyContent name="รายได้สุทธิของแต่ละเดือน" fontSize="small" />
+              </div>
+              <div className="flex items-center">
+                <label htmlFor="yearSelect" className="mr-2 font-bold">
                   เลือกปี:
                 </label>
                 <select
                   id="yearSelect"
                   value={selectedYear}
                   onChange={handleYearChange}
-                  className="p-2 border border-gray-300 rounded-md shadow-sm mr-10"
+                  className="p-2 border border-gray-300 rounded-md shadow-sm"
                 >
                   {availableYears.map((year) => (
                     <option key={year} value={year}>
@@ -930,23 +933,30 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
                   ))}
                 </select>
               </div>
-              <div className="ml-16 font-semibold">
-                <MyContent name="รายได้สุทธิของแต่ละเดือน" fontSize="small" />
-              </div>
             </div>
 
-            <ReactECharts option={options} style={{ width: 1000 }} />
+            <div className="w-full sm:w-11/12 lg:w-10/12 mx-auto">
+              <ReactECharts
+                option={options}
+                style={{
+                  width: "100%",
+                  height: "300px",
+                  minHeight: "250px",
+                  maxHeight: "400px",
+                }}
+              />
+            </div>
 
-            <div className="flex mt-6">
-              <div className="w-9/12">
-                <div className="flex justify-between">
-                  <div className="p-1">
+            <div className="flex flex-col lg:flex-row gap-6 mt-6">
+              <div className="w-full lg:w-8/12">
+                <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+                  <div className="text-center sm:text-left font-semibold">
                     <MyContent
                       name="สัดส่วนจำนวนหิ้วของแต่ละสินค้า"
                       fontSize="small"
                     />
                   </div>
-                  <div className="-mt-1">
+                  <div className="flex items-center mt-2 sm:mt-0">
                     <label htmlFor="sorting" className="font-semibold mr-2">
                       สินค้า:
                     </label>
@@ -964,34 +974,42 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
                     </select>
                   </div>
                 </div>
-                <div>
-                  <ReactECharts
-                    option={{
-                      ...optionsBar,
-                      xAxis: {
-                        ...optionsBar.xAxis,
-                        data: sortedProducts,
+                <ReactECharts
+                  option={{
+                    ...optionsBar,
+                    xAxis: {
+                      ...optionsBar.xAxis,
+                      data: sortedProducts,
+                    },
+                    series: [
+                      {
+                        ...optionsBar.series[0],
+                        data: sortedQuantities,
                       },
-                      series: [
-                        {
-                          ...optionsBar.series[0],
-                          data: sortedQuantities,
-                        },
-                      ],
-                    }}
-                  />
-                </div>
+                    ],
+                  }}
+                  style={{
+                    width: "100%",
+                    height: "250px",
+                  }}
+                />
               </div>
 
-              <div className="w-5/12 ">
-                <p className="pl-11 ">
+              <div className="w-full lg:w-4/12 mt-6 lg:mt-0">
+                <div className="text-center lg:text-left font-semibold mb-4">
                   <MyContent
                     name="สัดส่วนจำนวนหิ้วตามหมวดหมู่สินค้า"
                     fontSize="small"
                   />
-                </p>
-                <div className="pt-7 pl-22">
-                  <ReactECharts option={optionsDonut} />
+                </div>
+                <div className="flex justify-center lg:justify-start">
+                  <ReactECharts
+                    option={optionsDonut}
+                    style={{
+                      width: "100%",
+                      height: "250px",
+                    }}
+                  />
                 </div>
               </div>
             </div>
