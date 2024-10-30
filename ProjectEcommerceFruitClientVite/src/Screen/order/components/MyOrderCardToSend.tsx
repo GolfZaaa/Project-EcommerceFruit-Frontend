@@ -170,296 +170,196 @@ const MyOrderCardToSend = ({ order, index }: props) => {
   };
 
   return (
-    <div ref={componentRef}>
-      <div className="flex justify-between">
-        <div>
-          <Typography variant="h5">
-            <MyContent name={`จำนวน ${order.length}`} fontSize="normal" />
-          </Typography>
-        </div>
+<div ref={componentRef} className="p-4">
+  <div className="flex flex-col md:flex-row justify-between items-center">
+    <Typography variant="h5">
+      <MyContent name={`จำนวน ${order.length}`} fontSize="normal" />
+    </Typography>
 
-        {order.length > 0 && (
-          <div>
-            <button
-              onClick={toggleDropdown}
-              className="p-2 bg-blue-500 text-white rounded-md"
-            >
-              <BiDownload />
-            </button>
-          </div>
-        )}
-      </div>
+    {order.length > 0 && (
+      <button
+        onClick={toggleDropdown}
+        className="p-2 bg-blue-500 text-white rounded-md mt-4 md:mt-0"
+      >
+        <BiDownload />
+      </button>
+    )}
+  </div>
 
-      {openDropdown && (
-        <div className="absolute right-12 -mt-1 bg-white border rounded shadow-md w-20">
-          <ul>
-            <li
-              className="p-2 hover:bg-gray-200 cursor-pointer flex items-center "
-              onClick={generatePDF}
-            >
-              <VscFilePdf className="mr-2" /> PDF
-            </li>
-            <li
-              className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
-              onClick={generateExcel}
-            >
-              <RiFileExcel2Line className="mr-2" /> Excel
-            </li>
-          </ul>
-        </div>
-      )}
-
-      {select.length ? (
-        <Grid
-          container
-          spacing={2}
-          style={{
-            marginTop: 15,
-            marginBottom: 35,
-          }}
+  {openDropdown && (
+    <div className="absolute right-4 mt-2 bg-white border rounded shadow-md w-28">
+      <ul>
+        <li
+          className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
+          onClick={generatePDF}
         >
-          <Grid item xs={7.6}>
-            <Typography variant="h5">
-              <MyContent
-                name={`จำนวนที่เลือก ${select.length}`}
-                fontSize="normal"
-              />
-            </Typography>
-          </Grid>
-          <Grid item xs={2.7}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
+          <VscFilePdf className="mr-2" /> PDF
+        </li>
+        <li
+          className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
+          onClick={generateExcel}
+        >
+          <RiFileExcel2Line className="mr-2" /> Excel
+        </li>
+      </ul>
+    </div>
+  )}
+
+  {select.length > 0 && (
+    <Grid container spacing={2} className="my-4">
+      <Grid item xs={12} sm={8}>
+        <Typography variant="h5">
+          <MyContent name={`จำนวนที่เลือก ${select.length}`} fontSize="normal" />
+        </Typography>
+      </Grid>
+      <Grid item xs={6} sm={3} className="flex justify-center items-center">
+        <input
+          type="checkbox"
+          className="mr-2 w-6 h-6"
+          checked={select.length === order.length}
+          onChange={() =>
+            select.length === order.length
+              ? setSelect([])
+              : setSelect(order.map((item) => item.id))
+          }
+        />
+        <Typography variant="h6">เลือกทั้งหมด</Typography>
+      </Grid>
+      <Grid item xs={6} sm={1} className="flex justify-center items-center">
+        <Fab variant="extended" color="primary" onClick={handleConfirm}>
+          <EditIcon sx={{ mr: 1 }} />
+          <MyContent name="ยืนยันการส่ง" fontSize="smaller" />
+        </Fab>
+      </Grid>
+    </Grid>
+  )}
+
+  {order.map((item, index) => {
+    const status = item?.shippings[0]?.shippingStatus;
+    const myDriver = item.shippings[0].driverHistories.find(
+      (x) => x.statusDriver === 3 && x.userId === user?.id
+    );
+    const myDriverFee = item.shippings[0].driverHistories.find(
+      (x) => x.userId === user?.id
+    );
+    const calculateTotalPrice = () =>
+      item?.orderItems?.reduce(
+        (total, item) => item.product.price * item.quantity + total,
+        0
+      );
+    const totalPrice = calculateTotalPrice();
+    const formattedTotalPrice = formatNumberWithCommas(totalPrice);
+
+    return (
+      <div
+        key={item.orderId}
+        className="mt-5 rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+      >
+        <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
+          <span className="text-lg font-semibold text-gray-900">
+            รหัสคำสั่งซื้อ : {item.orderId}
+          </span>
+          <span
+            className={`text-lg font-semibold text-${
+              status === 0
+                ? "yellow-500"
+                : status === 1
+                ? "green-500"
+                : status === 2
+                ? "red-500"
+                : "gray-500"
+            }`}
+          >
+            สถานะ :{" "}
+            {status === 0
+              ? "กำลังจัดส่ง"
+              : status === 1
+              ? "จัดส่งสำเร็จ"
+              : status === 2
+              ? "จัดส่งไม่สำเร็จ"
+              : "เพิ่มสถานะด้วย"}{" "}
+            {!!myDriver && "(ส่งต่อให้ผู้จัดส่งคนอื่นแล้ว)"}
+          </span>
+          <p className="text-base leading-4 text-gray-800">
+            <MyContent
+              name={`ได้รับค่าจัดส่ง : ${myDriverFee?.shippingFee} บาท`}
+              fontSize="small"
+            />
+          </p>
+          {index === 1 && !myDriver && (
+            <div className="flex items-center">
               <input
                 type="checkbox"
-                className="mr-2"
-                style={{
-                  width: 50,
-                  height: 50,
-                }}
-                checked={select.length === order.length}
-                onChange={() =>
-                  select.length === order.length
-                    ? setSelect([])
-                    : setSelect(order.map((item) => item.id))
-                }
+                className="mr-2 w-6 h-6"
+                checked={select.find((x) => x === item.id) !== undefined}
+                onChange={() => onSelect(item.id)}
               />
-              <Typography variant="h5" align="left">
-                เลือกทั้งหมด
-              </Typography>
+              <Typography variant="h6">เลือกสินค้า</Typography>
             </div>
-          </Grid>
-          <Grid item xs={1.7}>
-            <Fab variant="extended" color="primary" onClick={handleConfirm}>
-              <EditIcon sx={{ mr: 1 }} />
-              <MyContent name="ยืนยันการส่ง" fontSize="smaller" />
-            </Fab>
-          </Grid>
-        </Grid>
-      ) : (
-        <></>
-      )}
+          )}
+        </div>
 
-      {order.map((item) => {
-        const status = item?.shippings[0]?.shippingStatus;
+        {item.orderItems.map((orderItem) => {
+          const TotalPriceForProduct =
+            orderItem.product.price * orderItem.quantity;
+          const formatTotalPriceForProduct =
+            formatNumberWithCommas(TotalPriceForProduct);
 
-        const myDriver = item.shippings[0].driverHistories.find(
-          (x) => x.statusDriver === 3 && x.userId === user?.id
-        );
-
-        const myDriverFee = item.shippings[0].driverHistories.find(
-          (x) => x.userId === user?.id
-        );
-
-        const calculateTotalPrice = () => {
-          return item?.orderItems?.reduce((total, item: OrderItem) => {
-            total = item.product.price * item.quantity + total;
-
-            return total;
-          }, 0);
-        };
-
-        const totalPrice: any = calculateTotalPrice();
-        const formattedTotalPrice = formatNumberWithCommas(totalPrice);
-
-        return (
-          <div className="mt-5 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6">
-            <div className="space-y-4">
-              <div className="md:flex md:justify-between">
-                <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
-                  รหัสคำสั่งซื้อ : {item.orderId}
-                </span>
-                <span
-                  className={
-                    "text-lg font-semibold text-gray-900 text-" +
-                    (status === 0
-                      ? "yellow-500"
-                      : status === 1
-                      ? "green-500"
-                      : status === 2
-                      ? "red-500"
-                      : "gray-500")
-                  }
-                  // className="text-lg font-semibold text-gray-900 dark:text-red-500"
-                >
-                  สถานะ :{" "}
-                  {status === 0
-                    ? "กำลังจัดส่ง"
-                    : status === 1
-                    ? "จัดส่งสำเร็จ"
-                    : status === 2
-                    ? "จัดส่งไม่สำเร็จ"
-                    : "เพิ่มสถานะด้วย"}{" "}
-                  {!!myDriver && "(" + "ส่งต่อให้ผู้จัดส่งคนอื่นแล้ว" + ")"}
-                </span>
-
-                <div className="flex justify-between items-center mb-3">
-                  <p className="text-base leading-4 text-gray-800">
-                    {/* ได้รับค่าจัดส่ง : {item?.shippings[0]?.shippingFee} บาท */}
-                    <MyContent
-                      name={`ได้รับค่าจัดส่ง : ${myDriverFee?.shippingFee} บาท`}
-                      fontSize="small"
-                    />
-                  </p>
-                </div>
-
-                {index === 1 && !myDriver && (
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      className="mr-2"
-                      style={{
-                        width: 50,
-                        height: 50,
-                      }}
-                      checked={select.find((x) => x === item.id) !== undefined}
-                      onChange={() => onSelect(item.id)}
-                    />
-                    <Typography variant="h5" align="left">
-                      เลือกสินค้า
-                    </Typography>
-                  </div>
-                )}
+          return (
+            <div
+              key={orderItem.product.id}
+              className="mt-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm flex flex-col md:flex-row justify-between items-center"
+            >
+              <a
+                onClick={() => {
+                  navigate(RoutePath.productDetail(String(orderItem.product.id)));
+                  resetScroll();
+                }}
+                className="cursor-pointer"
+              >
+                <img
+                  className="h-20 w-20 object-cover"
+                  src={pathImages.product + orderItem.product.images}
+                  alt={orderItem.product.images || "product image"}
+                />
+              </a>
+              <p className="text-sm font-bold text-gray-500 mt-2 md:mt-0">
+                {orderItem.product.productGI.category.name}
+              </p>
+              <a
+                className="text-base font-medium text-gray-900 hover:underline mt-1 md:mt-0"
+              >
+                {orderItem.product.productGI.name}
+              </a>
+              <div className="text-center md:w-20 font-semibold text-gray-900">
+                {orderItem.quantity}
               </div>
-
-              {item.orderItems.map((item: OrderItem) => {
-                const TotalPriceForProduct = item.product.price * item.quantity;
-                const formatTotalPriceForProduct =
-                  formatNumberWithCommas(TotalPriceForProduct);
-
-                return (
-                  <div
-                    key={item.product.id}
-                    className="rounded-lg border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-white"
-                  >
-                    <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
-                      <a
-                        onClick={() => {
-                          navigate(
-                            RoutePath.productDetail(String(item.product.id))
-                          );
-                          resetScroll();
-                        }}
-                        style={{
-                          cursor: "pointer",
-                        }}
-                        className="shrink-0 md:order-1"
-                      >
-                        <img
-                          className="hidden h-20 w-20 dark:block"
-                          src={pathImages.product + item.product.images}
-                          alt={item.product.images || "product image"}
-                        />
-                      </a>
-                      <label className="sr-only">Choose quantity:</label>
-                      <div className="flex items-center justify-between md:order-3 md:justify-end">
-                        <div className="flex items-center">
-                          <p className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-gray-800">
-                            {item.quantity}
-                          </p>
-                        </div>
-                        <div className="text-end md:order-4 md:w-32">
-                          <p className="text-base font-bold text-gray-900 dark:text-gray-900">
-                            {formatTotalPriceForProduct} บาท
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
-                        <p className="text-sm text-gray-500 font-bold">
-                          {item.product.productGI.category.name}
-                        </p>
-                        <a
-                          href="#"
-                          className="text-base font-medium text-gray-900 hover:underline dark:text-gray-800"
-                        >
-                          {item.product.productGI.name}
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <TotalPrice
-              formattedTotalPrice={parseFloat(formattedTotalPrice)}
-              ShippingFee={item?.shippings[0]?.shippingFee}
-            />
-
-            <div className="flex-1">
-              <p className="text-xl leading-4 text-gray-800 font-medium">
-                ชื่อ-ที่อยู่ลูกค้า : {item?.address?.user?.fullName} เบอร์ :{" "}
-                {item?.address?.user?.phoneNumber} บ้านเลขที่{" "}
-                {item?.address?.detail} แขวง/ตำบล
-                {item?.address?.subDistrict} เขต/อำเภอ
-                {item?.address?.district}
-                <br />
-                <div className="mt-4">
-                  จังหวัด
-                  {item?.address?.province} รหัสไปรษณีย์{" "}
-                  {item?.address?.postCode}
-                </div>
+              <p className="text-base font-bold text-gray-900">
+                {formatTotalPriceForProduct} บาท
               </p>
             </div>
-            {/* <div className="rounded-sm flex flex-col px-4 xl:p-6 w-full bg-white">
-              <div className="flex justify-between items-center w-full mb-3">
-                <p className="text-base leading-4 text-gray-800">ราคารวม</p>
-                <p className="text-base leading-4 text-gray-600">
-                  {formattedTotalPrice} บาท
-                </p>
-              </div>
-              <div className="flex justify-between items-center w-full mb-3">
-                <p className="text-base leading-4 text-gray-800">ค่าจัดส่ง</p>
-                <p className="text-base leading-4 text-gray-600">
-                  {item?.shippings[0]?.shippingFee} บาท
-                </p>
-              </div>
-              <div className="flex justify-between items-center w-full">
-                <p className="text-base font-semibold leading-4 text-gray-800">
-                  ราคารวมทั้งหมด
-                </p>
-                <p className="text-base font-semibold leading-4 text-gray-600">
-                  {parseFloat(formattedTotalPrice) +
-                    item?.shippings[0]?.shippingFee}{" "}
-                  บาท
-                </p>
-              </div>
-            </div> */}
-          </div>
-        );
-      })}
-    </div>
+          );
+        })}
+
+        <TotalPrice
+          formattedTotalPrice={parseFloat(formattedTotalPrice)}
+          ShippingFee={item?.shippings[0]?.shippingFee}
+        />
+
+        <div className="mt-4">
+          <p className="text-lg font-medium text-gray-800">
+            ชื่อ-ที่อยู่ลูกค้า : {item?.address?.user?.fullName} เบอร์ :{" "}
+            {item?.address?.user?.phoneNumber} บ้านเลขที่ {item?.address?.detail}
+            แขวง/ตำบล {item?.address?.subDistrict} เขต/อำเภอ{" "}
+            {item?.address?.district}  จังหวัด {item?.address?.province} รหัสไปรษณีย์{" "}
+            {item?.address?.postCode}
+          </p>
+        </div>
+      </div>
+    );
+  })}
+</div>
+
   );
 };
 
