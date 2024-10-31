@@ -9,6 +9,8 @@ import {
   ListItemText,
   Toolbar,
   Collapse,
+  IconButton,
+  Drawer,
 } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -17,7 +19,7 @@ import DirectionsBikeIcon from "@mui/icons-material/DirectionsBike";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import ProductGIList from "../Shopping/GI/ProductGIList";
 import { RoutePath } from "../../constants/RoutePath";
 import AddressList from "../address/AddressList";
@@ -29,6 +31,7 @@ import SearchOrderToSendList from "../order/SearchOrderToSendList";
 import EmailIcon from "@mui/icons-material/Email";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import MyContent from "../../component/MyContent";
+import MenuIcon from "@mui/icons-material/Menu";
 
 const drawerWidth = 240;
 
@@ -38,6 +41,17 @@ const MyAccountScreen = () => {
     useStore().orderStore;
 
   const [screenComponent, setScreenComponent] = useState("my-dashboard");
+
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const handleDrawerClose = () => {
+    setMobileOpen(false);
+  };
+
 
   useEffect(() => {
     getAddressByUserId();
@@ -68,7 +82,7 @@ const MyAccountScreen = () => {
           style={{
             cursor: "pointer",
           }}
-          onClick={() => setScreenComponent("my-dashboard")}
+          onClick={() => {setScreenComponent("my-dashboard"); handleDrawerClose();}}
         >
           <ListItemIcon>
             <PeopleIcon />
@@ -82,7 +96,7 @@ const MyAccountScreen = () => {
           style={{
             cursor: "pointer",
           }}
-          onClick={() => setScreenComponent("my-account")}
+          onClick={() => {setScreenComponent("my-account"); handleDrawerClose();}}
         >
           <ListItemIcon>
             <DashboardIcon />
@@ -102,7 +116,7 @@ const MyAccountScreen = () => {
           style={{
             cursor: "pointer",
           }}
-          onClick={() => setScreenComponent("addressList")}
+          onClick={() => {setScreenComponent("addressList");handleDrawerClose();}}
         >
           <ListItemIcon>
             <ShoppingCartIcon />
@@ -118,6 +132,7 @@ const MyAccountScreen = () => {
           onClick={() => {
             setScreenComponent("orderList");
             getOrdersByUser();
+            handleDrawerClose();
           }}
         >
           <ListItemIcon>
@@ -135,6 +150,7 @@ const MyAccountScreen = () => {
           onClick={() => {
             setScreenComponent("orderToSendList");
             getMyOrderToSend();
+            handleDrawerClose();
           }}
         >
           <ListItemIcon>
@@ -152,6 +168,7 @@ const MyAccountScreen = () => {
           onClick={() => {
             setScreenComponent("searchorderToSendList");
             setOrder([]);
+            handleDrawerClose();
           }}
         >
           <ListItemIcon>
@@ -170,26 +187,48 @@ const MyAccountScreen = () => {
 
   return (
     <Box sx={{ display: "flex" }}>
+      <AppBar position="fixed" sx={{ display: { sm: "none" } }}>
+        <Toolbar sx={{ minHeight: 80, justifyContent: "space-between" }}>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+          >
+            <MenuIcon />
+          </IconButton>
+
+          <NavLink
+            to={RoutePath.homeScreen}
+            style={{ textDecoration: "none", color: "#fff" }}
+          >
+            <MyContent name="กลับหน้าหลัก" fontSize="normal" />
+          </NavLink>
+        </Toolbar>
+      </AppBar>
+
       <Box
         component="nav"
         sx={{
-          width: { sm: drawerWidth + 8 },
+          width: { sm: drawerWidth },
           flexShrink: { sm: 0 },
+          position: "relative",
         }}
-        aria-label="mailbox folders"
       >
-        {/* <Drawer
+        <Drawer
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: "block", sm: "none" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
+              position: "fixed",
+              bottom: 12,
             },
           }}
         >
@@ -201,21 +240,24 @@ const MyAccountScreen = () => {
             display: { xs: "none", sm: "block" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
-              width: drawerWidth,
+              position: "fixed",
+              bottom: 12,
+              top: 82,
             },
           }}
           open
         >
           {drawer}
-        </Drawer> */}
-        {drawer}
+        </Drawer>
       </Box>
+
       <Box
         component="main"
         sx={{
           flexGrow: 1,
           p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
+          marginBottom: { xs: 8, sm: 0 },
         }}
       >
         <Toolbar />
