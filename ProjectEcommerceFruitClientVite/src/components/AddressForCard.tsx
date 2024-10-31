@@ -12,48 +12,49 @@ interface props {
 
 const AddressForCard = ({ ACustomer }: props) => {
   return (
-    <div>
-      <Grid alignContent="center" item xs={4}>
-        <Typography fontSize={22}>
-          ชื่อ-ที่อยู่ลูกค้า : {ACustomer?.user?.fullName}
+<div>
+  <Grid container spacing={2} className="p-4">
+    <Grid item xs={12}>
+      <Typography variant="h6" fontSize={{ xs: 18, sm: 20, md: 22 }} fontWeight="bold">
+        ชื่อ-ที่อยู่ลูกค้า : {ACustomer?.user?.fullName}
+      </Typography>
+    </Grid>
+
+    <Grid container item xs={12} spacing={2} className="mt-4">
+      <Grid item xs={12} sm={6} md={4}>
+        <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+          เบอร์ : {ACustomer?.user?.phoneNumber}
         </Typography>
       </Grid>
-      <Grid container justifyContent="space-evenly">
-        <Grid alignContent="center" item xs={4}>
-          <Typography fontSize={20}>
-            เบอร์ : {ACustomer?.user?.phoneNumber}
-          </Typography>
-        </Grid>
-        <Grid alignContent="center" item xs={4}>
-          <Typography fontSize={20}>
-            บ้านเลขที่ {ACustomer?.address?.detail}
-          </Typography>
-        </Grid>
-        <Grid alignContent="center" item xs={4}>
-          <Typography fontSize={20}>
-            แขวง/ตำบล
-            {ACustomer?.address?.subDistrict}
-          </Typography>
-        </Grid>
-        <Grid alignContent="center" item xs={4}>
-          <Typography fontSize={20}>
-            เขต/อำเภอ
-            {ACustomer?.address?.district}
-          </Typography>
-        </Grid>
-        <Grid alignContent="center" item xs={4}>
-          <Typography fontSize={20}>
-            จังหวัด
-            {ACustomer?.address?.province}
-          </Typography>
-        </Grid>
-        <Grid alignContent="center" item xs={4}>
-          <Typography fontSize={20}>
-            รหัสไปรษณีย์ {ACustomer?.address?.postCode}
-          </Typography>
-        </Grid>
+      <Grid item xs={12} sm={6} md={4}>
+        <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+          บ้านเลขที่ {ACustomer?.address?.detail}
+        </Typography>
       </Grid>
-    </div>
+      <Grid item xs={12} sm={6} md={4}>
+        <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+          แขวง/ตำบล {ACustomer?.address?.subDistrict}
+        </Typography>
+      </Grid>
+      <Grid item xs={12} sm={6} md={4}>
+        <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+          เขต/อำเภอ {ACustomer?.address?.district}
+        </Typography>
+      </Grid>
+      <Grid item xs={12} sm={6} md={4}>
+        <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+          จังหวัด {ACustomer?.address?.province}
+        </Typography>
+      </Grid>
+      <Grid item xs={12} sm={6} md={4}>
+        <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+          รหัสไปรษณีย์ {ACustomer?.address?.postCode}
+        </Typography>
+      </Grid>
+    </Grid>
+  </Grid>
+</div>
+
   );
 };
 
