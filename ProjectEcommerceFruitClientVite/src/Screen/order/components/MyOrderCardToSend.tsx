@@ -170,197 +170,243 @@ const MyOrderCardToSend = ({ order, index }: props) => {
   };
 
   return (
-<div ref={componentRef} className="p-4">
-  <div className="flex flex-col md:flex-row justify-between items-center">
-    <Typography variant="h5">
-      <MyContent name={`จำนวน ${order.length}`} fontSize="normal" />
-    </Typography>
-
-    {order.length > 0 && (
-      <button
-        onClick={toggleDropdown}
-        className="p-2 bg-blue-500 text-white rounded-md mt-4 md:mt-0"
-      >
-        <BiDownload />
-      </button>
-    )}
-  </div>
-
-  {openDropdown && (
-    <div className="absolute right-4 mt-2 bg-white border rounded shadow-md w-28">
-      <ul>
-        <li
-          className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
-          onClick={generatePDF}
-        >
-          <VscFilePdf className="mr-2" /> PDF
-        </li>
-        <li
-          className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
-          onClick={generateExcel}
-        >
-          <RiFileExcel2Line className="mr-2" /> Excel
-        </li>
-      </ul>
-    </div>
-  )}
-
-  {select.length > 0 && (
-    <Grid container spacing={2} className="my-4">
-      <Grid item xs={12} sm={8}>
+    <div ref={componentRef} className="p-4">
+      <div className="flex flex-col md:flex-row justify-between items-center">
         <Typography variant="h5">
-          <MyContent name={`จำนวนที่เลือก ${select.length}`} fontSize="normal" />
+          <MyContent name={`จำนวน ${order.length}`} fontSize="normal" />
         </Typography>
-      </Grid>
-      <Grid item xs={6} sm={3} className="flex justify-center items-center">
-        <input
-          type="checkbox"
-          className="mr-2 w-6 h-6"
-          checked={select.length === order.length}
-          onChange={() =>
-            select.length === order.length
-              ? setSelect([])
-              : setSelect(order.map((item) => item.id))
-          }
-        />
-        <Typography variant="h6">เลือกทั้งหมด</Typography>
-      </Grid>
-      <Grid item xs={6} sm={1} className="flex justify-center items-center">
-        <Fab variant="extended" color="primary" onClick={handleConfirm}>
-          <EditIcon sx={{ mr: 1 }} />
-          <MyContent name="ยืนยันการส่ง" fontSize="smaller" />
-        </Fab>
-      </Grid>
-    </Grid>
-  )}
 
-  {order.map((item, index) => {
-    const status = item?.shippings[0]?.shippingStatus;
-    const myDriver = item.shippings[0].driverHistories.find(
-      (x) => x.statusDriver === 3 && x.userId === user?.id
-    );
-    const myDriverFee = item.shippings[0].driverHistories.find(
-      (x) => x.userId === user?.id
-    );
-    const calculateTotalPrice = () =>
-      item?.orderItems?.reduce(
-        (total, item) => item.product.price * item.quantity + total,
-        0
-      );
-    const totalPrice = calculateTotalPrice();
-    const formattedTotalPrice = formatNumberWithCommas(totalPrice);
-
-    return (
-      <div
-        key={item.orderId}
-        className="mt-5 rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
-      >
-        <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
-          <span className="text-lg font-semibold text-gray-900">
-            รหัสคำสั่งซื้อ : {item.orderId}
-          </span>
-          <span
-            className={`text-lg font-semibold text-${
-              status === 0
-                ? "yellow-500"
-                : status === 1
-                ? "green-500"
-                : status === 2
-                ? "red-500"
-                : "gray-500"
-            }`}
+        {order.length > 0 && (
+          <button
+            onClick={toggleDropdown}
+            className="p-2 bg-blue-500 text-white rounded-md mt-4 md:mt-0"
           >
-            สถานะ :{" "}
-            {status === 0
-              ? "กำลังจัดส่ง"
-              : status === 1
-              ? "จัดส่งสำเร็จ"
-              : status === 2
-              ? "จัดส่งไม่สำเร็จ"
-              : "เพิ่มสถานะด้วย"}{" "}
-            {!!myDriver && "(ส่งต่อให้ผู้จัดส่งคนอื่นแล้ว)"}
-          </span>
-          <p className="text-base leading-4 text-gray-800">
-            <MyContent
-              name={`ได้รับค่าจัดส่ง : ${myDriverFee?.shippingFee} บาท`}
-              fontSize="small"
-            />
-          </p>
-          {index === 1 && !myDriver && (
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                className="mr-2 w-6 h-6"
-                checked={select.find((x) => x === item.id) !== undefined}
-                onChange={() => onSelect(item.id)}
-              />
-              <Typography variant="h6">เลือกสินค้า</Typography>
-            </div>
-          )}
-        </div>
+            <BiDownload />
+          </button>
+        )}
+      </div>
 
-        {item.orderItems.map((orderItem) => {
-          const TotalPriceForProduct =
-            orderItem.product.price * orderItem.quantity;
-          const formatTotalPriceForProduct =
-            formatNumberWithCommas(TotalPriceForProduct);
-
-          return (
-            <div
-              key={orderItem.product.id}
-              className="mt-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm flex flex-col md:flex-row justify-between items-center"
+      {openDropdown && (
+        <div className="absolute right-4 mt-2 bg-white border rounded shadow-md w-28">
+          <ul>
+            <li
+              className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
+              onClick={generatePDF}
             >
-              <a
-                onClick={() => {
-                  navigate(RoutePath.productDetail(String(orderItem.product.id)));
-                  resetScroll();
-                }}
-                className="cursor-pointer"
-              >
-                <img
-                  className="h-20 w-20 object-cover"
-                  src={pathImages.product + orderItem.product.images}
-                  alt={orderItem.product.images || "product image"}
-                />
-              </a>
-              <p className="text-sm font-bold text-gray-500 mt-2 md:mt-0">
-                {orderItem.product.productGI.category.name}
-              </p>
-              <a
-                className="text-base font-medium text-gray-900 hover:underline mt-1 md:mt-0"
-              >
-                {orderItem.product.productGI.name}
-              </a>
-              <div className="text-center md:w-20 font-semibold text-gray-900">
-                {orderItem.quantity}
-              </div>
-              <p className="text-base font-bold text-gray-900">
-                {formatTotalPriceForProduct} บาท
-              </p>
-            </div>
+              <VscFilePdf className="mr-2" /> PDF
+            </li>
+            <li
+              className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
+              onClick={generateExcel}
+            >
+              <RiFileExcel2Line className="mr-2" /> Excel
+            </li>
+          </ul>
+        </div>
+      )}
+
+      {select.length > 0 && (
+        <Grid container spacing={2} className="my-4">
+          <Grid item xs={12} sm={8}>
+            <Typography variant="h5">
+              <MyContent
+                name={`จำนวนที่เลือก ${select.length}`}
+                fontSize="normal"
+              />
+            </Typography>
+          </Grid>
+          <Grid item xs={6} sm={3} className="flex justify-center items-center">
+            <input
+              type="checkbox"
+              className="mr-2 w-6 h-6"
+              checked={select.length === order.length}
+              onChange={() =>
+                select.length === order.length
+                  ? setSelect([])
+                  : setSelect(order.map((item) => item.id))
+              }
+            />
+            <Typography variant="h6">เลือกทั้งหมด</Typography>
+          </Grid>
+          <Grid item xs={6} sm={1} className="flex justify-center items-center">
+            <Fab variant="extended" color="primary" onClick={handleConfirm}>
+              <EditIcon sx={{ mr: 1 }} />
+              <MyContent name="ยืนยันการส่ง" fontSize="smaller" />
+            </Fab>
+          </Grid>
+        </Grid>
+      )}
+
+      {order.map((item, index) => {
+        const status = item?.shippings[0]?.shippingStatus;
+        const myDriver = item.shippings[0].driverHistories.find(
+          (x) => x.statusDriver === 3 && x.userId === user?.id
+        );
+        const myDriverFee = item.shippings[0].driverHistories.find(
+          (x) => x.userId === user?.id
+        );
+        const calculateTotalPrice = () =>
+          item?.orderItems?.reduce(
+            (total, item) => item.product.price * item.quantity + total,
+            0
           );
-        })}
+        const totalPrice = calculateTotalPrice();
+        const formattedTotalPrice = formatNumberWithCommas(totalPrice);
 
-        <TotalPrice
-          formattedTotalPrice={parseFloat(formattedTotalPrice)}
-          ShippingFee={item?.shippings[0]?.shippingFee}
-        />
+        return (
+          <div
+            key={item.orderId}
+            className="mt-5 rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+          >
+            <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
+              <span className="text-lg font-semibold text-gray-900">
+                รหัสคำสั่งซื้อ : {item.orderId}
+              </span>
+              <span
+                className={`text-lg font-semibold text-${
+                  status === 0
+                    ? "yellow-500"
+                    : status === 1
+                    ? "green-500"
+                    : status === 2
+                    ? "red-500"
+                    : "gray-500"
+                }`}
+              >
+                สถานะ :{" "}
+                {status === 0
+                  ? "กำลังจัดส่ง"
+                  : status === 1
+                  ? "จัดส่งสำเร็จ"
+                  : status === 2
+                  ? "จัดส่งไม่สำเร็จ"
+                  : "เพิ่มสถานะด้วย"}{" "}
+                {!!myDriver && "(ส่งต่อให้ผู้จัดส่งคนอื่นแล้ว)"}
+              </span>
+              <p className="text-base leading-4 text-gray-800">
+                <MyContent
+                  name={`ได้รับค่าจัดส่ง : ${myDriverFee?.shippingFee} บาท`}
+                  fontSize="small"
+                />
+              </p>
+              {index === 1 && !myDriver && (
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    className="mr-2 w-6 h-6"
+                    checked={select.find((x) => x === item.id) !== undefined}
+                    onChange={() => onSelect(item.id)}
+                  />
+                  <Typography variant="h6">เลือกสินค้า</Typography>
+                </div>
+              )}
+            </div>
 
-        <div className="mt-4">
-          <p className="text-lg font-medium text-gray-800">
+            {item.orderItems.map((orderItem) => {
+              const TotalPriceForProduct =
+                orderItem.product.price * orderItem.quantity;
+              const formatTotalPriceForProduct =
+                formatNumberWithCommas(TotalPriceForProduct);
+
+              return (
+                <div
+                  key={orderItem.product.id}
+                  className="mt-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm flex flex-col md:flex-row justify-between items-center"
+                >
+                  <a
+                    onClick={() => {
+                      navigate(
+                        RoutePath.productDetail(String(orderItem.product.id))
+                      );
+                      resetScroll();
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <img
+                      className="h-20 w-20 object-cover"
+                      src={pathImages.product + orderItem.product.images}
+                      alt={orderItem.product.images || "product image"}
+                    />
+                  </a>
+                  <p className="text-sm font-bold text-gray-500 mt-2 md:mt-0">
+                    {orderItem.product.productGI.category.name}
+                  </p>
+                  <a className="text-base font-medium text-gray-900 hover:underline mt-1 md:mt-0">
+                    {orderItem.product.productGI.name}
+                  </a>
+                  <div className="text-center md:w-20 font-semibold text-gray-900">
+                    {orderItem.quantity}
+                  </div>
+                  <p className="text-base font-bold text-gray-900">
+                    {formatTotalPriceForProduct} บาท
+                  </p>
+                </div>
+              );
+            })}
+
+            <TotalPrice
+              formattedTotalPrice={parseFloat(formattedTotalPrice)}
+              ShippingFee={item?.shippings[0]?.shippingFee}
+            />
+
+            <div className="mt-4">
+              {/* <p className="text-lg font-medium text-gray-800">
             ชื่อ-ที่อยู่ลูกค้า : {item?.address?.user?.fullName} เบอร์ :{" "}
             {item?.address?.user?.phoneNumber} บ้านเลขที่ {item?.address?.detail}
             แขวง/ตำบล {item?.address?.subDistrict} เขต/อำเภอ{" "}
             {item?.address?.district}  จังหวัด {item?.address?.province} รหัสไปรษณีย์{" "}
             {item?.address?.postCode}
-          </p>
-        </div>
-        
-      </div>
-    );
-  })}
-</div>
+          </p> */}
 
+              <Grid container spacing={2} className="p-4">
+                <Grid item xs={12}>
+                  <Typography
+                    variant="h6"
+                    fontSize={{ xs: 18, sm: 20, md: 22 }}
+                    fontWeight="bold"
+                  >
+                    ชื่อ-ที่อยู่ลูกค้า : {item?.address?.user?.fullName}
+                  </Typography>
+                </Grid>
+
+                <Grid container item xs={12} spacing={2} className="mt-4">
+                  <Grid item xs={12} sm={6} md={4}>
+                    <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+                      เบอร์ : {item?.address?.user?.phoneNumber}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4}>
+                    <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+                      บ้านเลขที่ {item?.address?.detail}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4}>
+                    <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+                      แขวง/ตำบล {item?.address?.subDistrict}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4}>
+                    <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+                      เขต/อำเภอ {item?.address?.district}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4}>
+                    <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+                      จังหวัด {item?.address?.province}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4}>
+                    <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+                      รหัสไปรษณีย์ {item?.address?.postCode}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 };
 
