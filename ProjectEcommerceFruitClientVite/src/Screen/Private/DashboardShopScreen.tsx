@@ -188,6 +188,10 @@ export default observer(function DashboardShopScreen() {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleDrawerClose = () => {
+    setMobileOpen(false);
+  };
+
   const thaiMonths = [
     "มกราคม",
     "กุมภาพันธ์",
@@ -203,7 +207,6 @@ export default observer(function DashboardShopScreen() {
     "ธันวาคม",
   ];
 
-  // ยอดขาย(กราฟเส้น)
   const option = {
     xAxis: {
       type: "category",
@@ -257,53 +260,6 @@ export default observer(function DashboardShopScreen() {
       },
     },
   };
-
-  // ยอดขาย (กราฟแท่ง)
-  // const option = {
-  //   xAxis: {
-  //     type: "category",
-  //     data: monthlyOrderData?.map((item: any) =>
-  //       thaiMonths[moment(item?.month, "MMMM").month()]
-  //     ),
-  //     axisLabel: {
-  //       fontSize: 10,
-  //       fontWeight: 600,
-  //     },
-  //   },
-  //   yAxis: {
-  //     type: "value",
-  //     axisLabel: {
-  //       formatter: (value: any) => value.toLocaleString(),
-  //       fontSize: 10,
-  //       fontWeight: 600,
-  //     },
-  //   },
-  //   series: [
-  //     {
-  //       data: monthlyOrderData?.map((item: any) => item?.total),
-  //       type: "bar", // เปลี่ยนเป็น bar หากต้องการให้เป็นกราฟแท่ง
-  //       smooth: true,
-  //       lineStyle: {
-  //         color: "#00910a",
-  //         width: 2,
-  //       },
-  //       itemStyle: {
-  //         color: "#00910a",
-  //         borderColor: "#00910a",
-  //       },
-  //       barWidth: '10%', // เพิ่ม barWidth ที่นี่
-  //       symbolSize: 6,
-  //     },
-  //   ],
-  //   tooltip: {
-  //     trigger: "axis",
-  //     formatter: (params: any) => `${params[0]?.data?.toLocaleString()} บาท`,
-  //     textStyle: {
-  //       fontSize: 14,
-  //     },
-  //   },
-  // };
-
   const [pieChartData, setPieChartData] = useState([]);
 
   useEffect(() => {
@@ -373,7 +329,7 @@ export default observer(function DashboardShopScreen() {
     ];
 
     worksheet.addRow({
-      item: "รายได้รวมการจำหน่ายสินค้า",
+      item: "กำไรจากการขาย",
       value: totalPrice.toLocaleString(),
       unit: "บาท",
     });
@@ -396,7 +352,7 @@ export default observer(function DashboardShopScreen() {
       unit: "ครั้ง",
     });
 
-    worksheet.addRow({ item: "รายได้ต่อเดือน", value: "", unit: "" });
+    worksheet.addRow({ item: "กำไรต่อเดือน", value: "", unit: "" });
 
     monthlyOrderData.forEach((data: any) => {
       const monthIndex = parseInt(moment().month(data.month).format("M")) - 1;
@@ -443,108 +399,148 @@ export default observer(function DashboardShopScreen() {
       case "dashboard":
         return (
           <div className="-mt-16">
-  {/* Card Image Section */}
-  <Card style={{ marginBottom: "20px" }}>
-    <CardMedia
-      component="img"
-      style={{ height: "200px", objectFit: "cover" }}
-      image={imageDashboard}
-      alt="Dashboard"
-    />
-  </Card>
-
-  <div ref={componentRef}>
-    {/* Stat Cards Section */}
-    <div className="mt-2 relative flex flex-wrap justify-center items-center gap-4 sm:gap-8 md:gap-10">
-      {[
-        { icon: <BiDollar size={30} />, label: "รายได้รวมการจำหน่ายสินค้า", value: totalPrice.toLocaleString() },
-        { icon: <BiCart size={30} />, label: "จำนวนสินค้าที่ซื้อ", value: totalQuantity },
-        { icon: <BiCheck size={30} />, label: "ยอดคำสั่งซื้อที่สำเร็จ", value: totalOrderSuccess },
-        { icon: <BiX size={30} />, label: "ยอดคำสั่งซื้อที่ยกเลิก", value: totalOrderFailed }
-      ].map((stat, idx) => (
-        <a key={idx} className="flex h-28 w-40 sm:w-44 md:w-48 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80">
-          <div className="flex flex-row items-center justify-center">
-            <span className="mr-3">{stat.icon}</span>
-            <span className="font-bold text-gray-600">{stat.value}</span>
-          </div>
-          <div className="mt-2 text-sm text-gray-400">
-            <MyContent name={stat.label} fontSize="smaller" />
-          </div>
-        </a>
-      ))}
-    </div>
-
-    {/* Download Button */}
-    <button
-      id="downloadButton"
-      onClick={toggleDropdown}
-      className="absolute top-0 right-0 p-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-200"
-    >
-      <BiDownload />
-    </button>
-
-    {openDropdown && (
-      <div className="absolute right-0 top-5 mt-2 bg-white border rounded shadow-md w-28">
-        <ul>
-          <li className="p-2 hover:bg-gray-200 cursor-pointer flex items-center" onClick={generatePDF}>
-            <VscFilePdf className="mr-2" /> PDF
-          </li>
-          <li className="p-2 hover:bg-gray-200 cursor-pointer flex items-center" onClick={generateExcel}>
-            <RiFileExcel2Line className="mr-2" /> Excel
-          </li>
-        </ul>
-      </div>
-    )}
-
-    {/* Graphs Section */}
-    <div className="w-full mt-5 flex flex-col lg:flex-row gap-4">
-      {/* Monthly Sales Graph */}
-      <div className="w-full lg:w-2/3 bg-white border rounded-sm overflow-hidden shadow">
-        <div className="p-2 flex justify-between items-center">
-          <MyContent name="กราฟแสดงยอดขายในแต่ละเดือน" fontSize="normal" />
-          {order.filter((x) => x.confirmReceipt === 1).length > 0 && (
-            <div className="flex items-center">
-              <p className="mr-2">ปี :</p>
-              <Select
-                options={yearOptions}
-                value={yearOptions.find((option:any) => option.value === selectedYear)}
-                onChange={handleYearChange}
-                placeholder="Select Year"
-                className="w-32 z-20"
+            {/* Card Image Section */}
+            <Card style={{ marginBottom: "20px" }}>
+              <CardMedia
+                component="img"
+                style={{ height: "200px", objectFit: "cover" }}
+                image={imageDashboard}
+                alt="Dashboard"
               />
-            </div>
-          )}
-        </div>
-        <div className="p-2 -mt-10">
-          {order?.filter((x) => x.confirmReceipt === 1).length > 0 ? (
-            <ReactECharts option={option} style={{ height: "300px", width: "100%" }} />
-          ) : (
-            <div className="flex justify-center items-center h-80">
-              <p className="text-4xl font-medium">ไม่มีข้อมูล</p>
-            </div>
-          )}
-        </div>
-      </div>
+            </Card>
 
-      {/* Category Sales Pie Chart */}
-      <div className="w-full lg:w-1/3 bg-white border rounded-sm overflow-hidden shadow">
-        <div className="p-2 -mb-3">
-          <MyContent name="สัดส่วนยอดขายตามหมวดหมู่ผลิตภัณฑ์" fontSize="normal" />
-        </div>
-        <div className="p-2">
-          {order?.filter((x) => x.confirmReceipt === 1).length > 0 ? (
-            <ReactECharts option={pieOption} style={{ height: "300px", width: "100%" }} />
-          ) : (
-            <div className="flex justify-center items-center h-80 -mt-5">
-              <p className="text-4xl font-medium">ไม่มีข้อมูล</p>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+            <div ref={componentRef}>
+              {/* Stat Cards Section */}
+              <div className="mt-2 relative flex flex-wrap justify-center items-center gap-4 sm:gap-8 md:gap-10">
+                {[
+                  {
+                    icon: <BiDollar size={30} />,
+                    label: "กำไรจากการขาย",
+                    value: totalPrice.toLocaleString(),
+                  },
+                  {
+                    icon: <BiCart size={30} />,
+                    label: "จำนวนสินค้าที่ซื้อ",
+                    value: totalQuantity,
+                  },
+                  {
+                    icon: <BiCheck size={30} />,
+                    label: "ยอดคำสั่งซื้อที่สำเร็จ",
+                    value: totalOrderSuccess,
+                  },
+                  {
+                    icon: <BiX size={30} />,
+                    label: "ยอดคำสั่งซื้อที่ยกเลิก",
+                    value: totalOrderFailed,
+                  },
+                ].map((stat, idx) => (
+                  <a
+                    key={idx}
+                    className="flex h-28 w-40 sm:w-44 md:w-48 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80"
+                  >
+                    <div className="flex flex-row items-center justify-center">
+                      <span className="mr-3">{stat.icon}</span>
+                      <span className="font-bold text-gray-600">
+                        {stat.value}
+                      </span>
+                    </div>
+                    <div className="mt-2 text-sm text-gray-400">
+                      <MyContent name={stat.label} fontSize="smaller" />
+                    </div>
+                  </a>
+                ))}
+              </div>
 
+              {/* Download Button */}
+              <button
+                id="downloadButton"
+                onClick={toggleDropdown}
+                className="absolute top-0 right-0 p-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-200"
+              >
+                <BiDownload />
+              </button>
+
+              {openDropdown && (
+                <div className="absolute right-0 top-5 mt-2 bg-white border rounded shadow-md w-28">
+                  <ul>
+                    <li
+                      className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
+                      onClick={generatePDF}
+                    >
+                      <VscFilePdf className="mr-2" /> PDF
+                    </li>
+                    <li
+                      className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
+                      onClick={generateExcel}
+                    >
+                      <RiFileExcel2Line className="mr-2" /> Excel
+                    </li>
+                  </ul>
+                </div>
+              )}
+
+              {/* Graphs Section */}
+              <div className="w-full mt-5 flex flex-col lg:flex-row gap-4">
+                {/* Monthly Sales Graph */}
+                <div className="w-full lg:w-2/3 bg-white border rounded-sm overflow-hidden shadow">
+                  <div className="p-2 flex justify-between items-center">
+                    <MyContent
+                      name="กราฟแสดงยอดขายในแต่ละเดือน"
+                      fontSize="normal"
+                    />
+                    {order.filter((x) => x.confirmReceipt === 1).length > 0 && (
+                      <div className="flex items-center">
+                        <p className="mr-2">ปี :</p>
+                        <Select
+                          options={yearOptions}
+                          value={yearOptions.find(
+                            (option: any) => option.value === selectedYear
+                          )}
+                          onChange={handleYearChange}
+                          placeholder="Select Year"
+                          className="w-32 z-20"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-2 -mt-10">
+                    {order?.filter((x) => x.confirmReceipt === 1).length > 0 ? (
+                      <ReactECharts
+                        option={option}
+                        style={{ height: "300px", width: "100%" }}
+                      />
+                    ) : (
+                      <div className="flex justify-center items-center h-80">
+                        <p className="text-4xl font-medium">ไม่มีข้อมูล</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Category Sales Pie Chart */}
+                <div className="w-full lg:w-1/3 bg-white border rounded-sm overflow-hidden shadow">
+                  <div className="p-2 -mb-3">
+                    <MyContent
+                      name="สัดส่วนยอดขายตามหมวดหมู่ผลิตภัณฑ์"
+                      fontSize="normal"
+                    />
+                  </div>
+                  <div className="p-2">
+                    {order?.filter((x) => x.confirmReceipt === 1).length > 0 ? (
+                      <ReactECharts
+                        option={pieOption}
+                        style={{ height: "300px", width: "100%" }}
+                      />
+                    ) : (
+                      <div className="flex justify-center items-center h-80 -mt-5">
+                        <p className="text-4xl font-medium">ไม่มีข้อมูล</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         );
       default:
     }
@@ -552,14 +548,19 @@ export default observer(function DashboardShopScreen() {
 
   const drawer = (
     <div>
-      <Toolbar />
+      <Toolbar sx={{ minHeight: 0 }} /> {/* ลดขนาด Toolbar เพื่อเขยิบขึ้น */}
       <Divider />
       <List
         style={{
           cursor: "pointer",
         }}
       >
-        <ListItem onClick={() => setScreenComponent("dashboard")}>
+        <ListItem
+          onClick={() => {
+            setScreenComponent("dashboard");
+            handleDrawerClose();
+          }}
+        >
           <ListItemIcon>
             <DashboardIcon />
           </ListItemIcon>
@@ -574,7 +575,12 @@ export default observer(function DashboardShopScreen() {
             </ListItem>
           </List>
         </Collapse>
-        <ListItem onClick={() => setScreenComponent("CreateShop")}>
+        <ListItem
+          onClick={() => {
+            setScreenComponent("CreateShop");
+            handleDrawerClose();
+          }}
+        >
           <ListItemIcon>
             <ShoppingCartIcon />
           </ListItemIcon>
@@ -582,7 +588,12 @@ export default observer(function DashboardShopScreen() {
             primary={<MyContent name="แก้ไขร้านค้า" fontSize="small" />}
           />
         </ListItem>
-        <ListItem onClick={() => setScreenComponent("ProductGIList")}>
+        <ListItem
+          onClick={() => {
+            setScreenComponent("ProductGIList");
+            handleDrawerClose();
+          }}
+        >
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
@@ -590,8 +601,12 @@ export default observer(function DashboardShopScreen() {
             primary={<MyContent name="เพิ่มข้อมูลสินค้า" fontSize="small" />}
           />
         </ListItem>
-
-        <ListItem onClick={() => setScreenComponent("ProductList")}>
+        <ListItem
+          onClick={() => {
+            setScreenComponent("ProductList");
+            handleDrawerClose();
+          }}
+        >
           <ListItemIcon>
             <BarChartIcon />
           </ListItemIcon>
@@ -599,7 +614,12 @@ export default observer(function DashboardShopScreen() {
             primary={<MyContent name="เพิ่มสินค้า" fontSize="small" />}
           />
         </ListItem>
-        <ListItem onClick={() => setScreenComponent("OrderList")}>
+        <ListItem
+          onClick={() => {
+            setScreenComponent("OrderList");
+            handleDrawerClose();
+          }}
+        >
           <ListItemIcon>
             <ReceiptLongIcon />
           </ListItemIcon>
@@ -607,12 +627,6 @@ export default observer(function DashboardShopScreen() {
             primary={<MyContent name="คำสั่งซื้อ" fontSize="small" />}
           />
         </ListItem>
-        {/* <ListItem   component={Link} to="/integrations">
-          <ListItemIcon>
-            <LayersIcon />
-          </ListItemIcon>
-          <ListItemText primary="Integrations" />
-        </ListItem>  */}
       </List>
       <Divider />
     </div>
@@ -623,11 +637,11 @@ export default observer(function DashboardShopScreen() {
       <AppBar
         position="fixed"
         sx={{
-          zIndex: (theme) => theme.zIndex.drawer + 1,
           backgroundColor: "#3f51b5",
+          zIndex: (theme) => theme.zIndex.drawer, // ทำให้ AppBar อยู่ใต้ Drawer เมื่อ Drawer เปิด
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ minHeight: 80 }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -665,9 +679,14 @@ export default observer(function DashboardShopScreen() {
           </div>
         </Toolbar>
       </AppBar>
+
       <Box
         component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        sx={{
+          width: { sm: drawerWidth },
+          flexShrink: { sm: 0 },
+          position: "relative",
+        }}
         aria-label="mailbox folders"
       >
         <Drawer
@@ -682,17 +701,22 @@ export default observer(function DashboardShopScreen() {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
+              zIndex: (theme) => theme.zIndex.modal + 1, // ทำให้ Drawer ทับ AppBar
+              position: "absolute", // ทำให้ Drawer อยู่ในตำแหน่งทับ AppBar
             },
           }}
         >
           {drawer}
         </Drawer>
+
         <Drawer
           variant="permanent"
           sx={{
             display: { xs: "none", sm: "block" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
+              width: drawerWidth,
+              zIndex: (theme) => theme.zIndex.appBar - 1, // ให้ Drawer ปกติอยู่ใต้ AppBar
             },
           }}
           open
@@ -700,6 +724,7 @@ export default observer(function DashboardShopScreen() {
           {drawer}
         </Drawer>
       </Box>
+
       <Box
         component="main"
         sx={{
