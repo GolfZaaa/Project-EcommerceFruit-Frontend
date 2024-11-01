@@ -307,7 +307,7 @@ const OrderList = () => {
   };
 
   return (
-    <div className="-mt-16">
+    <div className="mt-4 md:mt-0 p-4 lg:p-6">
       {onCreate ? (
         <EditOrderScreen onChangeCU={onChangeCU} dataEdit={dataEdit} />
       ) : (
@@ -317,7 +317,7 @@ const OrderList = () => {
             flexDirection="column"
             alignItems="center"
             justifyContent="center"
-            mt={4}
+            className="mb-5"
           >
             <Typography variant="h4" component="h1" gutterBottom align="center">
               <MyContent name="คำสั่งซื้อ" fontSize="large" />
@@ -333,7 +333,7 @@ const OrderList = () => {
             </div>
 
             {openDropdown && (
-              <div className="absolute right-16 top-52 mt-2 bg-white border rounded shadow-md w-20">
+              <div className="absolute right-16 top-64 mt-2 bg-white border rounded shadow-md w-20">
                 <ul>
                   <li
                     className="p-2 hover:bg-gray-200 cursor-pointer flex items-center "
@@ -352,11 +352,9 @@ const OrderList = () => {
             )}
 
             <TableContainer
-              sx={{
-                width: 1200,
-              }}
-              ref={componentRef}
               component={Paper}
+              className="overflow-x-auto"
+              ref={componentRef}
             >
               <Table
                 sx={{ width: "100%" }}

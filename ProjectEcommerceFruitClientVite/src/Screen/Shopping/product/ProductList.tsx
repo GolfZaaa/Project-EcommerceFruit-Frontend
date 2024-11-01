@@ -177,34 +177,17 @@ const ProductList = () => {
   };
 
   return (
-    <div className="-mt-16">
+<div className="responsive-container">
       {onCreate ? (
-        <CreateProductScreen
-          onChangeCU={onChangeCU}
-          dataEdit={dataEdit}
-          id={1}
-        />
+        <CreateProductScreen onChangeCU={onChangeCU} dataEdit={dataEdit} id={1} />
       ) : (
         <Container maxWidth="lg">
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            mt={4}
-          >
+          <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
             <Typography variant="h4" component="h1" gutterBottom align="center">
               <MyContent name="เพิ่มสินค้า" fontSize="large" />
             </Typography>
-            <Grid
-              container
-              spacing={2}
-              style={{
-                marginBottom: 15,
-              }}
-            >
-              <Grid item xs={11}></Grid>
-              <Grid item xs={1}>
+            <Grid container justifyContent="flex-end" mb={2} spacing={2}>
+              <Grid item>
                 <Fab
                   variant="extended"
                   color="primary"
@@ -220,10 +203,7 @@ const ProductList = () => {
             </Grid>
 
             <TableContainer component={Paper}>
-              <Table
-                sx={{ minWidth: 500 }}
-                aria-label="custom pagination table"
-              >
+              <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
                 <TableHead>
                   <TableRow>
                     {columns.map((column) => (
@@ -240,103 +220,77 @@ const ProductList = () => {
                         page * rowsPerPage + rowsPerPage
                       )
                     : product
-                  ).map((row) => {
-                    return (
-                      <TableRow key={row.id}>
-                        <TableCell component="th" scope="row">
-                          <MyContent
-                            name={row.productGI.name}
-                            fontSize="small"
-                          />
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          style={{ color: "red" }}
-                          //   align="right"
-                        >
-                          {row.images ? (
-                            <img
-                              src={pathImages.product + row.images}
-                              alt="product-image"
-                              style={{
-                                width: "250px",
-                                height: "200px",
-                                objectFit: "contain",
-                              }}
-                            />
-                          ) : (
-                            "ไม่มีรูปภาพ"
-                          )}
-                        </TableCell>
-                        <TableCell align="center">
-                          <MyContent
-                            name={row?.productGI?.category.name}
-                            fontSize="small"
-                          />
-                        </TableCell>
-                        <TableCell align="center">
-                          <MyContent name={row?.price} fontSize="small" />
-                        </TableCell>
-                        <TableCell align="center">
-                          <MyContent name={row?.weight} fontSize="small" />
-                        </TableCell>
-                        <TableCell>
-                          <MyContent name={row?.quantity} fontSize="small" />
-                        </TableCell>
-                        <TableCell>
-                          <MySwitch
-                            handleChange={async () =>
-                              await isUsedProduct(row.id).then(() => {
-                                getProductByStore(user?.stores[0].id || 0);
-                              })
-                            }
-                            checked={row.status}
-                          />
-                        </TableCell>
-                        <TableCell style={{ width: 100 }}>
-                          <Fab
-                            variant="extended"
-                            color="primary"
-                            onClick={() => {
-                              setDataEdit(row);
-                              onChangeCU();
+                  ).map((row) => (
+                    <TableRow key={row.id}>
+                      <TableCell component="th" scope="row">
+                        <MyContent name={row.productGI.name} fontSize="small" />
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.images ? (
+                          <img
+                            src={pathImages.product + row.images}
+                            alt="product"
+                            style={{
+                              width: "100%",
+                              height: "auto",
+                              maxWidth: "250px",
+                              objectFit: "contain",
                             }}
-                          >
-                            <EditIcon sx={{ mr: 1 }} />
-                            <MyContent name="แก้ไข" fontSize="small" />
-                          </Fab>
-                        </TableCell>
-                        <TableCell style={{ width: 100 }}>
-                          <Fab
-                            variant="extended"
-                            color="error"
-                            onClick={handleClickOpen}
-                          >
-                            <RemoveIcon sx={{ mr: 1 }} />
-                            <MyContent name="ลบ" fontSize="small" />
-                          </Fab>
-                          {/* <Button
-                          variant="contained"
+                          />
+                        ) : (
+                          "ไม่มีรูปภาพ"
+                        )}
+                      </TableCell>
+                      <TableCell align="center">
+                        <MyContent name={row?.productGI?.category.name} fontSize="small" />
+                      </TableCell>
+                      <TableCell align="center">
+                        <MyContent name={row?.price} fontSize="small" />
+                      </TableCell>
+                      <TableCell align="center">
+                        <MyContent name={row?.weight} fontSize="small" />
+                      </TableCell>
+                      <TableCell align="center">
+                        <MyContent name={row?.quantity} fontSize="small" />
+                      </TableCell>
+                      <TableCell align="center">
+                        <MySwitch
+                          handleChange={async () => {
+                            await isUsedProduct(row.id).then(() => {
+                              getProductByStore(user?.stores[0].id || 0);
+                            });
+                          }}
+                          checked={row.status}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <Fab
+                          variant="extended"
                           color="primary"
-                          size="large"
-                          fullWidth
+                          onClick={() => {
+                            setDataEdit(row);
+                            onChangeCU();
+                          }}
+                          size="small"
+                        >
+                          <EditIcon sx={{ mr: 1 }} />
+                          <MyContent name="แก้ไข" fontSize="small" />
+                        </Fab>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Fab
+                          variant="extended"
+                          color="error"
                           onClick={handleClickOpen}
+                          size="small"
                         >
-                          ลบ
-                        </Button> */}
-                        </TableCell>
-
-                        <Dialog
-                          open={open}
-                          onClose={handleClose}
-                          aria-labelledby="alert-dialog-title"
-                          aria-describedby="alert-dialog-description"
-                        >
-                          <DialogTitle id="alert-dialog-title">
-                            {"ลบข้อมูลนี้ออกจากฐานข้อมูล"}
-                          </DialogTitle>
+                          <RemoveIcon sx={{ mr: 1 }} />
+                          <MyContent name="ลบ" fontSize="small" />
+                        </Fab>
+                        <Dialog open={open} onClose={handleClose}>
+                          <DialogTitle>{"ลบข้อมูลนี้ออกจากฐานข้อมูล"}</DialogTitle>
                           <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
+                            <DialogContentText>
                               ลบข้อมูลนี้ออกจากฐานข้อมูล ยืนยันเพื่อลบ
                             </DialogContentText>
                           </DialogContent>
@@ -355,36 +309,23 @@ const ProductList = () => {
                             </Button>
                           </DialogActions>
                         </Dialog>
-                      </TableRow>
-                    );
-                  })}
+                      </TableCell>
+                    </TableRow>
+                  ))}
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
+                      <TableCell colSpan={columns.length} />
                     </TableRow>
                   )}
                 </TableBody>
                 <TableFooter>
                   <TableRow>
                     <TablePagination
-                      rowsPerPageOptions={[
-                        5,
-                        10,
-                        25,
-                        { label: "ทั้งหมด", value: -1 },
-                      ]}
-                      colSpan={3}
+                      rowsPerPageOptions={[5, 10, 25, { label: "ทั้งหมด", value: -1 }]}
+                      colSpan={columns.length}
                       count={product.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
-                      slotProps={{
-                        select: {
-                          inputProps: {
-                            "aria-label": "rows per page",
-                          },
-                          native: true,
-                        },
-                      }}
                       onPageChange={handleChangePage}
                       onRowsPerPageChange={handleChangeRowsPerPage}
                       ActionsComponent={TablePaginationActions}
