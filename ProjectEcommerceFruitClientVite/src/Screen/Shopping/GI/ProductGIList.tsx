@@ -178,197 +178,165 @@ const ProductGIList = () => {
   console.log("loadingPGI", loadingPGI);
 
   return (
-    <div className="-mt-16">
-      {onCreate ? (
-        <CreateFruitGIScreen onChangeCU={onChangeCU} dataEdit={dataEdit} />
-      ) : (
-        <>
-          <Container maxWidth="lg">
-            <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
-              mt={4}
-            >
-              <Typography
-                variant="h4"
-                component="h1"
-                gutterBottom
-                align="center"
-              >
-                <MyContent name="เพิ่มข้อมูล (GI) สินค้า" fontSize="large" />
-              </Typography>
-              <Grid
-                container
-                spacing={2}
-                style={{
-                  marginBottom: 15,
+    <Box className="-mt-16" sx={{ p: { xs: 2, md: 4 }, minHeight: "100vh" }}>
+    {onCreate ? (
+      <CreateFruitGIScreen onChangeCU={onChangeCU} dataEdit={dataEdit} />
+    ) : (
+      <Container maxWidth="lg">
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          mt={4}
+          sx={{ textAlign: "center" }}
+        >
+          <Typography variant="h4" gutterBottom>
+            <MyContent name="เพิ่มข้อมูล (GI) สินค้า" fontSize="large" />
+          </Typography>
+          <Grid
+            container
+            spacing={2}
+            justifyContent="flex-end"
+            mb={2}
+            sx={{ width: "100%" }}
+          >
+            <Grid item>
+              <Fab
+                variant="extended"
+                color="primary"
+                onClick={() => {
+                  setDataEdit(null);
+                  onChangeCU();
                 }}
               >
-                <Grid item xs={11}></Grid>
-                <Grid item xs={1}>
-                  <Fab
-                    variant="extended"
-                    color="primary"
-                    onClick={() => {
-                      setDataEdit(null);
-                      onChangeCU();
-                    }}
-                  >
-                    <AddIcon sx={{ mr: 1 }} />
-                    <MyContent name="เพิ่ม" fontSize="small" />
-                  </Fab>
-                </Grid>
-              </Grid>
+                <AddIcon sx={{ mr: 1 }} />
+                <MyContent name="เพิ่ม" fontSize="small" />
+              </Fab>
+            </Grid>
+          </Grid>
 
-              {loadingPGI ? (
-                <Box sx={{ display: "flex" }}>
-                  <CircularProgress />
-                </Box>
-              ) : (
-                <TableContainer component={Paper}>
-                  <Table
-                    sx={{ minWidth: 500 }}
-                    aria-label="custom pagination table"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        {columns.map((column, i) => (
-                          <TableCell
-                            key={column.id}
-                            align={i > 2 ? "center" : "left"}
-                          >
-                            <MyContent name={column.label} fontSize="small" />
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {(rowsPerPage > 0
-                        ? productGI.slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage
-                          )
-                        : productGI
-                      ).map((row) => (
-                        <TableRow key={row.name}>
-                          <TableCell component="th" scope="row">
-                            <MyContent name={row.name} fontSize="small" />
-                          </TableCell>
-                          <TableCell>
-                            <MyContent
-                              name={row?.category?.name}
-                              fontSize="small"
-                            />
-                          </TableCell>
-                          <TableCell style={{ width: 100 }}>
-                            <Fab
-                              variant="extended"
-                              color="primary"
-                              onClick={() => {
-                                setDataEdit(row);
-                                onChangeCU();
-                              }}
-                            >
-                              <EditIcon sx={{ mr: 1 }} />
-                              <MyContent name="แก้ไข" fontSize="small" />
-                            </Fab>
-                          </TableCell>
-                          <TableCell style={{ width: 100 }}>
-                            <Fab
-                              variant="extended"
-                              color="error"
-                              onClick={handleClickOpen}
-                            >
-                              <RemoveIcon sx={{ mr: 1 }} />
-                              <MyContent name="ลบ" fontSize="small" />
-                            </Fab>
-                            {/* <Button
-                        variant="contained"
-                        color="primary"
-                        size="large"
-                        fullWidth
-                        onClick={handleClickOpen}
-                      >
-                        ลบ
-                      </Button> */}
-                          </TableCell>
-
-                          <Dialog
-                            open={open}
-                            onClose={handleClose}
-                            aria-labelledby="alert-dialog-title"
-                            aria-describedby="alert-dialog-description"
-                          >
-                            <DialogTitle id="alert-dialog-title">
-                              {"ลบข้อมูลนี้ออกจากฐานข้อมูล"}
-                            </DialogTitle>
-                            <DialogContent>
-                              <DialogContentText id="alert-dialog-description">
-                                ลบข้อมูลนี้ออกจากฐานข้อมูล ยืนยันเพื่อลบ
-                              </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                              <Button onClick={handleClose}>ยกเลิก</Button>
-                              <Button
-                                onClick={() => {
-                                  removeProductGI(row.id).then((res) => {
-                                    if (res !== true) {
-                                      myToast("ข้อมูล GI นี้มีการใช้งานอยู่");
-                                    }
-                                    handleClose();
-                                  });
-                                }}
-                                autoFocus
-                              >
-                                ยืนยัน
-                              </Button>
-                            </DialogActions>
-                          </Dialog>
-                        </TableRow>
-                      ))}
-                      {emptyRows > 0 && (
-                        <TableRow style={{ height: 53 * emptyRows }}>
-                          <TableCell colSpan={6} />
-                        </TableRow>
-                      )}
-                    </TableBody>
-                    <TableFooter>
-                      <TableRow>
-                        <TablePagination
-                          rowsPerPageOptions={[
-                            5,
-                            10,
-                            25,
-                            { label: "ทั้งหมด", value: -1 },
-                          ]}
-                          colSpan={3}
-                          count={productGI.length}
-                          rowsPerPage={rowsPerPage}
-                          page={page}
-                          slotProps={{
-                            select: {
-                              inputProps: {
-                                "aria-label": "rows per page",
-                              },
-                              native: true,
-                            },
-                          }}
-                          onPageChange={handleChangePage}
-                          onRowsPerPageChange={handleChangeRowsPerPage}
-                          ActionsComponent={TablePaginationActions}
-                        />
-                      </TableRow>
-                    </TableFooter>
-                  </Table>
-                </TableContainer>
-              )}
+          {loadingPGI ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "50vh",
+              }}
+            >
+              <CircularProgress />
             </Box>
-          </Container>
-        </>
-      )}
-    </div>
+          ) : (
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+                <TableHead>
+                  <TableRow>
+                    {columns.map((column, i) => (
+                      <TableCell key={column.id} align={i > 2 ? "center" : "left"}>
+                        <MyContent name={column.label} fontSize="small" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {(rowsPerPage > 0
+                    ? productGI.slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                    : productGI
+                  ).map((row) => (
+                    <TableRow key={row.name}>
+                      <TableCell component="th" scope="row">
+                        <MyContent name={row.name} fontSize="small" />
+                      </TableCell>
+                      <TableCell>
+                        <MyContent name={row?.category?.name} fontSize="small" />
+                      </TableCell>
+                      <TableCell align="center">
+                        <Fab
+                          variant="extended"
+                          color="primary"
+                          onClick={() => {
+                            setDataEdit(row);
+                            onChangeCU();
+                          }}
+                        >
+                          <EditIcon sx={{ mr: 1 }} />
+                          <MyContent name="แก้ไข" fontSize="small" />
+                        </Fab>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Fab
+                          variant="extended"
+                          color="error"
+                          onClick={handleClickOpen}
+                        >
+                          <RemoveIcon sx={{ mr: 1 }} />
+                          <MyContent name="ลบ" fontSize="small" />
+                        </Fab>
+                      </TableCell>
+                      <Dialog
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                      >
+                        <DialogTitle id="alert-dialog-title">
+                          {"ลบข้อมูลนี้ออกจากฐานข้อมูล"}
+                        </DialogTitle>
+                        <DialogContent>
+                          <DialogContentText id="alert-dialog-description">
+                            ลบข้อมูลนี้ออกจากฐานข้อมูล ยืนยันเพื่อลบ
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={handleClose}>ยกเลิก</Button>
+                          <Button
+                            onClick={() => {
+                              removeProductGI(row.id).then((res) => {
+                                if (res !== true) {
+                                  myToast("ข้อมูล GI นี้มีการใช้งานอยู่");
+                                }
+                                handleClose();
+                              });
+                            }}
+                            autoFocus
+                          >
+                            ยืนยัน
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                    </TableRow>
+                  ))}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TablePagination
+                      rowsPerPageOptions={[5, 10, 25, { label: "ทั้งหมด", value: -1 }]}
+                      colSpan={3}
+                      count={productGI.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                      ActionsComponent={TablePaginationActions}
+                    />
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </TableContainer>
+          )}
+        </Box>
+      </Container>
+    )}
+  </Box>
   );
 };
 
