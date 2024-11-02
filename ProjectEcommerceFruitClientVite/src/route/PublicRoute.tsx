@@ -130,7 +130,7 @@ export const PublicRoute: any = [
   },
   {
     id: 21,
-    path: RoutePath.homeScreen + "shop-detail-screen/:id",
+    path: RoutePath.firstscreen + "shop-detail-screen/:id",
     element: <ShopDetailScreen />,
   },
 ];
