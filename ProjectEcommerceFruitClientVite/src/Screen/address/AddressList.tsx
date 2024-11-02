@@ -113,9 +113,9 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           marginBottom: 15,
         }}
       >
-        <Grid item xs={9}></Grid>
+        <Grid item xs={8}></Grid>
 
-        <Grid item xs={1}>
+        <Grid item xs={2}>
           {confirmChangeAddress !== undefined && (
             <Fab
               variant="extended"

@@ -204,69 +204,77 @@ export default observer(function SummaryScreen() {
   return (
     <div className="bg-gray-50 -mt-8">
       <div className="ml-10 mr-10">
-        <div className="mt-8 flex justify-center md:flex-row flex-col items-stretch w-full space-y-4 md:space-y-0 md:space-x-6 xl:space-x-8">
-          <div className="flex flex-col px-4 py-6 md:p-6 xl:p-8 w-full bg-white space-y-6 shadow-md rounded-sm">
-            <div className="flex">
-              <svg
-                className="-mt-1"
-                xmlns="http://www.w3.org/2000/svg"
-                width="27"
-                height="27"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#06ff00"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <h3 className="text-xl font-medium leading-5 text-gray-700">
-                <MyContent name="ที่อยู่ในการจัดส่ง" fontSize="normal" />
-              </h3>
-            </div>
 
-            {!onChangeAddress ? (
-              <div className="flex flex-col md:flex-row md:justify-between items-center w-full space-y-4 md:space-y-0">
-                <div className="flex-1">
-                  <p className="text-lg leading-4 text-gray-800 font-semibold">
-                    <MyContent
-                      name={`${myAddressgotoOrder?.user?.fullName} เบอร์ :
-                    ${myAddressgotoOrder?.user?.phoneNumber}`}
-                      fontSize="small"
-                    />
-                  </p>
-                </div>
-                <div className="flex-1 -ml-96">
-                  <p className="text-lg leading-4 text-gray-800 font-medium">
-                    <MyContent
-                      name={`${myAddressgotoOrder?.detail} แขวง/ตำบล
-                    ${myAddressgotoOrder?.subDistrict} เขต/อำเภอ
-                    ${myAddressgotoOrder?.district} จังหวัด
-                    ${myAddressgotoOrder?.province} รหัสไปรษณีย์
-                    ${myAddressgotoOrder?.postCode}`}
-                      fontSize="small"
-                    />
-                  </p>
-                </div>
-                <div className="flex items-center justify-center md:justify-end">
-                  <button
-                    onClick={() => {
-                      getAddressByUserId();
-                      setOnChangeAddress(true);
-                    }}
-                    className="text-lg leading-4 text-blue-700 font-medium"
-                  >
-                    <MyContent name="เปลี่ยน" fontSize="small" />
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <AddressList confirmChangeAddress={confirmChangeAddress} />
-            )}
-          </div>
+
+        
+      <div className="mt-8 flex justify-center flex-col md:flex-row items-stretch w-full space-y-4 md:space-y-0 md:space-x-6 xl:space-x-8">
+  <div className="flex flex-col px-4 py-6 md:p-6 xl:p-8 w-full bg-white space-y-6 shadow-md rounded-sm">
+    <div className="flex items-center space-x-2">
+      <svg
+        className="-mt-1"
+        xmlns="http://www.w3.org/2000/svg"
+        width="27"
+        height="27"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#06ff00"
+        strokeWidth="3.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />
+        <circle cx="12" cy="10" r="3" />
+      </svg>
+      <h3 className="text-xl font-medium leading-5 text-gray-700">
+        <MyContent name="ที่อยู่ในการจัดส่ง" fontSize="normal" />
+      </h3>
+    </div>
+
+    {!onChangeAddress ? (
+      <div className="flex flex-col xl:flex-row xl:justify-between items-start xl:items-center w-full space-y-4 xl:space-y-0">
+        <div>
+          <p className="text-lg leading-4 text-gray-800 font-semibold">
+            <MyContent
+              name={`${myAddressgotoOrder?.user?.fullName} เบอร์ :
+            ${myAddressgotoOrder?.user?.phoneNumber}`}
+              fontSize="small"
+            />
+          </p>
         </div>
+        <div>
+          <p className="text-lg leading-4 text-gray-800 font-medium">
+            <MyContent
+              name={`${myAddressgotoOrder?.detail} แขวง/ตำบล
+            ${myAddressgotoOrder?.subDistrict} เขต/อำเภอ
+            ${myAddressgotoOrder?.district} จังหวัด
+            ${myAddressgotoOrder?.province} รหัสไปรษณีย์
+            ${myAddressgotoOrder?.postCode}`}
+              fontSize="small"
+            />
+          </p>
+        </div>
+        <div className="flex items-center justify-center xl:justify-end">
+          <button
+            onClick={() => {
+              getAddressByUserId();
+              setOnChangeAddress(true);
+            }}
+            className="text-lg leading-4 text-blue-700 font-medium"
+          >
+            <MyContent name="เปลี่ยน" fontSize="small" />
+          </button>
+        </div>
+      </div>
+    ) : (
+      <AddressList confirmChangeAddress={confirmChangeAddress} />
+    )}
+  </div>
+</div>
+
+
+
+
+
 
         <div className=" py-14 px-4 md:px-6 2xl:px-20 2xl:container 2xl:mx-auto">
           <div className="mt-10 flex flex-col xl:flex-row jusitfy-center items-stretch  w-full xl:space-x-8 space-y-4 md:space-y-6 xl:space-y-0">

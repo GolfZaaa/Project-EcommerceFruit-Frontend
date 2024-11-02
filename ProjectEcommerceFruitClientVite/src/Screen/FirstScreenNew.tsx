@@ -321,7 +321,7 @@ export default observer(function FirstScreenNew() {
 
       {/* สินค้าสุ่ม Start */}
       <div className="xl:mx-auto xl:container">
-  <div className="lg:px-20 md:px-6 px-4 md:py-12 py-8">
+    <div className="lg:px-20 md:px-6 px-4 md:py-12 py-8">
     <div className="flex flex-col xl:flex-row items-center">
       <motion.div
         ref={ref}

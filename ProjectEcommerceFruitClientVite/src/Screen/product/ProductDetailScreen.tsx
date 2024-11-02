@@ -215,6 +215,7 @@ export default observer(function ProductDetailScreen() {
   );
 
   const handleShopDetail = (item: any) => {
+    console.log("item",item)
     navigate(RoutePath.shopDetail(item[0].userId));
     resetScroll();
   };
@@ -757,26 +758,23 @@ export default observer(function ProductDetailScreen() {
 
       {RecommendProducts.length > 0 && (
         <div className="bg-white mt-5">
-          <div className="ml-12 pt-5 text-2xl mb-3 flex justify-between">
-            {/* <p>สินค้าจากร้านเดียวกัน</p> */}
-            <MyContent name={"สินค้าจากร้านเดียวกัน"} fontSize="normal" />
-            <div
-              className="mr-10 flex cursor-pointer"
-              onClick={() => handleShopDetail(shopProductDetail)}
-            >
-              <p className="font-semibold text-sm text-red-500">
-                <MyContent name={"ดูทั้งหมด"} fontSize="small" />
-              </p>
-              {/* <p className="font-semibold text-sm text-red-500">ดูทั้งหมด</p> */}
-
-              <GrNext className="text-red-500" />
-            </div>
-          </div>
+           <div className="flex justify-between items-center px-4 md:px-8 lg:px-12 pt-5 text-2xl mb-3">
+    <MyContent name={"สินค้าจากร้านเดียวกัน"} fontSize="normal" />
+    <div
+      className="flex cursor-pointer items-center space-x-1 text-red-500"
+      onClick={() => handleShopDetail(shopProductDetail)}
+    >
+      <p className="font-semibold text-sm">
+        <MyContent name={"ดูทั้งหมด"} fontSize="small" />
+      </p>
+      <GrNext className="text-red-500" />
+    </div>
+  </div>
 
           <div className="relative">
             <button
               onClick={handlePrev}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-green-700 rounded-full p-2"
+              className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-green-700 rounded-full p-2"
               disabled={currentIndex <= 0}
             >
               <GrPrevious className="text-white" />
@@ -784,7 +782,7 @@ export default observer(function ProductDetailScreen() {
 
             <motion.div
               ref={carouselRef}
-              className="flex overflow-hidden"
+              className="flex overflow-x-scroll space-x-4 px-4"
               transition={{ type: "tween", duration: 0.5 }}
             >
               {RecommendProducts.slice(
@@ -794,7 +792,7 @@ export default observer(function ProductDetailScreen() {
                 <motion.div
                   onClick={() => NavigateDetail(item)}
                   key={item.id}
-                  className="m-custom-marginleft mb-9 w-64 max-w-custom-size overflow-hidden rounded-lg bg-white border relative cursor-pointer"
+                  className="flex-shrink-0  m-custom-marginleft mb-9 w-64 max-w-custom-size overflow-hidden rounded-lg bg-white border relative cursor-pointer "
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
@@ -864,85 +862,73 @@ export default observer(function ProductDetailScreen() {
             </motion.div>
 
             <button
-              onClick={handleNext}
-              className={`absolute right-0 top-1/2 transform -translate-y-1/2 z-10 rounded-full p-2 ${
-                isDisabled ? "bg-gray-400" : "bg-green-700"
-              }`}
-              disabled={isDisabled}
-            >
-              <GrNext className="text-white" />
-            </button>
+      onClick={handleNext}
+      className={`absolute right-2 top-1/2 transform -translate-y-1/2 z-10 rounded-full p-2 ${
+        isDisabled ? "bg-gray-400" : "bg-green-700"
+      }`}
+      disabled={isDisabled}
+    >
+      <GrNext className="text-white" />
+    </button>
           </div>
         </div>
       )}
 
+
+
+      
+
       <div className="bg-white mt-5">
-        <div className="ml-12 pt-5 text-2xl mb-3 flex justify-between">
-          {/* <p>สินค้าใกล้เคียงกัน</p> */}
-          <MyContent name={"สินค้าใกล้เคียงกัน"} fontSize="normal" />
+        <div className="px-6 pt-5 text-2xl mb-5 flex justify-between items-center">
+          <MyContent name="สินค้าใกล้เคียงกัน" fontSize="normal" />
         </div>
 
-        <div className="relative">
-          <div className="flex overflow-hidden">
-            <div className="grid grid-cols-4 gap-4">
-              {filteredProducts.slice(0, visibleCount).map((item) => (
-                <div
-                  onClick={() => NavigateDetail(item)}
-                  key={item.id}
-                  className="m-4 w-64 max-w-full overflow-hidden rounded-lg bg-white border relative cursor-pointer"
-                >
-                  <div className="shadow-md relative">
-                    <img
-                      className="h-48 w-full rounded-t-lg object-cover"
-                      src={pathImages.product + item.images}
-                      alt="product image"
-                    />
-                    {/* <span className="absolute top-0 left-0 w-28 translate-y-6 -translate-x-6 -rotate-45 bg-red-500 text-center text-sm text-white z-10">
-                      ยอดนิยม
-                    </span> */}
-                    <div className="mt-4 px-3 pb-5">
-                      <h5
-                        className="text-base font-semibold tracking-tight text-slate-900"
-                        style={{ fontSize: fontSizenormal }}
-                      >
-                        {/* {item.productGI.name} */}
-                        <MyContent
-                          name={item.productGI.name}
-                          fontSize="small"
-                        />
-                      </h5>
-                      <div className="flex items-center justify-between mt-10">
-                        <p>
-                          <span className="text-xl font-bold text-slate-900 flex">
-                            {/* ฿{item.price} */}
-                            ฿
-                            <MyContent name={item.price} fontSize="small" />
-                          </span>
-                        </p>
-                        <button className="flex items-center rounded-md bg-slate-900 px-4 py-2.5 text-center text-xs font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="mr-2 h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                            />
-                          </svg>
-                          {/* เพิ่มสินค้าลงตะกร้า */}
-                          รายละเอียดสินค้า
-                        </button>
-                      </div>
+        <div className="relative px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            {filteredProducts.slice(0, visibleCount).map((item) => (
+              <div
+                key={item.id}
+                onClick={() => NavigateDetail(item)}
+                className="overflow-hidden rounded-lg bg-white border border-gray-200 shadow-sm transition-transform transform hover:scale-105 cursor-pointer"
+              >
+                <div className="relative">
+                  <img
+                    className="h-48 w-full rounded-t-lg object-cover"
+                    src={pathImages.product + item.images}
+                    alt="product image"
+                  />
+                  <div className="p-4">
+                    <h5 className="text-sm font-medium text-gray-800 mb-2">
+                      <MyContent name={item.productGI.name} fontSize="small" />
+                    </h5>
+                    <div className="flex items-center justify-between">
+                      <p className="text-lg font-bold text-gray-900 flex items-center">
+                        <span className="mr-1">฿</span>
+                        <MyContent name={item.price} fontSize="small" />
+                      </p>
+
+                      <button className="flex items-center rounded-md bg-gray-800 px-3 py-2 text-xs font-medium text-white hover:bg-gray-700 focus:outline-none">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="mr-1 h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                          />
+                        </svg>
+                        รายละเอียดสินค้า
+                      </button>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

@@ -128,200 +128,138 @@ export default observer(function ShopDetailScreen() {
 
   return (
     <div>
+      
       <div className="bg-white p-6 shadow-md">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <img
-              src="https://marketplace.canva.com/EAFaFUz4aKo/2/0/1600w/canva-yellow-abstract-cooking-fire-free-logo-JmYWTjUsE-Q.jpg"
-              alt="Store Logo"
-              className="w-16 h-16 object-cover rounded-full"
-            />
-            <div>
-              <h1 className="text-xl font-bold">{shopDetail?.name}</h1>
-              <p className="text-gray-500 text-lg">
-                สร้างโดย {shopDetail?.user.fullName}
-              </p>
-            </div>
-          </div>
+  <div className="flex flex-col lg:flex-row items-center justify-between space-y-4 lg:space-y-0">
+    <div className="flex items-center space-x-4">
+      <img
+        src="https://marketplace.canva.com/EAFaFUz4aKo/2/0/1600w/canva-yellow-abstract-cooking-fire-free-logo-JmYWTjUsE-Q.jpg"
+        alt="Store Logo"
+        className="w-16 h-16 object-cover rounded-full"
+      />
+      <div>
+        <h1 className="text-xl font-bold">{shopDetail?.name}</h1>
+        <p className="text-gray-500 text-lg">สร้างโดย {shopDetail?.user.fullName}</p>
+      </div>
+    </div>
 
-          <div className="space-y-8 text-center text-gray-600 pr-9">
-            <div className="flex space-x-8 justify-center">
-              <div>
-                <span className="text-red-500 text-xl font-bold">
-                  {shopProductUser.length}
-                </span>
-                <p>รายการสินค้า</p>
-              </div>
-              <div>
-                <span className="text-red-500 text-xl font-bold">
-                  {totalQuantity.toLocaleString()}
-                </span>
-                <p>จำนวนสินค้าที่ถูกซื้อ</p>
-              </div>
-              <div>
-                <span className="text-red-500 text-xl font-bold">
-                  {OrderByStore}
-                </span>
-                <p>ยอดการสั่งซื้อ</p>
-              </div>
-              <div>
-                <span className="text-red-500 text-xl font-bold">
-                  {timeAgo}
-                </span>
-                <p>สร้างร้านค้าเมื่อ</p>
-              </div>
-            </div>
+    <div className="space-y-8 text-center text-gray-600 lg:pr-9">
+      <div className="flex flex-wrap justify-center space-x-4 lg:space-x-8">
+        <div className="flex flex-col items-center">
+          <span className="text-red-500 text-xl font-bold">{shopProductUser.length}</span>
+          <p>รายการสินค้า</p>
+        </div>
+        <div className="flex flex-col items-center">
+          <span className="text-red-500 text-xl font-bold">{totalQuantity.toLocaleString()}</span>
+          <p>จำนวนสินค้าที่ถูกซื้อ</p>
+        </div>
+        <div className="flex flex-col items-center">
+          <span className="text-red-500 text-xl font-bold">{OrderByStore}</span>
+          <p>ยอดการสั่งซื้อ</p>
+        </div>
+        <div className="flex flex-col items-center">
+          <span className="text-red-500 text-xl font-bold">{timeAgo}</span>
+          <p>สร้างร้านค้าเมื่อ</p>
+        </div>
+      </div>
 
-            {/* บรรทัดที่สอง */}
-
-            {shopProductDetail
-              ?.filter((store: any) =>
-                store.user.address.some((address: any) => address.isUsed_Store)
-              )
-              .map((store: any, index) => (
-                <div key={index} className="flex space-x-8 justify-center">
-                  {store.user.address
-                    .filter((address: any) => address.isUsed_Store)
-                    .map((address: any, i: any) => (
-                      <div className="flex" key={i}>
-                        <div className="mr-5">
-                          <span className="text-red-500 text-xl font-bold">
-                            {address.detail}
-                          </span>
-                          <p>บ้านเลขที่</p>
-                        </div>
-                        <div className="mr-5">
-                          <span className="text-red-500 text-xl font-bold">
-                            {address.subDistrict}
-                          </span>
-                          <p>ตำบล</p>
-                        </div>
-                        <div className="mr-5">
-                          <span className="text-red-500 text-xl font-bold">
-                            {address.district}
-                          </span>
-                          <p>อำเภอ</p>
-                        </div>
-                        <div>
-                          <span className="text-red-500 text-xl font-bold">
-                            {address.province}
-                          </span>
-                          <p>จังหวัด</p>
-                        </div>
-                      </div>
-                    ))}
+      {shopProductDetail
+        ?.filter((store: any) =>
+          store.user.address.some((address: any) => address.isUsed_Store)
+        )
+        .map((store: any, index) => (
+          <div key={index} className="flex flex-wrap justify-center space-x-4 lg:space-x-8">
+            {store.user.address
+              .filter((address: any) => address.isUsed_Store)
+              .map((address: any, i: any) => (
+                <div className="flex flex-col items-center lg:flex-row lg:space-x-4" key={i}>
+                  <div className="mr-5">
+                    <span className="text-red-500 text-xl font-bold">{address.detail}</span>
+                    <p>บ้านเลขที่</p>
+                  </div>
+                  <div className="mr-5">
+                    <span className="text-red-500 text-xl font-bold">{address.subDistrict}</span>
+                    <p>ตำบล</p>
+                  </div>
+                  <div className="mr-5">
+                    <span className="text-red-500 text-xl font-bold">{address.district}</span>
+                    <p>อำเภอ</p>
+                  </div>
+                  <div>
+                    <span className="text-red-500 text-xl font-bold">{address.province}</span>
+                    <p>จังหวัด</p>
+                  </div>
                 </div>
               ))}
-
-            {/* <div className="flex space-x-8 justify-center">
-              <div>
-                <span className="block text-green-500 text-xl font-bold">
-                  123/45 หมู่ 6
-                </span>
-                <p>บ้านเลขที่</p>
-              </div>
-              <div>
-                <span className="block text-gray-600 text-xl font-bold">
-                  ตำบลบางใหญ่
-                </span>
-                <p>ตำบล</p>
-              </div>
-              <div>
-                <span className="block text-blue-500 text-xl font-bold">
-                  อำเภอบางใหญ่
-                </span>
-                <p>อำเภอ</p>
-              </div>
-              <div>
-                <span className="block text-red-500 text-xl font-bold">
-                  นนทบุรี
-                </span>
-                <p>จังหวัด</p>
-              </div>
-            </div> */}
           </div>
-        </div>
+        ))}
+    </div>
+  </div>
+</div>
+
+
+<div className="px-4 md:px-14 mt-10">
+  <div className="bg-white p-4 shadow-md rounded-md border">
+    <h2 className="text-lg font-semibold mb-4">กรองข้อมูลสินค้า</h2>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-4">
+        <label className="text-sm font-medium text-gray-700">ประเภทผลไม้</label>
+        <select
+          value={selectedCategory}
+          onChange={(e) => onSelectCate(Number(e.target.value))}
+          className="block w-full md:w-52 bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:ring focus:ring-indigo-200"
+        >
+          {categories.map((item, i: number) => (
+            <option key={i} value={item.id}>
+              {item.name}
+            </option>
+          ))}
+        </select>
       </div>
 
-      <div className="pl-14 pr-14 mt-10">
-        <div className="bg-white p-4 shadow-md rounded-md -mb-6 border ">
-          <h2 className="text-lg font-semibold mb-4">กรองข้อมูลสินค้า</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="flex items-center space-x-4">
-              <label className="text-sm font-medium text-gray-700 ">
-                ประเภทผลไม้
-              </label>
-              <select
-                value={selectedCategory}
-                onChange={(e) => onSelectCate(Number(e.target.value))}
-                className="block w-52 bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:ring focus:ring-indigo-200"
-              >
-                {categories.map((item, i: number) => (
-                  <option key={i} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* <div className="mt-4">
-        <button
-          className="px-4 py-2 bg-green-500 text-white"
-          onClick={() => setSortPrice("asc")}
+      <div className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-4">
+        <label className="text-sm font-medium text-gray-700">ช่วงราคาสินค้า</label>
+        <select
+          value={sortPrice || ""}
+          onChange={onSortChange}
+          className="block w-full md:w-52 bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:ring focus:ring-indigo-200"
         >
-          ราคา: ต่ำไปสูง
-        </button>
-        <button
-          className="px-4 py-2 bg-red-500 text-white ml-2"
-          onClick={() => setSortPrice("desc")}
-        >
-          ราคา: สูงไปต่ำ
-        </button>
-      </div> */}
-
-            <div className="flex items-center space-x-4">
-              <label className="text-sm font-medium text-gray-700">
-                ช่วงราคาสินค้า
-              </label>
-              <select
-                value={sortPrice || ""}
-                onChange={onSortChange}
-                className="block w-52 bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:ring focus:ring-indigo-200"
-              >
-                <option value="" hidden>
-                  {sortPrice === "asc"
-                    ? "ราคา: จากน้อยไปมาก"
-                    : sortPrice === "desc"
-                    ? "ราคา: จากมากไปน้อย"
-                    : "ราคา"}
-                </option>
-                <option value="lowToHigh">ราคา: จากน้อยไปมาก</option>
-                <option value="highToLow">ราคา: จากมากไปน้อย</option>
-              </select>
-            </div>
-
-            <div className="flex items-center space-x-4 ml-11">
-              <button
-                onClick={handleResetSort}
-                className="w-52 text-base rounded-md bg-green-600 py-2 px-4 border border-transparent text-center text-white transition-all shadow-md hover:shadow-lg active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:opacity-50 disabled:shadow-none ml-2"
-                type="button"
-                disabled={loadingUser}
-              >
-                {loadingUser ? (
-                  <div>
-                    {" "}
-                    <CircularProgress size={17} color="inherit" />
-                  </div>
-                ) : (
-                  <div>
-                    <p>รีเซ็ตกรองข้อมูลสินค้า</p>
-                  </div>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
+          <option value="" hidden>
+            {sortPrice === "asc"
+              ? "ราคา: จากน้อยไปมาก"
+              : sortPrice === "desc"
+              ? "ราคา: จากมากไปน้อย"
+              : "ราคา"}
+          </option>
+          <option value="lowToHigh">ราคา: จากน้อยไปมาก</option>
+          <option value="highToLow">ราคา: จากมากไปน้อย</option>
+        </select>
       </div>
+
+      <div className="flex items-center justify-start lg:justify-end">
+        <button
+          onClick={handleResetSort}
+          className="w-full md:w-52 text-base rounded-md bg-green-600 py-2 px-4 border border-transparent text-white transition-all shadow-md hover:shadow-lg active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:opacity-50 disabled:shadow-none"
+          type="button"
+          disabled={loadingUser}
+        >
+          {loadingUser ? (
+            <div>
+              <CircularProgress size={17} color="inherit" />
+            </div>
+          ) : (
+            <div>
+              <p>รีเซ็ตกรองข้อมูลสินค้า</p>
+            </div>
+          )}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 pl-16 pr-16 mt-10">
         {filterProduct.map((product: Product, i: number) => {
           const userid = user?.id;
