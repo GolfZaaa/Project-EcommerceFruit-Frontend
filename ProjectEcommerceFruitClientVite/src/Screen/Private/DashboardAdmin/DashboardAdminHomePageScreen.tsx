@@ -1,688 +1,265 @@
-import React, { useEffect, useState } from "react";
-import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import { observer } from "mobx-react-lite";
-import { NavLink } from "react-router-dom";
-import { RoutePath } from "../../../constants/RoutePath";
-import DashboardAdminShowUser from "./DashboardAdminShowUser";
-import DashboardAdminShowStore from "./DashboardAdminShowStore";
-import { useStore } from "../../../store/store";
-import DashboardAdminShowProduct from "./DashboardAdminShowProduct";
-import DashboardAdminShowProductGI from "./DashboardAdminShowProductGI";
-import DashboardAdminShowOrder from "./DashboardAdminShowOrder";
-import DashboardAdminShowSystemSetting from "./DashboardAdminShowSystemSetting";
-import DashboardAdminSlideShow from "./DashboardAdminSlideShow";
-import DashboardAdminNEWS from "./DashboardAdminNEWS";
+  import React, { useEffect, useState } from "react";
+  import {
+    AppBar,
+    Box,
+    Divider,
+    Drawer,
+    IconButton,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Toolbar,
+    Typography,
+  } from "@mui/material";
+  import MenuIcon from "@mui/icons-material/Menu";
+  import { observer } from "mobx-react-lite";
+  import { NavLink } from "react-router-dom";
+  import { RoutePath } from "../../../constants/RoutePath";
+  import DashboardAdminShowUser from "./DashboardAdminShowUser";
+  import DashboardAdminShowStore from "./DashboardAdminShowStore";
+  import { useStore } from "../../../store/store";
+  import DashboardAdminShowProduct from "./DashboardAdminShowProduct";
+  import DashboardAdminShowProductGI from "./DashboardAdminShowProductGI";
+  import DashboardAdminShowOrder from "./DashboardAdminShowOrder";
+  import DashboardAdminShowSystemSetting from "./DashboardAdminShowSystemSetting";
+  import DashboardAdminSlideShow from "./DashboardAdminSlideShow";
+  import DashboardAdminNEWS from "./DashboardAdminNEWS";
+  import { FaBoxOpen, FaClipboardList, FaStore, FaUser } from "react-icons/fa6";
+  import { GiCardboardBox } from "react-icons/gi";
+  import { FaCog, FaImage, FaNewspaper } from "react-icons/fa";
+import MyContent from "../../../component/MyContent";
 
-export default observer(function DashboardAdminHomePageScreen() {
-  const [show, setShow] = useState(false);
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const { getStoreAll } = useStore().shopuserStore;
-  const { getProduct } = useStore().productStore;
-  const { getOrdersAll } = useStore().orderStore;
-  const { getSystemSetting } = useStore().systemSettingStore;
+  const drawerWidth = 240;
 
-  useEffect(() => {
-    getSystemSetting();
-  }, []);
+  export default observer(function DashboardAdminHomePageScreen() {
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const { getStoreAll } = useStore().shopuserStore;
+    const { getProduct } = useStore().productStore;
+    const { getOrdersAll } = useStore().orderStore;
+    const { getSystemSetting } = useStore().systemSettingStore;
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+    useEffect(() => {
+      getSystemSetting();
+    }, []);
 
-  const [screenComponent, setScreenComponent] = useState(
-    "DashboardAdminShowUser"
-  );
 
-  const renderScreens = () => {
-    switch (screenComponent) {
-      case "DashboardAdminShowUser":
-        return <DashboardAdminShowUser />;
-      case "DashboardAdminShowStore":
-        return <DashboardAdminShowStore />;
-      case "DashboardAdminShowProduct":
-        return <DashboardAdminShowProduct />;
-      case "DashboardAdminShowProductGI":
-        return <DashboardAdminShowProductGI />;
-      case "DashboardAdminShowOrder":
-        return <DashboardAdminShowOrder />;
-      case "DashboardAdminShowSystemSetting":
-        return <DashboardAdminShowSystemSetting />;
-      case "DashboardAdminSlideShow":
-        return <DashboardAdminSlideShow />;
-      case "DashboardAdminNEWS":
-        return <DashboardAdminNEWS />;
-      default:
-    }
-  };
+    const handleDrawerToggle = () => {
+      setMobileOpen(!mobileOpen);
+    };
 
-  const handleDashboardAdminShowStore = () => {
-    getStoreAll();
-    setScreenComponent("DashboardAdminShowStore");
-  };
+    const [screenComponent, setScreenComponent] = useState(
+      "DashboardAdminShowUser"
+    );
 
-  const handleDashboardAdminShowProduct = () => {
-    getProduct(0);
-    setScreenComponent("DashboardAdminShowProduct");
-  };
+    const renderScreens = () => {
+      switch (screenComponent) {
+        case "DashboardAdminShowUser":
+          return <DashboardAdminShowUser />;
+        case "DashboardAdminShowStore":
+          return <DashboardAdminShowStore />;
+        case "DashboardAdminShowProduct":
+          return <DashboardAdminShowProduct />;
+        case "DashboardAdminShowProductGI":
+          return <DashboardAdminShowProductGI />;
+        case "DashboardAdminShowOrder":
+          return <DashboardAdminShowOrder />;
+        case "DashboardAdminShowSystemSetting":
+          return <DashboardAdminShowSystemSetting />;
+        case "DashboardAdminSlideShow":
+          return <DashboardAdminSlideShow />;
+        case "DashboardAdminNEWS":
+          return <DashboardAdminNEWS />;
+        default:
+          return null;
+      }
+    };
 
-  const handleDashboardAdminShowProductGI = () => {
-    setScreenComponent("DashboardAdminShowProductGI");
-  };
+    const handleDashboardAdminShowStore = () => {
+      getStoreAll();
+      setScreenComponent("DashboardAdminShowStore");
+    };
 
-  const handleDashboardAdminShowOrder = () => {
-    getOrdersAll();
-    setScreenComponent("DashboardAdminShowOrder");
-  };
+    const handleDashboardAdminShowProduct = () => {
+      getProduct(0);
+      setScreenComponent("DashboardAdminShowProduct");
+    };
 
-  const handleDashboardAdminShowSystemSetting = () => {
-    getSystemSetting();
-    setScreenComponent("DashboardAdminShowSystemSetting");
-  };
+    const handleDashboardAdminShowProductGI = () => {
+      setScreenComponent("DashboardAdminShowProductGI");
+    };
 
-  const handleDashboardAdminSlideShow = () => {
-    setScreenComponent("DashboardAdminSlideShow");
-  };
+    const handleDashboardAdminShowOrder = () => {
+      getOrdersAll();
+      setScreenComponent("DashboardAdminShowOrder");
+    };
 
-  const handleDashboardAdminNEWS = () => {
-    setScreenComponent("DashboardAdminNEWS");
-  };
+    const handleDashboardAdminShowSystemSetting = () => {
+      getSystemSetting();
+      setScreenComponent("DashboardAdminShowSystemSetting");
+    };
 
-  return (
-    <div className="flex">
-      <AppBar
-        position="fixed"
-        sx={{
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: "#3f51b5",
-          height: 70,
+    const handleDashboardAdminSlideShow = () => {
+      setScreenComponent("DashboardAdminSlideShow");
+    };
+
+    const handleDashboardAdminNEWS = () => {
+      setScreenComponent("DashboardAdminNEWS");
+    };
+
+    const drawer = (
+      <div>
+      <Toolbar sx={{ minHeight: 0 }} />
+        <Divider />
+        <List
+        style={{
+          cursor: "pointer",
         }}
       >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
+          <ListItem
+            onClick={() => setScreenComponent("DashboardAdminShowUser")}
           >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
-            แดชบอร์ด
-          </Typography>
-          <div>
-            <NavLink
-              to={RoutePath.homeScreen}
-              style={{ textDecoration: "none", color: "#fff" }}
+            <ListItemIcon>
+              <FaUser className="text-2xl" />
+            </ListItemIcon>
+            <ListItemText primary="ข้อมูลผู้ใช้งาน" />
+          </ListItem>
+          <ListItem  onClick={handleDashboardAdminShowStore}>
+            <ListItemIcon>
+              <FaStore className="text-2xl" />
+            </ListItemIcon>
+            <ListItemText primary="ข้อมูลร้านค้าทั้งหมด" />
+          </ListItem>
+          <ListItem  onClick={handleDashboardAdminShowProduct}>
+            <ListItemIcon>
+              <FaBoxOpen className="text-2xl" />
+            </ListItemIcon>
+            <ListItemText primary="ข้อมูลสินค้าทั้งหมด" />
+          </ListItem>
+          <ListItem  onClick={handleDashboardAdminShowProductGI}>
+            <ListItemIcon>
+              <GiCardboardBox className="text-2xl" />
+            </ListItemIcon>
+            <ListItemText primary="ข้อมูล GI ทั้งหมด" />
+          </ListItem>
+          <ListItem button onClick={handleDashboardAdminShowOrder}>
+            <ListItemIcon>
+              <FaClipboardList className="text-2xl" />
+            </ListItemIcon>
+            <ListItemText primary="คำสั่งซื้อสินค้าทั้งหมด" />
+          </ListItem>
+        </List>
+        <Divider />
+        <List>
+          <ListItem button onClick={handleDashboardAdminShowSystemSetting}>
+            <ListItemIcon>
+              <FaCog className="text-2xl" />
+            </ListItemIcon>
+            <ListItemText primary="ตั้งค่าเว็บไซต์" />
+          </ListItem>
+          <ListItem button onClick={handleDashboardAdminSlideShow}>
+            <ListItemIcon>
+              <FaImage className="text-2xl" />
+            </ListItemIcon>
+            <ListItemText primary="รูปภาพหน้าเว็บ" />
+          </ListItem>
+          <ListItem button onClick={handleDashboardAdminNEWS}>
+            <ListItemIcon>
+              <FaNewspaper className="text-2xl" />
+            </ListItemIcon>
+            <ListItemText primary="ข่าวประชาสัมพันธ์" />
+          </ListItem>
+        </List>
+      </div>
+    );
+
+    return (
+      <Box sx={{ display: "flex" }}>
+      <AppBar
+          position="fixed"
+          sx={{
+            backgroundColor: "#3f51b5",
+            zIndex: (theme) => theme.zIndex.drawer, // ทำให้ AppBar อยู่ใต้ Drawer เมื่อ Drawer เปิด
+            
+          }}
+        >
+          <Toolbar sx={{ minHeight: 80 }}>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { sm: "none" } }}
             >
+              <MenuIcon />
+            </IconButton>
+            
+            <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
+              แดชบอร์ด
+            </Typography>
+            <NavLink to={RoutePath.homeScreen} style={{ textDecoration: "none", color: "#fff" }}>
               กลับหน้าหลัก
             </NavLink>
-          </div>
-        </Toolbar>
-      </AppBar>
+          </Toolbar>
+        </AppBar>
 
-      <div>
-        <div className="bg-gray-50">
-          <div className="bg-white xl:hidden flex text-gray-800  hover:text-black focus:outline-none focus:text-black justify-between w-full p-6 items-center ">
-            <button className="flex justify-between  items-center space-x-3">
-              <svg
-                width={34}
-                height={34}
-                viewBox="0 0 34 34"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M1 17H0H1ZM7 17H6H7ZM17 27V28V27ZM27 17H28H27ZM17 0C12.4913 0 8.1673 1.79107 4.97918 4.97918L6.3934 6.3934C9.20644 3.58035 13.0218 2 17 2V0ZM4.97918 4.97918C1.79107 8.1673 0 12.4913 0 17H2C2 13.0218 3.58035 9.20644 6.3934 6.3934L4.97918 4.97918ZM0 17C0 21.5087 1.79107 25.8327 4.97918 29.0208L6.3934 27.6066C3.58035 24.7936 2 20.9782 2 17H0ZM4.97918 29.0208C8.1673 32.2089 12.4913 34 17 34V32C13.0218 32 9.20644 30.4196 6.3934 27.6066L4.97918 29.0208ZM17 34C21.5087 34 25.8327 32.2089 29.0208 29.0208L27.6066 27.6066C24.7936 30.4196 20.9782 32 17 32V34ZM29.0208 29.0208C32.2089 25.8327 34 21.5087 34 17H32C32 20.9782 30.4196 24.7936 27.6066 27.6066L29.0208 29.0208ZM34 17C34 12.4913 32.2089 8.1673 29.0208 4.97918L27.6066 6.3934C30.4196 9.20644 32 13.0218 32 17H34ZM29.0208 4.97918C25.8327 1.79107 21.5087 0 17 0V2C20.9782 2 24.7936 3.58035 27.6066 6.3934L29.0208 4.97918ZM17 6C14.0826 6 11.2847 7.15893 9.22183 9.22183L10.636 10.636C12.3239 8.94821 14.6131 8 17 8V6ZM9.22183 9.22183C7.15893 11.2847 6 14.0826 6 17H8C8 14.6131 8.94821 12.3239 10.636 10.636L9.22183 9.22183ZM6 17C6 19.9174 7.15893 22.7153 9.22183 24.7782L10.636 23.364C8.94821 21.6761 8 19.3869 8 17H6ZM9.22183 24.7782C11.2847 26.8411 14.0826 28 17 28V26C14.6131 26 12.3239 25.0518 10.636 23.364L9.22183 24.7782ZM17 28C19.9174 28 22.7153 26.8411 24.7782 24.7782L23.364 23.364C21.6761 25.0518 19.3869 26 17 26V28ZM24.7782 24.7782C26.8411 22.7153 28 19.9174 28 17H26C26 19.3869 25.0518 21.6761 23.364 23.364L24.7782 24.7782ZM28 17C28 14.0826 26.8411 11.2847 24.7782 9.22183L23.364 10.636C25.0518 12.3239 26 14.6131 26 17H28ZM24.7782 9.22183C22.7153 7.15893 19.9174 6 17 6V8C19.3869 8 21.6761 8.94821 23.364 10.636L24.7782 9.22183ZM10.3753 8.21913C6.86634 11.0263 4.86605 14.4281 4.50411 18.4095C4.14549 22.3543 5.40799 26.7295 8.13176 31.4961L9.86824 30.5039C7.25868 25.9371 6.18785 21.9791 6.49589 18.5905C6.80061 15.2386 8.46699 12.307 11.6247 9.78087L10.3753 8.21913ZM23.6247 25.7809C27.1294 22.9771 29.1332 19.6127 29.4958 15.6632C29.8549 11.7516 28.5904 7.41119 25.8682 2.64741L24.1318 3.63969C26.7429 8.20923 27.8117 12.1304 27.5042 15.4803C27.2001 18.7924 25.5372 21.6896 22.3753 24.2191L23.6247 25.7809Z"
-                  fill="currentColor"
-                />
-              </svg>
-              <p className="text-2xl leading-6 ">OvonRueden</p>
-            </button>
-            <div
-              aria-label="toggler"
-              className="flex justify-center items-center"
-            >
-              <button
-                id="open"
-                onClick={() => setShow(!show)}
-                aria-label="open"
-                className={`${
-                  show ? "" : "hidden"
-                } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800`}
-              >
-                <svg
-                  className="text-gray-800"
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M4 6H20"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M4 12H20"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M4 18H20"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-              <button
-                id="close"
-                onClick={() => setShow(!show)}
-                aria-label="close"
-                className={`${
-                  show ? "hidden" : ""
-                } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800`}
-              >
-                <svg
-                  className="text-gray-800"
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M18 6L6 18"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M6 6L18 18"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div
-            id="Main"
-            className={`${
-              show ? "-translate-x-full" : "translate-x-0"
-            } bg-white transform  xl:translate-x-0 ease-in-out transition duration-500 flex justify-start items-start w-full sm:w-72   flex-col h-full`}
+        <Box
+          component="nav"
+          sx={{
+            width: { sm: drawerWidth },
+            flexShrink: { sm: 0 },
+            position: "relative",
+          }}
+          aria-label="mailbox folders"
+        >
+<Drawer
+  variant="temporary"
+  open={mobileOpen}
+  onClose={handleDrawerToggle}
+  ModalProps={{
+    keepMounted: true, 
+  }}
+  disableScrollLock={true} 
+  sx={{
+    display: { xs: "block", sm: "none" },
+    "& .MuiDrawer-paper": {
+      boxSizing: "border-box",
+      width: drawerWidth,
+    },
+  }}
+>
+  {drawer}
+</Drawer>
+
+          <Drawer
+            variant="permanent"
+            sx={{
+              display: { xs: "none", sm: "block" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+                zIndex: (theme) => theme.zIndex.appBar - 1, // ให้ Drawer ปกติอยู่ใต้ AppBar
+              },
+            }}
+            open
           >
-            <div className="xl:mt-6 flex flex-col justify-start items-start  px-4 w-full space-y-3 pb-5 ">
-              <button
-                onClick={() => setScreenComponent("DashboardAdminShowUser")}
-                className="focus:outline-none flex jusitfy-start hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4 items-center space-x-6 w-full "
-              >
-                <svg
-                  className="fill-stroke "
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M9 4H5C4.44772 4 4 4.44772 4 5V9C4 9.55228 4.44772 10 5 10H9C9.55228 10 10 9.55228 10 9V5C10 4.44772 9.55228 4 9 4Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M19 4H15C14.4477 4 14 4.44772 14 5V9C14 9.55228 14.4477 10 15 10H19C19.5523 10 20 9.55228 20 9V5C20 4.44772 19.5523 4 19 4Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M9 14H5C4.44772 14 4 14.4477 4 15V19C4 19.5523 4.44772 20 5 20H9C9.55228 20 10 19.5523 10 19V15C10 14.4477 9.55228 14 9 14Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M19 14H15C14.4477 14 14 14.4477 14 15V19C14 19.5523 14.4477 20 15 20H19C19.5523 20 20 19.5523 20 19V15C20 14.4477 19.5523 14 19 14Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <p className="text-base leading-4 ">ข้อมูลผู้ใช้งาน</p>
-              </button>
-              <button
-                onClick={handleDashboardAdminShowStore}
-                className="focus:outline-none flex jusitfy-start hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4  items-center w-full  space-x-6"
-              >
-                <svg
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M19 5H5C3.89543 5 3 5.89543 3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M3 7L12 13L21 7"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <p className="text-base leading-4 ">ข้อมูลร้านค้าทั้งหมด</p>
-              </button>
-              <button
-                onClick={handleDashboardAdminShowProduct}
-                className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full "
-              >
-                <svg
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 19C10.2091 19 12 17.2091 12 15C12 12.7909 10.2091 11 8 11C5.79086 11 4 12.7909 4 15C4 17.2091 5.79086 19 8 19Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M10.85 12.15L19 4"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M18 5L20 7"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M15 8L17 10"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <p className="text-base leading-4  ">ข้อมูลสินค้าทั้งหมด</p>
-              </button>
-              <button
-                onClick={handleDashboardAdminShowProductGI}
-                className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full "
-              >
-                <svg
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 19C10.2091 19 12 17.2091 12 15C12 12.7909 10.2091 11 8 11C5.79086 11 4 12.7909 4 15C4 17.2091 5.79086 19 8 19Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M10.85 12.15L19 4"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M18 5L20 7"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M15 8L17 10"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <p className="text-base leading-4  ">ข้อมูล GI ทั้งหมด</p>
-              </button>
-              <button
-                onClick={handleDashboardAdminShowOrder}
-                className="flex justify-start items-center space-x-6 hover:text-white focus:outline-none focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4  w-full "
-              >
-                <svg
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 21H12"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M10 21V3"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M10 4L19 8L10 12"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <p className="text-base leading-4  ">คำสั่งซื้อสินค้าทั้งหมด</p>
-              </button>
-            </div>
-            <div className="w-full px-4">
-              <hr className=" border-gray-100 w-full" />
-            </div>
-            <div className="mt-6 flex flex-col justify-start items-start  px-4 w-full space-y-3 pb-5 ">
-              {/* <button className="focus:outline-none flex justify-start items-center  hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded py-3 pl-4  w-full ">
-                <div className="flex justify-between items-center  w-full">
-                  <div className="flex justify-start items-center">
-                    <svg
-                      width={24}
-                      height={24}
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M15 10L11 14L17 20L21 4L3 11L7 13L9 19L12 15"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    <p className="text-base leading-4  ml-6">ตั้งค่าโลโก้</p>
-                  </div>
-                </div>
-              </button> */}
-              <button
-                onClick={handleDashboardAdminShowSystemSetting}
-                className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full "
-              >
-                <svg
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M14 8C15.1046 8 16 7.10457 16 6C16 4.89543 15.1046 4 14 4C12.8954 4 12 4.89543 12 6C12 7.10457 12.8954 8 14 8Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M4 6H12"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M16 6H20"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M8 14C9.10457 14 10 13.1046 10 12C10 10.8954 9.10457 10 8 10C6.89543 10 6 10.8954 6 12C6 13.1046 6.89543 14 8 14Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M4 12H6"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M10 12H20"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M17 20C18.1046 20 19 19.1046 19 18C19 16.8954 18.1046 16 17 16C15.8954 16 15 16.8954 15 18C15 19.1046 15.8954 20 17 20Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M4 18H15"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M19 18H20"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <p className="text-base leading-4">ตั้งค่าเว็บไซต์</p>
-              </button>
-              <button
-                onClick={handleDashboardAdminSlideShow}
-                className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full "
-              >
-                <svg
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M14 8C15.1046 8 16 7.10457 16 6C16 4.89543 15.1046 4 14 4C12.8954 4 12 4.89543 12 6C12 7.10457 12.8954 8 14 8Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M4 6H12"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M16 6H20"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M8 14C9.10457 14 10 13.1046 10 12C10 10.8954 9.10457 10 8 10C6.89543 10 6 10.8954 6 12C6 13.1046 6.89543 14 8 14Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M4 12H6"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M10 12H20"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M17 20C18.1046 20 19 19.1046 19 18C19 16.8954 18.1046 16 17 16C15.8954 16 15 16.8954 15 18C15 19.1046 15.8954 20 17 20Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M4 18H15"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M19 18H20"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <p className="text-base leading-4">รูปภาพหน้าเว็บ</p>
-              </button>
-              <button
-                onClick={handleDashboardAdminNEWS}
-                className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full "
-              >
-                <svg
-                  width={24}
-                  height={24}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M14 8C15.1046 8 16 7.10457 16 6C16 4.89543 15.1046 4 14 4C12.8954 4 12 4.89543 12 6C12 7.10457 12.8954 8 14 8Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M4 6H12"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M16 6H20"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M8 14C9.10457 14 10 13.1046 10 12C10 10.8954 9.10457 10 8 10C6.89543 10 6 10.8954 6 12C6 13.1046 6.89543 14 8 14Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M4 12H6"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M10 12H20"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M17 20C18.1046 20 19 19.1046 19 18C19 16.8954 18.1046 16 17 16C15.8954 16 15 16.8954 15 18C15 19.1046 15.8954 20 17 20Z"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M4 18H15"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M19 18H20"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <p className="text-base leading-4">ข่าวประชาสัมพันธ์</p>
-              </button>
-            </div>
-            <div className="w-full px-4">
-              <hr className=" border-gray-100 w-full" />
-            </div>
-            <div className="mt-6 flex flex-col justify-start items-start  px-4 w-full space-y-3 pb-5 ">
-              <div className="focus:outline-none flex justify-start items-center space-x-6 hover:text-white focus:bg-indigo-700 focus:text-white hover:bg-indigo-700 text-gray-600 rounded  py-3 pl-4  w-full "></div>
-            </div>
+            {drawer}
+          </Drawer>
+        </Box>
+
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+          }}
+        >
+          <Toolbar />
+          <div className="-mt-20">
+          {renderScreens()}
           </div>
-        </div>
-      </div>
-      <div className="flex-1 bg-gray-50">{renderScreens()}</div>
-    </div>
-  );
-});
+        </Box>
+      </Box>
+    );
+  });
