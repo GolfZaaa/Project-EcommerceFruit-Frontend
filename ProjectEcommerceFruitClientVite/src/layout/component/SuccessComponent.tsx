@@ -8,7 +8,7 @@ import { resetScroll } from "../../api/agent";
 import MyContent from "../../component/MyContent";
 import { formatDateThai } from "../../helper/components";
 
-const OrderDetail = ({ title, content }) => (
+const OrderDetail = ({ title, content }:any) => (
   <dl className="flex items-center justify-between gap-4">
     <dt className="font-normal text-gray-500 dark:text-gray-400">
       <MyContent name={title} fontSize="small" />
