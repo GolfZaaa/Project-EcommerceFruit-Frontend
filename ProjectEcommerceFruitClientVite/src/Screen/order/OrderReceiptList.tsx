@@ -59,7 +59,7 @@ const OrderReceiptList = () => {
   return token === null ? (
     <NotFoundScreen name={"เข้าสู่ระบบก่อน"} />
   ) : (
-    <div>
+    <div className="pt-10">
       <div
         style={{
           marginTop: 20,

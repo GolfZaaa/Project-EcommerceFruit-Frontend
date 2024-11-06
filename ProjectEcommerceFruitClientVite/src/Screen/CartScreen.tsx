@@ -199,36 +199,36 @@ export default observer(function CartScreen() {
   const { setLoadingUser, loadingUser } = useStore().userStore;
 
   return (
-<div>
-  <BannerComponent />
-  <section className="bg-white py-8 antialiased md:py-16">
-    <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 2xl:px-0">
-      {cartItems.length <= 0 ? (
-        <div></div>
-      ) : (
-        <div>
-          <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">
-            <MyContent
-              name={`จำนวนสินค้า ${cartItems.length} ชิ้น จาก ${
-                Object.entries(groupedCartItems).length
-              } ร้านค้า`}
-              fontSize="normal"
-            />
-          </h2>
-        </div>
-      )}
+    <div>
+      <BannerComponent />
+      <section className="bg-white py-8 antialiased md:py-16">
+        <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 2xl:px-0">
+          {cartItems.length <= 0 ? (
+            <div></div>
+          ) : (
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">
+                <MyContent
+                  name={`จำนวนสินค้า ${cartItems.length} ชิ้น จาก ${
+                    Object.entries(groupedCartItems).length
+                  } ร้านค้า`}
+                  fontSize="normal"
+                />
+              </h2>
+            </div>
+          )}
 
-      {cartItems.length <= 0 && (
-        <div className="flex flex-col items-center justify-center">
-          <MyLottie lottieFile={LottieCart} />
-          <div className="text-center text-lg font-medium text-gray-700 mt-4">
-            ไม่มีสินค้าในตะกร้า
-          </div>
-        </div>
-      )}
+          {cartItems.length <= 0 && (
+            <div className="flex flex-col items-center justify-center">
+              <MyLottie lottieFile={LottieCart} />
+              <div className="text-center text-lg font-medium text-gray-700 mt-4">
+                <MyContent name={"ไม่มีสินค้าในตะกร้า"} fontSize="large" />
+              </div>
+            </div>
+          )}
 
-      <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
-      <div className="w-8/12 flex flex-col space-y-6">
+          <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
+            <div className="w-8/12 flex flex-col space-y-6">
               {Object.entries(groupedCartItems).map(
                 ([storeName, items]: [string, CartItem[]], i) => (
                   <div
@@ -432,59 +432,58 @@ export default observer(function CartScreen() {
               )}
             </div>
 
-        {cartItems.length > 0 && (
-          <div className="mt-6 lg:mt-0 lg:w-4/12 space-y-6">
-            <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-              <p className="text-xl font-semibold text-gray-900">
-                <MyContent name="สรุปการสั่งซื้อ" fontSize="normal" />
-              </p>
-              <div className="mt-4 mb-5">
-                <dl className="flex items-center justify-between">
-                  <dt className="text-base font-bold text-gray-800">
-                    <MyContent name="ราคารวม" fontSize="small" />
-                  </dt>
-                  <dd className="text-base font-medium text-green-600">
-                    <MyContent
-                      name={`${!checkedItem ? 0 : formattedTotalPrice} บาท`}
-                      fontSize="small"
-                    />
-                  </dd>
-                </dl>
+            {cartItems.length > 0 && (
+              <div className="mt-6 lg:mt-0 lg:w-4/12 space-y-6">
+                <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+                  <p className="text-xl font-semibold text-gray-900">
+                    <MyContent name="สรุปการสั่งซื้อ" fontSize="normal" />
+                  </p>
+                  <div className="mt-4 mb-5">
+                    <dl className="flex items-center justify-between">
+                      <dt className="text-base font-bold text-gray-800">
+                        <MyContent name="ราคารวม" fontSize="small" />
+                      </dt>
+                      <dd className="text-base font-medium text-green-600">
+                        <MyContent
+                          name={`${!checkedItem ? 0 : formattedTotalPrice} บาท`}
+                          fontSize="small"
+                        />
+                      </dd>
+                    </dl>
+                  </div>
+                  <button
+                    onClick={handleToOrderSummary}
+                    disabled={!checkedItem}
+                    className={`flex w-full items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium text-white focus:outline-none focus:ring-4 ${
+                      !checkedItem
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 dark:bg-green-500 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                    }`}
+                  >
+                    {loadingUser ? (
+                      <CircularProgress size={17} color="inherit" />
+                    ) : (
+                      <MyContent name="ดำเนินการชำระเงิน" fontSize="small" />
+                    )}
+                  </button>
+                  <div className="mt-4 items-center justify-center flex">
+                    <span className="text-sm font-normal text-gray-800">
+                      <MyContent name="หรือ" fontSize="small" />
+                    </span>
+                    <button
+                      onClick={handleBackHomeScreen}
+                      className="ml-2 text-sm font-medium text-primary-700 underline hover:no-underline"
+                    >
+                      <MyContent name="ช้อปปิ้งต่อ" fontSize="small" />
+                    </button>
+                  </div>
+                </div>
               </div>
-              <button
-                 onClick={handleToOrderSummary}
-                 disabled={!checkedItem}
-                 className={`flex w-full items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium text-white focus:outline-none focus:ring-4 ${
-                   !checkedItem
-                     ? "bg-gray-400 cursor-not-allowed"
-                     : "bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 dark:bg-green-500 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                 }`}
-              >
-                {loadingUser ? (
-                  <CircularProgress size={17} color="inherit" />
-                ) : (
-                  <MyContent name="ดำเนินการชำระเงิน" fontSize="small" />
-                )}
-              </button>
-              <div className="mt-4 items-center justify-center flex">
-                <span className="text-sm font-normal text-gray-800">
-                  <MyContent name="หรือ" fontSize="small" />
-                </span>
-                <button
-                  onClick={handleBackHomeScreen}
-                  className="ml-2 text-sm font-medium text-primary-700 underline hover:no-underline"
-                >
-                  <MyContent name="ช้อปปิ้งต่อ" fontSize="small" />
-                </button>
-              </div>
-            </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      </section>
+      <Footer />
     </div>
-  </section>
-  <Footer />
-</div>
-
   );
 });
