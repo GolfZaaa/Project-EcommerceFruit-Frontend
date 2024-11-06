@@ -15,6 +15,7 @@ export default observer(function TabLayout() {
   const { getToken } = useStore().commonStore;
   const { getSystemSetting } = useStore().systemSettingStore;
   const { cartItemsStore } = useStore().cartStore;
+  const { user } = useStore().userStore;
   const colorScheme = useColorScheme();
   const router = useRouter();
 
@@ -34,6 +35,8 @@ export default observer(function TabLayout() {
     getToken();
     getSystemSetting();
   }, []);
+
+  console.log("user", !!user);
 
   return (
     <Tabs
@@ -108,6 +111,9 @@ export default observer(function TabLayout() {
               style={{ transform: [{ scale: focused ? 1.2 : 1 }] }}
             />
           ),
+          tabBarStyle: {
+            display: "none",
+          },
         }}
       />
       <Tabs.Screen

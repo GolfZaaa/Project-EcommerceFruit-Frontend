@@ -21,6 +21,7 @@ import * as FileSystem from "expo-file-system";
 
 import * as ImagePicker from "expo-image-picker";
 import { SegmentedButtons } from "react-native-paper";
+import { Mytoast } from "@/components/MyToast";
 
 const formatNumberWithCommas = (number: number) => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -179,6 +180,13 @@ export default observer(function CartDetailScreen() {
           const test = await CreateUpdateOrderById(Data);
 
           console.log("test", test);
+
+          if (typeof test === "number") {
+            router.push("/successscreen");
+          } else {
+            alert("เกิดข้อผิดพลาด");
+            Mytoast("เกิดข้อผิดพลาด");
+          }
 
           // alert("เริ่มการชำระเงินได้");
         } else {

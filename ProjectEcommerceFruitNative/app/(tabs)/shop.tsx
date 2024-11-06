@@ -10,10 +10,14 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { useStore } from "@/src/store/store";
 
 const { width } = Dimensions.get("window");
 
 export default function ShopScreen() {
+  const { GetShopByUserId } = useStore().shopUserStore;
+  const { GetAddressByStore } = useStore().addressStore;
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const slideAnim = useRef(new Animated.Value(-width)).current;
 
@@ -33,7 +37,9 @@ export default function ShopScreen() {
     }
   };
 
-  const handleEditStoreName = () => {
+  const handleEditStoreName = async () => {
+    await GetShopByUserId();
+    await GetAddressByStore();
     router.push("../storeuser/editname");
   };
 
@@ -94,23 +100,33 @@ export default function ShopScreen() {
         </TouchableOpacity>
       </Animated.View>
 
-
-
       <View style={styles.cardContainer}>
-          <View style={{justifyContent:"center",alignItems:'center',flex:1}}>
-          <Text style={{ fontSize: 20, color: '#8a8a8a', fontWeight: 'bold', letterSpacing: 1.2, marginBottom: 10 }}>
-    รายได้รวมจากการจำหน่ายสินค้า
-  </Text>
-  <Text style={{ fontSize: 40, color: '#28a745', fontWeight: 'bold', letterSpacing: 1.5 }}>
-    ฿17,000
-  </Text>
-          </View>
+        <View
+          style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+              color: "#8a8a8a",
+              fontWeight: "bold",
+              letterSpacing: 1.2,
+              marginBottom: 10,
+            }}
+          >
+            รายได้รวมจากการจำหน่ายสินค้า
+          </Text>
+          <Text
+            style={{
+              fontSize: 40,
+              color: "#28a745",
+              fontWeight: "bold",
+              letterSpacing: 1.5,
+            }}
+          >
+            ฿17,000
+          </Text>
+        </View>
       </View>
-
-
-      
-
-
     </View>
   );
 }
@@ -125,7 +141,7 @@ const styles = StyleSheet.create({
   burgerIcon: {
     position: "absolute",
     top: 40,
-    right: 20,
+    left: 20,
     zIndex: 1,
   },
   menuItem: {

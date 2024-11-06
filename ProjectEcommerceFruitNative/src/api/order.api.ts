@@ -31,12 +31,12 @@ export const Order = {
   cancelOrder: (values: any | undefined) =>
     requests.post(`Order/CancelOrder`, createFormData(values)),
   CreateUpdateOrderById: (values: any | undefined) =>
-    requests.post(`Order/CreateUpdateOrderById`, createFormData(values)),
+    requests.postForm(`Order/CreateUpdateOrderById`, createFormData(values)),
   getOrdersAll: () => requests.get("Order/GetOrders"),
   getOrderItemByOrderId: (orderId: number) =>
     requests.get(`Order/GetOrderItemByOrderId?orderId=${orderId}`),
-  createOrderToReceipt: (valus: any) => {
-    return requests.post(
+  createOrderToReceipt: (valus: number[]) => {
+    return requests.postForm(
       `Order/CreateOrderToReceipt`,
       createFormDataUseMyName(valus, "orderId")
     );

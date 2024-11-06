@@ -8,15 +8,16 @@ import {
   ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { router, useNavigation } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import styled from "styled-components/native";
 import { LinearGradient } from "expo-linear-gradient";
 import mockAddress from "../assets/json/new_data.json";
 import SelectDropdown from "react-native-select-dropdown";
 import { useStore } from "@/src/store/store";
 import { Mytoast } from "@/components/MyToast";
+import { observer } from "mobx-react-lite";
 
-const Container: any = styled(LinearGradient).attrs({
+export const Container: any = styled(LinearGradient).attrs({
   colors: ["#E8F0FF", "#F7F9FC"],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
@@ -26,7 +27,7 @@ const Container: any = styled(LinearGradient).attrs({
   padding-top: 60px;
 `;
 
-const Title: any = styled.Text`
+export const Title: any = styled.Text`
   font-size: 30px;
   font-weight: bold;
   color: #333;
@@ -34,15 +35,20 @@ const Title: any = styled.Text`
   margin-bottom: 20px;
 `;
 
-export default function EditAddressScreen() {
+export default observer(function EditAddressScreen() {
+  const params = useLocalSearchParams();
+  const { title, data: dAtA, goto, setting }: any = params;
+
+  const datA = JSON.parse(dAtA);
+
   const { createUpdateAddress, getAddressByUserId } = useStore().addressStore;
 
   const navigation = useNavigation();
-  const [address, setAddress] = useState("");
-  const [postCode, setPostCode] = useState("");
+  const [address, setAddress] = useState(datA ? datA.detail : "");
+  const [postCode, setPostCode] = useState(datA ? datA.postCode : "");
 
   const [data, setData]: any = useState([]);
-  const [dataSelect, setdataSelect]: any = useState([]);
+  const [dataSelect, setdataSelect]: any = useState(datA ? datA : []);
 
   const handleSave = async () => {
     if (
@@ -55,7 +61,7 @@ export default function EditAddressScreen() {
       console.log("บันทึกได้ !!");
 
       const dataAddress = {
-        id: 0,
+        id: datA.id,
         subDistrict: dataSelect.subDistrict,
         district: dataSelect.district,
         province: dataSelect.province,
@@ -66,15 +72,23 @@ export default function EditAddressScreen() {
         gps: "",
       };
 
-      await createUpdateAddress(dataAddress).then((result) => {
+      await createUpdateAddress(dataAddress).then(async (result) => {
         console.log("dataAddress", dataAddress);
         console.log("result", result);
 
         if (!!result) {
           Mytoast("เพิ่มที่อยู่สำเร็จ");
-          getAddressByUserId();
+          await getAddressByUserId();
 
-          router.replace("/cartdetail");
+          console.log("setting", setting);
+
+          if (JSON.parse(setting) === true) {
+            router.back();
+          } else {
+            router.replace("/cartdetail");
+          }
+        } else {
+          Mytoast("เกิดข้อผิดพลาด");
         }
       });
     } else {
@@ -111,6 +125,9 @@ export default function EditAddressScreen() {
     searchByZipCode(Number(postCode));
   }, [postCode]);
 
+  console.log("datA", datA);
+  console.log("address", address);
+
   return (
     <Container>
       <TouchableOpacity
@@ -125,7 +142,7 @@ export default function EditAddressScreen() {
         <Ionicons name="arrow-back" size={30} color="#007bff" />
       </TouchableOpacity>
 
-      <Title>เพิ่มที่อยู่</Title>
+      <Title>{title}</Title>
 
       <ScrollView contentContainerStyle={styles.formContainer}>
         <TextInput
@@ -211,7 +228,7 @@ export default function EditAddressScreen() {
       </ScrollView>
     </Container>
   );
-}
+});
 
 const styles = StyleSheet.create({
   formContainer: {

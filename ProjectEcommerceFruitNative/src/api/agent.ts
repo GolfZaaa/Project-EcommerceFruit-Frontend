@@ -7,10 +7,11 @@ import { Cart } from "./cart.api";
 import { SystemSetting } from "./systemsetting.api";
 import { Address } from "./address.api";
 import { Order } from "./order.api";
+import { Shop } from "./shop.api";
 
 // axios.defaults.baseURL = "https://localhost:7168/api/";
 
-export const port = "https://d6ba-202-28-123-199.ngrok-free.app/";
+export const port = "https://e5aa-202-28-123-199.ngrok-free.app/";
 
 axios.defaults.baseURL = port + "api/";
 
@@ -57,7 +58,6 @@ export const requests = {
   onlyGet: (url: string, params?: any) =>
     axios.get(url + params).then(responseBody),
   post: (url: string, params: {}) => axios.post(url, params).then(responseBody),
-
   onlyPost: (url: string) => axios.post(url).then(responseBody),
   put: (url: string, params: {}) => axios.put(url, params).then(responseBody),
   delete: (url: string) => axios.delete(url).then(responseBody),
@@ -80,4 +80,5 @@ export default {
   SystemSetting,
   Address,
   Order,
+  Shop,
 };

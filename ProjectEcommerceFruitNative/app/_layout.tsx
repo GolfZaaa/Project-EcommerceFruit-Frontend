@@ -45,8 +45,9 @@ export default function RootLayout() {
         <Stack.Screen name="editname" />
         <Stack.Screen name="listproductgi" />
         <Stack.Screen name="listproduct" />
-        <Stack.Screen name="../(tabs)" />
+        {/* <Stack.Screen name="../(tabs)" /> */}
         <Stack.Screen name="successscreen" />
+        <Stack.Screen name="addresslist" />
       </Stack>
     </ThemeProvider>
   );

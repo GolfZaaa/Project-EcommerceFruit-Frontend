@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -54,20 +54,35 @@ export const LogoutButton: any = ({ children, onPress }: any) => (
 export default observer(function SettingScreen() {
   const { logout } = useStore().commonStore;
   const { user } = useStore().userStore;
+  const {
+    getAddressByUserId,
+    getAddressgotoOrderByUserId,
+    myAddressgotoOrder,
+  } = useStore().addressStore;
+  const { searchOrdersWantToReceipt, getOrdersByUser } = useStore().orderStore;
+
+  useEffect(() => {
+    getAddressgotoOrderByUserId();
+  }, []);
 
   const handlePress = (screenName: string) => {
     console.log("Navigating to:", screenName);
   };
 
   const handleOrderhistory = async () => {
+    getOrdersByUser();
     router.push("/orderhistory");
   };
 
   const handleAddress = async () => {
-    router.push("/editaddress");
+    await getAddressByUserId().then(() => {
+      router.push("/addresslist");
+    });
+    // router.push("/editaddress");
   };
 
   const handleEarn = async () => {
+    searchOrdersWantToReceipt(new URLSearchParams());
     router.push("/earn");
   };
 
@@ -93,9 +108,9 @@ export default observer(function SettingScreen() {
             }}
             style={styles.avatar}
           />
-          <Text style={styles.userName}>Test</Text>
+          <Text style={styles.userName}>{user.fullName}</Text>
           <Text style={styles.userDetails}>
-            11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี
+            {`${myAddressgotoOrder?.detail} ต.${myAddressgotoOrder?.subDistrict} อ.${myAddressgotoOrder?.district} จ.${myAddressgotoOrder?.province}`}
           </Text>
         </View>
       </LinearGradient>

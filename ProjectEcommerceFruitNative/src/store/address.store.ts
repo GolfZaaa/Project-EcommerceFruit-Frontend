@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { Address } from "../models/Address";
 import { store } from "./store";
 import agent from "../api/agent";
@@ -49,6 +49,21 @@ export default class AddressStore {
     try {
       const result = await agent.Address.createUpdateAddress(values);
       store.systemSettingStore.setLoading(false);
+
+      return result;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  removeAddressById = async (id: number) => {
+    try {
+      const result = await agent.Address.removeAddressById(id);
+
+      console.log("resul t : ", result);
+
+      await this.getAddressByUserId();
+
       return result;
     } catch (error) {
       return error;

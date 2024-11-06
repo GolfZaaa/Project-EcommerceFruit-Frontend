@@ -9,10 +9,13 @@ export default class OrderStore {
   loadingOrder: boolean = false;
   ordertotal: Order[] = [];
   orderWantToReceipt: Order[] = [];
+  totalPriceMyOrder: number = 0;
 
   constructor() {
     makeAutoObservable(this);
   }
+
+  setTotalPriceMyOrder = (state: number) => (this.totalPriceMyOrder = state);
 
   setLoadingOrder = (state: boolean) => (this.loadingOrder = state);
 
@@ -180,10 +183,15 @@ export default class OrderStore {
     }
   };
 
-  createOrderToReceipt = async (valus: any) => {
+  createOrderToReceipt = async (valus: number[]) => {
+    console.log("valus", valus);
+
     try {
       const result = await agent.Order.createOrderToReceipt(valus);
-      this.getOrdersWantToReceipt();
+      console.log("result", result);
+
+      this.searchOrdersWantToReceipt(new URLSearchParams());
+
       return result;
     } catch (error) {
       return error;

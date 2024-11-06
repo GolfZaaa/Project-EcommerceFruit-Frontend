@@ -17,7 +17,7 @@ import { Checkbox, IconButton } from "react-native-paper";
 import { LoginButton, SaveButtonText } from "./setting";
 import { Product } from "@/src/models/Product";
 
-const formatNumberWithCommas = (number: number) => {
+export const formatNumberWithCommas = (number: number) => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
@@ -75,11 +75,13 @@ export default observer(function CartScreen() {
 
   useEffect(() => {
     setTotalPrice(formatNumberWithCommas(calculateTotalPrice()));
+
     setFormattedTotalPrice(
       formatNumberWithCommas(
         calculateTotalPrice() + systemSetting[0]?.shippingCost
       )
     );
+
     if (selectMyCart.length === 0) {
       setCheckedItem(null);
     }
@@ -95,7 +97,13 @@ export default observer(function CartScreen() {
         if (!!res) {
           router.push("/cartdetail");
         } else {
-          router.push("/editaddress");
+          router.push({
+            pathname: "/editaddress",
+            params: {
+              title: "เพิ่มที่อยู่",
+              data: JSON.stringify({ id: 0 }),
+            },
+          });
         }
       });
     }
@@ -357,7 +365,7 @@ export default observer(function CartScreen() {
         </TotalRow>
         <TotalRow>
           <TotalText>ค่าจัดส่ง</TotalText>
-          <TotalAmount>{systemSetting[0].shippingCost} ฿</TotalAmount>
+          <TotalAmount>{systemSetting[0]?.shippingCost} ฿</TotalAmount>
         </TotalRow>
         <TotalRow>
           <TotalText style={{ fontWeight: "bold", fontSize: 22 }}>
