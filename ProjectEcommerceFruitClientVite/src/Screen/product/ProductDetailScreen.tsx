@@ -21,6 +21,7 @@ import {
 import MyDescription from "../../components/MyDescription";
 import { motion } from "framer-motion";
 import MyContent from "../../component/MyContent";
+import { AiOutlineLogin } from "react-icons/ai";
 
 dayjs.extend(relativeTime);
 dayjs.locale("th");
@@ -215,7 +216,7 @@ export default observer(function ProductDetailScreen() {
   );
 
   const handleShopDetail = (item: any) => {
-    console.log("item",item)
+    console.log("item", item);
     navigate(RoutePath.shopDetail(item[0].userId));
     resetScroll();
   };
@@ -630,7 +631,7 @@ export default observer(function ProductDetailScreen() {
 
               <MyContent name={"นี่คือสินค้าในร้านของคุณ"} fontSize="small" />
             </button>
-          ) : (
+          ) : user ? (
             <button
               className="
 						focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800
@@ -653,7 +654,7 @@ export default observer(function ProductDetailScreen() {
                 <div>
                   <CircularProgress size={23} color="inherit" />
                 </div>
-              ) : (
+              ) : user ? (
                 <div className="flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -671,8 +672,51 @@ export default observer(function ProductDetailScreen() {
                   </svg>
                   <MyContent name={"เพิ่มลงตะกร้า"} fontSize="small" />
                 </div>
+              ) : (
+                <div className="flex items-center">
+                  <AiOutlineLogin className="mr-2 h-6 w-6" />
+                  <MyContent
+                    name={"ผู้ใช้ยังไม่ได้เข้าสู่ระบบ"}
+                    fontSize="small"
+                  />
+                </div>
               )}
             </button>
+          ) : (
+            <div>
+              <button
+                className="
+						focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400
+						text-base
+						flex
+						items-center
+						justify-center
+						leading-none
+						text-white
+						bg-slate-300
+						w-full
+						py-4
+						hover:bg-slate-400
+                        mt-4 
+					"
+                onClick={handleAddToCart}
+                disabled
+              >
+                {loadingCart ? (
+                  <div>
+                    <CircularProgress size={23} color="inherit" />
+                  </div>
+                ) : (
+                  <div className="flex items-center">
+                    <AiOutlineLogin className="mr-2 h-6 w-6" />
+                    <MyContent
+                      name={"ผู้ใช้ยังไม่ได้เข้าสู่ระบบ"}
+                      fontSize="small"
+                    />
+                  </div>
+                )}
+              </button>
+            </div>
           )}
         </div>
       </div>
@@ -758,18 +802,18 @@ export default observer(function ProductDetailScreen() {
 
       {RecommendProducts.length > 0 && (
         <div className="bg-white mt-5">
-           <div className="flex justify-between items-center px-4 md:px-8 lg:px-12 pt-5 text-2xl mb-3">
-    <MyContent name={"สินค้าจากร้านเดียวกัน"} fontSize="normal" />
-    <div
-      className="flex cursor-pointer items-center space-x-1 text-red-500"
-      onClick={() => handleShopDetail(shopProductDetail)}
-    >
-      <p className="font-semibold text-sm">
-        <MyContent name={"ดูทั้งหมด"} fontSize="small" />
-      </p>
-      <GrNext className="text-red-500" />
-    </div>
-  </div>
+          <div className="flex justify-between items-center px-4 md:px-8 lg:px-12 pt-5 text-2xl mb-3">
+            <MyContent name={"สินค้าจากร้านเดียวกัน"} fontSize="normal" />
+            <div
+              className="flex cursor-pointer items-center space-x-1 text-red-500"
+              onClick={() => handleShopDetail(shopProductDetail)}
+            >
+              <p className="font-semibold text-sm">
+                <MyContent name={"ดูทั้งหมด"} fontSize="small" />
+              </p>
+              <GrNext className="text-red-500" />
+            </div>
+          </div>
 
           <div className="relative">
             <button
@@ -862,21 +906,17 @@ export default observer(function ProductDetailScreen() {
             </motion.div>
 
             <button
-      onClick={handleNext}
-      className={`absolute right-2 top-1/2 transform -translate-y-1/2 z-10 rounded-full p-2 ${
-        isDisabled ? "bg-gray-400" : "bg-green-700"
-      }`}
-      disabled={isDisabled}
-    >
-      <GrNext className="text-white" />
-    </button>
+              onClick={handleNext}
+              className={`absolute right-2 top-1/2 transform -translate-y-1/2 z-10 rounded-full p-2 ${
+                isDisabled ? "bg-gray-400" : "bg-green-700"
+              }`}
+              disabled={isDisabled}
+            >
+              <GrNext className="text-white" />
+            </button>
           </div>
         </div>
       )}
-
-
-
-      
 
       <div className="bg-white mt-5">
         <div className="px-6 pt-5 text-2xl mb-5 flex justify-between items-center">
