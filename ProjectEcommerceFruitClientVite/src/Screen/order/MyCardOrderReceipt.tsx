@@ -37,7 +37,7 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
+      cancelButtonColor: "#5acb09",
       confirmButtonText: "ยืนยัน",
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
