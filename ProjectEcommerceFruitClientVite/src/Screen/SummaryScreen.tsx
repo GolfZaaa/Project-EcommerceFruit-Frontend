@@ -11,12 +11,10 @@ import { resetScroll } from "../api/agent";
 import CircularProgress from "@mui/material/CircularProgress";
 import MyContent from "../component/MyContent";
 
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { useStripe, useElements } from "@stripe/react-stripe-js";
 import { CardCvcElement } from "@stripe/react-stripe-js";
 import { CardExpiryElement } from "@stripe/react-stripe-js";
 import { CardNumberElement } from "@stripe/react-stripe-js";
-import { PaymentElement } from "@stripe/react-stripe-js";
-import { AddressElement } from "@stripe/react-stripe-js";
 
 interface CartItem {
   id: string;
@@ -56,9 +54,7 @@ export default observer(function SummaryScreen() {
 
   const {
     GetCartItemByUser,
-    cartItems,
     GetCartItemByUserOrderStore,
-    cartItemsStore,
     selectMyCart,
   } = useStore().cartStore;
 
@@ -70,6 +66,7 @@ export default observer(function SummaryScreen() {
   const [onChangeAddress, setOnChangeAddress] = useState(false);
 
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+
   const getData = async () => {
     await GetCartItemByUser();
     await getAddressgotoOrderByUserId();
@@ -86,7 +83,11 @@ export default observer(function SummaryScreen() {
     if (Number(e.target.value) !== 0) {
       setIsImageValid(true);
     }
+
+    setDropZoneImage(null);
   };
+
+  console.log("DropZoneImage",dropZoneImage)
 
   const confirmChangeAddress = () => {
     setOnChangeAddress(false);
@@ -130,6 +131,7 @@ export default observer(function SummaryScreen() {
   const handleCheckCardCvc = (event: any) => {
     setCheckCardCvcElement(event.complete);
   };
+
   const handleSubmit = async (value: any) => {
     if (selectedPaymentMethod === 0 && !dropZoneImage) {
       setIsImageValid(false);
