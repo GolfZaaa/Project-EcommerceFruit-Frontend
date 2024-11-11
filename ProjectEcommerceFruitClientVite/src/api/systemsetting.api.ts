@@ -32,4 +32,6 @@ export const SystemSetting = {
     requests.onlyPost(`SystemSetting/IsUsedNEWS?newsId=${id}`),
   removeNEWS: (id: any) =>
     requests.delete(`SystemSetting/RemoveNEWS?newsId=${id}`),
+  getNewsById: (id: any) =>
+    requests.get(`SystemSetting/GetNewsById?newsId=${id}`),
 };

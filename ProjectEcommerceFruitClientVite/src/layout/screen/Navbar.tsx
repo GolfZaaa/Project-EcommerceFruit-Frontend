@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography, IconButton, Badge } from "@mui/material";
 import { pathImages, RoutePath } from "../../constants/RoutePath";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -42,6 +42,8 @@ export default observer(function Navbar() {
     }
   }, [token]);
 
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const toggleDrawer = () => setDrawerOpen(!drawerOpen);
   return (
     <>
       <Backdrop
@@ -58,7 +60,7 @@ export default observer(function Navbar() {
       </Backdrop>
 
       <div>
-        <nav className=" fixed w-full px-4 py-4 flex justify-between items-center bg-white z-50 shadow-md">
+        <nav className="fixed w-full p-4 flex justify-between items-center bg-white shadow-md z-50">
           <NavLink to={RoutePath.firstscreen}>
             {loadings ? (
               <CircularProgress />
@@ -72,21 +74,30 @@ export default observer(function Navbar() {
                       alignItems: "center",
                     }}
                   >
-                    <img
-                      src={pathImages.image_web + systemSetting[0]?.image}
-                      alt="image"
-                      style={{
-                        width: 50,
-                        height: 50,
-                        objectFit: "contain",
-                      }}
-                    />
-                    <p className="ml-5">
-                      <MyContent
-                        name={systemSetting[0]?.webName}
-                        fontSize="large"
+                    <button
+                      className="lg:hidden text-2xl lg: mr-3"
+                      onClick={toggleDrawer}
+                    >
+                      &#9776;
+                    </button>
+
+                    <div className="hidden md:flex items-center justify-start ">
+                      <img
+                        src={pathImages.image_web + systemSetting[0]?.image}
+                        alt="image"
+                        style={{
+                          width: 50,
+                          height: 50,
+                          objectFit: "contain",
+                        }}
                       />
-                    </p>
+                      <p className="ml-5">
+                        <MyContent
+                          name={systemSetting[0]?.webName}
+                          fontSize="large"
+                        />
+                      </p>
+                    </div>
                   </div>
                 ) : (
                   <p>
@@ -101,7 +112,8 @@ export default observer(function Navbar() {
               </>
             )}
           </NavLink>
-          <div className="lg:hidden">
+
+          {/* <div className="lg:hidden">
             <button className="navbar-burger flex items-center text-blue-600 p-3">
               <svg
                 className="block h-4 w-4 fill-current"
@@ -112,7 +124,8 @@ export default observer(function Navbar() {
                 <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path>
               </svg>
             </button>
-          </div>
+          </div> */}
+
           <ul className="hidden absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 lg:flex lg:mx-auto lg:items-center lg:w-auto lg:space-x-6">
             <li>
               <NavLink
@@ -235,7 +248,6 @@ export default observer(function Navbar() {
             <div>
               <ButtonMui color="secondary" onClick={handleClick}>
                 <Typography variant="body1" color="black">
-                  {/* {user?.fullName} */}
                   <MyContent name={user?.fullName} fontSize="small" />
                 </Typography>
               </ButtonMui>
@@ -262,7 +274,6 @@ export default observer(function Navbar() {
                     to={RoutePath.dashboardShopScreen}
                     style={{ textDecoration: "none", color: "#000" }}
                   >
-                    {/* <MenuItem onClick={handleClose}>ร้านค้า</MenuItem> */}
                     <MenuItem onClick={handleClose}>
                       <MyContent name={"ร้านค้า"} fontSize="small" />
                     </MenuItem>
@@ -272,7 +283,6 @@ export default observer(function Navbar() {
                     to={RoutePath.createShopScreen}
                     style={{ textDecoration: "none", color: "#000" }}
                   >
-                    {/* <MenuItem onClick={handleClose}>ลงทะเบียนร้านค้า</MenuItem> */}
                     <MenuItem onClick={handleClose}>
                       <MyContent name={"ลงทะเบียนร้านค้า"} fontSize="small" />
                     </MenuItem>
@@ -317,6 +327,76 @@ export default observer(function Navbar() {
           )}
         </nav>
       </div>
+
+      <div
+        className={`fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity ${
+          drawerOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={toggleDrawer}
+      ></div>
+
+      <div
+        className={`fixed inset-0 bg-slate-50 w-64 p-4 z-50 transition-transform ${
+          drawerOpen ? "transform-none" : "transform -translate-x-full"
+        }`}
+      >
+        <div className="flex flex-col space-y-5 mt-5">
+          <NavLink
+            to={RoutePath.firstscreen}
+            className={({ isActive }) =>
+              `text-sm ${
+                isActive
+                  ? "text-blue-600 font-bold"
+                  : "text-gray-400 hover:text-gray-500"
+              }`
+            }
+          >
+            <MyContent name={"หน้าหลัก"} fontSize="normal" />
+          </NavLink>
+          <NavLink
+            to={RoutePath.homeScreen}
+            className={({ isActive }) =>
+              `text-sm ${
+                isActive
+                  ? "text-blue-600 font-bold"
+                  : "text-gray-400 hover:text-gray-500"
+              }`
+            }
+          >
+            <MyContent name={"สินค้า"} fontSize="normal" />
+          </NavLink>
+          {user && user && (
+            <NavLink
+              to={RoutePath.orderReceiptList}
+              className={({ isActive }) =>
+                `text-sm ${
+                  isActive
+                    ? "text-blue-600 font-bold"
+                    : "text-gray-400 hover:text-gray-500"
+                }`
+              }
+            >
+              <MyContent name={"สร้างรายได้"} fontSize="normal" />
+            </NavLink>
+          )}
+
+          {user?.roleId == 1 && (
+            <NavLink
+              to={RoutePath.dashboardAdminHomePageScreen}
+              className={({ isActive }) =>
+                `text-sm ${
+                  isActive
+                    ? "text-blue-600 font-bold"
+                    : "text-gray-400 hover:text-gray-500"
+                }`
+              }
+            >
+              <MyContent name={"ตั้งค่าระบบ"} fontSize="normal" />
+            </NavLink>
+          )}
+        </div>
+      </div>
+
       <div className="border border-gray-200 mb-20"></div>
     </>
   );

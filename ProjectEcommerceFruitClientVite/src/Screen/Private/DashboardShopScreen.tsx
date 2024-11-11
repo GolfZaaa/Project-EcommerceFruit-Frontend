@@ -639,6 +639,9 @@ export default observer(function DashboardShopScreen() {
         sx={{
           backgroundColor: "#3f51b5",
           zIndex: (theme) => theme.zIndex.drawer, // ทำให้ AppBar อยู่ใต้ Drawer เมื่อ Drawer เปิด
+          height:81,
+          justifyContent:'center',
+
         }}
       >
         <Toolbar sx={{ minHeight: 80 }}>

@@ -20,6 +20,7 @@ export const RoutePath = {
   successScreen: `${HOST}order-success-screen`,
   checkorderScreen: `${HOST}check-order-user`,
 
+
   addressScreen: `${HOST}Address-screen`,
   summaryScreen: `${HOST}summary-screen`,
 
@@ -29,6 +30,10 @@ export const RoutePath = {
 
   productDetail: (id: string) => `${HOST}product-detail-screen/${id}`,
   shopDetail: (id: string) => `${HOST}shop-detail-screen/${id}`,
+
+  newsList: `${HOST}news-list`,
+  newsListDetail: (id: string) => `${HOST}news-list-detail-screen/${id}`,
+
   // shopdetailScreen: `${HOST}shop-detail-screen`,
 
   createshop: `${HOST}create-shop`,
