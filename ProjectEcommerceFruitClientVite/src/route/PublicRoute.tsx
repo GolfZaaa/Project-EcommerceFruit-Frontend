@@ -21,6 +21,8 @@ import DashboardForUser from "../Screen/my/DashboardForUser";
 import CheckOrderScreen from "../Screen/CheckOrderScreen";
 import OrderReceiptList from "../Screen/order/OrderReceiptList";
 import ShopDetailScreen from "../Screen/ShopDetailScreen";
+import NewsList from "../Screen/news/NewsList";
+import NewsDetailScreen from "../Screen/news/NewsDetailScreen";
 
 export const PublicRoute: any = [
   {
@@ -132,5 +134,15 @@ export const PublicRoute: any = [
     id: 21,
     path: RoutePath.firstscreen + "shop-detail-screen/:id",
     element: <ShopDetailScreen />,
+  },
+  {
+    id: 22,
+    path: RoutePath.newsList,
+    element: <NewsList />,
+  },
+  {
+    id: 23,
+    path: RoutePath.firstscreen + "news-list-detail-screen/:id",
+    element: <NewsDetailScreen />,
   },
 ];

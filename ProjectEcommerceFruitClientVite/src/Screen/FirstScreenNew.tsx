@@ -28,6 +28,7 @@ import {
 } from "../api/agent";
 import MyDescription from "../components/MyDescription";
 import MyContent from "../components/MyContent";
+import { NEWS } from "../models/NEWS";
 
 const settingsImageSlide = {
   dots: false,
@@ -48,7 +49,7 @@ export default observer(function FirstScreenNew() {
 
   const { getUserAll, userAll, user } = useStore().userStore;
 
-  const { slideShow, getSlideShow, getSystemSetting } =
+  const { slideShow, getSlideShow, getSystemSetting, getNEWSs, news } =
     useStore().systemSettingStore;
 
   const [randomProduct, setRandomProduct] = useState<Product>();
@@ -61,9 +62,18 @@ export default observer(function FirstScreenNew() {
       await getUserAll();
       await getSystemSetting();
       await getSlideShow();
+      await getNEWSs();
     };
     fetchData();
-  }, [getProduct, getCategory]);
+  }, [getProduct, getCategory, getNEWSs]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getNEWSs();
+    };
+    fetchData();
+  }, [])
+  
 
   useEffect(() => {
     if (product.length > 0) {
@@ -86,6 +96,16 @@ export default observer(function FirstScreenNew() {
 
   const NavigateDetail = (product: any) => {
     navigate(RoutePath.productDetail(product.id));
+    resetScroll();
+  };
+
+  const NavigateNewsDetail = (item:any) => {
+    navigate(RoutePath.newsListDetail(item.id));
+    resetScroll();
+  };
+
+  const NavigateNews = () => {
+    navigate(RoutePath.newsList);
     resetScroll();
   };
 
@@ -317,76 +337,71 @@ export default observer(function FirstScreenNew() {
       </div>
       {/* ข้อมูลหลัก End */}
 
-
-
       {/* สินค้าสุ่ม Start */}
       <div className="xl:mx-auto xl:container">
-    <div className="lg:px-20 md:px-6 px-4 md:py-12 py-8">
-    <div className="flex flex-col xl:flex-row items-center">
-      <motion.div
-        ref={ref}
-        className="w-full xl:w-1/2 md:py-9 py-6"
-        data-aos="fade-left"
-      >
-        <img
-          src={randomProduct && pathImages.product + randomProduct.images}
-          alt="product"
-          className="w-full h-96 object-cover object-center transition-transform duration-500"
-        />
-      </motion.div>
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, x: -50, scale: 0.95, rotate: -5 }}
-        animate={controls}
-        className="w-full xl:w-1/2 xl:pl-12 xl:pr-24 mt-6 xl:mt-0 sm:pl-32 md:pl-28"
-      >
-        <p
-          className="text-sm leading-none text-gray-600 pb-2 xl:pl-16"
-          style={{ fontSize: fontSizesmall }}
-        >
-          {randomProduct && randomProduct.productGI.category.name}
-        </p>
-        <p
-          className="md:text-3xl xl:text-4xl text-2xl font-semibold xl:leading-9 text-gray-800 xl:pb-6 md:pb-4 pb-2 xl:pl-16"
-          style={{ fontSize: fontSizeBiglittle }}
-        >
-          {randomProduct && randomProduct.productGI.name}
-        </p>
-        <p
-          className="text-sm leading-5 text-gray-600 md:pb-10 pb-8 xl:pl-16"
-          style={{ fontSize: fontSizesmall }}
-        >
-          {randomProduct && randomProduct && (
-            <MyDescription text={randomProduct.productGI.description} />
-          )}
-        </p>
-        <div
-          className="md:block flex items-center justify-center xl:pl-16"
-          style={{ fontSize: fontSizesmall }}
-        >
-          <motion.button
-            onClick={() => NavigateDetail(randomProduct)}
-            className="lg:w-auto w-full border border-gray-800 hover:text-gray-50 hover:bg-gray-800 focus:outline-none lg:px-10 px-7 lg:py-4 py-3 text-sm leading-none text-gray-800"
-            whileHover={{ scale: 1.1, rotate: 2 }}
-            whileTap={{ scale: 0.95, rotate: -1 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          >
-            <MyContent name="ดูรายละเอียดเพิ่มเติม" fontSize="small" />
-          </motion.button>
+        <div className="lg:px-20 md:px-6 px-4 md:py-12 py-8">
+          <div className="flex flex-col xl:flex-row items-center">
+            <motion.div
+              ref={ref}
+              className="w-full xl:w-1/2 md:py-9 py-6"
+              data-aos="fade-left"
+            >
+              <img
+                src={randomProduct && pathImages.product + randomProduct.images}
+                alt="product"
+                className="w-full h-96 object-cover object-center transition-transform duration-500"
+              />
+            </motion.div>
+            <motion.div
+              ref={ref}
+              initial={{ opacity: 0, x: -50, scale: 0.95, rotate: -5 }}
+              animate={controls}
+              className="w-full xl:w-1/2 xl:pl-12 xl:pr-24 mt-6 xl:mt-0 sm:pl-32 md:pl-28"
+            >
+              <p
+                className="text-sm leading-none text-gray-600 pb-2 xl:pl-16"
+                style={{ fontSize: fontSizesmall }}
+              >
+                {randomProduct && randomProduct.productGI.category.name}
+              </p>
+              <p
+                className="md:text-3xl xl:text-4xl text-2xl font-semibold xl:leading-9 text-gray-800 xl:pb-6 md:pb-4 pb-2 xl:pl-16"
+                style={{ fontSize: fontSizeBiglittle }}
+              >
+                {randomProduct && randomProduct.productGI.name}
+              </p>
+              <p
+                className="text-sm leading-5 text-gray-600 md:pb-10 pb-8 xl:pl-16"
+                style={{ fontSize: fontSizesmall }}
+              >
+                {randomProduct && randomProduct && (
+                  <MyDescription text={randomProduct.productGI.description} />
+                )}
+              </p>
+              <div
+                className="md:block flex items-center justify-center xl:pl-16"
+                style={{ fontSize: fontSizesmall }}
+              >
+                <motion.button
+                  onClick={() => NavigateDetail(randomProduct)}
+                  className="lg:w-auto w-full border border-gray-800 hover:text-gray-50 hover:bg-gray-800 focus:outline-none lg:px-10 px-7 lg:py-4 py-3 text-sm leading-none text-gray-800"
+                  whileHover={{ scale: 1.1, rotate: 2 }}
+                  whileTap={{ scale: 0.95, rotate: -1 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                >
+                  <MyContent name="ดูรายละเอียดเพิ่มเติม" fontSize="small" />
+                </motion.button>
+              </div>
+            </motion.div>
+          </div>
         </div>
-      </motion.div>
-    </div>
-  </div>
-</div>
+      </div>
 
       {/* สินค้าสุ่ม End */}
-
-
 
       {/* สินค้าขายดี Start */}
       <div className=" 2xl:container 2xl:mx-auto px-4 md:px-6 2xl:px-6 py-16 flex justify-center overflow-hidden">
         <div className="flex flex-col justify-center items-center">
-          
           <div className="flex justify-start items-start">
             <p
               data-aos="fade-up"
@@ -780,193 +795,166 @@ export default observer(function FirstScreenNew() {
       {/* สเตตัส End */}
 
       {/* ข่าวสาร Start */}
-      <div className="container mx-auto px-4 mb-5 ">
-        <h1 className="text-5xl text-center f-m-w text-green-500 font-bold pt-0">
-          ข่าวประชาสัมพันธ์
-        </h1>
-        <div className="pt-14 xl:px-0 px-4">
-          <div className="w-full lg:flex overflow-x-hidden">
-            <div className="lg:w-1/2">
-              <img
-                data-aos="fade-right"
-                data-aos-offset="300"
-                data-aos-easing="ease-in-sine"
-                src={News1}
-                className="w-full"
-              />
-              <div
-                data-aos="fade-right"
-                data-aos-offset="300"
-                data-aos-easing="ease-in-sine"
-                className="mt-8 lg:mb-0 mb-8"
-              >
-                <h1
-                  data-aos="fade-right"
-                  data-aos-offset="300"
-                  data-aos-easing="ease-in-sine"
-                  className="f-m-m text-lg font-semibold leading-7"
-                >
-                  ลงพื้นที่รับขึ้นทะเบียนเกษตรกร 67/68 ม.6 ต.ลิ่นถิ่น
-                </h1>
-                <p
-                  data-aos="fade-right"
-                  data-aos-offset="300"
-                  data-aos-easing="ease-in-sine"
-                  className="f-m-m leading-loose mt-2"
-                  style={{ fontSize: fontSizesmall }}
-                >
-                  <MyContent
-                    name="วันที่ 18 กรกฎาคม 2567 นายจตุพร อิ่มจิตร เกษตรอำเภอทองผาภูมิ
-                  มอบหมายให้ นางสาวขนิษฐา บุญคำมา
-                  นักวิชาการส่งเสริมการเกษตรชำนาญการ
-                  ลงพื้นที่รับขึ้นทะเบียนเกษตรกรผู้ปลูกข้าว ปี67/68 ณ หมู่ 6
-                  ตำบลลิ่นถิ่น อำเภอทองผาภูมิ จังหวัดกาญจนบุรี
-                  พร้อมทั้งแจงโครงการปุ๋ยคนละครึ่ง ณ หมู่ 6 ตำบลลิ่นถิ่น
-                  อำเภอทองผาภูมิ จังหวัดกาญจนบุรี"
-                    fontSize="small"
-                  />
+      {news && (
+        <div className="container mx-auto px-4 mb-5 ">
+          <h1 className="text-5xl text-center f-m-w text-green-500 font-bold pt-0">
+            ข่าวประชาสัมพันธ์
+          </h1>
+
+          <div className="pt-14 xl:px-0 px-4">
+            <div className="w-full lg:flex overflow-x-hidden">
+
+{news.length > 0 &&
+  news
+    .filter((x, index) => index >= 3 && x.isUsed)
+    .slice(0, 1)
+    .map((item: NEWS) => {
+      const testNews = (item: NEWS) => {
+        console.log("testNews", item.id);
+      };
+      return (
+        <div className="lg:w-1/2">
+          <img
+            data-aos="fade-right"
+            data-aos-offset="300"
+            data-aos-easing="ease-in-sine"
+            src={pathImages.news + item.imageName}
+            className="w-full object-cover"
+            onClick={() => testNews(item)}
+          />
+          <div
+            data-aos="fade-right"
+            data-aos-offset="300"
+            data-aos-easing="ease-in-sine"
+            className="mt-8 lg:mb-0 mb-8"
+          >
+            <h1
+              data-aos="fade-right"
+              data-aos-offset="300"
+              data-aos-easing="ease-in-sine"
+              className="f-m-m text-lg font-semibold leading-7"
+            >
+              {item.title}
+            </h1>
+            <p
+              data-aos="fade-right"
+              data-aos-offset="300"
+              data-aos-easing="ease-in-sine"
+              className="f-m-m leading-loose mt-2"
+              style={{ fontSize: fontSizesmall, color: "#7b7575" }}
+            >
+              {item.description.replace(/<[^>]+>/g, "").length > 180
+                ? item.description
+                    .replace(/<[^>]+>/g, "")
+                    .slice(0, 180) + "..."
+                : item.description.replace(/<[^>]+>/g, "")}
+            </p>
+            <div
+              onClick={() => NavigateNewsDetail(item)}
+              data-aos="fade-right"
+              data-aos-offset="300"
+              data-aos-easing="ease-in-sine"
+              className="mt-6"
+            >
+              <a className="cursor-pointer">
+                <p className="text-indigo-700 underline text-base font-semibold f-m-m">
+                  อ่านเพิ่มเติม
                 </p>
-                <div
-                  data-aos="fade-right"
-                  data-aos-offset="300"
-                  data-aos-easing="ease-in-sine"
-                  className="mt-6"
-                >
-                  <a href="">
-                    <p className="text-indigo-700 underline text-base font-semibold f-m-m">
-                      อ่านเพิ่มเติม
-                    </p>
-                  </a>
-                </div>
-              </div>
+              </a>
             </div>
-            
-            <div className="lg:w-1/2 lg:ml-8 ">
-              <div className="lg:flex items-start mb-8">
-                <img
-                  data-aos="fade-left"
-                  data-aos-offset="300"
-                  data-aos-easing="ease-in-sine"
-                  src={News2}
-                  className="sm:w-4/4 md:w-4/4 lg:w-40"
-                />
-                <div className="lg:ml-6">
-                  <h1
-                    data-aos="fade-left"
-                    data-aos-offset="300"
-                    data-aos-easing="ease-in-sine"
-                    className="f-m-m text-lg font-semibold leading-7 lg:mt-0 mt-8"
-                  >
-                    ประชุมหารือผลวิเคราะห์ข้อมูลปริมาณการผลิตสินค้าเกษตรด้านพืช
-                    ระดับจังหวัด
-                  </h1>
-                  <p
-                    data-aos="fade-left"
-                    data-aos-offset="300"
-                    data-aos-easing="ease-in-sine"
-                    className="text-xs f-m-m leading-loose mt-2"
-                  >
-                    <MyContent
-                      name="วันที่ 18 กรกฎาคม 2567 นายจตุพร เกษตรอำเภอทองผาภูมิ
-                    มอบหมายให้ นางสาวขนิษฐา บุญคำมา
-                    นักวิชาการส่งเสริมการเกษตรชำนาญการ
-                    เข้าร่วมประชุมหารือผลวิเคราะห์ข้อมูลปริมาณการผลิตสินค้าเกษตรด้านพืช
-                    ระดับจังหวัด ครั้งที่ 1/2567"
-                      fontSize="small"
-                    />
-                  </p>
-                  <div className="mt-4">
-                    <a href="">
-                      <p
+          </div>
+        </div>
+      );
+    })}
+
+
+              <div className="lg:w-1/2 lg:ml-8 ">
+                {news.length > 0 && news
+                  .slice(0, 3)
+                  .filter((x) => x.isUsed == true)
+                  .map((item: NEWS) => (
+                    <div className="lg:flex items-start mb-8">
+                      <img
                         data-aos="fade-left"
                         data-aos-offset="300"
                         data-aos-easing="ease-in-sine"
-                        className="text-indigo-700 underline text-base font-semibold f-m-m"
-                      >
-                        อ่านเพิ่มเติม
-                      </p>
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div className="lg:flex items-start mb-8">
-                <img
-                  data-aos="fade-left"
-                  data-aos-offset="300"
-                  data-aos-easing="ease-in-sine"
-                  src={News3}
-                  className="sm:w-4/4 md:w-4/4 lg:w-40"
-                />
-                <div
-                  data-aos="fade-left"
-                  data-aos-offset="300"
-                  data-aos-easing="ease-in-sine"
-                  className="lg:ml-6"
-                >
-                  <h1 className="f-m-m text-lg font-semibold leading-7 lg:mt-0 mt-8">
-                    กิจกรรมปลูกผักสวนครัวโครงการพัฒนาพื้นที่ต้นแบบ
-                    เพื่อพัฒนาคุณภาพชีวิตฯ
-                  </h1>
-                  <p className="text-xs f-m-m leading-loose mt-2">
-                    <MyContent
-                      name="ณ ศูนย์พัฒนาอาชีพหนองบัว ต.หนองบัว อ.เมือง จ.กาญจนบุรี
-                    ร่วมกิจกรรมปลูกผักสวนครัว ตามโครงการพัฒนาพื้นที่ต้นแบบ
-                    เพื่อพัฒนาคุณภาพชีวิตแบบอารยเกษตรตามแนวพระราชดำริ"
-                      fontSize="small"
-                    />
-                  </p>
-                  <div className="mt-4">
-                    <a href="">
-                      <p className="text-indigo-700 underline text-base font-semibold f-m-m">
-                        อ่านเพิ่มเติม
-                      </p>
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div className="lg:flex items-start mb-8">
-                <img
-                  data-aos="fade-left"
-                  data-aos-offset="300"
-                  data-aos-easing="ease-in-sine"
-                  src={News4}
-                  className="sm:w-4/4 md:w-4/4 lg:w-40"
-                />
-                <div
-                  data-aos="fade-left"
-                  data-aos-offset="300"
-                  data-aos-easing="ease-in-sine"
-                  className="lg:ml-6"
-                >
-                  <h1 className="f-m-m text-lg font-semibold leading-7 lg:mt-0 mt-8">
-                    ให้บริการขึ้นทะเบียนเกษตรกรและปรับปรุงทะเบียนเกษตรกร ม.2
-                    ต.สหกรณ์นิคม
-                  </h1>
-                  <p className="text-xs f-m-m leading-loose mt-2">
-                    <MyContent
-                      name="วันที่ 10 กรกฎาคม 2567 นายจตุพร อิ่มจิตร เกษตรอำเภอทองผาภูมิ
-                    มอบหมายให้ นางสาวรัตนาพร เปรมปรีดิ์
-                    นักวิชาการส่งเสริมการเกษตร และ นายสุทัศน์ สุขศีลล้ำเลิศ
-                    นักวิชาการส่งเสริมการเกษตรปฏิบัติการ
-                    ลงพื้นที่รับขึ้นทะเบียนเกษตรกร ณ หมู่ 2 ตำบลสหกรณ์นิคม
-                    อำเภอทองผาภูมิ จังหวัดกาญจนบุรี พร้อมทั้งแจ้ง"
-                      fontSize="small"
-                    />
-                  </p>
-                  <div className="mt-4">
-                    <a href="">
-                      <p className="text-indigo-700 underline text-base font-semibold f-m-m">
-                        อ่านเพิ่มเติม
-                      </p>
-                    </a>
-                  </div>
-                </div>
+                        src={pathImages.news + item.imageName}
+                        className="sm:w-4/4 md:w-4/4 lg:w-40 lg:h-64 cursor-pointer object-cover"
+                      />
+                      <div className="lg:ml-6">
+                        <h1
+                          data-aos="fade-left"
+                          data-aos-offset="300"
+                          data-aos-easing="ease-in-sine"
+                          className="f-m-m text-lg font-semibold leading-7 lg:mt-0 mt-8 cursor-pointer"
+                        >
+                          {item.title.length > 48
+                            ? item.title.slice(0, 48) + "..."
+                            : item.title}
+                        </h1>
+                        <p
+                          data-aos="fade-left"
+                          data-aos-offset="300"
+                          data-aos-easing="ease-in-sine"
+                          className="text-lg f-m-m leading-loose mt-2"
+                          style={{ fontSize: fontSizesmall, color: "#7b7575" }}
+                        >
+                          {item.description.replace(/<[^>]+>/g, "").length > 180
+                            ? item.description
+                                .replace(/<[^>]+>/g, "")
+                                .slice(0, 180) + "..."
+                            : item.description.replace(/<[^>]+>/g, "")}
+                        </p>
+                        <div onClick={()=>NavigateNewsDetail(item)} className="mt-4">
+                            <a className="cursor-pointer">
+                            <p
+                              data-aos="fade-left"
+                              data-aos-offset="300"
+                              data-aos-easing="ease-in-sine"
+                              className="text-indigo-700 underline text-base font-semibold f-m-m"
+                            >
+                              อ่านเพิ่มเติม
+                            </p>
+                            </a>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
               </div>
             </div>
+          </div>
 
+          <div />
+        </div>
+      )}
+
+      <div className="flex justify-center align-middle">
+        <div className="p-4 flex flex-col items-center justify-center">
+          <div className="cursor-pointer">
+            <button onClick={NavigateNews} className="relative inline-flex items-center justify-center px-10 py-3 overflow-hidden font-medium text-teal-600 transition duration-300 ease-out border-2 border-teal-500 rounded-full shadow-md group">
+              <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-teal-500 group-hover:translate-x-0 ease">
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </span>
+              <span className="absolute flex items-center justify-center w-full h-full text-teal-500 transition-all duration-300 transform group-hover:translate-x-full ease">
+                ดูข่าวสารทั้งหมด
+              </span>
+              <span className="relative invisible">ดูข่าวทั้งหมด</span>
+            </button>
           </div>
         </div>
-        <div />
       </div>
       <Footer />
     </div>

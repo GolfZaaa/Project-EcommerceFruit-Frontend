@@ -8,6 +8,8 @@ export default class SystemSettingStore {
   systemSetting: SystemSetting[] = [];
   slideShow: SlideShow[] = [];
   news: NEWS[] = [];
+  newsdetail: NEWS | null = null;
+
   loadings: boolean = false;
 
   constructor() {
@@ -101,7 +103,6 @@ export default class SystemSettingStore {
   getNEWSs = async () => {
     try {
       const result = await agent.SystemSetting.getNEWSs();
-
       this.news = result;
     } catch (error) {
       throw error;
@@ -147,4 +148,15 @@ export default class SystemSettingStore {
       throw error;
     }
   };
+
+  getNewsById = async (id: any) => {
+    try {
+      const result = await agent.SystemSetting.getNewsById(id);
+      this.newsdetail = result;
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  };
+
 }
