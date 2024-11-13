@@ -149,13 +149,15 @@ export default class SystemSettingStore {
     }
   };
 
-  getNewsById = async (id: any) => {
+  getNewsById = async (id:any) => {
+    this.setLoading(true);
     try {
       const result = await agent.SystemSetting.getNewsById(id);
       this.newsdetail = result;
-      return result;
     } catch (error) {
-      throw error;
+      console.error(error);
+    } finally {
+      this.setLoading(false); 
     }
   };
 

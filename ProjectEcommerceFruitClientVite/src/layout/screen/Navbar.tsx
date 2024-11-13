@@ -45,7 +45,7 @@ export default observer(function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const toggleDrawer = () => setDrawerOpen(!drawerOpen);
   return (
-    <>
+    <div className="hiddenPrint">
       <Backdrop
         sx={(theme) => ({
           color: "#000",
@@ -398,6 +398,6 @@ export default observer(function Navbar() {
       </div>
 
       <div className="border border-gray-200 mb-20"></div>
-    </>
+    </div>
   );
 });

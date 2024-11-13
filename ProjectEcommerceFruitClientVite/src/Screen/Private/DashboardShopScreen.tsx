@@ -455,13 +455,13 @@ export default observer(function DashboardShopScreen() {
               <button
                 id="downloadButton"
                 onClick={toggleDropdown}
-                className="absolute top-0 right-0 p-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-200"
+                className="absolute top-80 right-5 p-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-200"
               >
                 <BiDownload />
               </button>
 
               {openDropdown && (
-                <div className="absolute right-0 top-5 mt-2 bg-white border rounded shadow-md w-28">
+                <div className="absolute right-5 top-85 mt-2 bg-white border rounded shadow-md w-28">
                   <ul>
                     <li
                       className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"

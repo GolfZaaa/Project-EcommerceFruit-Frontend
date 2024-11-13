@@ -71,7 +71,6 @@ export default observer(function ProductDetailScreen() {
 
   const [addquantity, setAddQuantity] = useState<any>();
   const [show, setShow] = useState(false);
-  const [show2, setShow2] = useState(false);
   const [quantity, setQuantity] = useState<number>(1);
 
   const increaseQuantity = (quantityy: any) => {

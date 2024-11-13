@@ -72,8 +72,7 @@ export default observer(function FirstScreenNew() {
       await getNEWSs();
     };
     fetchData();
-  }, [])
-  
+  }, []);
 
   useEffect(() => {
     if (product.length > 0) {
@@ -99,7 +98,7 @@ export default observer(function FirstScreenNew() {
     resetScroll();
   };
 
-  const NavigateNewsDetail = (item:any) => {
+  const NavigateNewsDetail = (item: any) => {
     navigate(RoutePath.newsListDetail(item.id));
     resetScroll();
   };
@@ -144,7 +143,7 @@ export default observer(function FirstScreenNew() {
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Check on initial load
+    handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -176,6 +175,7 @@ export default observer(function FirstScreenNew() {
     }
   }, [inView, controls]);
 
+  console.log("topProducts", topProducts);
   return (
     <div>
       <div className="overflow-hidden mt-4 ml-4 mr-4">
@@ -338,179 +338,190 @@ export default observer(function FirstScreenNew() {
       {/* ข้อมูลหลัก End */}
 
       {/* สินค้าสุ่ม Start */}
-      <div className="xl:mx-auto xl:container">
-        <div className="lg:px-20 md:px-6 px-4 md:py-12 py-8">
-          <div className="flex flex-col xl:flex-row items-center">
-            <motion.div
-              ref={ref}
-              className="w-full xl:w-1/2 md:py-9 py-6"
-              data-aos="fade-left"
-            >
-              <img
-                src={randomProduct && pathImages.product + randomProduct.images}
-                alt="product"
-                className="w-full h-96 object-cover object-center transition-transform duration-500"
-              />
-            </motion.div>
-            <motion.div
-              ref={ref}
-              initial={{ opacity: 0, x: -50, scale: 0.95, rotate: -5 }}
-              animate={controls}
-              className="w-full xl:w-1/2 xl:pl-12 xl:pr-24 mt-6 xl:mt-0 sm:pl-32 md:pl-28"
-            >
-              <p
-                className="text-sm leading-none text-gray-600 pb-2 xl:pl-16"
-                style={{ fontSize: fontSizesmall }}
+      {randomProduct ? (
+        <div className="xl:mx-auto xl:container">
+          <div className="lg:px-20 md:px-6 px-4 md:py-12 py-8">
+            <div className="flex flex-col xl:flex-row items-center">
+              <motion.div
+                ref={ref}
+                className="w-full xl:w-1/2 md:py-9 py-6"
+                data-aos="fade-left"
               >
-                {randomProduct && randomProduct.productGI.category.name}
-              </p>
-              <p
-                className="md:text-3xl xl:text-4xl text-2xl font-semibold xl:leading-9 text-gray-800 xl:pb-6 md:pb-4 pb-2 xl:pl-16"
-                style={{ fontSize: fontSizeBiglittle }}
+                <img
+                  src={
+                    randomProduct && pathImages.product + randomProduct.images
+                  }
+                  alt="product"
+                  className="w-full h-96 object-cover object-center transition-transform duration-500"
+                />
+              </motion.div>
+              <motion.div
+                ref={ref}
+                initial={{ opacity: 0, x: -50, scale: 0.95, rotate: -5 }}
+                animate={controls}
+                className="w-full xl:w-1/2 xl:pl-12 xl:pr-24 mt-6 xl:mt-0 sm:pl-32 md:pl-28"
               >
-                {randomProduct && randomProduct.productGI.name}
-              </p>
-              <p
-                className="text-sm leading-5 text-gray-600 md:pb-10 pb-8 xl:pl-16"
-                style={{ fontSize: fontSizesmall }}
-              >
-                {randomProduct && randomProduct && (
-                  <MyDescription text={randomProduct.productGI.description} />
-                )}
-              </p>
-              <div
-                className="md:block flex items-center justify-center xl:pl-16"
-                style={{ fontSize: fontSizesmall }}
-              >
-                <motion.button
-                  onClick={() => NavigateDetail(randomProduct)}
-                  className="lg:w-auto w-full border border-gray-800 hover:text-gray-50 hover:bg-gray-800 focus:outline-none lg:px-10 px-7 lg:py-4 py-3 text-sm leading-none text-gray-800"
-                  whileHover={{ scale: 1.1, rotate: 2 }}
-                  whileTap={{ scale: 0.95, rotate: -1 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                <p
+                  className="text-sm leading-none text-gray-600 pb-2 xl:pl-16"
+                  style={{ fontSize: fontSizesmall }}
                 >
-                  <MyContent name="ดูรายละเอียดเพิ่มเติม" fontSize="small" />
-                </motion.button>
-              </div>
-            </motion.div>
+                  {randomProduct && randomProduct.productGI.category.name}
+                </p>
+                <p
+                  className="md:text-3xl xl:text-4xl text-2xl font-semibold xl:leading-9 text-gray-800 xl:pb-6 md:pb-4 pb-2 xl:pl-16"
+                  style={{ fontSize: fontSizeBiglittle }}
+                >
+                  {randomProduct && randomProduct.productGI.name}
+                </p>
+                <p
+                  className="text-sm leading-5 text-gray-600 md:pb-10 pb-8 xl:pl-16"
+                  style={{ fontSize: fontSizesmall }}
+                >
+                  {randomProduct && randomProduct && (
+                    <MyDescription text={randomProduct.productGI.description} />
+                  )}
+                </p>
+                <div
+                  className="md:block flex items-center justify-center xl:pl-16"
+                  style={{ fontSize: fontSizesmall }}
+                >
+                  <motion.button
+                    onClick={() => NavigateDetail(randomProduct)}
+                    className="lg:w-auto w-full border border-gray-800 hover:text-gray-50 hover:bg-gray-800 focus:outline-none lg:px-10 px-7 lg:py-4 py-3 text-sm leading-none text-gray-800"
+                    whileHover={{ scale: 1.1, rotate: 2 }}
+                    whileTap={{ scale: 0.95, rotate: -1 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  >
+                    <MyContent name="ดูรายละเอียดเพิ่มเติม" fontSize="small" />
+                  </motion.button>
+                </div>
+              </motion.div>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div></div>
+      )}
 
       {/* สินค้าสุ่ม End */}
 
       {/* สินค้าขายดี Start */}
-      <div className=" 2xl:container 2xl:mx-auto px-4 md:px-6 2xl:px-6 py-16 flex justify-center overflow-hidden">
-        <div className="flex flex-col justify-center items-center">
-          <div className="flex justify-start items-start">
-            <p
-              data-aos="fade-up"
-              className="text-3xl lg:text-4xl font-semibold leading-9 text-gray-800"
-            >
-              สินค้าที่โดดเด่น
-            </p>
-          </div>
+      {topProducts.length > 0 ? (
+        <div className=" 2xl:container 2xl:mx-auto px-4 md:px-6 2xl:px-6 py-16 flex justify-center overflow-hidden">
+          <div className="flex flex-col justify-center items-center">
+            <div className="flex justify-start items-start">
+              <p
+                data-aos="fade-up"
+                className="text-3xl lg:text-4xl font-semibold leading-9 text-gray-800"
+              >
+                สินค้าที่โดดเด่น
+              </p>
+            </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 justify-items-between mt-8 gap-y-8 lg:gap-y-0 gap-x-8">
-            {topProducts.map((productItem, _) => {
-              const userid = user?.id;
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 justify-items-between mt-8 gap-y-8 lg:gap-y-0 gap-x-8">
+              {topProducts.map((productItem, _) => {
+                const userid = user?.id;
 
-              return (
-                <motion.div
-                  key={productItem.id}
-                  onClick={() => NavigateDetail(productItem)}
-                  className="flex items-start flex-col cursor-pointer"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  whileHover={{ y: -10, transition: { duration: 0.3 } }}
-                  whileTap={{ scale: 0.95 }}
-                >
+                return (
                   <motion.div
-                    data-aos="fade-up"
-                    className="relative flex justify-center items-center bg-white py-12 px-16"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
-                    transition={{ duration: 0.5 }}
+                    key={productItem.id}
+                    onClick={() => NavigateDetail(productItem)}
+                    className="flex items-start flex-col cursor-pointer"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    whileHover={{ y: -10, transition: { duration: 0.3 } }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <img
-                      className="w-96 h-44 object-cover"
-                      src={pathImages.product + productItem.images}
-                      alt="mobile"
-                    />
-                    {userid === productItem?.productGI?.store?.user?.id && (
-                      <motion.span
-                        className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full"
+                    <motion.div
+                      data-aos="fade-up"
+                      className="relative flex justify-center items-center bg-white py-12 px-16"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      whileHover={{ scale: 1.1, transition: { duration: 0.3 } }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <img
+                        className="w-96 h-44 object-cover"
+                        src={pathImages.product + productItem.images}
+                        alt="mobile"
+                      />
+                      {userid === productItem?.productGI?.store?.user?.id && (
+                        <motion.span
+                          className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full"
+                          whileHover={{
+                            rotate: 15,
+                            transition: { duration: 0.3 },
+                          }}
+                        >
+                          สินค้าของคุณ
+                        </motion.span>
+                      )}
+                      <motion.button
                         whileHover={{
+                          scale: 1.1,
                           rotate: 15,
                           transition: { duration: 0.3 },
                         }}
+                        whileTap={{ scale: 0.9 }}
+                        className="absolute top-4 right-4 flex justify-center items-center p-3.5 bg-white rounded-full"
                       >
-                        สินค้าของคุณ
-                      </motion.span>
-                    )}
-                    <motion.button
-                      whileHover={{
-                        scale: 1.1,
-                        rotate: 15,
-                        transition: { duration: 0.3 },
-                      }}
-                      whileTap={{ scale: 0.9 }}
-                      className="absolute top-4 right-4 flex justify-center items-center p-3.5 bg-white rounded-full"
-                    >
-                      <svg
-                        className="fill-stroke text-gray-600 hover:text-gray-500"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M6.00002 6.59999V5.39999C6.00002 4.44521 6.37931 3.52953 7.05444 2.8544C7.72957 2.17927 8.64525 1.79999 9.60003 1.79999V1.79999C10.5548 1.79999 11.4705 2.17927 12.1456 2.8544C12.8207 3.52953 13.2 4.44521 13.2 5.39999V6.59999M3.00002 6.59999C2.84089 6.59999 2.68828 6.6632 2.57576 6.77572C2.46324 6.88825 2.40002 7.04086 2.40002 7.19999V15.3C2.40002 16.434 3.36602 17.4 4.50002 17.4H14.7C15.834 17.4 16.8 16.4809 16.8 15.3469V7.19999C16.8 7.04086 16.7368 6.88825 16.6243 6.77572C16.5118 6.6632 16.3592 6.59999 16.2 6.59999H3.00002Z"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M6 8.40002V9.00002C6 9.9548 6.37928 10.8705 7.05442 11.5456C7.72955 12.2207 8.64522 12.6 9.6 12.6C10.5548 12.6 11.4705 12.2207 12.1456 11.5456C12.8207 10.8705 13.2 9.9548 13.2 9.00002V8.40002"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </motion.button>
-                  </motion.div>
-                  <div className="flex flex-col items-start justify-start mt-3 space-y-3">
-                    <motion.div
-                      data-aos="fade-up"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      <p
-                        className="text-lg font-medium leading-4 text-gray-800"
-                        style={{ fontSize: fontSizenormal }}
-                      >
-                        {productItem.productGI.name}
-                      </p>
+                        <svg
+                          className="fill-stroke text-gray-600 hover:text-gray-500"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M6.00002 6.59999V5.39999C6.00002 4.44521 6.37931 3.52953 7.05444 2.8544C7.72957 2.17927 8.64525 1.79999 9.60003 1.79999V1.79999C10.5548 1.79999 11.4705 2.17927 12.1456 2.8544C12.8207 3.52953 13.2 4.44521 13.2 5.39999V6.59999M3.00002 6.59999C2.84089 6.59999 2.68828 6.6632 2.57576 6.77572C2.46324 6.88825 2.40002 7.04086 2.40002 7.19999V15.3C2.40002 16.434 3.36602 17.4 4.50002 17.4H14.7C15.834 17.4 16.8 16.4809 16.8 15.3469V7.19999C16.8 7.04086 16.7368 6.88825 16.6243 6.77572C16.5118 6.6632 16.3592 6.59999 16.2 6.59999H3.00002Z"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            d="M6 8.40002V9.00002C6 9.9548 6.37928 10.8705 7.05442 11.5456C7.72955 12.2207 8.64522 12.6 9.6 12.6C10.5548 12.6 11.4705 12.2207 12.1456 11.5456C12.8207 10.8705 13.2 9.9548 13.2 9.00002V8.40002"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </motion.button>
                     </motion.div>
+                    <div className="flex flex-col items-start justify-start mt-3 space-y-3">
+                      <motion.div
+                        data-aos="fade-up"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        <p
+                          className="text-lg font-medium leading-4 text-gray-800"
+                          style={{ fontSize: fontSizenormal }}
+                        >
+                          {productItem.productGI.name}
+                        </p>
+                      </motion.div>
 
-                    <motion.div data-aos="fade-up">
-                      <p
-                        className="text-lg leading-4 text-gray-600"
-                        style={{ fontSize: fontSizesmall }}
-                      >
-                        {productItem.price.toLocaleString()} บาท
-                      </p>
-                    </motion.div>
-                  </div>
-                </motion.div>
-              );
-            })}
+                      <motion.div data-aos="fade-up">
+                        <p
+                          className="text-lg leading-4 text-gray-600"
+                          style={{ fontSize: fontSizesmall }}
+                        >
+                          {productItem.price.toLocaleString()} บาท
+                        </p>
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div></div>
+      )}
+
       {/* สินค้าขายดี End */}
 
       {/* Card Start */}
@@ -795,7 +806,7 @@ export default observer(function FirstScreenNew() {
       {/* สเตตัส End */}
 
       {/* ข่าวสาร Start */}
-      {news && (
+      {news.filter((x) => x.isUsed === true).length > 0 && (
         <div className="container mx-auto px-4 mb-5 ">
           <h1 className="text-5xl text-center f-m-w text-green-500 font-bold pt-0">
             ข่าวประชาสัมพันธ์
@@ -803,123 +814,167 @@ export default observer(function FirstScreenNew() {
 
           <div className="pt-14 xl:px-0 px-4">
             <div className="w-full lg:flex overflow-x-hidden">
-
-{news.length > 0 &&
-  news
-    .filter((x, index) => index >= 3 && x.isUsed)
-    .slice(0, 1)
-    .map((item: NEWS) => {
-      const testNews = (item: NEWS) => {
-        console.log("testNews", item.id);
-      };
-      return (
-        <div className="lg:w-1/2">
-          <img
-            data-aos="fade-right"
-            data-aos-offset="300"
-            data-aos-easing="ease-in-sine"
-            src={pathImages.news + item.imageName}
-            className="w-full object-cover"
-            onClick={() => testNews(item)}
-          />
-          <div
-            data-aos="fade-right"
-            data-aos-offset="300"
-            data-aos-easing="ease-in-sine"
-            className="mt-8 lg:mb-0 mb-8"
-          >
-            <h1
-              data-aos="fade-right"
-              data-aos-offset="300"
-              data-aos-easing="ease-in-sine"
-              className="f-m-m text-lg font-semibold leading-7"
-            >
-              {item.title}
-            </h1>
-            <p
-              data-aos="fade-right"
-              data-aos-offset="300"
-              data-aos-easing="ease-in-sine"
-              className="f-m-m leading-loose mt-2"
-              style={{ fontSize: fontSizesmall, color: "#7b7575" }}
-            >
-              {item.description.replace(/<[^>]+>/g, "").length > 180
-                ? item.description
-                    .replace(/<[^>]+>/g, "")
-                    .slice(0, 180) + "..."
-                : item.description.replace(/<[^>]+>/g, "")}
-            </p>
-            <div
-              onClick={() => NavigateNewsDetail(item)}
-              data-aos="fade-right"
-              data-aos-offset="300"
-              data-aos-easing="ease-in-sine"
-              className="mt-6"
-            >
-              <a className="cursor-pointer">
-                <p className="text-indigo-700 underline text-base font-semibold f-m-m">
-                  อ่านเพิ่มเติม
-                </p>
-              </a>
-            </div>
-          </div>
-        </div>
-      );
-    })}
-
+              {news.length > 0 &&
+                news
+                  .filter((x, index) => index >= 3 && x.isUsed === true)
+                  .slice(0, 1)
+                  .map((item: NEWS) => {
+                    const testNews = (item: NEWS) => {
+                      console.log("testNews", item.id);
+                    };
+                    return (
+                      <div className="lg:w-1/2">
+                        <img
+                          data-aos="fade-right"
+                          data-aos-offset="300"
+                          data-aos-easing="ease-in-sine"
+                          src={pathImages.news + item.imageName}
+                          className="w-full object-cover"
+                          onClick={() => testNews(item)}
+                        />
+                        <div
+                          data-aos="fade-right"
+                          data-aos-offset="300"
+                          data-aos-easing="ease-in-sine"
+                          className="mt-8 lg:mb-0 mb-8"
+                        >
+                          <h1
+                            data-aos="fade-right"
+                            data-aos-offset="300"
+                            data-aos-easing="ease-in-sine"
+                            className="f-m-m text-lg font-semibold leading-7"
+                          >
+                            {item.title}
+                          </h1>
+                          <p
+                            data-aos="fade-right"
+                            data-aos-offset="300"
+                            data-aos-easing="ease-in-sine"
+                            className="f-m-m leading-loose mt-2"
+                            style={{
+                              fontSize: fontSizesmall,
+                              color: "#7b7575",
+                            }}
+                          >
+                            {item.description.replace(/<[^>]+>/g, "").length >
+                            180
+                              ? item.description
+                                  .replace(/<[^>]+>/g, "")
+                                  .slice(0, 180) + "..."
+                              : item.description.replace(/<[^>]+>/g, "")}
+                          </p>
+                          <div
+                            onClick={() => NavigateNewsDetail(item)}
+                            data-aos="fade-right"
+                            data-aos-offset="300"
+                            data-aos-easing="ease-in-sine"
+                            className="mt-6"
+                          >
+                            <a className="cursor-pointer">
+                              <p className="text-indigo-700 underline text-base font-semibold f-m-m">
+                                อ่านเพิ่มเติม
+                              </p>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
 
               <div className="lg:w-1/2 lg:ml-8 ">
-                {news.length > 0 && news
-                  .slice(0, 3)
-                  .filter((x) => x.isUsed == true)
-                  .map((item: NEWS) => (
-                    <div className="lg:flex items-start mb-8">
-                      <img
-                        data-aos="fade-left"
-                        data-aos-offset="300"
-                        data-aos-easing="ease-in-sine"
-                        src={pathImages.news + item.imageName}
-                        className="sm:w-4/4 md:w-4/4 lg:w-40 lg:h-64 cursor-pointer object-cover"
-                      />
-                      <div className="lg:ml-6">
-                        <h1
-                          data-aos="fade-left"
-                          data-aos-offset="300"
-                          data-aos-easing="ease-in-sine"
-                          className="f-m-m text-lg font-semibold leading-7 lg:mt-0 mt-8 cursor-pointer"
-                        >
-                          {item.title.length > 48
-                            ? item.title.slice(0, 48) + "..."
-                            : item.title}
-                        </h1>
-                        <p
-                          data-aos="fade-left"
-                          data-aos-offset="300"
-                          data-aos-easing="ease-in-sine"
-                          className="text-lg f-m-m leading-loose mt-2"
-                          style={{ fontSize: fontSizesmall, color: "#7b7575" }}
-                        >
-                          {item.description.replace(/<[^>]+>/g, "").length > 180
-                            ? item.description
-                                .replace(/<[^>]+>/g, "")
-                                .slice(0, 180) + "..."
-                            : item.description.replace(/<[^>]+>/g, "")}
-                        </p>
-                        <div onClick={()=>NavigateNewsDetail(item)} className="mt-4">
-                            <a className="cursor-pointer">
+                {news.length > 0 &&
+                  news
+                    .slice(0, 3)
+                    .filter((x) => x.isUsed == true)
+                    .map((item: NEWS) => {
+                      return (
+                        <div className="lg:flex items-start mb-8">
+                          <img
+                            data-aos="fade-left"
+                            data-aos-offset="300"
+                            data-aos-easing="ease-in-sine"
+                            src={pathImages.news + item.imageName}
+                            className="sm:w-4/4 md:w-4/4 lg:w-40 lg:h-64 cursor-pointer object-cover"
+                          />
+                          <div className="lg:ml-6">
+                            <h1
+                              data-aos="fade-left"
+                              data-aos-offset="300"
+                              data-aos-easing="ease-in-sine"
+                              className="f-m-m text-lg font-semibold leading-7 lg:mt-0 mt-8 cursor-pointer"
+                            >
+                              {item.title.length > 48
+                                ? item.title.slice(0, 48) + "..."
+                                : item.title}
+                            </h1>
                             <p
                               data-aos="fade-left"
                               data-aos-offset="300"
                               data-aos-easing="ease-in-sine"
-                              className="text-indigo-700 underline text-base font-semibold f-m-m"
+                              className="text-lg f-m-m leading-loose mt-2"
+                              style={{
+                                fontSize: fontSizesmall,
+                                color: "#7b7575",
+                              }}
                             >
-                              อ่านเพิ่มเติม
+                              {item.description.replace(/<[^>]+>/g, "").length >
+                              180
+                                ? item.description
+                                    .replace(/<[^>]+>/g, "")
+                                    .slice(0, 180) + "..."
+                                : item.description.replace(/<[^>]+>/g, "")}
                             </p>
-                            </a>
+                            <div
+                              onClick={() => NavigateNewsDetail(item)}
+                              className="mt-4"
+                            >
+                              <a className="cursor-pointer">
+                                <p
+                                  data-aos="fade-left"
+                                  data-aos-offset="300"
+                                  data-aos-easing="ease-in-sine"
+                                  className="text-indigo-700 underline text-base font-semibold f-m-m"
+                                >
+                                  อ่านเพิ่มเติม
+                                </p>
+                              </a>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  ))}
+                      );
+                    })}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-center align-middle">
+            <div className="p-4 flex flex-col items-center justify-center">
+              <div className="cursor-pointer">
+                <button
+                  onClick={NavigateNews}
+                  className="relative inline-flex items-center justify-center px-10 py-3 overflow-hidden font-medium text-teal-600 transition duration-300 ease-out border-2 border-teal-500 rounded-full shadow-md group"
+                >
+                  <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-teal-500 group-hover:translate-x-0 ease">
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      />
+                    </svg>
+                  </span>
+                  <span className="absolute flex items-center justify-center w-full h-full text-teal-500 transition-all duration-300 transform group-hover:translate-x-full ease">
+                    ดูข่าวสารทั้งหมด
+                  </span>
+                  <span className="relative invisible">ดูข่าวทั้งหมด</span>
+                </button>
               </div>
             </div>
           </div>
@@ -928,34 +983,6 @@ export default observer(function FirstScreenNew() {
         </div>
       )}
 
-      <div className="flex justify-center align-middle">
-        <div className="p-4 flex flex-col items-center justify-center">
-          <div className="cursor-pointer">
-            <button onClick={NavigateNews} className="relative inline-flex items-center justify-center px-10 py-3 overflow-hidden font-medium text-teal-600 transition duration-300 ease-out border-2 border-teal-500 rounded-full shadow-md group">
-              <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-teal-500 group-hover:translate-x-0 ease">
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </span>
-              <span className="absolute flex items-center justify-center w-full h-full text-teal-500 transition-all duration-300 transform group-hover:translate-x-full ease">
-                ดูข่าวสารทั้งหมด
-              </span>
-              <span className="relative invisible">ดูข่าวทั้งหมด</span>
-            </button>
-          </div>
-        </div>
-      </div>
       <Footer />
     </div>
   );

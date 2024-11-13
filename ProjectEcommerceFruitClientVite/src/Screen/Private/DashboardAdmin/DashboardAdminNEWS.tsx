@@ -32,6 +32,7 @@ const DashboardAdminNEWS = () => {
 
   const handleIsUsed = (_userItem: any) => {
     isUsedNEWS(_userItem.id);
+    getNEWSsAdmin();
   };
 
   const handleRemove = (_userItem: any) => {

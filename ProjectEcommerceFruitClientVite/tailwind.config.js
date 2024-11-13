@@ -16,6 +16,9 @@ export default {
         '23': '23px', 
         '22': '22px', 
       },
+      inset: { 
+        '85': '340px', 
+      },
     },
   },
   plugins: [],
