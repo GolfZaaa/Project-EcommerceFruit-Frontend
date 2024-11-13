@@ -43,7 +43,7 @@ import html2pdf from "html2pdf.js";
 import ExcelJS from "exceljs";
 import MyContent from "../../component/MyContent";
 import { formatDateThai } from "../../helper/components";
-import imagecraditcard from "../../image/craditcard.png"
+
 interface TablePaginationActionsProps {
   count: number;
   page: number;
@@ -160,7 +160,7 @@ const OrderList = () => {
 
   const columns = [
     { id: "orderId", label: "รหัสคำสั่งซื้อ" },
-    { id: "paymentImage", label: "ชำระเงินโดย" },
+    { id: "paymentImage", label: "รูปภาพสลิป" },
     { id: "description", label: "หมายเลขพัสดุ (tracking)" },
     { id: "createdAt", label: "สร้างเมื่อวันที่" },
     { id: "status", label: "สถานะ" },
@@ -231,7 +231,7 @@ const OrderList = () => {
     // กำหนดหัวตารางให้ตรงกับข้อมูลที่แสดงในตาราง
     worksheet.columns = [
       { header: "รหัสคำสั่งซื้อ", key: "orderId", width: 20 },
-      { header: "ชำระเงินโดย", key: "paymentImage", width: 30 },
+      { header: "รูปภาพสลิป", key: "paymentImage", width: 30 },
       { header: "หมายเลขพัสดุ", key: "description", width: 30 },
       { header: "สร้างเมื่อวันที่", key: "createdAt", width: 20 },
       { header: "สถานะคำสั่งซื้อ", key: "status", width: 30 },
@@ -265,27 +265,31 @@ const OrderList = () => {
       // เพิ่มข้อมูลข้อความ
       const addedRow = worksheet.addRow({
         orderId: row.orderId,
-        paymentImage: row.paymentImage ? "การโอน" : "เครดิตการ์ด",
+        paymentImage: row.paymentImage ? "มีรูปภาพ" : "ไม่มีรูปภาพ",
         description: row.tag || "ยังไม่ได้กรอกหมายเลขพัสดุ",
         createdAt: createdAtFormatted,
         status: statusText,
         confirmReceipt: confirmReceiptText,
       });
 
+      // ถ้ามีรูปภาพ ให้เพิ่มลงใน Excel
       if (row.paymentImage) {
         try {
+          // แปลงรูปภาพเป็นบัฟเฟอร์โดยตรง
           const imageUrl = pathImages.paymentImage + row.paymentImage;
           const response = await fetch(imageUrl);
           const arrayBuffer = await response.arrayBuffer();
 
+          // เพิ่มรูปภาพใน workbook
           const imageId = workbook.addImage({
-            buffer: arrayBuffer, 
-            extension: "jpeg", 
+            buffer: arrayBuffer, // ใช้บัฟเฟอร์ของรูปภาพ
+            extension: "jpeg", // ใช้ "png" หรือ "jpeg" ตามประเภทของไฟล์ภาพ
           });
 
+          // กำหนดให้แสดงรูปภาพในเซลล์ที่ตรงกับแถวที่เพิ่มข้อมูล
           worksheet.addImage(imageId, {
-            tl: { col: 1, row: addedRow.number - 1 }, 
-            ext: { width: 100, height: 100 }, 
+            tl: { col: 1, row: addedRow.number - 1 }, // ตำแหน่งเริ่มต้น (col: 1 คือ column ที่ 2)
+            ext: { width: 100, height: 100 }, // ขนาดของรูปภาพ
           });
         } catch (error) {
           console.error("Error adding image to Excel:", error);
@@ -293,6 +297,7 @@ const OrderList = () => {
       }
     }
 
+    // บันทึกไฟล์ Excel และทำให้ดาวน์โหลดได้
     workbook.xlsx.writeBuffer().then((data) => {
       const blob = new Blob([data], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -307,7 +312,7 @@ const OrderList = () => {
   };
 
   return (
-    <div className="mt-4 md:mt-0 p-4 lg:p-6">
+    <div className="-mt-16">
       {onCreate ? (
         <EditOrderScreen onChangeCU={onChangeCU} dataEdit={dataEdit} />
       ) : (
@@ -317,7 +322,7 @@ const OrderList = () => {
             flexDirection="column"
             alignItems="center"
             justifyContent="center"
-            className="mb-5"
+            mt={4}
           >
             <Typography variant="h4" component="h1" gutterBottom align="center">
               <MyContent name="คำสั่งซื้อ" fontSize="large" />
@@ -333,7 +338,7 @@ const OrderList = () => {
             </div>
 
             {openDropdown && (
-              <div className="absolute right-16 top-64 mt-2 bg-white border rounded shadow-md w-20">
+              <div className="absolute right-16 top-52 mt-2 bg-white border rounded shadow-md w-20">
                 <ul>
                   <li
                     className="p-2 hover:bg-gray-200 cursor-pointer flex items-center "
@@ -352,9 +357,11 @@ const OrderList = () => {
             )}
 
             <TableContainer
-              component={Paper}
-              className="overflow-x-auto"
+              sx={{
+                width: 1200,
+              }}
               ref={componentRef}
+              component={Paper}
             >
               <Table
                 sx={{ width: "100%" }}
@@ -382,7 +389,14 @@ const OrderList = () => {
                     : order
                   ).map((row) => (
                     <TableRow key={row.id}>
-                      <TableCell component="th" scope="row" align="center">
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        align="center"
+                        style={{
+                          width: 140,
+                        }}
+                      >
                         <MyContent name={row.orderId} fontSize="smaller" />
                       </TableCell>
                       <TableCell component="th" scope="row" align="center">
@@ -392,22 +406,13 @@ const OrderList = () => {
                             alt={
                               pathImages.paymentImage + dataEdit?.paymentImage
                             }
-                            width={100}
+                            width={130}
                           />
                         ) : (
-                          <img
-                            src={imagecraditcard}
-                            alt={
-                              "เครดิตการ์ด"
-                            }
-                            width={100}
-                          />
+                          <MyContent name="ไม่มีรูปภาพ" fontSize="small" />
                         )}
                       </TableCell>
-                      <TableCell
-                        // style={{ width: 160 }}
-                        align="center"
-                      >
+                      <TableCell style={{ width: 250 }} align="center">
                         <div
                           className={
                             row.status !== 2
@@ -432,7 +437,12 @@ const OrderList = () => {
                           )}
                         </div>
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell
+                        align="center"
+                        style={{
+                          width: 200,
+                        }}
+                      >
                         <MyContent
                           name={formatDateThai(row.createdAt, +543, 1)}
                           fontSize="small"
@@ -477,18 +487,28 @@ const OrderList = () => {
                           )}
                         </div>
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell
+                        align="center"
+                        style={{
+                          width: 160,
+                        }}
+                      >
                         {row.confirmReceipt === 0 ? (
                           <MyContent name="กำลังดำเนินการ" fontSize="small" />
                         ) : row.confirmReceipt === 1 ? (
-                          <MyContent name="ได้รับพัสดุแล้ว" fontSize="small" />
+                          "ได้รับพัสดุแล้ว"
                         ) : row.confirmReceipt === 2 ? (
-                          <MyContent name="ไม่ได้รับพัสดุ" fontSize="small" />
+                          "ไม่ได้รับพัสดุ"
                         ) : (
-                          <MyContent name="เพิ่มสถานะด้วย" fontSize="small" />
+                          "เพิ่มสถานะด้วย"
                         )}
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell
+                        align="center"
+                        style={{
+                          width: 160,
+                        }}
+                      >
                         <Fab
                           variant="extended"
                           color="primary"

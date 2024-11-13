@@ -197,7 +197,7 @@ export default observer(function DashboardAdminHomePageScreen() {
             แดชบอร์ด
           </Typography>
           <NavLink
-            to={RoutePath.homeScreen}
+            to={RoutePath.firstscreen}
             style={{ textDecoration: "none", color: "#fff" }}
           >
             กลับหน้าหลัก

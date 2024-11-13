@@ -25,11 +25,6 @@ export default observer(function LoginScreen() {
     const data = new FormData(event.currentTarget);
     let formData: any = Object.fromEntries(data.entries());
 
-    // formData = {
-    //   phoneNumber: parseInt(formData.PhoneNumber),
-    //   password: formData.Password,
-    // };
-
     const phoneNumber = formData.PhoneNumber;
     const password = formData.Password;
 
