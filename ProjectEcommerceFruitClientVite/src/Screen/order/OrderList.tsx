@@ -357,9 +357,9 @@ const OrderList = () => {
             )}
 
             <TableContainer
-              sx={{
-                width: 1200,
-              }}
+              // sx={{
+              //   width: 1200,
+              // }}
               ref={componentRef}
               component={Paper}
             >

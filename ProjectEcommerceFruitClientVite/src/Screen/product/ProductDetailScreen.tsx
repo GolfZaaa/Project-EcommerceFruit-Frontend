@@ -22,6 +22,7 @@ import MyDescription from "../../components/MyDescription";
 import { motion } from "framer-motion";
 import MyContent from "../../component/MyContent";
 import { AiOutlineLogin } from "react-icons/ai";
+import { IoCloseCircleOutline, IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 
 dayjs.extend(relativeTime);
 dayjs.locale("th");
@@ -388,8 +389,9 @@ export default observer(function ProductDetailScreen() {
                             <div className="flex items-center">
                               <button
                                 type="button"
+                                disabled
                                 onClick={handleDecrease}
-                                className="px-4 py-1 bg-red-500 rounded-lg mr-6 text-white text-xl"
+                                className="px-4 py-1 bg-gray-400 rounded-lg mr-6 text-white text-xl"
                               >
                                 -
                               </button>
@@ -468,7 +470,7 @@ export default observer(function ProductDetailScreen() {
 
                 <button
                   onClick={() => hanldleDelete(productDetail.id)}
-                  className={`p-2 ${
+                  className={`p-2 flex items-center space-x-2 ${
                     productDetail?.quantity === 0
                       ? "bg-gray-400 text-gray-700"
                       : !productDetail?.hidden
@@ -477,6 +479,14 @@ export default observer(function ProductDetailScreen() {
                   } font-semibold rounded-2xl pl-5 pr-5`}
                   disabled={productDetail?.quantity === 0}
                 >
+
+                  {productDetail?.quantity === 0
+                    ? <IoCloseCircleOutline />
+                    : !productDetail?.hidden
+                    ? <IoEyeOffOutline size={20} className="mr-2"/>
+                    : <IoEyeOutline size={20} className="mr-2"/>}
+
+
                   {productDetail?.quantity === 0
                     ? "สินค้าหมด"
                     : !productDetail?.hidden
@@ -487,7 +497,7 @@ export default observer(function ProductDetailScreen() {
             )}
           </div>
           <div>
-            <p className="xl:pr-48 text-base lg:leading-tight leading-normal text-gray-600 mt-7">
+            <p className=" text-base lg:leading-tight leading-normal text-gray-600 mt-7">
               {/* {productDetail?.detail.replace(/<\/?[^>]+(>|$)/g, "")} */}
               {productDetail?.detail ? (
                 <MyDescription text={productDetail?.detail} />
@@ -916,11 +926,15 @@ export default observer(function ProductDetailScreen() {
           </div>
         </div>
       )}
-
+      
+      
       <div className="bg-white mt-5">
+      {filteredProducts.length > 0 && (
         <div className="px-6 pt-5 text-2xl mb-5 flex justify-between items-center">
-          <MyContent name="สินค้าใกล้เคียงกัน" fontSize="normal" />
-        </div>
+        <MyContent name="สินค้าใกล้เคียงกัน" fontSize="normal" />
+      </div>
+      )}
+        
 
         <div className="relative px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">

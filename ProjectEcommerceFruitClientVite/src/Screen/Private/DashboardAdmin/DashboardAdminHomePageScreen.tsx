@@ -116,25 +116,25 @@ export default observer(function DashboardAdminHomePageScreen() {
           marginTop: "15px"
         }}
       >
-        <ListItem onClick={() => setScreenComponent("DashboardAdminShowUser")}>
+        <ListItem button onClick={() => setScreenComponent("DashboardAdminShowUser")}>
           <ListItemIcon>
             <FaUser className="text-2xl" />
           </ListItemIcon>
           <ListItemText primary="ข้อมูลผู้ใช้งาน" />
         </ListItem>
-        <ListItem onClick={handleDashboardAdminShowStore}>
+        <ListItem button onClick={handleDashboardAdminShowStore}>
           <ListItemIcon>
             <FaStore className="text-2xl" />
           </ListItemIcon>
           <ListItemText primary="ข้อมูลร้านค้าทั้งหมด" />
         </ListItem>
-        <ListItem onClick={handleDashboardAdminShowProduct}>
+        <ListItem button onClick={handleDashboardAdminShowProduct}>
           <ListItemIcon>
             <FaBoxOpen className="text-2xl" />
           </ListItemIcon>
           <ListItemText primary="ข้อมูลสินค้าทั้งหมด" />
         </ListItem>
-        <ListItem onClick={handleDashboardAdminShowProductGI}>
+        <ListItem button onClick={handleDashboardAdminShowProductGI}>
           <ListItemIcon>
             <GiCardboardBox className="text-2xl" />
           </ListItemIcon>

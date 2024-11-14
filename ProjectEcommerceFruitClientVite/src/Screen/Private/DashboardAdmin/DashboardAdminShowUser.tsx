@@ -129,7 +129,10 @@ export default observer(function DashboardAdminShowUser() {
         <div className="p-4">
           <div className="flex flex-col">
             <div className=" overflow-x-auto">
-              <div className="min-w-full inline-block align-middle" ref={componentRef}>
+              <div
+                className="min-w-full inline-block align-middle"
+                ref={componentRef}
+              >
                 <div className="relative text-gray-500 focus-within:text-gray-900 mb-4">
                   <div className="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none">
                     <svg
@@ -163,62 +166,55 @@ export default observer(function DashboardAdminShowUser() {
                     onChange={(e) => setSearchUser(e.target.value)}
                   />
 
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                    <div className="relative inline-block text-left">
+                      <div id="downloadButton">
+                        <button
+                          onClick={handleDropdown}
+                          type="button"
+                          className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                          id="menu-button"
+                          aria-expanded="true"
+                          aria-haspopup="true"
+                        >
+                          <BiDownload />
+                        </button>
+                      </div>
 
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                  <div className="relative inline-block text-left">
-                    <div id="downloadButton">
-                      <button
-                        onClick={handleDropdown}
-                        type="button"
-                        className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                        id="menu-button"
-                        aria-expanded="true"
-                        aria-haspopup="true"
-                      >
-                        <BiDownload/>
-                      </button>
-                    </div>
-
-                    {dropdown && (
-                      <div
-                        className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                        role="menu"
-                        aria-orientation="vertical"
-                        aria-labelledby="menu-button"
-                      >
-                        <div className="py-1 cursor-pointer " role="none" >
-                          <div>
-                          <button
-                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-red-600 hover:bg-gray-200 hover:font-bold w-full"
-                            role="menuitem"
-                            id="menu-item-0"
-                            onClick={generatePDF}
-                          >
-                           <VscFilePdf className="mr-2"size={20} /> PDF
-                          </button>
-                          </div>
-                          <div className="">
-                            <button
-                              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:bg-gray-200 hover:font-bold w-full"
-                              onClick={generateExcel}
-                              role="menuitem"
-                              id="menu-item-1"
-                            >
-                              <RiFileExcel2Line
-                                className="mr-2"
-                                size={20}
-                              />
-                              EXCEL
-                            </button>
+                      {dropdown && (
+                        <div
+                          className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                          role="menu"
+                          aria-orientation="vertical"
+                          aria-labelledby="menu-button"
+                        >
+                          <div className="py-1 cursor-pointer " role="none">
+                            <div>
+                              <button
+                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-red-600 hover:bg-gray-200 hover:font-bold w-full"
+                                role="menuitem"
+                                id="menu-item-0"
+                                onClick={generatePDF}
+                              >
+                                <VscFilePdf className="mr-2" size={20} /> PDF
+                              </button>
+                            </div>
+                            <div className="">
+                              <button
+                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:bg-gray-200 hover:font-bold w-full"
+                                onClick={generateExcel}
+                                role="menuitem"
+                                id="menu-item-1"
+                              >
+                                <RiFileExcel2Line className="mr-2" size={20} />
+                                EXCEL
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
-                </div>
-
-
-
                 </div>
 
                 <div className="overflow-hidden ">
@@ -348,7 +344,7 @@ export default observer(function DashboardAdminShowUser() {
                                 ></path>
                               </svg>
                             </button> */}
-                                <button className="p-2 rounded-full  group transition-all duration-500  flex item-center">
+                                {/* <button className="p-2 rounded-full  group transition-all duration-500  flex item-center">
                                   <svg
                                     width="20"
                                     height="20"
@@ -364,7 +360,7 @@ export default observer(function DashboardAdminShowUser() {
                                       stroke-linecap="round"
                                     ></path>
                                   </svg>
-                                </button>
+                                </button> */}
                               </div>
                             </td>
                           </tr>

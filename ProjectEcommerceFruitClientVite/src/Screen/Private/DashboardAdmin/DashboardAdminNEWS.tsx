@@ -276,7 +276,7 @@ const DashboardAdminNEWS = () => {
                                     ></path>
                                   </svg>
                                 </button>
-                                <button className="p-2 rounded-full  group transition-all duration-500  flex item-center">
+                                {/* <button className="p-2 rounded-full  group transition-all duration-500  flex item-center">
                                   <svg
                                     width="20"
                                     height="20"
@@ -292,7 +292,7 @@ const DashboardAdminNEWS = () => {
                                       stroke-linecap="round"
                                     ></path>
                                   </svg>
-                                </button>
+                                </button> */}
                               </div>
                             </td>
                           </tr>
