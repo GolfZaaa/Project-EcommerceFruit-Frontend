@@ -254,7 +254,7 @@ const ProductGIList = () => {
                       <TableCell>
                         <MyContent name={row?.category?.name} fontSize="small" />
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell>
                         <Fab
                           variant="extended"
                           color="primary"

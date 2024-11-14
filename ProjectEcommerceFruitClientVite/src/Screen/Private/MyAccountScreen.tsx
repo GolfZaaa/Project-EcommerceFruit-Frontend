@@ -229,6 +229,7 @@ const MyAccountScreen = () => {
               width: drawerWidth,
               position: "fixed",
               bottom: 12,
+               zIndex: 1,
             },
           }}
         >
@@ -243,6 +244,7 @@ const MyAccountScreen = () => {
               position: "fixed",
               bottom: 12,
               top: 82,
+              zIndex: 1,
             },
           }}
           open

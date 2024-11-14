@@ -206,8 +206,17 @@ const MyOrderCardToSend = ({ order, index }: props) => {
       )}
 
       {select.length > 0 && (
-        <Grid container spacing={2} className="my-4">
-          <Grid item xs={12} sm={8}>
+        <Grid
+          container
+          spacing={2}
+          style={{
+            marginTop: 15,
+            marginBottom: 35,
+            zIndex: 1,
+            position: "relative",
+          }}
+        >
+          <Grid item xs={7.6}>
             <Typography variant="h5">
               <MyContent
                 name={`จำนวนที่เลือก ${select.length}`}
@@ -215,20 +224,34 @@ const MyOrderCardToSend = ({ order, index }: props) => {
               />
             </Typography>
           </Grid>
-          <Grid item xs={6} sm={3} className="flex justify-center items-center">
-            <input
-              type="checkbox"
-              className="mr-2 w-6 h-6"
-              checked={select.length === order.length}
-              onChange={() =>
-                select.length === order.length
-                  ? setSelect([])
-                  : setSelect(order.map((item) => item.id))
-              }
-            />
-            <Typography variant="h6">เลือกทั้งหมด</Typography>
+          <Grid item xs={2.7}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <input
+                type="checkbox"
+                className="mr-2"
+                style={{
+                  width: 50,
+                  height: 50,
+                }}
+                checked={select.length === order.length}
+                onChange={() =>
+                  select.length === order.length
+                    ? setSelect([])
+                    : setSelect(order.map((item) => item.id))
+                }
+              />
+              <Typography variant="h5" align="left">
+                เลือกทั้งหมด
+              </Typography>
+            </div>
           </Grid>
-          <Grid item xs={6} sm={1} className="flex justify-center items-center">
+          <Grid item xs={1.7}>
             <Fab variant="extended" color="primary" onClick={handleConfirm}>
               <EditIcon sx={{ mr: 1 }} />
               <MyContent name="ยืนยันการส่ง" fontSize="smaller" />
@@ -237,20 +260,26 @@ const MyOrderCardToSend = ({ order, index }: props) => {
         </Grid>
       )}
 
-      {order.map((item, index) => {
+    {order.map((item) => {
         const status = item?.shippings[0]?.shippingStatus;
+
         const myDriver = item.shippings[0].driverHistories.find(
           (x) => x.statusDriver === 3 && x.userId === user?.id
         );
+
         const myDriverFee = item.shippings[0].driverHistories.find(
           (x) => x.userId === user?.id
         );
-        const calculateTotalPrice = () =>
-          item?.orderItems?.reduce(
-            (total, item) => item.product.price * item.quantity + total,
-            0
-          );
-        const totalPrice = calculateTotalPrice();
+
+        const calculateTotalPrice = () => {
+          return item?.orderItems?.reduce((total, item: OrderItem) => {
+            total = item.product.price * item.quantity + total;
+
+            return total;
+          }, 0);
+        };
+
+        const totalPrice: any = calculateTotalPrice();
         const formattedTotalPrice = formatNumberWithCommas(totalPrice);
 
         return (
@@ -290,17 +319,30 @@ const MyOrderCardToSend = ({ order, index }: props) => {
                 />
               </p>
               {index === 1 && !myDriver && (
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    className="mr-2 w-6 h-6"
-                    checked={select.find((x) => x === item.id) !== undefined}
-                    onChange={() => onSelect(item.id)}
-                  />
-                  <Typography variant="h6">เลือกสินค้า</Typography>
-                </div>
-              )}
-            </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      className="mr-2"
+                      style={{
+                        width: 50,
+                        height: 50,
+                      }}
+                      checked={select.find((x) => x === item.id) !== undefined}
+                      onChange={() => onSelect(item.id)}
+                    />
+                    <Typography variant="h5" align="left">
+                      เลือกสินค้า
+                    </Typography>
+                  </div>
+                )}
+              </div>
+
 
             {item.orderItems.map((orderItem) => {
               const TotalPriceForProduct =
@@ -350,14 +392,6 @@ const MyOrderCardToSend = ({ order, index }: props) => {
             />
 
             <div className="mt-4">
-              {/* <p className="text-lg font-medium text-gray-800">
-            ชื่อ-ที่อยู่ลูกค้า : {item?.address?.user?.fullName} เบอร์ :{" "}
-            {item?.address?.user?.phoneNumber} บ้านเลขที่ {item?.address?.detail}
-            แขวง/ตำบล {item?.address?.subDistrict} เขต/อำเภอ{" "}
-            {item?.address?.district}  จังหวัด {item?.address?.province} รหัสไปรษณีย์{" "}
-            {item?.address?.postCode}
-          </p> */}
-
               <Grid container spacing={2} className="p-4">
                 <Grid item xs={12}>
                   <Typography

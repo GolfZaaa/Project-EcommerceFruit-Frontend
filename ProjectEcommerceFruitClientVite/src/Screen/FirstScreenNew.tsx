@@ -829,8 +829,8 @@ export default observer(function FirstScreenNew() {
                           data-aos-offset="300"
                           data-aos-easing="ease-in-sine"
                           src={pathImages.news + item.imageName}
-                          className="w-full object-cover"
-                          onClick={() => testNews(item)}
+                          className="w-full object-cover cursor-pointer"
+                          onClick={() => NavigateNewsDetail(item)}
                         />
                         <div
                           data-aos="fade-right"
@@ -842,7 +842,8 @@ export default observer(function FirstScreenNew() {
                             data-aos="fade-right"
                             data-aos-offset="300"
                             data-aos-easing="ease-in-sine"
-                            className="f-m-m text-lg font-semibold leading-7"
+                            className="f-m-m text-lg font-semibold leading-7 cursor-pointer"
+                            onClick={() => NavigateNewsDetail(item)}
                           >
                             {item.title}
                           </h1>
@@ -895,6 +896,7 @@ export default observer(function FirstScreenNew() {
                             data-aos-easing="ease-in-sine"
                             src={pathImages.news + item.imageName}
                             className="sm:w-4/4 md:w-4/4 lg:w-40 lg:h-64 cursor-pointer object-cover"
+                            onClick={() => NavigateNewsDetail(item)}
                           />
                           <div className="lg:ml-6">
                             <h1
@@ -902,6 +904,7 @@ export default observer(function FirstScreenNew() {
                               data-aos-offset="300"
                               data-aos-easing="ease-in-sine"
                               className="f-m-m text-lg font-semibold leading-7 lg:mt-0 mt-8 cursor-pointer"
+                              onClick={() => NavigateNewsDetail(item)}
                             >
                               {item.title.length > 48
                                 ? item.title.slice(0, 48) + "..."

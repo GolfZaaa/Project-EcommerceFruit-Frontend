@@ -147,8 +147,8 @@ const MyOrderCard = ({ order, index }: props) => {
 
   const handleConfirm = (values: any) => {
     Swal.fire({
-      title: "ท่านแน่ใจหรือไม่ว่าต้องการรับหิ้ว?",
-      text: "หากยืนยันแล้ว ท่านจะสามารถดูรายการได้ใน ข้อมูลส่วนตัว",
+      title: "แน่ใจหรือไม่ว่าได้รับสินค้าแล้ว?",
+      text: "หากยืนยันแล้ว ผู้ใช้จะสามารถดูรายการได้ใน ข้อมูลส่วนตัว",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -158,8 +158,8 @@ const MyOrderCard = ({ order, index }: props) => {
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire(
-          "รับหิ้วเรียบร้อยแล้ว",
-          "ท่านรับหิ้วเรียบร้อยแล้ว",
+          "ได้รับสินค้าเรียบร้อยแล้ว",
+          "ได้รับสินค้าเรียบร้อยแล้ว",
           "success"
         );
 

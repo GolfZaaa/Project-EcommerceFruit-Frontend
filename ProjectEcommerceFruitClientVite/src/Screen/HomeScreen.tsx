@@ -5,12 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { pathImages, RoutePath } from "../constants/RoutePath";
 import Loading from "../layout/component/LoadingComponent";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import { BsFillBarChartLineFill } from "react-icons/bs";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/th";
 import { resetScroll } from "../api/agent";
 import MyLottie from "../helper/components/MyLottie";
+import { MdAccessTimeFilled } from "react-icons/md";
 dayjs.extend(relativeTime);
 
 import lottiteEmpty from "../assets/lotties/lf20_qh5z2fdq.json";
@@ -473,7 +474,7 @@ export default observer(function HomeScreen() {
                               >
                                 <div className="relative">
                                   <img
-                                    className="w-full h-72 "
+                                    className="w-full h-72 object-cover"
                                     src={pathImages.product + product.images}
                                     alt="Sunset in the mountains"
                                   />
@@ -490,7 +491,7 @@ export default observer(function HomeScreen() {
                                     <div className="absolute top-0 left-0 bg-green-600 px-4 py-2 text-white mt-3 ml-3 text-xs font-bold rounded">
                                       <MyContent
                                         name="สินค้าของคุณ"
-                                        fontSize="smaller"
+                                        fontSize="small"
                                       />
                                     </div>
                                   )}
@@ -504,22 +505,7 @@ export default observer(function HomeScreen() {
                                 </div>
                                 <div className="px-6 py-3 flex flex-row items-center justify-between bg-gray-100">
                                   <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
-                                    <svg
-                                      height="13px"
-                                      width="13px"
-                                      version="1.1"
-                                      id="Layer_1"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      x="0px"
-                                      y="0px"
-                                      viewBox="0 0 512 512"
-                                    >
-                                      <g>
-                                        <g>
-                                          <path d="M256,0C114.837,0,0,114.837,0,256s114.837,256,256,256s256-114.837,256-256S397.163,0,256,0z M277.333,256 c0,11.797-9.536,21.333-21.333,21.333h-85.333c-11.797,0-21.333-9.536-21.333-21.333s9.536-21.333,21.333-21.333h64v-128 c0-11.797,9.536-21.333,21.333-21.333s21.333,9.536,21.333,21.333V256z"></path>
-                                        </g>
-                                      </g>
-                                    </svg>
+                                  <MdAccessTimeFilled size={20}/>
                                     <span className="ml-1">
                                       {" "}
                                       <MyContent
@@ -530,19 +516,7 @@ export default observer(function HomeScreen() {
                                   </span>
 
                                   <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
-                                    <svg
-                                      className="h-5"
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      stroke="currentColor"
-                                    >
-                                      <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-                                      ></path>
-                                    </svg>
+                                  <BsFillBarChartLineFill size={20}/>
                                     <span className="ml-1 flex">
                                       <MyContent
                                         name={product.sold}
@@ -600,7 +574,11 @@ export default observer(function HomeScreen() {
                             />
                             <div className="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
                             <div className="text-xs absolute top-0 right-0 bg-indigo-600 px-4 py-2 text-white mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                              {category.name}
+                              {/* {category.name} */}
+                              <MyContent
+                                      name={category.name}
+                                      fontSize="smaller"
+                                    />
                             </div>
 
                             {userid == myProduct?.productGI?.store?.userId && (
@@ -691,42 +669,36 @@ export default observer(function HomeScreen() {
                           </div>
                           <div className="px-6 py-3 flex flex-row items-center justify-between bg-gray-100">
                             <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
-                              <svg
-                                height="13px"
-                                width="13px"
-                                version="1.1"
-                                id="Layer_1"
-                                xmlns="http://www.w3.org/2000/svg"
-                                x="0px"
-                                y="0px"
-                                viewBox="0 0 512 512"
-                              >
-                                <g>
-                                  <g>
-                                    <path d="M256,0C114.837,0,0,114.837,0,256s114.837,256,256,256s256-114.837,256-256S397.163,0,256,0z M277.333,256 c0,11.797-9.536,21.333-21.333,21.333h-85.333c-11.797,0-21.333-9.536-21.333-21.333s9.536-21.333,21.333-21.333h64v-128 c0-11.797,9.536-21.333,21.333-21.333s21.333,9.536,21.333,21.333V256z"></path>
-                                  </g>
-                                </g>
-                              </svg>
-                              <span className="ml-1">{timePassed}</span>
+                            <MdAccessTimeFilled size={20}/>
+                              <span className="ml-1">
+                                
+                                <MyContent
+                                        name={timePassed}
+                                        fontSize="small"
+                                      />
+
+                              </span>
+                              
                             </span>
 
                             <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
-                              <svg
-                                className="h-5"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-                                ></path>
-                              </svg>
-                              <span className="ml-1">
+                            <BsFillBarChartLineFill size={20}/>
+
+                              {/* <span className="ml-1">
                                 {myProduct.sold} ยอดขาย
-                              </span>
+                              </span> */}
+                              <span className="ml-1 flex">
+                                      <MyContent
+                                        name={myProduct.sold}
+                                        fontSize="small"
+                                      />
+                                      <p style={{ paddingLeft: 5 }}>
+                                        <MyContent
+                                          name={"ยอดขาย"}
+                                          fontSize="small"
+                                        />
+                                      </p>
+                                    </span>
                             </span>
                           </div>
                         </div>
