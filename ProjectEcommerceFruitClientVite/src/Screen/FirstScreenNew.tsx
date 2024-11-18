@@ -75,16 +75,18 @@ export default observer(function FirstScreenNew() {
   }, []);
 
   useEffect(() => {
-    if (product.length > 0) {
-      const funcrandom = Math.floor(Math.random() * product.length);
-      const result: any = product[funcrandom];
+    const filterProduct = product.filter(x=>x.status === true)
+    if (filterProduct.length > 0) {
+      const funcrandom = Math.floor(Math.random() * filterProduct.length);
+      const result: any = filterProduct[funcrandom];
       setRandomProduct(result);
 
-      const sortedProducts = [...product].sort((a, b) => b.sold - a.sold);
+      const sortedProducts = [...filterProduct].sort((a, b) => b.sold - a.sold);
       const topFour = sortedProducts.slice(0, 4);
       setTopProducts(topFour);
     }
   }, [product]);
+
 
   useEffect(() => {
     AOS.init({

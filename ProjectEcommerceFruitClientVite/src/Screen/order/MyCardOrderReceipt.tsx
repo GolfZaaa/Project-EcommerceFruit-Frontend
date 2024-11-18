@@ -69,7 +69,7 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
             </div>
           </Grid>
           <Grid item xs={1.5}>
-            <Fab variant="extended" color="primary" onClick={handleConfirm}>
+            <Fab variant="extended" color="primary" onClick={handleConfirm} sx={{ zIndex: 1 }}>
               <EditIcon sx={{ mr: 1 }} />
               ยืนยันการเลือก
             </Fab>

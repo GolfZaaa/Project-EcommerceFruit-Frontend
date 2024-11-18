@@ -64,8 +64,8 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
 
   const handleConfirm = () => {
     Swal.fire({
-      title: "ท่านแน่ใจหรือไม่ว่าส่งสินค้าถึงมือลูกค้าแล้ว?",
-      text: "หากยืนยันแล้ว หมายถึงสินค้าได้ส่งถึงมือลูกค้าแล้ว",
+      title: "แน่ใจหรือไม่ว่าต้องการร้องขอรับหิ้วสินค้าต่อ?",
+      text: "หากกดยืนยันแล้ว กรุณารอคำสั่งอนุมัติจากผู้รับหิ้วคนก่อน",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -74,7 +74,7 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire("ส่งเรียบร้อยแล้ว", "ท่านส่งสินค้าเรียบร้อยแล้ว", "success");
+        Swal.fire("ส่งเรียบร้อยแล้ว", "ส่งคำร้องขอรับหิ้วสินค้าต่อสำเร็จ", "success");
 
         iWantToTakeOrdertoSend({ ...select.map((item) => item) });
 
@@ -102,50 +102,26 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
 
       {select.length ? (
         <Grid
-          container
-          spacing={2}
-          style={{
-            marginTop: 15,
-            marginBottom: 35,
-          }}
-        >
-          <Grid item xs={4} sm={8} md={8} lg={8} xl={8}>
-            <Typography variant="h5">จำนวนที่เลือก {select.length}</Typography>
-          </Grid>
-          <Grid item xs={4} sm={4} md={4} lg={4} xl={2}>
-            {/* <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <input
-                type="checkbox"
-                className="mr-2"
-                style={{
-                  width: 50,
-                  height: 50,
-                }}
-                checked={select.length === order.length}
-                onChange={() =>
-                  select.length === order.length
-                    ? setSelect([])
-                    : setSelect(order.map((item) => item.id))
-                }
-              />
-              <Typography variant="h5" align="left">
-                เลือกทั้งหมด
-              </Typography>
-            </div> */}
-          </Grid>
-          <Grid item xs={4} sm={4} md={4} lg={4} xl={2}>
-            <Fab variant="extended" color="primary" onClick={handleConfirm}>
-              <EditIcon sx={{ mr: 1 }} />
-              ยืนยันการเลือก
-            </Fab>
-          </Grid>
-        </Grid>
+  container
+  spacing={2}
+  style={{
+    marginTop: 15,
+    marginBottom: 35,
+  }}
+  justifyContent="space-between"
+  alignItems="center"  // Aligns items vertically in the center
+>
+  <Grid item xs={4} sm={8} md={8} lg={8} xl={8}>
+    <Typography variant="h5">จำนวนที่เลือก {select.length}</Typography>
+  </Grid>
+  <Grid item >
+    <Fab variant="extended" color="primary" onClick={handleConfirm}  sx={{ zIndex: 1 }} >
+      <EditIcon sx={{ mr: 1 }} />
+      ยืนยันการเลือก
+    </Fab>
+  </Grid>
+</Grid>
+
       ) : (
         <></>
       )}
