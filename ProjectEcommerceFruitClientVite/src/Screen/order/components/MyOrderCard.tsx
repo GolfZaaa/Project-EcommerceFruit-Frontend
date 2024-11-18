@@ -352,7 +352,7 @@ const MyOrderCard = ({ order, index }: props) => {
               }
             />
 
-            {index === 4 && (
+            {index === 3 && (
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   {/* <Typography align="center" color={"red"}>

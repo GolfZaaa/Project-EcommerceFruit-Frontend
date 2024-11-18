@@ -180,7 +180,6 @@ export default observer(function SummaryScreen() {
             await stripe.confirmCardPayment(test.clientSecret, {
               payment_method: paymentMethodId,
             });
-
           if (confirmError) {
             console.error("Error confirming card payment:", confirmError);
           } else if (paymentIntent.status === "succeeded") {

@@ -22,14 +22,14 @@ import MyDescription from "../../components/MyDescription";
 import { motion } from "framer-motion";
 import MyContent from "../../component/MyContent";
 import { AiOutlineLogin } from "react-icons/ai";
-import { IoCloseCircleOutline, IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+import { IoArrowBack, IoCloseCircleOutline, IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 
 dayjs.extend(relativeTime);
 dayjs.locale("th");
 
 export default observer(function ProductDetailScreen() {
   const navigate = useNavigate();
-  const { getProductById, productDetail, DeleteProduct, addStockProduct } =
+  const { getProductById, productDetail, DeleteProduct, addStockProduct, isUsedProduct} =
     useStore().productStore;
   const { user } = useStore().userStore;
   const {
@@ -104,7 +104,8 @@ export default observer(function ProductDetailScreen() {
   };
 
   const hanldleDelete = async (productid: any) => {
-    await DeleteProduct(productid);
+    // await DeleteProduct(productid);
+    await isUsedProduct(productid);
     await getProductById(productid);
   };
 
@@ -208,7 +209,6 @@ export default observer(function ProductDetailScreen() {
     (x) =>
       x.quantity > 0 &&
       x.status === true &&
-      x.hidden != true &&
       x.productGI.store.hidden != true &&
       x.id != productDetail?.id &&
       x.productGI.category.name === productDetail?.productGI.category.name &&
@@ -225,13 +225,27 @@ export default observer(function ProductDetailScreen() {
     (x) =>
       x.id !== productDetail?.id &&
       x.hidden !== true &&
+      x.status === true &&
       x.productGI.store.hidden !== true
   );
+
+  const handleGoBack = () => {
+    navigate(RoutePath.homeScreen)
+  }
+
 
   return (
     <div className="bg-gray-100 py-12 2xl:px-20 md:px-6 px-4">
       <div className="md:flex items-start justify-center py-12 2xl:px-20 md:px-6 px-4 bg-white">
         {showToast && <ToastAdd Check={checkToast} />}
+
+
+        <button onClick={handleGoBack} className="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-700 focus:outline-none focus:shadow-outline -mt-6">
+        <IoArrowBack />
+        </button>
+       
+
+
         <div>
           <img
             className="h-96 rounded-t-lg object-cover"
@@ -264,47 +278,14 @@ export default observer(function ProductDetailScreen() {
         </div>
 
         <div className="xl:w-2/5 md:w-1/2 lg:ml-8 md:ml-6 md:mt-0 mt-6">
-          <div className="border-b border-gray-200 pb-6 flex justify-between">
-            <div>
-              <p
-                className="text-sm leading-none text-gray-600"
-                style={{ fontSize: fontSizesmall }}
-              >
-                {/* {productDetail && productDetail?.productGI?.category.name} */}
-                <MyContent
-                  name={
-                    productDetail && productDetail?.productGI?.category?.name
-                  }
-                  fontSize="small"
-                />
-              </p>
-              <h1
-                className="
-							lg:text-2xl
-							text-xl
-							font-semibold
-							lg:leading-6
-							leading-7
-							text-gray-800
-							mt-2
-						"
-                style={{ fontSize: fontSizeBiglittle }}
-              >
-                {/* {productDetail && productDetail?.productGI?.name} */}
-                <MyContent
-                  name={productDetail && productDetail?.productGI?.name}
-                  fontSize="large"
-                />
-              </h1>
-            </div>
 
-            {user && user?.id == productDetail?.productGI?.store?.userId && (
-              <div className="flex items-center">
+        {user && user?.id == productDetail?.productGI?.store?.userId && (
+              <div className="flex justify-end">
                 <div>
                   <button
                     onClick={() => handlemodel(productDetail)}
                     className={
-                      "bg-green-400 font-semibold rounded-2xl pl-5 pr-5 p-2 mr-6 flex items-center"
+                      "bg-green-400 font-semibold rounded-2xl p-2 mr-6 flex items-center"
                     }
                   >
                     <FaPlus className="mr-3" /> เพิ่มสินค้า
@@ -473,7 +454,7 @@ export default observer(function ProductDetailScreen() {
                   className={`p-2 flex items-center space-x-2 ${
                     productDetail?.quantity === 0
                       ? "bg-gray-400 text-gray-700"
-                      : !productDetail?.hidden
+                      : productDetail?.status
                       ? "bg-red-500 text-gray-700"
                       : "bg-green-400"
                   } font-semibold rounded-2xl pl-5 pr-5`}
@@ -482,19 +463,53 @@ export default observer(function ProductDetailScreen() {
 
                   {productDetail?.quantity === 0
                     ? <IoCloseCircleOutline />
-                    : !productDetail?.hidden
+                    : productDetail?.status
                     ? <IoEyeOffOutline size={20} className="mr-2"/>
                     : <IoEyeOutline size={20} className="mr-2"/>}
 
-
                   {productDetail?.quantity === 0
                     ? "สินค้าหมด"
-                    : !productDetail?.hidden
+                    : productDetail?.status
                     ? "ปิดการขาย"
                     : "เปิดการขาย"}
                 </button>
               </div>
-            )}
+        )}
+
+
+          <div className="border-b border-gray-200 pb-6 flex justify-between">
+            <div>
+              <p
+                className="text-sm leading-none text-gray-600"
+                style={{ fontSize: fontSizesmall }}
+              >
+                {/* {productDetail && productDetail?.productGI?.category.name} */}
+                <MyContent
+                  name={
+                    productDetail && productDetail?.productGI?.category?.name
+                  }
+                  fontSize="small"
+                />
+              </p>
+              <h1
+                className="
+							lg:text-2xl
+							text-xl
+							font-semibold
+							lg:leading-6
+							leading-7
+							text-gray-800
+							mt-2
+						"
+                style={{ fontSize: fontSizeBiglittle }}
+              >
+                {/* {productDetail && productDetail?.productGI?.name} */}
+                <MyContent
+                  name={productDetail && productDetail?.productGI?.name}
+                  fontSize="large"
+                />
+              </h1>
+            </div>
           </div>
           <div>
             <p className=" text-base lg:leading-tight leading-normal text-gray-600 mt-7">

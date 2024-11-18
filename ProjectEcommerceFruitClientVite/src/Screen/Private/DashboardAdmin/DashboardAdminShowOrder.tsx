@@ -16,10 +16,23 @@ export default function DashboardAdminShowOrder() {
   const [filterUser, setfilterUser] = useState<any>([]);
 
   const { getOrdersAll, order } = useStore().orderStore;
+
+  const testGet = async () => {
+    await getOrdersAll();
+   }
+
+   const [loading, setLoading] = useState(false)
+
   useEffect(() => {
-    getOrdersAll();
+    setLoading(true)
+    getOrdersAll()
+    setLoading(false)
     AOS.init({ duration: 1000 });
   }, []);
+
+
+
+  console.log("order",order)
 
   useEffect(() => {
     if (searchUser === "") {
@@ -36,6 +49,7 @@ export default function DashboardAdminShowOrder() {
       setfilterUser(filtered);
     }
   }, [searchUser, order]);
+
 
   const formatDateToThai = (dateString: string) => {
     const date = new Date(dateString);
@@ -299,7 +313,7 @@ export default function DashboardAdminShowOrder() {
                   </thead>
 
                   <tbody className="divide-y divide-gray-300">
-                    {filterUser.map((userItem: any, index: any) => {
+                    {filterUser && filterUser.map((userItem: any, index: any) => {
                       return (
                         <tr className="bg-white transition-all duration-500 hover:bg-gray-50">
                           <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">

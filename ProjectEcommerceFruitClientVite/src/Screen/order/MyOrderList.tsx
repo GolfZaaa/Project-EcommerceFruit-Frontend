@@ -82,12 +82,6 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
               width: "20%",
             }}
           />
-          {/* <Tab
-            label={<MyContent name="ที่ต้องชำระ" fontSize="small" />}
-            style={{
-              width: "20%",
-            }}
-          /> */}
           <Tab
             label={<MyContent name="กำลังรออนุมัติ" fontSize="small" />}
             style={{
@@ -126,22 +120,15 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
             index={0}
           />
         </CustomTabPanel>
-        {/* <CustomTabPanel value={value} index={1}>
-          <MyOrderCard
-            order={order?.filter((item) => item?.paymentImage === null)} //ที่ต้องชำระ
-            index={1}
-          />
-        </CustomTabPanel> */}
-        <CustomTabPanel value={value} index={2}>
+        <CustomTabPanel value={value} index={1}>
           <MyOrderCard
             order={order.filter(
-              // (item) => item?.paymentImage !== null && item?.status === 0 //กำลังรออนุมัติ
               (item) =>  item?.status === 0 //กำลังรออนุมัติ
             )}
-            index={2}
+            index={1}
           />
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={3}>
+        <CustomTabPanel value={value} index={2}>
           <MyOrderCard
             order={order.filter(
               (item) =>
@@ -150,10 +137,10 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
                 item.confirmReceipt !== 1 && //อนุมัติแล้ว
                 item.confirmReceipt !== 2
             )}
-            index={3}
+            index={2}
           />
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={4}>
+        <CustomTabPanel value={value} index={3}>
           <MyOrderCard
             order={order.filter((item) =>
               item?.shippings[0]?.shippingStatus !== undefined
@@ -164,23 +151,23 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
                   item?.confirmReceipt === 0 &&
                   item?.status !== 2
             )}
+            index={3}
+          />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={4}>
+          <MyOrderCard
+            order={order.filter(
+              (item) => item?.status === 1 && item?.confirmReceipt === 1 //สำเร็จแล้ว
+            )}
             index={4}
           />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={5}>
           <MyOrderCard
             order={order.filter(
-              (item) => item?.status === 1 && item?.confirmReceipt === 1 //สำเร็จแล้ว
-            )}
-            index={5}
-          />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={6}>
-          <MyOrderCard
-            order={order.filter(
               (item) => item?.status === 2 || item?.confirmReceipt === 2 //ยกเลิกแล้ว
             )}
-            index={6}
+            index={5}
           />
         </CustomTabPanel>
       </Box>
