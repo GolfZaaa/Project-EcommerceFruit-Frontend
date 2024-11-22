@@ -133,10 +133,14 @@ export default observer(function LoginScreen() {
                     WebkitAppearance: "none",
                     MozAppearance: "textfield",
                   }}
+                  // onInput={(e: any) => {
+                  //   if (e.target.value.length > 10) {
+                  //     e.target.value = e.target.value.slice(0, 10);
+                  //   }
+                  // }}
                   onInput={(e: any) => {
-                    if (e.target.value.length > 10) {
-                      e.target.value = e.target.value.slice(0, 10);
-                    }
+                    const value = e.target.value.replace(/[^0-9]/g, ""); 
+                    e.target.value = value.slice(0, 10); 
                   }}
                 />
                 {phoneNumberError && (
