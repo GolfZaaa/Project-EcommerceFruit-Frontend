@@ -32,6 +32,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import MyContent from "../../component/MyContent";
 import MenuIcon from "@mui/icons-material/Menu";
+import { MdDashboard, MdSpaceDashboard } from "react-icons/md";
 
 const drawerWidth = 240;
 
@@ -51,7 +52,6 @@ const MyAccountScreen = () => {
   const handleDrawerClose = () => {
     setMobileOpen(false);
   };
-
 
   useEffect(() => {
     getAddressByUserId();
@@ -78,33 +78,51 @@ const MyAccountScreen = () => {
   const drawer = (
     <Box sx={{ display: "flex" }}>
       <List>
+
+      <ListItem
+      >
+          <ListItemText
+          sx={{ textAlign: "center" }}
+            primary={<MyContent name="แดชบอร์ดส่วนตัว" fontSize="small" />}
+          />
+        </ListItem>
+
         <ListItem
+        button
           style={{
             cursor: "pointer",
           }}
-          onClick={() => {setScreenComponent("my-dashboard"); handleDrawerClose();}}
+          onClick={() => {
+            setScreenComponent("my-dashboard");
+            handleDrawerClose();
+          }}
+        >
+          <ListItemIcon>
+            <MdDashboard size={25} />
+          </ListItemIcon>
+          <ListItemText
+            primary={<MyContent name="สรุปข้อมูล" fontSize="small" />}
+          />
+        </ListItem>
+
+        <ListItem
+        button
+          style={{
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            setScreenComponent("my-account");
+            handleDrawerClose();
+          }}
         >
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
           <ListItemText
-            primary={<MyContent name="แดชบอร์ด" fontSize="small" />}
-          />
-        </ListItem>
-
-        <ListItem
-          style={{
-            cursor: "pointer",
-          }}
-          onClick={() => {setScreenComponent("my-account"); handleDrawerClose();}}
-        >
-          <ListItemIcon>
-            <DashboardIcon />
-          </ListItemIcon>
-          <ListItemText
             primary={<MyContent name="ข้อมูลส่วนตัว" fontSize="small" />}
           />
         </ListItem>
+
         <Collapse timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <ListItem component={Link} to={RoutePath.firstscreen}>
@@ -113,19 +131,24 @@ const MyAccountScreen = () => {
           </List>
         </Collapse>
         <ListItem
+        button
           style={{
             cursor: "pointer",
           }}
-          onClick={() => {setScreenComponent("addressList");handleDrawerClose();}}
+          onClick={() => {
+            setScreenComponent("addressList");
+            handleDrawerClose();
+          }}
         >
           <ListItemIcon>
-            <ShoppingCartIcon />
+            <ListAltIcon />
           </ListItemIcon>
           <ListItemText
             primary={<MyContent name="ที่อยู่" fontSize="small" />}
           />
         </ListItem>
         <ListItem
+        button
           style={{
             cursor: "pointer",
           }}
@@ -136,7 +159,7 @@ const MyAccountScreen = () => {
           }}
         >
           <ListItemIcon>
-            <ListAltIcon />
+            <ShoppingCartIcon />
           </ListItemIcon>
           <ListItemText
             primary={<MyContent name="คำสั่งซื้อ" fontSize="small" />}
@@ -144,6 +167,7 @@ const MyAccountScreen = () => {
         </ListItem>
 
         <ListItem
+        button
           style={{
             cursor: "pointer",
           }}
@@ -162,6 +186,7 @@ const MyAccountScreen = () => {
         </ListItem>
 
         <ListItem
+        button
           style={{
             cursor: "pointer",
           }}
@@ -229,7 +254,7 @@ const MyAccountScreen = () => {
               width: drawerWidth,
               position: "fixed",
               bottom: 12,
-               zIndex: 1,
+              zIndex: 1,
             },
           }}
         >

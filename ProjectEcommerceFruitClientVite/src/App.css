@@ -9,4 +9,17 @@
   }
   
 
+.FontLogo {
+  font-family: "Kanit", sans-serif;
+}
 
+.ChangeFont {
+  font-family: "Kanit", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.FontPublic {
+  font-family: "Noto Sans Thai Looped", sans-serif;
+  font-style: normal;
+}

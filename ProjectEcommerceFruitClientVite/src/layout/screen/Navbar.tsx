@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Typography, IconButton, Badge } from "@mui/material";
 import { pathImages, RoutePath } from "../../constants/RoutePath";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, Router, useNavigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -12,6 +12,7 @@ import Divider from "@mui/material/Divider";
 import CircularProgress from "@mui/material/CircularProgress";
 import Backdrop from "@mui/material/Backdrop";
 import MyContent from "../../component/MyContent";
+import { resetScroll } from "../../api/agent";
 
 export default observer(function Navbar() {
   const navigate = useNavigate();
@@ -41,6 +42,10 @@ export default observer(function Navbar() {
       GetCartItemByUser();
     }
   }, [token]);
+
+  const handleHomeScreen = () => {
+    resetScroll();
+  }
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const toggleDrawer = () => setDrawerOpen(!drawerOpen);
@@ -88,10 +93,10 @@ export default observer(function Navbar() {
                         style={{
                           width: 50,
                           height: 50,
-                          objectFit: "contain",
+                          borderRadius:'50%'
                         }}
                       />
-                      <p className="ml-5">
+                      <p className="ml-5 FontLogo font-semibold" style={{color:'#01c446'}}>
                         <MyContent
                           name={systemSetting[0]?.webName}
                           fontSize="large"
@@ -113,19 +118,6 @@ export default observer(function Navbar() {
             )}
           </NavLink>
 
-          {/* <div className="lg:hidden">
-            <button className="navbar-burger flex items-center text-blue-600 p-3">
-              <svg
-                className="block h-4 w-4 fill-current"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <title>Mobile menu</title>
-                <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path>
-              </svg>
-            </button>
-          </div> */}
-
           <ul className="hidden absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 lg:flex lg:mx-auto lg:items-center lg:w-auto lg:space-x-6">
             <li>
               <NavLink
@@ -138,7 +130,9 @@ export default observer(function Navbar() {
                   }`
                 }
               >
+                <p className="FontPublic">
                 <MyContent name={"หน้าหลัก"} fontSize="small" />
+                </p>
               </NavLink>
             </li>
             <li className="text-gray-300">
@@ -160,6 +154,7 @@ export default observer(function Navbar() {
             <li>
               <NavLink
                 to={RoutePath.homeScreen}
+                onClick={handleHomeScreen}
                 className={({ isActive }) =>
                   `text-sm ${
                     isActive
@@ -168,11 +163,13 @@ export default observer(function Navbar() {
                   }`
                 }
               >
+                <p className="FontPublic">
                 <MyContent name={"สินค้า"} fontSize="small" />
+                </p>
               </NavLink>
             </li>
             <li className="text-gray-300">
-              {user && user && (
+              {token && token && (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -190,7 +187,7 @@ export default observer(function Navbar() {
               )}
             </li>
 
-            {user && user && (
+            {token && token && (
               <li>
                 <NavLink
                   to={RoutePath.orderReceiptList}
@@ -202,7 +199,9 @@ export default observer(function Navbar() {
                     }`
                   }
                 >
+                  <p className="FontPublic">
                   <MyContent name={"สร้างรายได้"} fontSize="small" />
+                  </p>
                 </NavLink>
               </li>
             )}
@@ -238,7 +237,9 @@ export default observer(function Navbar() {
                     }`
                   }
                 >
+                  <p className="FontPublic">
                   <MyContent name={"ตั้งค่าระบบ"} fontSize="small" />
+                  </p>
                 </NavLink>
               </li>
             )}
