@@ -102,7 +102,7 @@ export default function Footer() {
         <div className='w-64'>
           <ul className="mt-6 space-y-4 text-sm">
             <li>
-              <a href="#" className="text-gray-700 transition hover:opacity-75 text-2xl"> คณะ/โรงเรียน </a>
+              <p className="text-gray-700 transition hover:opacity-75 text-2xl"> คณะ/โรงเรียน </p>
             </li>
 
             <li>
@@ -135,7 +135,7 @@ export default function Footer() {
         <div className='w-64'>
           <ul className="mt-6 space-y-4 text-sm">
             <li>
-              <a href="#" className="text-gray-700 transition hover:opacity-75 text-2xl"> สำนัก/ศูนย์/กอง </a>
+              <p className="text-gray-700 transition hover:opacity-75 text-2xl"> สำนัก/ศูนย์/กอง </p>
             </li>
 
             <li>

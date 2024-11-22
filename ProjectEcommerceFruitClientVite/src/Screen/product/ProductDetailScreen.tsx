@@ -8,7 +8,7 @@ import { pathImages, RoutePath } from "../../constants/RoutePath";
 import { FaPlus } from "react-icons/fa6";
 import { Product } from "../../models/Product";
 import CircularProgress from "@mui/material/CircularProgress";
-import { GrNext, GrPrevious } from "react-icons/gr";
+import { GrNext, GrPowerReset, GrPrevious } from "react-icons/gr";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/th";
@@ -22,15 +22,26 @@ import MyDescription from "../../components/MyDescription";
 import { motion } from "framer-motion";
 import MyContent from "../../component/MyContent";
 import { AiOutlineLogin } from "react-icons/ai";
-import { IoArrowBack, IoCloseCircleOutline, IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+import {
+  IoArrowBack,
+  IoCloseCircleOutline,
+  IoEyeOffOutline,
+  IoEyeOutline,
+} from "react-icons/io5";
+import { RxLockClosed } from "react-icons/rx";
 
 dayjs.extend(relativeTime);
 dayjs.locale("th");
 
 export default observer(function ProductDetailScreen() {
   const navigate = useNavigate();
-  const { getProductById, productDetail, DeleteProduct, addStockProduct, isUsedProduct} =
-    useStore().productStore;
+  const {
+    getProductById,
+    productDetail,
+    DeleteProduct,
+    addStockProduct,
+    isUsedProduct,
+  } = useStore().productStore;
   const { user } = useStore().userStore;
   const {
     GetStoreProductUser,
@@ -84,6 +95,8 @@ export default observer(function ProductDetailScreen() {
     if (quantity > 1) setQuantity(quantity - 1);
   };
 
+  console.log("setAddQuantity",addquantity)
+
   const handleAddToCart = async () => {
     try {
       const ProductId = productDetail?.id;
@@ -109,9 +122,26 @@ export default observer(function ProductDetailScreen() {
     await getProductById(productid);
   };
 
+  const [loadingreset, setLoadingreset] = useState<any>(false)
+  const [loadingincrease, setLoadingIncrease] = useState<any>(false)
+
+
   const handleIncrease = () => {
+    setLoadingIncrease(true)
     setAddQuantity((prevQuantity: any) => prevQuantity + 1);
+    setTimeout(() => {
+      setLoadingIncrease(false)
+       }, 400);
   };
+
+
+  const handleResetQuantity = async () => {
+    setLoadingreset(true)
+    setAddQuantity(resetQuantity)
+    setTimeout(() => {
+   setLoadingreset(false)
+    }, 400);
+  }
 
   const handleDecrease = () => {
     if (addquantity > 1) {
@@ -141,12 +171,16 @@ export default observer(function ProductDetailScreen() {
   }, [productDetail]);
 
   const [openModel, setOpenModel] = useState(false);
+  const [resetQuantity, setResetQuantity] = useState<any>()
 
   const handlemodel = async (product: any) => {
     await getProductById(product.id);
     setAddQuantity(productDetail?.quantity);
+    setResetQuantity(productDetail?.quantity);
     setOpenModel(!openModel);
   };
+
+
 
   const handleAddQuantity = async (product: Product) => {
     const productId = product.id;
@@ -199,7 +233,7 @@ export default observer(function ProductDetailScreen() {
     currentIndex >=
     shopProductUser.filter((x) => x.id !== productDetail?.id).length - 1;
 
-  const [visibleCount, setVisibleCount] = useState(8);
+  const [visibleCount, setVisibleCount] = useState(5);
 
   const loadMore = () => {
     setVisibleCount((x) => x + 4);
@@ -230,22 +264,24 @@ export default observer(function ProductDetailScreen() {
   );
 
   const handleGoBack = () => {
-    navigate(RoutePath.homeScreen)
-  }
+    navigate(RoutePath.homeScreen);
+  };
 
+  const handleGoLogin = () => {
+    navigate(RoutePath.loginScreen);
+    resetScroll()
+  }
 
   return (
     <div className="bg-gray-100 py-12 2xl:px-20 md:px-6 px-4">
       <div className="md:flex items-start justify-center py-12 2xl:px-20 md:px-6 px-4 bg-white">
         {showToast && <ToastAdd Check={checkToast} />}
-
-
-        <button onClick={handleGoBack} className="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-700 focus:outline-none focus:shadow-outline -mt-6">
-        <IoArrowBack />
+        <button
+          onClick={handleGoBack}
+          className="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-700 focus:outline-none focus:shadow-outline -mt-6"
+        >
+          <IoArrowBack />
         </button>
-       
-
-
         <div>
           <img
             className="h-96 rounded-t-lg object-cover"
@@ -278,212 +314,233 @@ export default observer(function ProductDetailScreen() {
         </div>
 
         <div className="xl:w-2/5 md:w-1/2 lg:ml-8 md:ml-6 md:mt-0 mt-6">
-
-        {user && user?.id == productDetail?.productGI?.store?.userId && (
-              <div className="flex justify-end">
-                <div>
-                  <button
-                    onClick={() => handlemodel(productDetail)}
-                    className={
-                      "bg-green-400 font-semibold rounded-2xl p-2 mr-6 flex items-center"
-                    }
+          {user && user?.id == productDetail?.productGI?.store?.userId && (
+            <div className="flex justify-end">
+              <div>
+                <button
+                  onClick={() => handlemodel(productDetail)}
+                  className={
+                    "bg-green-400 font-semibold rounded-2xl p-2 mr-6 flex items-center pl-5 pr-5"
+                  }
+                >
+                  <FaPlus className="mr-3 " style={{ color: "#000000" }} />{" "}
+                  <p
+                    style={{
+                      color: "#000000",
+                      fontWeight: "bold",
+                    }}
+                    className="FontPublic"
                   >
-                    <FaPlus className="mr-3" /> เพิ่มสินค้า
-                  </button>
-                </div>
+                    เพิ่มสินค้า
+                  </p>
+                </button>
+              </div>
 
-                {openModel && (
-                  <div className="overflow-y-auto overflow-x-hidden bg-opacity-50 bg-black inset-0 fixed flex z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
-                    <div className="relative p-4 w-full max-w-2xl h-full md:h-auto">
-                      {/* Modal content */}
-                      <div className="relative p-4  rounded-lg shadow bg-white sm:p-5">
-                        {/* Modal header */}
-                        <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
-                          <h3 className="text-lg font-semibold text-black-800 dark:text-black">
-                            รายละเอียดสินค้า
-                          </h3>
-                          <button
-                            onClick={handlemodel}
-                            type="button"
-                            className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-black-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                          >
-                            <svg
-                              aria-hidden="true"
-                              className="w-5 h-5"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                            <span className="sr-only">Close modal</span>
-                          </button>
-                        </div>
-                        {/* Modal body */}
-                        <div className="grid gap-4 mb-4 sm:grid-cols-2">
-                          <div>
-                            <label
-                              htmlFor="name"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                            >
-                              ชื่อสินค้า
-                            </label>
-                            <input
-                              type="text"
-                              name="name"
-                              id="name"
-                              className="disabled:bg-gray-300 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                              placeholder="Type product name"
-                              value={productDetail?.productGI?.name}
-                              disabled
-                            />
-                          </div>
-                          <div>
-                            <label
-                              htmlFor="brand"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                            >
-                              ราคา
-                            </label>
-                            <input
-                              type="text"
-                              name="brand"
-                              id="brand"
-                              className="disabled:bg-gray-300 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                              placeholder="Product brand"
-                              value={productDetail.price}
-                              disabled
-                            />
-                          </div>
-
-                          <div>
-                            <label
-                              htmlFor="price"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                            >
-                              จำนวนสินค้า
-                            </label>
-                            <div className="flex items-center">
-                              <button
-                                type="button"
-                                disabled
-                                onClick={handleDecrease}
-                                className="px-4 py-1 bg-gray-400 rounded-lg mr-6 text-white text-xl"
-                              >
-                                -
-                              </button>
-                              <input
-                                className="bg-white border border-green-800 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500 text-center font-bold"
-                                value={addquantity.toLocaleString()}
-                                onChange={handleInputChange}
-                              />
-                              <button
-                                type="button"
-                                onClick={handleIncrease}
-                                className="px-3 py-1 bg-green-500 rounded-lg ml-6 text-white text-xl"
-                              >
-                                +
-                              </button>
-                            </div>
-                          </div>
-                          <div>
-                            <label
-                              htmlFor="price"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                            >
-                              ประเภท
-                            </label>
-                            <input
-                              name="price"
-                              id="price"
-                              className="disabled:bg-gray-300 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                              value={productDetail.productGI.category.name}
-                              disabled
-                            />
-                          </div>
-
-                          <div className="sm:col-span-2">
-                            <label
-                              htmlFor="description"
-                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                            >
-                              รายละเอียด
-                            </label>
-                            <textarea
-                              id="description"
-                              rows={4}
-                              className=" disabled:bg-gray-300 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                              placeholder="Write product description here"
-                              value={productDetail.detail.replace(
-                                /<\/?[^>]+(>|$)/g,
-                                ""
-                              )}
-                              disabled
-                            />
-                          </div>
-                        </div>
+              {openModel && (
+                <div className="overflow-y-auto overflow-x-hidden bg-opacity-50 bg-black inset-0 fixed flex z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
+                  <div className="relative p-4 w-full max-w-2xl h-full md:h-auto">
+                    <div className="relative p-4  rounded-lg shadow bg-white sm:p-5">
+                      <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                        <h3 className="FontPublic text-lg font-semibold text-black-800 dark:text-black">
+                          รายละเอียดสินค้า
+                        </h3>
                         <button
-                          onClick={() => handleAddQuantity(productDetail)}
-                          className="text-white inline-flex items-center bg-green-500 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                          onClick={handlemodel}
+                          type="button"
+                          className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-black-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
                         >
                           <svg
-                            className="mr-1 -ml-1 w-6 h-6"
+                            aria-hidden="true"
+                            className="w-5 h-5"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
                               fillRule="evenodd"
-                              d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                               clipRule="evenodd"
                             />
                           </svg>
-                          เพิ่มสินค้า
+                          <span className="sr-only">Close modal</span>
                         </button>
                       </div>
+                      <div className="grid gap-4 mb-4 sm:grid-cols-2">
+                        <div>
+                          <label
+                            htmlFor="name"
+                            className="FontPublic block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                          >
+                            ชื่อสินค้า
+                          </label>
+                          <input
+                            type="text"
+                            name="name"
+                            id="name"
+                            className="FontPublic disabled:bg-gray-300 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Type product name"
+                            value={productDetail?.productGI?.name}
+                            disabled
+                          />
+                        </div>
+                        <div>
+                          <label
+                            htmlFor="brand"
+                            className="FontPublic block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                          >
+                            ราคา
+                          </label>
+                          <input
+                            type="text"
+                            name="brand"
+                            id="brand"
+                            className="FontPublic disabled:bg-gray-300 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Product brand"
+                            value={productDetail.price}
+                            disabled
+                          />
+                        </div>
+
+                        <div>
+                          <label
+                            htmlFor="price"
+                            className="FontPublic block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                          >
+                            จำนวนสินค้า
+                          </label>
+                          <div className="flex items-center">
+                            <button
+                              type="button"
+                              onClick={handleResetQuantity}
+                              disabled={loadingreset}
+                              className="px-4 py-2 bg-red-500 rounded-lg mr-6 text-white text-xl"
+                              style={{ width: "50px", height: "35px" }}
+                            >
+                              {loadingreset ? 
+                              <div style={{marginTop:-3}}>
+                              <CircularProgress size={18} color="inherit" />
+                            </div>
+                              :<GrPowerReset size={20} />}
+                            </button>
+                            <input
+                              className="bg-white border border-green-800 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500 text-center font-bold"
+                              value={addquantity.toLocaleString()}
+                              onChange={handleInputChange}
+                            />
+                            <button
+                              type="button"
+                              onClick={handleIncrease}
+                              disabled={loadingincrease}
+                              className="px-4 py-2 bg-green-500 rounded-lg ml-6 text-white text-xl"
+                              style={{ width: "50px", height: "35px" }}
+                            >
+                                {loadingincrease ? 
+                              <div style={{marginTop:-3}}>
+                              <CircularProgress size={18} color="inherit" />
+                            </div>
+                              : <FaPlus size={20}  />
+                            }
+                            </button>
+                          </div>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor="price"
+                            className="FontPublic block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                          >
+                            ประเภท
+                          </label>
+                          <input
+                            name="price"
+                            id="price"
+                            className="FontPublic disabled:bg-gray-300 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            value={productDetail.productGI.category.name}
+                            disabled
+                          />
+                        </div>
+
+                        <div className="sm:col-span-2">
+                          <label
+                            htmlFor="description"
+                            className="FontPublic block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                          >
+                            รายละเอียด
+                          </label>
+                          <textarea
+                            id="description"
+                            rows={4}
+                            className=" FontPublic disabled:bg-gray-300 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Write product description here"
+                            value={productDetail.detail.replace(
+                              /<\/?[^>]+(>|$)/g,
+                              ""
+                            )}
+                            disabled
+                          />
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleAddQuantity(productDetail)}
+                        className="text-white inline-flex items-center bg-green-500 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                      >
+                        <svg
+                          className="mr-1 -ml-1 w-6 h-6"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <p className="FontPublic">เพิ่มสินค้า</p>
+                      </button>
                     </div>
                   </div>
+                </div>
+              )}
+
+              <button
+                onClick={() => hanldleDelete(productDetail.id)}
+                className={`p-2 flex items-center ${
+                  productDetail?.quantity === 0
+                    ? "bg-gray-400 text-gray-700"
+                    : productDetail?.status
+                    ? "bg-red-500 text-gray-700"
+                    : "bg-green-400"
+                } font-semibold rounded-2xl pl-5 pr-5`}
+                disabled={productDetail?.quantity === 0}
+              >
+                {productDetail?.quantity === 0 ? (
+                  <IoCloseCircleOutline size={20} className="mr-2" />
+                ) : productDetail?.status ? (
+                  <IoEyeOffOutline size={20} className="mr-2" />
+                ) : (
+                  <IoEyeOutline size={20} className="mr-2" />
                 )}
 
-                <button
-                  onClick={() => hanldleDelete(productDetail.id)}
-                  className={`p-2 flex items-center space-x-2 ${
-                    productDetail?.quantity === 0
-                      ? "bg-gray-400 text-gray-700"
-                      : productDetail?.status
-                      ? "bg-red-500 text-gray-700"
-                      : "bg-green-400"
-                  } font-semibold rounded-2xl pl-5 pr-5`}
-                  disabled={productDetail?.quantity === 0}
-                >
-
-                  {productDetail?.quantity === 0
-                    ? <IoCloseCircleOutline />
-                    : productDetail?.status
-                    ? <IoEyeOffOutline size={20} className="mr-2"/>
-                    : <IoEyeOutline size={20} className="mr-2"/>}
-
-                  {productDetail?.quantity === 0
-                    ? "สินค้าหมด"
-                    : productDetail?.status
-                    ? "ปิดการขาย"
-                    : "เปิดการขาย"}
-                </button>
-              </div>
-        )}
-
+                <p className="FontPublic " style={{
+                      color: "#000000",
+                      fontWeight: "bold",
+                    }}>
+                {productDetail?.quantity === 0
+                  ? "สินค้าหมด"
+                  : productDetail?.status
+                  ? "ปิดการขาย"
+                  : "เปิดการขาย"}
+                </p>
+              </button>
+            </div>
+          )}
 
           <div className="border-b border-gray-200 pb-6 flex justify-between">
             <div>
               <p
-                className="text-sm leading-none text-gray-600"
+                className="text-sm leading-none text-gray-600 FontPublic"
                 style={{ fontSize: fontSizesmall }}
               >
-                {/* {productDetail && productDetail?.productGI?.category.name} */}
                 <MyContent
                   name={
                     productDetail && productDetail?.productGI?.category?.name
@@ -500,10 +557,10 @@ export default observer(function ProductDetailScreen() {
 							leading-7
 							text-gray-800
 							mt-2
+              FontPublic
 						"
                 style={{ fontSize: fontSizeBiglittle }}
               >
-                {/* {productDetail && productDetail?.productGI?.name} */}
                 <MyContent
                   name={productDetail && productDetail?.productGI?.name}
                   fontSize="large"
@@ -512,8 +569,7 @@ export default observer(function ProductDetailScreen() {
             </div>
           </div>
           <div>
-            <p className=" text-base lg:leading-tight leading-normal text-gray-600 mt-7">
-              {/* {productDetail?.detail.replace(/<\/?[^>]+(>|$)/g, "")} */}
+            <p className=" text-base lg:leading-tight leading-normal text-gray-600 mt-7 FontPublic ">
               {productDetail?.detail ? (
                 <MyDescription text={productDetail?.detail} />
               ) : (
@@ -521,21 +577,41 @@ export default observer(function ProductDetailScreen() {
               )}
             </p>
 
-            <p className="text-base leading-4 mt-4 text-gray-600 flex">
-              {/* ขายแล้ว : {productDetail?.sold} ชิ้น */}
-              ขายแล้ว :{" "}
-              <MyContent name={productDetail?.sold} fontSize="small" /> ชิ้น
+            <div className="flex items-center space-x-2">
+            <p className=" text-gray-600 FontPublic font-semibold">
+              <MyContent name="ขายแล้ว :" fontSize="small" />
             </p>
-            <p className="text-base leading-4 mt-4 text-gray-600 mb-5 flex">
-              {/* ราคาต่อกิโลกรัม : {productDetail?.price} บาท */}
-              ราคาต่อกิโลกรัม :{" "}
-              <MyContent name={productDetail?.price} fontSize="small" /> บาท
+            <p className="text-gray-600 flex items-center FontPublic font-semibold">
+              <MyContent name={productDetail?.sold} fontSize="small" />
             </p>
-            <p className="text-base leading-4 mt-4 text-gray-600 mb-5 flex">
-              {/* คงเหลือ : {productDetail?.quantity} ชิ้น */}
-              คงเหลือ :{" "}
-              <MyContent name={productDetail?.quantity} fontSize="small" /> ชิ้น
+            <p className="text-gray-600 FontPublic font-semibold">
+            <MyContent name="ชิ้น" fontSize="small" />
             </p>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <p className=" text-gray-600 FontPublic font-semibold">
+              <MyContent name="ราคาต่อกิโลกรัม :" fontSize="small" />
+            </p>
+            <p className="text-gray-600 flex items-center FontPublic font-semibold">
+              <MyContent name={productDetail?.price} fontSize="small" />
+            </p>
+            <p className="text-gray-600 FontPublic font-semibold">
+            <MyContent name="บาท" fontSize="small" />
+            </p>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <p className=" text-gray-600 FontPublic font-semibold">
+              <MyContent name="คงเหลือ :" fontSize="small" />
+            </p>
+            <p className="text-gray-600 flex items-center FontPublic font-semibold">
+              <MyContent name={productDetail?.quantity} fontSize="small" />
+            </p>
+            <p className="text-gray-600 FontPublic font-semibold">
+            <MyContent name="ชิ้น" fontSize="small" />
+            </p>
+          </div>
 
             {user && user?.id == productDetail?.productGI?.store?.userId ? (
               <div></div>
@@ -547,9 +623,7 @@ export default observer(function ProductDetailScreen() {
                   size="medium"
                 >
                   <MyContent name={"-"} fontSize="small" />
-                  {/* - */}
                 </Button>
-                {/* <Typography variant="body1">{quantity}</Typography> */}
                 <Typography variant="body1">
                   {" "}
                   <MyContent name={quantity} fontSize="small" />
@@ -560,7 +634,6 @@ export default observer(function ProductDetailScreen() {
                   size="medium"
                 >
                   <MyContent name={"+"} fontSize="small" />
-                  {/* + */}
                 </Button>
               </Box>
             )}
@@ -571,8 +644,8 @@ export default observer(function ProductDetailScreen() {
                 onClick={() => setShow(!show)}
                 className="flex justify-between items-center cursor-pointer"
               >
-                <p className="text-base leading-4 text-gray-800">
-                  <MyContent name={"ข้อมูล IG ของสินค้า"} fontSize="small" />
+                <p className="text-base leading-4 text-gray-800 FontPublic font-medium">
+                  <MyContent name={"ข้อมูล GI ของสินค้า"} fontSize="small" />
                 </p>
                 <button
                   className="
@@ -611,11 +684,12 @@ export default observer(function ProductDetailScreen() {
                 id="sect"
               >
                 {productDetail?.productGI?.description ? (
-                  <MyDescription text={productDetail?.productGI?.description} />
+                  <p className="FontPublic ">
+                    <MyDescription text={productDetail?.productGI?.description} />
+                  </p>
                 ) : (
                   <div></div>
                 )}
-                {/* <MyDescription text={productDetail?.productGI?.description} /> */}
               </div>
             </div>
           </div>
@@ -633,27 +707,17 @@ export default observer(function ProductDetailScreen() {
 						w-full
 						py-4
 						hover:bg-gray-400
-                        mt-4 
+            mt-4 
+            cursor-not-allowed
 					"
               disabled
               onClick={handleAddToCart}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="mr-2 h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
+              <RxLockClosed size={25} className="mr-2"/>
+              <p className="FontPublic font-semibold">
+              <MyContent name={"ไม่สามารถซื้อสินค้าในร้านของตนเองได้"} fontSize="small" />
 
-              <MyContent name={"นี่คือสินค้าในร้านของคุณ"} fontSize="small" />
+              </p>
             </button>
           ) : user ? (
             <button
@@ -694,7 +758,9 @@ export default observer(function ProductDetailScreen() {
                       d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                     />
                   </svg>
-                  <MyContent name={"เพิ่มลงตะกร้า"} fontSize="small" />
+                  <p className="font-semibold FontPublic">
+                  <MyContent name={"เพิ่มสินค้าลงในตะกร้า"} fontSize="small" />
+                  </p>
                 </div>
               ) : (
                 <div className="flex items-center">
@@ -717,28 +783,22 @@ export default observer(function ProductDetailScreen() {
 						justify-center
 						leading-none
 						text-white
-						bg-slate-300
+						bg-green-500
 						w-full
 						py-4
-						hover:bg-slate-400
-                        mt-4 
+						hover:bg-green-700
+            mt-4
+            cursor-pointer
 					"
-                onClick={handleAddToCart}
-                disabled
+          onClick={handleGoLogin}
               >
-                {loadingCart ? (
-                  <div>
-                    <CircularProgress size={23} color="inherit" />
-                  </div>
-                ) : (
-                  <div className="flex items-center">
-                    <AiOutlineLogin className="mr-2 h-6 w-6" />
-                    <MyContent
-                      name={"ผู้ใช้ยังไม่ได้เข้าสู่ระบบ"}
-                      fontSize="small"
-                    />
-                  </div>
-                )}
+                
+                <div className="flex items-center justify-center">
+                  <AiOutlineLogin className="mr-2 " size={30} />
+                  <p className="FontPublic font-semibold">
+                    <MyContent name={"ลงชื่อเข้าใช้"} fontSize="small" />
+                  </p>
+                </div>
               </button>
             </div>
           )}
@@ -757,9 +817,7 @@ export default observer(function ProductDetailScreen() {
             </div>
 
             <div className="flex-grow">
-              <h1 className="text-2xl font-bold">
-                {/* {shopProductDetail?.[0]?.name} */}
-
+              <h1 className="text-2xl font-bold FontPublic">
                 <MyContent
                   name={shopProductDetail?.[0]?.name}
                   fontSize="normal"
@@ -772,51 +830,79 @@ export default observer(function ProductDetailScreen() {
                 onClick={() => handleShopDetail(shopProductDetail)}
                 className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-semibold border hover:bg-gray-200 hover:text-gray-800"
               >
+                <p className="FontPublic font-bold">
                 <MyContent name={"ดูร้านค้า"} fontSize="small" />
+                </p>
               </button>
             </div>
           </div>
 
           <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-6">
             <div>
-              <p className="text-gray-500">
+              <p className="text-gray-500 FontPublic font-semibold">
                 <MyContent name={"จำนวนสินค้าที่ถูกซื้อ"} fontSize="small" />
               </p>
-              <p className="text-red-500 text-xl font-bold">
-                {/* {totalQuantity.toLocaleString()} */}
+              <div className="flex">
+              <p className="text-red-500 text-xl font-bold FontPublic pr-2">
                 <MyContent
                   name={totalQuantity.toLocaleString()}
                   fontSize="small"
                 />
               </p>
+              <p className="text-red-500 text-xl font-bold FontPublic">
+                <MyContent
+                  name="ชิ้น"
+                  fontSize="small"
+                />
+              </p>
+              </div>
             </div>
 
-            <div>
-              <p className="text-gray-500">รายการสินค้า</p>
-              <p className="text-red-500 text-xl font-bold">
-                {/* {shopProductUser.length.toLocaleString()} */}
+            <div >
+            <p className="text-gray-500 FontPublic font-semibold">
+                <MyContent name={"รายการสินค้า"} fontSize="small" />
+              </p>
+              <div className="flex">
+              <p className="text-red-500 text-xl font-bold pr-2 FontPublic">
                 <MyContent
                   name={shopProductUser.length.toLocaleString()}
                   fontSize="small"
                 />
               </p>
+              <p className="text-red-500 text-xl font-bold FontPublic">
+                <MyContent
+                  name="รายการ"
+                  fontSize="small"
+                />
+              </p>
+              </div>
             </div>
 
             <div>
-              <p className="text-gray-500">ยอดการสั่งซื้อ</p>
-              <p className="text-red-500 text-xl font-bold">
-                {/* {OrderByStore.toLocaleString()} */}
+            <p className="text-gray-500 FontPublic font-semibold">
+                <MyContent name={"ยอดการสั่งซื้อ"} fontSize="small" />
+              </p>
+              <div className="flex">
+              <p className="text-red-500 text-xl font-bold pr-2 FontPublic">
                 <MyContent
                   name={OrderByStore.toLocaleString()}
                   fontSize="small"
                 />
               </p>
+              <p className="text-red-500 text-xl font-bold FontPublic">
+                <MyContent
+                  name="รายการ"
+                  fontSize="small"
+                />
+              </p>
+              </div>
             </div>
 
             <div>
-              <p className="text-gray-500">สร้างร้านค้าเมื่อ</p>
-              {/* <p className="text-red-500 text-xl font-bold">{timeAgo}</p> */}
-              <p className="text-red-500 text-xl font-bold">
+            <p className="text-gray-500 FontPublic font-semibold">
+                <MyContent name={"สร้างร้านค้าเมื่อ"} fontSize="small" />
+              </p>
+              <p className="text-red-500 text-xl font-bold FontPublic">
                 <MyContent name={timeAgo} fontSize="small" />
               </p>
             </div>
@@ -827,15 +913,18 @@ export default observer(function ProductDetailScreen() {
       {RecommendProducts.length > 0 && (
         <div className="bg-white mt-5">
           <div className="flex justify-between items-center px-4 md:px-8 lg:px-12 pt-5 text-2xl mb-3">
+          <p className="FontPublic font-bold relative after:content-[''] after:block after:w-full after:h-[2px] after:bg-gray-300 after:mt-2 after:relative">
             <MyContent name={"สินค้าจากร้านเดียวกัน"} fontSize="normal" />
+          </p>
+
             <div
-              className="flex cursor-pointer items-center space-x-1 text-red-500"
+              className="flex cursor-pointer items-center space-x-1 text-red-500 hover:text-red-700"
               onClick={() => handleShopDetail(shopProductDetail)}
             >
-              <p className="font-semibold text-sm">
+              <p className="font-semibold text-sm FontPublic">
                 <MyContent name={"ดูทั้งหมด"} fontSize="small" />
               </p>
-              <GrNext className="text-red-500" />
+              <GrNext className=" mt-1" />
             </div>
           </div>
 
@@ -874,17 +963,16 @@ export default observer(function ProductDetailScreen() {
                     />
                     {user &&
                     user?.id === productDetail?.productGI?.store?.userId ? (
-                      <span className="absolute top-0 left-0 w-28 translate-y-6 -translate-x-6 -rotate-45 bg-red-500 text-center text-sm text-white z-10">
+                      <span className="FontPublic absolute top-0 left-0 w-28 translate-y-6 -translate-x-6 -rotate-45 bg-red-500 text-center text-sm text-white z-10">
                         สินค้าของคุณ
                       </span>
                     ) : null}
 
                     <div className="mt-4 px-3 pb-5">
                       <h5
-                        className="text-base font-semibold tracking-tight text-slate-900"
+                        className="FontPublic text-base font-semibold tracking-tight text-slate-900"
                         style={{ fontSize: fontSizenormal }}
                       >
-                        {/* {item.productGI.name} */}
                         <MyContent
                           name={item.productGI.name}
                           fontSize="small"
@@ -892,8 +980,7 @@ export default observer(function ProductDetailScreen() {
                       </h5>
                       <div className="flex items-center justify-between mt-10">
                         <p>
-                          <span className="text-xl font-bold text-slate-900 flex">
-                            {/* ฿{item.price.toLocaleString()} */}
+                          <span className="FontPublic text-xl font-bold text-slate-900 flex">
                             ฿
                             <MyContent
                               name={item.price.toLocaleString()}
@@ -916,11 +1003,12 @@ export default observer(function ProductDetailScreen() {
                               d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                             />
                           </svg>
-                          {/* เพิ่มสินค้าลงตะกร้า */}
+                          <p className="FontPublic">
                           <MyContent
                             name={"รายละเอียดสินค้า"}
                             fontSize="smaller"
                           />
+                          </p>
                         </button>
                       </div>
                     </div>
@@ -941,15 +1029,15 @@ export default observer(function ProductDetailScreen() {
           </div>
         </div>
       )}
-      
-      
+
       <div className="bg-white mt-5">
-      {filteredProducts.length > 0 && (
-        <div className="px-6 pt-5 text-2xl mb-5 flex justify-between items-center">
-        <MyContent name="สินค้าใกล้เคียงกัน" fontSize="normal" />
-      </div>
-      )}
-        
+        {filteredProducts.length > 0 && (
+          <div className="px-6 pt-5 text-2xl mb-5 flex justify-between items-center">
+            <p className="FontPublic font-bold">
+            <MyContent name="สินค้าที่คล้ายกัน" fontSize="normal" />
+            </p>
+          </div>
+        )}
 
         <div className="relative px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
@@ -966,11 +1054,11 @@ export default observer(function ProductDetailScreen() {
                     alt="product image"
                   />
                   <div className="p-4">
-                    <h5 className="text-sm font-medium text-gray-800 mb-2">
+                    <h5 className="FontPublic text-sm font-medium text-gray-800 mb-2">
                       <MyContent name={item.productGI.name} fontSize="small" />
                     </h5>
                     <div className="flex items-center justify-between">
-                      <p className="text-lg font-bold text-gray-900 flex items-center">
+                      <p className="FontPublic text-lg font-bold text-gray-900 flex items-center ">
                         <span className="mr-1">฿</span>
                         <MyContent name={item.price} fontSize="small" />
                       </p>
@@ -990,7 +1078,9 @@ export default observer(function ProductDetailScreen() {
                             d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                           />
                         </svg>
+                        <p className="FontPublic">
                         รายละเอียดสินค้า
+                        </p>
                       </button>
                     </div>
                   </div>
@@ -1007,7 +1097,10 @@ export default observer(function ProductDetailScreen() {
             onClick={loadMore}
             className="rounded-md bg-white px-4 py-2 text-black hover:bg-gray-300 w-96 border border-gray-300"
           >
-            ดูเพิ่มเติม
+            <p className="FontPublic ">
+            <MyContent name="ดูเพิ่มเติม" fontSize="small" />
+            
+            </p>
           </button>
         </div>
       )}

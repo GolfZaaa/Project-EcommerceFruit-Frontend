@@ -553,9 +553,11 @@ export default observer(function DashboardShopScreen() {
       <List
         style={{
           cursor: "pointer",
+          marginTop: "15px"
         }}
       >
         <ListItem
+        button
           onClick={() => {
             setScreenComponent("dashboard");
             handleDrawerClose();
@@ -565,7 +567,7 @@ export default observer(function DashboardShopScreen() {
             <DashboardIcon />
           </ListItemIcon>
           <ListItemText
-            primary={<MyContent name="แดชบอร์ด" fontSize="small" />}
+            primary={<MyContent name="สรุปข้อมูล" fontSize="small" />}
           />
         </ListItem>
         <Collapse timeout="auto" unmountOnExit>
@@ -576,6 +578,7 @@ export default observer(function DashboardShopScreen() {
           </List>
         </Collapse>
         <ListItem
+        button
           onClick={() => {
             setScreenComponent("CreateShop");
             handleDrawerClose();
@@ -589,6 +592,7 @@ export default observer(function DashboardShopScreen() {
           />
         </ListItem>
         <ListItem
+        button
           onClick={() => {
             setScreenComponent("ProductGIList");
             handleDrawerClose();
@@ -598,10 +602,11 @@ export default observer(function DashboardShopScreen() {
             <PeopleIcon />
           </ListItemIcon>
           <ListItemText
-            primary={<MyContent name="เพิ่มข้อมูลสินค้า" fontSize="small" />}
+            primary={<MyContent name="เพิ่มข้อมูล GI " fontSize="small" />}
           />
         </ListItem>
         <ListItem
+        button
           onClick={() => {
             setScreenComponent("ProductList");
             handleDrawerClose();
@@ -615,6 +620,7 @@ export default observer(function DashboardShopScreen() {
           />
         </ListItem>
         <ListItem
+        button
           onClick={() => {
             setScreenComponent("OrderList");
             handleDrawerClose();
@@ -654,12 +660,14 @@ export default observer(function DashboardShopScreen() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} >
             {
-              <MyContent
-                name={`ร้านค้า ${usershop && usershop.name}`}
+              <p className="ChangeFont">
+                <MyContent
+                name={`แดชบอร์ดร้านค้า ${usershop && usershop.name}`}
                 fontSize="normal"
               />
+              </p>
             }
           </Typography>
           <div>

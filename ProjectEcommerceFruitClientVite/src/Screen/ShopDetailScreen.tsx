@@ -7,6 +7,9 @@ import { pathImages, RoutePath } from "../constants/RoutePath";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Product } from "../models/Product";
 import { resetScroll } from "../api/agent";
+import MyContent from "../component/MyContent";
+import { MdAccessTimeFilled } from "react-icons/md";
+import { BsFillBarChartLineFill } from "react-icons/bs";
 
 export default observer(function ShopDetailScreen() {
   const { id: userId } = useParams<{ id: any }>();
@@ -74,21 +77,6 @@ export default observer(function ShopDetailScreen() {
 
   const navigate = useNavigate();
 
-  //   let filterProduct = selectedCategory === 0
-  //   ? shopProductUser
-  //   : shopProductUser.filter(
-  //       (x) => x.productGI.category.id === selectedCategory
-  //     );
-
-  //     const [sortPrice, setSortPrice] = useState<"asc" | "desc" | null>(null);
-
-  // // Sort products by price based on sortPrice state
-  // if (sortPrice === "asc") {
-  //   filterProduct = [...filterProduct].sort((a, b) => a.price - b.price);
-  // } else if (sortPrice === "desc") {
-  //   filterProduct = [...filterProduct].sort((a, b) => b.price - a.price);
-  // }
-
   const [sortPrice, setSortPrice] = useState<"asc" | "desc" | null>(null);
 
   const onSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -107,14 +95,11 @@ export default observer(function ShopDetailScreen() {
           (x) => x.productGI.category.id === selectedCategory
         );
 
-  // Sort products by price based on sortPrice state
   if (sortPrice === "asc") {
     filterProduct = [...filterProduct].sort((a, b) => a.price - b.price);
   } else if (sortPrice === "desc") {
     filterProduct = [...filterProduct].sort((a, b) => b.price - a.price);
   }
-
-  console.log("categories", categories);
 
   const handleResetSort = async () => {
     setLoadingUser(true);
@@ -128,145 +113,310 @@ export default observer(function ShopDetailScreen() {
 
   return (
     <div>
-      
       <div className="bg-white p-6 shadow-md">
-  <div className="flex flex-col lg:flex-row items-center justify-between space-y-4 lg:space-y-0">
-    <div className="flex items-center space-x-4">
-      <img
-        src="https://marketplace.canva.com/EAFaFUz4aKo/2/0/1600w/canva-yellow-abstract-cooking-fire-free-logo-JmYWTjUsE-Q.jpg"
-        alt="Store Logo"
-        className="w-16 h-16 object-cover rounded-full"
-      />
-      <div>
-        <h1 className="text-xl font-bold">{shopDetail?.name}</h1>
-        <p className="text-gray-500 text-lg">สร้างโดย {shopDetail?.user.fullName}</p>
-      </div>
-    </div>
+        <div className="flex flex-col lg:flex-row items-center justify-between space-y-4 lg:space-y-0">
+          <div className="flex items-center space-x-4">
+            <img
+              src="https://marketplace.canva.com/EAFaFUz4aKo/2/0/1600w/canva-yellow-abstract-cooking-fire-free-logo-JmYWTjUsE-Q.jpg"
+              alt="Store Logo"
+              className="w-16 h-16 object-cover rounded-full"
+            />
+            <div>
+              <h1 className="FontPublic text-xl font-semibold mb-6">
+                <MyContent name={shopDetail?.name} fontSize="larger" />
+              </h1>
+              <div className="flex FontPublic text-gray-500 font-semibold">
+                <span className="mr-1">
+                  <MyContent name="สร้างโดย : " fontSize="normal" />
+                </span>
+                <span>
+                  <MyContent
+                    name={shopDetail?.user.fullName}
+                    fontSize="normal"
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
 
-    <div className="space-y-8 text-center text-gray-600 lg:pr-9">
-      <div className="flex flex-wrap justify-center space-x-4 lg:space-x-8">
-        <div className="flex flex-col items-center">
-          <span className="text-red-500 text-xl font-bold">{shopProductUser.length}</span>
-          <p>รายการสินค้า</p>
-        </div>
-        <div className="flex flex-col items-center">
-          <span className="text-red-500 text-xl font-bold">{totalQuantity.toLocaleString()}</span>
-          <p>จำนวนสินค้าที่ถูกซื้อ</p>
-        </div>
-        <div className="flex flex-col items-center">
-          <span className="text-red-500 text-xl font-bold">{OrderByStore}</span>
-          <p>ยอดการสั่งซื้อ</p>
-        </div>
-        <div className="flex flex-col items-center">
-          <span className="text-red-500 text-xl font-bold">{timeAgo}</span>
-          <p>สร้างร้านค้าเมื่อ</p>
-        </div>
-      </div>
+          <div className="space-y-8 text-center text-gray-600 lg:pr-9">
+            <div className="flex flex-wrap justify-center space-x-4 lg:space-x-8">
+              <div className="flex flex-col items-center FontPublic">
+                <div className="flex">
+                  <span className="text-red-500  font-bold mr-1">
+                    <MyContent
+                      name={shopProductUser.length}
+                      fontSize="littlenormal"
+                    />
+                  </span>
+                  <span className="text-red-500  font-bold">
+                    <MyContent name="รายการ" fontSize="littlenormal" />
+                  </span>
+                </div>
+                <p>
+                <MyContent name="รายการสินค้า" fontSize="littlenormal" />
+                </p>
+              </div>
 
-      {shopProductDetail
-        ?.filter((store: any) =>
-          store.user.address.some((address: any) => address.isUsed_Store)
-        )
-        .map((store: any, index) => (
-          <div key={index} className="flex flex-wrap justify-center space-x-4 lg:space-x-8">
-            {store.user.address
-              .filter((address: any) => address.isUsed_Store)
-              .map((address: any, i: any) => (
-                <div className="flex flex-col items-center lg:flex-row lg:space-x-4" key={i}>
-                  <div className="mr-5">
-                    <span className="text-red-500 text-xl font-bold">{address.detail}</span>
-                    <p>บ้านเลขที่</p>
-                  </div>
-                  <div className="mr-5">
-                    <span className="text-red-500 text-xl font-bold">{address.subDistrict}</span>
-                    <p>ตำบล</p>
-                  </div>
-                  <div className="mr-5">
-                    <span className="text-red-500 text-xl font-bold">{address.district}</span>
-                    <p>อำเภอ</p>
-                  </div>
-                  <div>
-                    <span className="text-red-500 text-xl font-bold">{address.province}</span>
-                    <p>จังหวัด</p>
-                  </div>
+              <div className="flex flex-col items-center FontPublic">
+                <div className="flex">
+                  <span className="text-red-500  font-bold mr-1">
+                    <MyContent
+                      name={totalQuantity.toLocaleString()}
+                      fontSize="littlenormal"
+                    />
+                  </span>
+                  <span className="text-red-500  font-bold">
+                    <MyContent name="ชิ้น" fontSize="littlenormal" />
+                  </span>
+                </div>
+                <p>
+                <MyContent name="จำนวนสินค้าที่ถูกซื้อ" fontSize="littlenormal" />
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center FontPublic">
+                <div className="flex">
+                  <span className="text-red-500  font-bold mr-1">
+                    <MyContent
+                      name={OrderByStore}
+                      fontSize="littlenormal"
+                    />
+                  </span>
+                  <span className="text-red-500  font-bold">
+                    <MyContent name="รายการ" fontSize="littlenormal" />
+                  </span>
+                </div>
+                <p>
+                <MyContent name="ยอดการสั่งซื้อ" fontSize="littlenormal" />
+                </p>
+              </div>
+
+
+              <div className="flex flex-col items-center FontPublic">
+                <div className="flex">
+                  <span className="text-red-500  font-bold mr-1">
+                    <MyContent
+                      name={timeAgo}
+                      fontSize="littlenormal"
+                    />
+                  </span>
+                </div>
+                <p>
+                <MyContent name="สร้างร้านค้าเมื่อ" fontSize="littlenormal" />
+                </p>
+              </div>
+            </div>
+
+            {shopProductDetail
+              ?.filter((store: any) =>
+                store.user.address.some((address: any) => address.isUsed_Store)
+              )
+              .map((store: any, index) => (
+                <div
+                  key={index}
+                  className="flex flex-wrap justify-center space-x-4 lg:space-x-8"
+                >
+                  {store.user.address
+                    .filter((address: any) => address.isUsed_Store)
+                    .map((address: any, i: any) => (
+                      <div
+                        className="FontPublic flex flex-col items-center lg:flex-row lg:space-x-4"
+                        key={i}
+                      >
+
+                        <div className="mr-5">
+                          <span className="text-red-500 text-xl font-bold">
+                <MyContent name={address.detail} fontSize="littlenormal" />
+                          </span>
+                          <p>
+                <MyContent name="บ้านเลขที่" fontSize="littlenormal" />
+                            </p>
+                        </div>
+
+                        <div className="mr-5">
+                          <span className="text-red-500 text-xl font-bold">
+                            
+                <MyContent name={address.subDistrict} fontSize="littlenormal" />
+
+                          </span>
+                          <p>
+                <MyContent name="ตำบล" fontSize="littlenormal" />
+
+                          </p>
+                        </div>
+                        <div className="mr-5">
+                          <span className="text-red-500 text-xl font-bold">
+                <MyContent name={address.district} fontSize="littlenormal" />
+
+                            
+                          </span>
+                          <p>
+                <MyContent name="อำเภอ" fontSize="littlenormal" />
+                            </p>
+                        </div>
+                        <div>
+                          <span className="text-red-500 text-xl font-bold">
+                            
+                <MyContent name={address.province} fontSize="littlenormal" />
+                          </span>
+                          <p>
+                <MyContent name="จังหวัด" fontSize="littlenormal" />
+                
+                            </p>
+                        </div>
+                      </div>
+                    ))}
                 </div>
               ))}
           </div>
-        ))}
-    </div>
-  </div>
-</div>
-
-
-<div className="px-4 md:px-14 mt-10">
-  <div className="bg-white p-4 shadow-md rounded-md border">
-    <h2 className="text-lg font-semibold mb-4">กรองข้อมูลสินค้า</h2>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-4">
-        <label className="text-sm font-medium text-gray-700">ประเภทผลไม้</label>
-        <select
-          value={selectedCategory}
-          onChange={(e) => onSelectCate(Number(e.target.value))}
-          className="block w-full md:w-52 bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:ring focus:ring-indigo-200"
-        >
-          {categories.map((item, i: number) => (
-            <option key={i} value={item.id}>
-              {item.name}
-            </option>
-          ))}
-        </select>
+        </div>
       </div>
 
-      <div className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-4">
-        <label className="text-sm font-medium text-gray-700">ช่วงราคาสินค้า</label>
-        <select
-          value={sortPrice || ""}
-          onChange={onSortChange}
-          className="block w-full md:w-52 bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:ring focus:ring-indigo-200"
-        >
-          <option value="" hidden>
-            {sortPrice === "asc"
-              ? "ราคา: จากน้อยไปมาก"
-              : sortPrice === "desc"
-              ? "ราคา: จากมากไปน้อย"
-              : "ราคา"}
-          </option>
-          <option value="lowToHigh">ราคา: จากน้อยไปมาก</option>
-          <option value="highToLow">ราคา: จากมากไปน้อย</option>
-        </select>
-      </div>
-
-      <div className="flex items-center justify-start lg:justify-end">
-        <button
-          onClick={handleResetSort}
-          className="w-full md:w-52 text-base rounded-md bg-green-600 py-2 px-4 border border-transparent text-white transition-all shadow-md hover:shadow-lg active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:opacity-50 disabled:shadow-none"
-          type="button"
-          disabled={loadingUser}
-        >
-          {loadingUser ? (
-            <div>
-              <CircularProgress size={17} color="inherit" />
+      {/* <div className="px-4 md:px-14 mt-10">
+        <div className="bg-white p-4 shadow-md rounded-md border">
+          <h2 className="text-lg font-semibold mb-4">กรองข้อมูลสินค้า</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-4">
+              <label className="text-sm font-medium text-gray-700">
+                ประเภทผลไม้
+              </label>
+              <select
+                value={selectedCategory}
+                onChange={(e) => onSelectCate(Number(e.target.value))}
+                className="block w-full md:w-52 bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:ring focus:ring-indigo-200"
+              >
+                {categories.map((item, i: number) => (
+                  <option key={i} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
             </div>
-          ) : (
-            <div>
-              <p>รีเซ็ตกรองข้อมูลสินค้า</p>
+
+            <div className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-4">
+              <label className="text-sm font-medium text-gray-700">
+                ช่วงราคาสินค้า
+              </label>
+              <select
+                value={sortPrice || ""}
+                onChange={onSortChange}
+                className="block w-full md:w-52 bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:ring focus:ring-indigo-200"
+              >
+                <option value="" hidden>
+                  {sortPrice === "asc"
+                    ? "ราคา: จากน้อยไปมาก"
+                    : sortPrice === "desc"
+                    ? "ราคา: จากมากไปน้อย"
+                    : "ราคา"}
+                </option>
+                <option value="lowToHigh">ราคา: จากน้อยไปมาก</option>
+                <option value="highToLow">ราคา: จากมากไปน้อย</option>
+              </select>
             </div>
-          )}
-        </button>
+
+            <div className="flex items-center justify-start lg:justify-end">
+              <button
+                onClick={handleResetSort}
+                className="w-full md:w-52 text-base rounded-md bg-green-600 py-2 px-4 border border-transparent text-white transition-all shadow-md hover:shadow-lg active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:opacity-50 disabled:shadow-none"
+                type="button"
+                disabled={loadingUser}
+              >
+                {loadingUser ? (
+                  <div>
+                    <CircularProgress size={17} color="inherit" />
+                  </div>
+                ) : (
+                  <div>
+                    <p>รีเซ็ตกรองข้อมูลสินค้า</p>
+                  </div>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div> */}
+
+
+      <div className="pl-14 pr-14 mt-10">
+              <div className="bg-white p-4 shadow-md rounded-md -mb-6 border ">
+                <h2 className="text-lg font-semibold mb-4 FontPublic">
+                  <MyContent name={"กรองข้อมูลสินค้า"} fontSize="normal" />
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="flex items-center space-x-4">
+                    <label className="text-sm font-medium text-gray-700 FontPublic">
+                      <MyContent name={"ประเภทผลไม้"} fontSize="small" />
+                    </label>
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => onSelectCate(Number(e.target.value))}
+                      className="block w-52 bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:ring focus:ring-indigo-200"
+                    >
+                      {categories.map((item, i: number) => (
+                        <option key={i} value={item.id} className="FontPublic">
+                          {/* {item.name} */}
+                          <MyContent name={item.name} fontSize="small" />
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="flex items-center space-x-3">
+                    <label className="FontPublic text-sm font-medium text-gray-700">
+                      <MyContent name={"ช่วงราคาสินค้า"} fontSize="small" />
+                    </label>
+                    <select
+                value={sortPrice || ""}
+                onChange={onSortChange}
+                className="block w-full md:w-52 bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:ring focus:ring-indigo-200"
+              >
+                <option value="" hidden>
+                  {sortPrice === "asc"
+                    ? "ราคา: จากน้อยไปมาก"
+                    : sortPrice === "desc"
+                    ? "ราคา: จากมากไปน้อย"
+                    : "ราคา"}
+                </option>
+                <option value="lowToHigh">ราคา: จากน้อยไปมาก</option>
+                <option value="highToLow">ราคา: จากมากไปน้อย</option>
+              </select>
+                  </div>
+
+                  <div className="flex items-center space-x-4  sm:w-full md:ml-11 md:w-36 lg:w-60">
+                    <button
+                      onClick={handleResetSort}
+                      className="text-base rounded-md bg-green-600 py-2 px-4 border border-transparent text-center text-white transition-all shadow-md hover:shadow-lg active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:opacity-50 disabled:shadow-none ml-2"
+                      style={{
+                        width: "100%",
+                      }}
+                      type="button"
+                      disabled={loadingUser}
+                    >
+                      {loadingUser ? (
+                        <div>
+                          <CircularProgress size={17} color="inherit" />
+                        </div>
+                      ) : (
+                        <div>
+                          <p className="FontPublic">
+                            <MyContent
+                              name={"รีเซ็ตกรองข้อมูลสินค้า"}
+                              fontSize="small"
+                            />
+                          </p>
+                        </div>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
       </div>
-    </div>
-  </div>
-</div>
-
-
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 pl-16 pr-16 mt-10">
         {filterProduct.map((product: Product, i: number) => {
           const userid = user?.id;
           const timePassed = dayjs(product.createdAt).locale("th").fromNow();
-
-          console.log("product", product);
-
           return (
             <div
               key={i}
@@ -281,58 +431,61 @@ export default observer(function ShopDetailScreen() {
                 />
                 <div className="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
                 <div className="text-xs absolute top-0 right-0 bg-indigo-600 px-4 py-2 text-white mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                  {product.productGI.category.name}
+                <p className="FontPublic">
+                                    <MyContent
+                                      name={product.productGI.category.name}
+                                      fontSize="smaller"
+                                    />
+                                  </p>
                 </div>
 
                 {userid == product?.productGI?.store?.userId && (
                   <div className="absolute top-0 left-0 bg-green-600 px-4 py-2 text-white mt-3 ml-3 text-xs font-bold rounded">
-                    สินค้าของคุณ
+                     <p className="FontPublic">
+                                      <MyContent
+                                        name="สินค้าของคุณ"
+                                        fontSize="small"
+                                      />
+                                    </p>
                   </div>
                 )}
               </div>
               <div className="px-6 py-4 mb-auto">
                 <div className="font-medium text-lg hover:text-indigo-600 transition duration-500 ease-in-out flex justify-between mb-2">
-                  <span>{product.productGI.name}</span>
-
-                  <span>{product.price} บาท</span>
+                  <span className="FontPublic">
+                                    {product.productGI.name}
+                                  </span>
+                                  <span className="FontPublic">
+                                    {product.price} บาท
+                   </span>
                 </div>
               </div>
               <div className="px-6 py-3 flex flex-row items-center justify-between bg-gray-100">
                 <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
-                  <svg
-                    height="13px"
-                    width="13px"
-                    version="1.1"
-                    id="Layer_1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    x="0px"
-                    y="0px"
-                    viewBox="0 0 512 512"
-                  >
-                    <g>
-                      <g>
-                        <path d="M256,0C114.837,0,0,114.837,0,256s114.837,256,256,256s256-114.837,256-256S397.163,0,256,0z M277.333,256 c0,11.797-9.536,21.333-21.333,21.333h-85.333c-11.797,0-21.333-9.536-21.333-21.333s9.536-21.333,21.333-21.333h64v-128 c0-11.797,9.536-21.333,21.333-21.333s21.333,9.536,21.333,21.333V256z"></path>
-                      </g>
-                    </g>
-                  </svg>
-                  <span className="ml-1">{timePassed}</span>
+                <MdAccessTimeFilled size={20} />
+                                  <span className="ml-1 FontPublic">
+                                    {" "}
+                                    <MyContent
+                                      name={timePassed}
+                                      fontSize="small"
+                                    />
+                                  </span>
                 </span>
 
                 <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
-                  <svg
-                    className="h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-                    ></path>
-                  </svg>
-                  <span className="ml-1">{product.sold} ยอดขาย</span>
+                <BsFillBarChartLineFill size={20} />
+                <span className="ml-1 flex FontPublic">
+                                    <MyContent
+                                      name={product.sold}
+                                      fontSize="small"
+                                    />
+                                    <p style={{ paddingLeft: 5 }}>
+                                      <MyContent
+                                        name={"ยอดขาย"}
+                                        fontSize="small"
+                                      />
+                                    </p>
+                                  </span>
                 </span>
               </div>
             </div>

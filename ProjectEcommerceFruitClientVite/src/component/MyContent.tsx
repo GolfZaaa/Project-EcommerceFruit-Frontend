@@ -2,6 +2,7 @@ interface fontSizeOptions {
   smaller: string;
   small: string;
   normal: string;
+  littlenormal: string;
   large: string;
   larger: string;
 }
@@ -15,6 +16,7 @@ export default function MyContent({ name, fontSize }: MyContentProps) {
   const ConvertSize: any = {
     smaller: 15,
     small: 19,
+    littlenormal: 22,
     normal: 25,
     large: 35,
     larger: 50,

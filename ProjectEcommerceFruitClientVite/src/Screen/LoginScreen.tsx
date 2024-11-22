@@ -8,7 +8,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import "./css/register-style.css";
 import { resetScroll } from "../api/agent";
 import MyContent from "../component/MyContent";
-import LogoKru from "../image/krulogo.png"
+import LogoKru from "../image/krulogo.png";
+import BackgroundImg from "../image/login.jpg";
 
 export default observer(function LoginScreen() {
   const navigate = useNavigate();
@@ -58,12 +59,14 @@ export default observer(function LoginScreen() {
         setTimeout(() => {
           setShowToast(false);
         }, 2000);
+        return;
       } else if (user === "Password Wrong") {
         setShowToast(true);
         setCheckToast("Password Wrong");
         setTimeout(() => {
           setShowToast(false);
         }, 2000);
+        return;
       } else {
         setToken(user);
         setShowToast(true);
@@ -89,19 +92,17 @@ export default observer(function LoginScreen() {
             <div
               className="hidden lg:block lg:w-1/2 bg-cover"
               style={{
-                backgroundImage:
-                  "url('https://static.thairath.co.th/media/dFQROr7oWzulq5FZUEVXGNcVB9WctRwJeQvetDkKvNhvhAqnbQtMrcTa99Sg0V7DbaW.jpg')",
+                backgroundImage: `url(${BackgroundImg})`,
               }}
             ></div>
             <div className="w-full p-8 lg:w-1/2">
               <div className="align-middle justify-center flex items-center">
                 <img
-                  className="w-16 h-24"
+                  className="h-24"
                   src={LogoKru}
                 />
               </div>
-              <h2 className="text-xl font-semibold text-gray-600 text-center">
-                {/* มหาวิทยาลัยราชภัฏกาญจนบุรี */}
+              <h2 className="FontPublic text-xl font-bold text-gray-600 text-center">
                 <MyContent
                   name={"มหาวิทยาลัยราชภัฏกาญจนบุรี"}
                   fontSize="normal"
@@ -113,12 +114,12 @@ export default observer(function LoginScreen() {
               ></a>
               <div className="mt-4 flex items-center justify-between">
                 <span className="border-b w-1/5 lg:w-1/4"></span>
-                <p className="text-2xl text-center text-gray-700 uppercase">
+                <p className="FontPublic font-semibold text-2xl text-center text-gray-700 uppercase">
                   <p>เข้าสู่ระบบ</p>
                 </p>
                 <span className="border-b w-1/5 lg:w-1/4"></span>
               </div>
-              <div className="mt-4">
+              <div className="FontPublic mt-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
                   <MyContent name="เบอร์โทรศัพท์" fontSize="small" />
                 </label>
@@ -139,12 +140,12 @@ export default observer(function LoginScreen() {
                   }}
                 />
                 {phoneNumberError && (
-                  <p className="text-red-500 text-xs italic">
+                  <p className=" text-red-500 text-xs italic mt-1 leading-[1.4]">
                     <MyContent name={phoneNumberError} fontSize="small" />
                   </p>
                 )}
               </div>
-              <div className="mt-4">
+              <div className="FontPublic mt-4">
                 <div className="flex justify-between">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
                     <MyContent name="รหัสผ่าน" fontSize="small" />
@@ -157,13 +158,13 @@ export default observer(function LoginScreen() {
                   className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
                 />
                 {passwordError && (
-                  <p className="text-red-500 text-xs italic">
+                  <p className="text-red-500 text-xs italic mt-1">
                     <MyContent name={passwordError} fontSize="small" />
                   </p>
                 )}
               </div>
 
-              <div className="mt-4 flex justify-end items-center">
+              <div className="FontPublic mt-4 flex justify-end items-center">
                 <p className="text-sm text-gray-500 uppercase mr-2">
                   <MyContent name="ไม่มีสมาชิก?" fontSize="small" />
                 </p>
@@ -175,7 +176,7 @@ export default observer(function LoginScreen() {
                 </NavLink>
               </div>
 
-              <div className="mt-5">
+              <div className="FontPublic mt-5">
                 <button
                   type="submit"
                   className="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600"

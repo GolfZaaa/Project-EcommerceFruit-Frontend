@@ -29,6 +29,7 @@ import {
 import MyDescription from "../components/MyDescription";
 import MyContent from "../components/MyContent";
 import { NEWS } from "../models/NEWS";
+import { GrFormNextLink } from "react-icons/gr";
 
 const settingsImageSlide = {
   dots: false,
@@ -75,7 +76,7 @@ export default observer(function FirstScreenNew() {
   }, []);
 
   useEffect(() => {
-    const filterProduct = product.filter(x=>x.status === true)
+    const filterProduct = product.filter((x) => x.status === true);
     if (filterProduct.length > 0) {
       const funcrandom = Math.floor(Math.random() * filterProduct.length);
       const result: any = filterProduct[funcrandom];
@@ -86,7 +87,6 @@ export default observer(function FirstScreenNew() {
       setTopProducts(topFour);
     }
   }, [product]);
-
 
   useEffect(() => {
     AOS.init({
@@ -177,7 +177,11 @@ export default observer(function FirstScreenNew() {
     }
   }, [inView, controls]);
 
-  console.log("topProducts", topProducts);
+  const handleProduct = () => {
+    navigate(RoutePath.homeScreen);
+    resetScroll();
+  }
+
   return (
     <div>
       <div className="overflow-hidden mt-4 ml-4 mr-4">
@@ -267,7 +271,7 @@ export default observer(function FirstScreenNew() {
             <div>
               <motion.p
                 data-aos="fade-right"
-                className="text-4xl sm:text-5xl xl:text-5xl 2xl:text-5xl font-bold text-green-600 capitalize"
+                className="text-4xl sm:text-5xl xl:text-5xl 2xl:text-5xl font-bold text-green-600 capitalize FontPublic"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.7, ease: "easeInOut" }}
@@ -277,22 +281,24 @@ export default observer(function FirstScreenNew() {
               </motion.p>
               <motion.p
                 data-aos="fade-up"
-                className="text-base leading-normal text-green-500 mt-5 font-normal"
+                className="text-base leading-normal text-green-500 mt-5 font-normal FontPublic"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.7, ease: "easeInOut" }}
                 whileHover={{ opacity: 0.8, color: "#2f855a" }}
                 style={{ fontSize: fontSizenormal }}
               >
-                เกษตรกรออนไลน์ เริ่มได้ง่าย ๆ
-                เพียงใช้อินเทอร์เน็ตและอุปกรณ์เข้าถึงที่เราใช้กันอยู่แล้วในชีวิตประจำวัน
-                อย่างแรกเลยคือการค้นคว้าหาข้อมูล
-                และช่องทางการซื้อขายผลผลิตที่เราต้องการเข้าถึง
-                โดยการซื้อขายสินค้าและผลผลิตทางการเกษตรก็มีหลายรูปแบบซึ่งไม่ต่างจากการซื้อขายสินค้าทั่วไป
+                การเป็นเกษตรกรออนไลน์ในยุคปัจจุบันเริ่มต้นได้อย่างง่ายดาย
+                ด้วยการใช้อินเทอร์เน็ตและอุปกรณ์ที่เราคุ้นเคยในชีวิตประจำวัน
+                ขั้นตอนแรกคือการค้นคว้าข้อมูลที่เกี่ยวข้อง
+                และสำรวจช่องทางการซื้อขายผลผลิตที่ต้องการเข้าถึง
+                การซื้อขายสินค้าและผลผลิตทางการเกษตรนั้นมีหลากหลายรูปแบบ
+                ซึ่งไม่แตกต่างจากการซื้อขายสินค้าอื่น ๆ ทั่วไปมากนัก
               </motion.p>
               <motion.button
+              onClick={handleProduct}
                 data-aos="zoom-in"
-                className="mt-8 text-base flex items-center justify-between py-4 px-8 bg-gray-800 text-white font-medium leading-none rounded-md"
+                className="mt-8 text-base flex items-center justify-between py-4 px-8 bg-gray-800 text-white font-medium leading-none rounded-md FontPublic"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.7, ease: "easeInOut" }}
@@ -303,34 +309,8 @@ export default observer(function FirstScreenNew() {
                 }}
               >
                 เยี่ยมชมสินค้าเกษตร
-                <div className="ml-2">
-                  <svg
-                    className="fill-stroke"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M3.33325 8H12.6666"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M10 10.6667L12.6667 8"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M10 5.33301L12.6667 7.99967"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                <div className="ml-2 mt-1">
+                <GrFormNextLink size={20}/>
                 </div>
               </motion.button>
             </div>
@@ -364,19 +344,19 @@ export default observer(function FirstScreenNew() {
                 className="w-full xl:w-1/2 xl:pl-12 xl:pr-24 mt-6 xl:mt-0 sm:pl-32 md:pl-28"
               >
                 <p
-                  className="text-sm leading-none text-gray-600 pb-2 xl:pl-16"
+                  className="FontPublic text-sm leading-none text-gray-600 pb-2 xl:pl-16"
                   style={{ fontSize: fontSizesmall }}
                 >
                   {randomProduct && randomProduct.productGI.category.name}
                 </p>
                 <p
-                  className="md:text-3xl xl:text-4xl text-2xl font-semibold xl:leading-9 text-gray-800 xl:pb-6 md:pb-4 pb-2 xl:pl-16"
+                  className="FontPublic md:text-3xl xl:text-4xl text-2xl font-semibold xl:leading-9 text-gray-800 xl:pb-6 md:pb-4 pb-2 xl:pl-16"
                   style={{ fontSize: fontSizeBiglittle }}
                 >
                   {randomProduct && randomProduct.productGI.name}
                 </p>
                 <p
-                  className="text-sm leading-5 text-gray-600 md:pb-10 pb-8 xl:pl-16"
+                  className="FontPublic text-sm leading-5 text-gray-600 md:pb-10 pb-8 xl:pl-16"
                   style={{ fontSize: fontSizesmall }}
                 >
                   {randomProduct && randomProduct && (
@@ -389,7 +369,7 @@ export default observer(function FirstScreenNew() {
                 >
                   <motion.button
                     onClick={() => NavigateDetail(randomProduct)}
-                    className="lg:w-auto w-full border border-gray-800 hover:text-gray-50 hover:bg-gray-800 focus:outline-none lg:px-10 px-7 lg:py-4 py-3 text-sm leading-none text-gray-800"
+                    className="FontPublic lg:w-auto w-full border border-gray-800 hover:text-gray-50 hover:bg-gray-800 focus:outline-none lg:px-10 px-7 lg:py-4 py-3 text-sm leading-none text-gray-800"
                     whileHover={{ scale: 1.1, rotate: 2 }}
                     whileTap={{ scale: 0.95, rotate: -1 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -414,9 +394,9 @@ export default observer(function FirstScreenNew() {
             <div className="flex justify-start items-start">
               <p
                 data-aos="fade-up"
-                className="text-3xl lg:text-4xl font-semibold leading-9 text-gray-800"
+                className="FontPublic text-3xl lg:text-4xl font-semibold leading-9 text-gray-800"
               >
-                สินค้าที่โดดเด่น
+                สินค้ายอดนิยม
               </p>
             </div>
 
@@ -449,7 +429,7 @@ export default observer(function FirstScreenNew() {
                       />
                       {userid === productItem?.productGI?.store?.user?.id && (
                         <motion.span
-                          className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full"
+                          className="FontPublic absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full"
                           whileHover={{
                             rotate: 15,
                             transition: { duration: 0.3 },
@@ -498,7 +478,7 @@ export default observer(function FirstScreenNew() {
                         transition={{ duration: 0.5 }}
                       >
                         <p
-                          className="text-lg font-medium leading-4 text-gray-800"
+                          className="FontPublic text-lg font-medium leading-4 text-gray-800"
                           style={{ fontSize: fontSizenormal }}
                         >
                           {productItem.productGI.name}
@@ -507,7 +487,7 @@ export default observer(function FirstScreenNew() {
 
                       <motion.div data-aos="fade-up">
                         <p
-                          className="text-lg leading-4 text-gray-600"
+                          className="FontPublic text-lg leading-4 text-gray-600"
                           style={{ fontSize: fontSizesmall }}
                         >
                           {productItem.price.toLocaleString()} บาท
@@ -603,19 +583,19 @@ export default observer(function FirstScreenNew() {
             </svg>
             <p
               data-aos="fade-zoom-in"
-              className=" text-xl text-gray-800 font-semibold leading-5 mt-6"
+              className="FontPublic text-xl text-gray-800 font-semibold leading-5 mt-6"
             >
               การซื้อสินค้าอย่างปลอดภัย
             </p>
             <p
               data-aos="fade-zoom-in"
-              className=" font-normal text-base leading-6 text-gray-600 my-4"
+              className="FontPublic font-normal text-base leading-6 text-gray-600 my-4"
             >
               ร้านค้าทุกสาขาของเรามีมาตรการด้านสุขอนามัยที่เป็นผู้นำในอุตสาหกรรม
             </p>
             <a
               data-aos="fade-zoom-in"
-              className=" cursor-pointer text-base leading-4 font-medium text-gray-800 border-b-2 border-gray-800 hover:text-gray-600 "
+              className="FontPublic cursor-pointer text-base leading-4 font-medium text-gray-800 border-b-2 border-gray-800 hover:text-gray-600 "
             >
               เรียนรู้เพิ่มเติม
             </a>
@@ -667,20 +647,20 @@ export default observer(function FirstScreenNew() {
             </svg>
             <p
               data-aos="fade-zoom-in"
-              className=" text-xl text-gray-800 font-semibold leading-5 mt-6"
+              className="FontPublic text-xl text-gray-800 font-semibold leading-5 mt-6"
             >
               การช็อปปิ้งส่วนตัว
             </p>
             <p
               data-aos="fade-zoom-in"
-              className=" font-normal text-base leading-6 text-gray-600 my-4"
+              className="FontPublic font-normal text-base leading-6 text-gray-600 my-4"
             >
               ธุรกิจจำหน่ายผลไม้ออนไลน์เป็นช่องทางที่เพิ่มความสะดวกสบายให้แก่ผู้บริโภค
               โดยนำเสนอผลิตภัณฑ์สดใหม่จากสวนสู่หน้าจอ พร้อมบริการจัดส่งถึงบ้าน
             </p>
             <a
               data-aos="fade-zoom-in"
-              className=" cursor-pointer text-base leading-4 font-medium text-gray-800 border-b-2 border-gray-800 hover:text-gray-600 "
+              className="FontPublic cursor-pointer text-base leading-4 font-medium text-gray-800 border-b-2 border-gray-800 hover:text-gray-600 "
             >
               เรียนรู้เพิ่มเติม
             </a>
@@ -706,22 +686,19 @@ export default observer(function FirstScreenNew() {
             </svg>
             <p
               data-aos="fade-zoom-in"
-              className=" text-xl text-gray-800 font-semibold leading-5 mt-6"
+              className="FontPublic text-xl text-gray-800 font-semibold leading-5 mt-6"
             >
-              จัดส่งฟรี
+              จัดส่งง่าย
             </p>
             <p
               data-aos="fade-zoom-in"
-              className=" font-normal text-base leading-6 text-gray-600 my-4"
+              className="FontPublic font-normal text-base leading-6 text-gray-600 my-4"
             >
-              จัดส่งฟรีเมื่อช็อปปิ้งเมื่อสั่งซื้อเกิน ฿ 100
-              สำหรับทุกรายการสินค้าในร้าน ไม่มีข้อยกเว้น
-              ประหยัดค่าส่งและรับสินค้าถึงบ้านอย่างรวดเร็วภายใน 3-5 วันทำการ
-              โปรโมชั่นพิเศษนี้มีระยะเวลาจำกัด
+              จัดส่งง่ายและสะดวกสบาย! เราให้บริการจัดส่งที่รวดเร็วและปลอดภัย พร้อมรับสินค้าถึงบ้านในระยะเวลา 3-5 วันทำการ
             </p>
             <a
               data-aos="fade-zoom-in"
-              className=" cursor-pointer text-base leading-4 font-medium text-gray-800 border-b-2 border-gray-800 hover:text-gray-600 "
+              className="FontPublic cursor-pointer text-base leading-4 font-medium text-gray-800 border-b-2 border-gray-800 hover:text-gray-600 "
             >
               เรียนรู้เพิ่มเติม
             </a>
@@ -737,12 +714,12 @@ export default observer(function FirstScreenNew() {
             <div className="mx-auto container w-full flex flex-col justify-center items-center">
               <div className="flex justify-center items-center flex-col">
                 <div className="mt-20">
-                  <h2 className="lg:text-5xl md:text-5xl text-4xl font-black leading-10 text-white">
+                  <h2 className="lg:text-5xl md:text-5xl text-4xl font-black leading-10 text-white FontPublic">
                     แพลตฟอร์มจำหน่ายสินค้าเกษตรออนไลน์
                   </h2>
                 </div>
                 <div className="mt-6 mx-2 md:mx-0 text-center">
-                  <p className="lg:text-lg md:text-base leading-6 text-sm  text-white">
+                  <p className="FontPublic lg:text-lg md:text-base leading-6 text-sm  text-white">
                     จากสวนสู่บ้านคุณ: ผลไม้สดใหม่ คัดสรรคุณภาพ
                     ส่งตรงถึงประตูบ้าน
                     เพื่อประสบการณ์การรับประทานผลไม้ที่เหนือระดับ
@@ -758,10 +735,10 @@ export default observer(function FirstScreenNew() {
                 data-aos-duration="500"
                 className="flex justify-center flex-col items-center w-36 h-36 md:w-44 md:h-48 lg:w-56 lg:h-56 bg-white shadow rounded-2xl"
               >
-                <h2 className="lg:text-5xl md:text-4xl text-2xl font-extrabold leading-10 text-center text-gray-800">
+                <h2 className="FontPublic lg:text-5xl md:text-4xl text-2xl font-extrabold leading-10 text-center text-gray-800">
                   {ordertotal.length}
                 </h2>
-                <p className="mt-4 text-sm md:text-base lg:text-lg leading-none text-center text-gray-600">
+                <p className="FontPublic mt-4 text-sm md:text-base lg:text-lg leading-none text-center text-gray-600">
                   จำนวนคำสั่งซื้อทั้งหมด
                 </p>
               </div>
@@ -770,10 +747,10 @@ export default observer(function FirstScreenNew() {
                 data-aos-duration="700"
                 className="flex justify-center flex-col items-center w-36 h-36 md:w-44 md:h-48 lg:w-56 lg:h-56 bg-white shadow rounded-2xl"
               >
-                <h2 className="lg:text-5xl md:text-4xl text-2xl font-extrabold leading-10 text-center text-gray-800">
+                <h2 className="FontPublic lg:text-5xl md:text-4xl text-2xl font-extrabold leading-10 text-center text-gray-800">
                   {product.length}
                 </h2>
-                <p className="mt-4 text-sm md:text-base lg:text-lg leading-none text-center text-gray-600">
+                <p className="FontPublic mt-4 text-sm md:text-base lg:text-lg leading-none text-center text-gray-600">
                   รายการผลไม้ทั้งหมด
                 </p>
               </div>
@@ -782,10 +759,10 @@ export default observer(function FirstScreenNew() {
                 data-aos-duration="900"
                 className="flex justify-center flex-col items-center w-36 h-36 md:w-44 md:h-48 lg:w-56 lg:h-56 bg-white shadow rounded-2xl"
               >
-                <h2 className="lg:text-5xl md:text-4xl text-2xl font-extrabold leading-10 text-center text-gray-800">
+                <h2 className="FontPublic lg:text-5xl md:text-4xl text-2xl font-extrabold leading-10 text-center text-gray-800">
                   {userAll.length}
                 </h2>
-                <p className="mt-4 text-sm md:text-base lg:text-lg leading-none text-center text-gray-600">
+                <p className="FontPublic mt-4 text-sm md:text-base lg:text-lg leading-none text-center text-gray-600">
                   ผู้ใช้ทั้งหมด
                 </p>
               </div>
@@ -794,11 +771,11 @@ export default observer(function FirstScreenNew() {
                 data-aos-duration="1100"
                 className="flex justify-center flex-col items-center w-36 h-36 md:w-44 md:h-48 lg:w-56 lg:h-56 bg-white shadow rounded-2xl"
               >
-                <h2 className="lg:text-5xl md:text-4xl text-2xl font-extrabold leading-10 text-center text-gray-800">
+                <h2 className="FontPublic lg:text-5xl md:text-4xl text-2xl font-extrabold leading-10 text-center text-gray-800">
                   {OrderDay(ordertotal).length}
                 </h2>
-                <p className="mt-4 text-sm md:text-base lg:text-lg leading-none text-center text-gray-600">
-                  ยอดขายของวันนี้
+                <p className="FontPublic mt-4 text-sm md:text-base lg:text-lg leading-none text-center text-gray-600">
+                  ยอดคำสั่งซื้อของวันนี้
                 </p>
               </div>
             </div>
@@ -810,7 +787,7 @@ export default observer(function FirstScreenNew() {
       {/* ข่าวสาร Start */}
       {news.filter((x) => x.isUsed === true).length > 0 && (
         <div className="container mx-auto px-4 mb-5 ">
-          <h1 className="text-5xl text-center f-m-w text-green-500 font-bold pt-0">
+          <h1 className="FontPublic text-5xl text-center f-m-w text-green-500 font-bold pt-0">
             ข่าวประชาสัมพันธ์
           </h1>
 
@@ -821,9 +798,6 @@ export default observer(function FirstScreenNew() {
                   .filter((x, index) => index >= 3 && x.isUsed === true)
                   .slice(0, 1)
                   .map((item: NEWS) => {
-                    const testNews = (item: NEWS) => {
-                      console.log("testNews", item.id);
-                    };
                     return (
                       <div className="lg:w-1/2">
                         <img
@@ -844,7 +818,7 @@ export default observer(function FirstScreenNew() {
                             data-aos="fade-right"
                             data-aos-offset="300"
                             data-aos-easing="ease-in-sine"
-                            className="f-m-m text-lg font-semibold leading-7 cursor-pointer"
+                            className="FontPublic f-m-m text-lg font-semibold leading-7 cursor-pointer"
                             onClick={() => NavigateNewsDetail(item)}
                           >
                             {item.title}
@@ -853,7 +827,7 @@ export default observer(function FirstScreenNew() {
                             data-aos="fade-right"
                             data-aos-offset="300"
                             data-aos-easing="ease-in-sine"
-                            className="f-m-m leading-loose mt-2"
+                            className="FontPublic f-m-m leading-loose mt-2"
                             style={{
                               fontSize: fontSizesmall,
                               color: "#7b7575",
@@ -874,7 +848,7 @@ export default observer(function FirstScreenNew() {
                             className="mt-6"
                           >
                             <a className="cursor-pointer">
-                              <p className="text-indigo-700 underline text-base font-semibold f-m-m">
+                              <p className="FontPublic text-indigo-700 underline text-base font-bold f-m-m">
                                 อ่านเพิ่มเติม
                               </p>
                             </a>
@@ -905,7 +879,7 @@ export default observer(function FirstScreenNew() {
                               data-aos="fade-left"
                               data-aos-offset="300"
                               data-aos-easing="ease-in-sine"
-                              className="f-m-m text-lg font-semibold leading-7 lg:mt-0 mt-8 cursor-pointer"
+                              className="FontPublic f-m-m text-lg font-semibold leading-7 lg:mt-0 mt-8 cursor-pointer"
                               onClick={() => NavigateNewsDetail(item)}
                             >
                               {item.title.length > 48
@@ -916,7 +890,7 @@ export default observer(function FirstScreenNew() {
                               data-aos="fade-left"
                               data-aos-offset="300"
                               data-aos-easing="ease-in-sine"
-                              className="text-lg f-m-m leading-loose mt-2"
+                              className="FontPublic text-lg f-m-m leading-loose mt-2"
                               style={{
                                 fontSize: fontSizesmall,
                                 color: "#7b7575",
@@ -938,7 +912,7 @@ export default observer(function FirstScreenNew() {
                                   data-aos="fade-left"
                                   data-aos-offset="300"
                                   data-aos-easing="ease-in-sine"
-                                  className="text-indigo-700 underline text-base font-semibold f-m-m"
+                                  className="FontPublic text-indigo-700 underline text-base font-bold f-m-m"
                                 >
                                   อ่านเพิ่มเติม
                                 </p>
@@ -975,7 +949,7 @@ export default observer(function FirstScreenNew() {
                       />
                     </svg>
                   </span>
-                  <span className="absolute flex items-center justify-center w-full h-full text-teal-500 transition-all duration-300 transform group-hover:translate-x-full ease">
+                  <span className="FontPublic absolute flex items-center justify-center w-full h-full text-teal-500 transition-all duration-300 transform group-hover:translate-x-full ease">
                     ดูข่าวสารทั้งหมด
                   </span>
                   <span className="relative invisible">ดูข่าวทั้งหมด</span>
