@@ -80,7 +80,7 @@ export default observer(function RegisterScreen() {
     <div className="py-16">
       {showToast && <ToastLoginRegister Check={checkToast} />}
       <form onSubmit={handleSubmit}>
-        <div className="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
+        <div className="FontPublic flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
           <div
             className="hidden lg:block lg:w-1/2 bg-cover"
             style={{
@@ -91,24 +91,23 @@ export default observer(function RegisterScreen() {
           <div className="w-full p-8 lg:w-1/2">
             <div className="align-middle justify-center flex items-center">
               <img
-                className="w-16 h-24"
+                className="h-24"
                 src={LogoKru}
               />
             </div>
-            <h2 className="text-xl font-semibold text-gray-600 text-center">
+            <h2 className="text-xl font-bold text-gray-600 text-center">
               <MyContent
                 name={"มหาวิทยาลัยราชภัฏกาญจนบุรี"}
                 fontSize="normal"
               />
             </h2>
-            {/* <p className="text-xl text-gray-600 text-center">ยินดีต้อนรับ</p> */}
             <a
               href="#"
               className="flex items-center justify-center mt-4 text-white rounded-lg shadow-md hover:bg-gray-100"
             ></a>
             <div className="mt-4 flex items-center justify-between">
               <span className="border-b w-1/5 lg:w-1/4"></span>
-              <p className="text-2xl text-center text-gray-700 uppercase">
+              <p className="font-semibold text-2xl text-center text-gray-700 uppercase">
                 <MyContent name="สมัครสมาชิก" fontSize="normal" />
               </p>
               <span className="border-b w-1/5 lg:w-1/4"></span>
@@ -140,10 +139,14 @@ export default observer(function RegisterScreen() {
                 type="number"
                 className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
                 style={{ WebkitAppearance: "none", MozAppearance: "textfield" }}
+                // onInput={(e: any) => {
+                //   if (e.target.value.length > 10) {
+                //     e.target.value = e.target.value.slice(0, 10);
+                //   }
+                // }}
                 onInput={(e: any) => {
-                  if (e.target.value.length > 10) {
-                    e.target.value = e.target.value.slice(0, 10);
-                  }
+                  const value = e.target.value.replace(/[^0-9]/g, ""); 
+                  e.target.value = value.slice(0, 10); 
                 }}
               />
               {phoneNumberError && (
