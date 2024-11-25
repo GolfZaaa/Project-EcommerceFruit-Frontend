@@ -103,9 +103,7 @@ const AddressList = ({ confirmChangeAddress }: any) => {
   };
 
   return !form ? (
-    <>
-
-    
+    <div className="FontPublic">
       <Grid
         container
         spacing={2}
@@ -123,139 +121,161 @@ const AddressList = ({ confirmChangeAddress }: any) => {
               onClick={confirmChangeAddress}
             >
               <ArrowBackIosIcon sx={{ mr: 1 }} />
+              <p className="FontPublic">
               <MyContent name="กลับ" fontSize="small" />
+              </p>
             </Fab>
           )}
         </Grid>
 
-        <Grid  item xs={12} sm={6} md={2} style={{ display: "flex", justifyContent: "flex-start" }}>
-  <Fab
-    variant="extended"
-    color="primary"
-    onClick={() => {
-      setDataEdit(null);
-      onChangeCU();
-      setAddress({
-        district: "",
-        amphoe: "",
-        province: "",
-        zipcode: "",
-        detail: "",
-      });
-    }}
-    sx={{
-      minWidth: '95%',
-      maxWidth: '250px',  // ปรับขนาดสูงสุดหากต้องการ
-      boxShadow: 3,
-      "&:hover": {
-        backgroundColor: 'primary.dark',
-      },
-      transition: 'all 0.3s ease-in-out',
-      ml: 1,
-    }}
-  >
-    <AddIcon sx={{ mr: 1 }} />
-    <MyContent name="เพิ่ม" fontSize="small" />
-  </Fab>
-</Grid>
-
-        
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          md={2}
+          style={{ display: "flex", justifyContent: "flex-start" }}
+        >
+          <Fab
+            variant="extended"
+            color="primary"
+            onClick={() => {
+              setDataEdit(null);
+              onChangeCU();
+              setAddress({
+                district: "",
+                amphoe: "",
+                province: "",
+                zipcode: "",
+                detail: "",
+              });
+            }}
+            sx={{
+              minWidth: "95%",
+              maxWidth: "250px", 
+              boxShadow: 3,
+              "&:hover": {
+                backgroundColor: "primary.dark",
+              },
+              transition: "all 0.3s ease-in-out",
+              ml: 1,
+              zIndex:1
+            }}
+          >
+            <AddIcon sx={{ mr: 1 }} />
+            <p className="FontPublic">
+            <MyContent name="เพิ่ม" fontSize="small" />
+            </p>
+          </Fab>
+        </Grid>
       </Grid>
-
 
       {myAddress?.length ? (
         myAddress?.map((item, i) => (
           <div key={i}>
+            <Card style={{ marginBottom: "20px" }} key={i}>
+              <Grid container spacing={2} alignItems="center">
+                {/* ข้อมูลที่อยู่ */}
+                <Grid item xs={12} md={5}>
+                  <CardContent>
+                    {/* <MyContent name={item?.detail} fontSize="small" /> */}
+                    <MyContent  name={`บ้านเลขที่, หมู่, ซอย, ถนน : ${item?.detail}`} fontSize="small" />
+                    <MyContent
+                      name={`แขวง/ตำบล : ${item?.subDistrict}`}
+                      fontSize="small"
+                    />
+                    <MyContent
+                      name={`เขต/อำเภอ : ${item?.district}`}
+                      fontSize="small"
+                    />
+                    <MyContent
+                      name={`จังหวัด : ${item?.province}`}
+                      fontSize="small"
+                    />
+                    <MyContent
+                      name={`รหัสไปรษณีย์ : ${item?.postCode}`}
+                      fontSize="small"
+                    />
+                  </CardContent>
+                </Grid>
 
-<Card style={{ marginBottom: "20px" }} key={i}>
-  <Grid container spacing={2} alignItems="center">
-    {/* ข้อมูลที่อยู่ */}
-    <Grid item xs={12} md={5}>
-      <CardContent>
-        <MyContent name={item?.detail} fontSize="small" />
-        <MyContent name={`แขวง/ตำบล ${item?.subDistrict}`} fontSize="small" />
-        <MyContent name={`เขต/อำเภอ ${item?.district}`} fontSize="small" />
-        <MyContent name={`จังหวัด ${item?.province}`} fontSize="small" />
-        <MyContent name={`รหัสไปรษณีย์ ${item?.postCode}`} fontSize="small" />
-      </CardContent>
-    </Grid>
+                {/* สวิตช์ที่อยู่ร้านค้า */}
+                <Grid item xs={12} sm={6} md={2} className="flex-center">
+                  <div className="text-center">
+                    <MyContent name="ตั้งเป็นที่อยู่ร้านค้า" fontSize="small" />
+                    <Switch
+                      checked={item.isUsed_Store}
+                      onClick={() => handleAddressUpdate(item.id, true)}
+                      color="primary"
+                    />
+                  </div>
+                </Grid>
 
-    {/* สวิตช์ที่อยู่ร้านค้า */}
-    <Grid item xs={12} sm={6} md={2} className="flex-center">
-      <div className="text-center">
-        <MyContent name="ตั้งเป็นที่อยู่ร้านค้า" fontSize="small" />
-        <Switch
-          checked={item.isUsed_Store}
-          onClick={() => handleAddressUpdate(item.id, true)}
-          color="primary"
-        />
-      </div>
-    </Grid>
+                {/* สวิตช์ที่อยู่สั่งซื้อ */}
+                <Grid item xs={12} sm={6} md={3} className="flex-center">
+                  <div className="text-center">
+                    <MyContent
+                      name="ตั้งเป็นที่อยู่สั่งซื้อ"
+                      fontSize="small"
+                    />
+                    <Switch
+                      checked={item.isUsed}
+                      onClick={() => {
+                        handleAddressUpdate(item.id, false);
+                        getAddressgotoOrderByUserId();
+                        if (confirmChangeAddress !== undefined)
+                          confirmChangeAddress();
+                      }}
+                      color="primary"
+                    />
+                  </div>
+                </Grid>
 
-    {/* สวิตช์ที่อยู่สั่งซื้อ */}
-    <Grid item xs={12} sm={6} md={3} className="flex-center">
-      <div className="text-center">
-        <MyContent name="ตั้งเป็นที่อยู่สั่งซื้อ" fontSize="small" />
-        <Switch
-          checked={item.isUsed}
-          onClick={() => {
-            handleAddressUpdate(item.id, false);
-            getAddressgotoOrderByUserId();
-            if (confirmChangeAddress !== undefined) confirmChangeAddress();
-          }}
-          color="primary"
-        />
-      </div>
-    </Grid>
-
-    {/* ปุ่มแก้ไขที่อยู่ */}
-    <Grid 
-  item 
-  xs={12} 
-  sm={6} 
-  md={2} 
-  display="flex" 
-  justifyContent="center" 
-  alignItems="center"
->
-  <Fab
-    variant="extended"
-    color="primary"
-    onClick={() => {
-      setAddress({
-        district: item?.subDistrict,
-        amphoe: item?.district,
-        province: item?.province,
-        zipcode: item?.postCode,
-        detail: item?.detail,
-      });
-      setDataEdit(item);
-      onChangeCU();
-    }}
-    sx={{
-      minWidth: { xs: '80%', sm: '60%', md: '80%' },
-      maxWidth: '200px',
-      boxShadow: 3,
-      "&:hover": {
-        backgroundColor: 'primary.dark',
-      },
-      transition: 'all 0.3s ease-in-out',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}
-  >
-    <EditIcon sx={{ mr: 1 }} />
-    <MyContent name="แก้ไข" fontSize="small" />
-  </Fab>
-</Grid>
-
-
-
-  </Grid>
-</Card>
-
-            
+                {/* ปุ่มแก้ไขที่อยู่ */}
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  md={2}
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Fab
+                    variant="extended"
+                    color="primary"
+                    onClick={() => {
+                      setAddress({
+                        district: item?.subDistrict,
+                        amphoe: item?.district,
+                        province: item?.province,
+                        zipcode: item?.postCode,
+                        detail: item?.detail,
+                      });
+                      setDataEdit(item);
+                      onChangeCU();
+                    }}
+                    sx={{
+                      minWidth: { xs: "80%", sm: "60%", md: "80%" },
+                      maxWidth: "200px",
+                      boxShadow: 3,
+                      "&:hover": {
+                        backgroundColor: "primary.dark",
+                      },
+                      transition: "all 0.3s ease-in-out",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      zIndex:1
+                    }}
+                  >
+                    <EditIcon sx={{ mr: 1 }} />
+                    <p className="FontPublic">
+                    <MyContent name="แก้ไข" fontSize="small" />
+                    </p>
+                  </Fab>
+                </Grid>
+              </Grid>
+            </Card>
           </div>
         ))
       ) : (
@@ -267,19 +287,22 @@ const AddressList = ({ confirmChangeAddress }: any) => {
               justifyContent: "center",
               alignItems: "center",
               fontSize: 30,
+              fontWeight: 600
             }}
           >
-            ที่อยู่ของคุณว่าง
+         <MyContent name="กรุณาเพิ่มที่อยู่" fontSize="large" />
           </div>
         </div>
       )}
-    </>
+    </div>
   ) : (
     <>
       <Grid item xs={1}>
-        <Fab variant="extended" color="primary" onClick={onChangeCU}>
+        <Fab variant="extended" color="primary" onClick={onChangeCU} sx={{zIndex:1}}>
           <ArrowBackIosIcon sx={{ mr: 1 }} />
-          กลับ
+          <p className="FontPublic">
+          <MyContent name="กลับ" fontSize="small" />
+          </p>
         </Fab>
       </Grid>
 
@@ -292,8 +315,24 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           margin="normal"
           name="detail"
           required
+          InputProps={{
+            sx: {
+              fontSize: '1.2rem', 
+              color: '#333',   
+              fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+            },
+          }}
+          InputLabelProps={{
+            sx: {
+              fontSize: '1.2rem',
+              color: '#888',
+              fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+            },
+          }}
         />
-        <label>รหัสไปรษณีย์</label>
+        <label className="FontPublic">
+          <MyContent name="รหัสไปรษณีย์" fontSize="small" />
+          </label>
         <InputThaiAddress.Zipcode
           value={address["zipcode"]}
           onChange={handleChange("zipcode")}
@@ -301,8 +340,12 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           style={{
             height: "55px",
           }}
+          className="custom-district-input FontPublic"
+          
         />
-        <label>แขวง/ตำบล</label>
+        <label className="FontPublic">
+          <MyContent name="แขวง/ตำบล" fontSize="small" />
+          </label>
         <InputThaiAddress.District
           value={address["district"]}
           onChange={handleChange("district")}
@@ -310,8 +353,11 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           style={{
             height: "55px",
           }}
+          className="custom-district-input FontPublic"
         />
-        <label>เขต/อำเภอ</label>
+        <label className="FontPublic">
+          <MyContent name="เขต/อำเภอ" fontSize="small" />
+          </label>
         <InputThaiAddress.Amphoe
           value={address["amphoe"]}
           onChange={handleChange("amphoe")}
@@ -319,8 +365,11 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           style={{
             height: "55px",
           }}
+          className="custom-district-input FontPublic"
         />
-        <label>จังหวัด</label>
+        <label className="FontPublic">
+          <MyContent name="จังหวัด" fontSize="small" />
+        </label>
         <InputThaiAddress.Province
           value={address["province"]}
           onChange={handleChange("province")}
@@ -328,6 +377,7 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           style={{
             height: "55px",
           }}
+          className="custom-district-input FontPublic"
         />
 
         <Button
@@ -351,7 +401,9 @@ const AddressList = ({ confirmChangeAddress }: any) => {
             </div>
           ) : (
             <div className="flex justify-center items-center h-full ">
-              <p>บันทึก</p>
+              <p className="FontPublic">
+                <MyContent name="บันทึก" fontSize="small" />
+                </p>
             </div>
           )}
         </Button>

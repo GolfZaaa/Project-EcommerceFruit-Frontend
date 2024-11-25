@@ -123,7 +123,7 @@ export default observer(function RegisterScreen() {
                 className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
               />
               {fullName && (
-                <p className="text-red-500 text-xs italic">
+                <p className="text-red-500 text-xs italic mt-1 leading-[1.4]">
                   <MyContent name={fullName} fontSize="small" />
                 </p>
               )}
@@ -150,7 +150,7 @@ export default observer(function RegisterScreen() {
                 }}
               />
               {phoneNumberError && (
-                <p className="text-red-500 text-xs italic">
+                <p className="text-red-500 text-xs italic mt-1 leading-[1.4]">
                   <MyContent name={phoneNumberError} fontSize="small" />
                 </p>
               )}
@@ -168,7 +168,7 @@ export default observer(function RegisterScreen() {
                 className="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
               />
               {passwordError && (
-                <p className="text-red-500 text-xs italic">
+                <p className="text-red-500 text-xs italic mt-1 leading-[1.4]">
                   <MyContent name={passwordError} fontSize="small" />
                 </p>
               )}

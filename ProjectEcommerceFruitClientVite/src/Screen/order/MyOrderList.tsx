@@ -54,7 +54,7 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
   };
 
   return (
-    <div className="-mt-12">
+    <div className="-mt-12 ">
       <Box
         display="flex"
         flexDirection="column"
@@ -63,7 +63,9 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
         mt={4}
       >
         <Typography variant="h4" component="h1" gutterBottom align="center">
+          <p className="FontPublic font-semibold">
           <MyContent name="คำสั่งซื้อของฉัน" fontSize="large" />
+          </p>
         </Typography>
         <Tabs
           value={value}
@@ -77,37 +79,61 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
           }}
         >
           <Tab
-            label={<MyContent name="ทั้งหมด" fontSize="small" />}
+            label={
+              <p className="FontPublic">
+            <MyContent name="ทั้งหมด" fontSize="small" />
+              </p>
+          }
             style={{
               width: "20%",
             }}
           />
           <Tab
-            label={<MyContent name="กำลังรออนุมัติ" fontSize="small" />}
+            label={
+              <p className="FontPublic">
+            <MyContent name="กำลังรออนุมัติ" fontSize="small" />
+              </p>
+          }
             style={{
               width: "20%",
             }}
           />
           <Tab
-            label={<MyContent name="อนุมัติแล้ว" fontSize="small" />}
+            label={
+              <p className="FontPublic">
+            <MyContent name="อนุมัติแล้ว" fontSize="small" />
+              </p>
+          }
             style={{
               width: "20%",
             }}
           />
           <Tab
-            label={<MyContent name="ที่ต้องได้รับ" fontSize="small" />}
+            label={
+              <p className="FontPublic">
+            <MyContent name="ที่ต้องได้รับ" fontSize="small" />
+              </p>
+          }
             style={{
               width: "20%",
             }}
           />
           <Tab
-            label={<MyContent name="สำเร็จแล้ว" fontSize="small" />}
+            label={
+              <p className="FontPublic">
+            <MyContent name="สำเร็จแล้ว" fontSize="small" />
+              </p>
+          }
             style={{
               width: "20%",
             }}
           />
           <Tab
-            label={<MyContent name="ยกเลิกแล้ว" fontSize="small" />}
+            label={
+              <p className="FontPublic">
+            <MyContent name="ยกเลิกแล้ว" fontSize="small" />
+              </p>
+          }
             style={{
               width: "20%",
             }}

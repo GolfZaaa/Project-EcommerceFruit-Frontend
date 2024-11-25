@@ -840,7 +840,7 @@ export default observer(function ProductDetailScreen() {
           <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-6">
             <div>
               <p className="text-gray-500 FontPublic font-semibold">
-                <MyContent name={"จำนวนสินค้าที่ถูกซื้อ"} fontSize="small" />
+                <MyContent name={"จำนวนสินค้าที่ขายแล้ว"} fontSize="small" />
               </p>
               <div className="flex">
               <p className="text-red-500 text-xl font-bold FontPublic pr-2">
@@ -880,7 +880,7 @@ export default observer(function ProductDetailScreen() {
 
             <div>
             <p className="text-gray-500 FontPublic font-semibold">
-                <MyContent name={"ยอดการสั่งซื้อ"} fontSize="small" />
+                <MyContent name={"ยอดสั่งซื้อ"} fontSize="small" />
               </p>
               <div className="flex">
               <p className="text-red-500 text-xl font-bold pr-2 FontPublic">
@@ -900,7 +900,7 @@ export default observer(function ProductDetailScreen() {
 
             <div>
             <p className="text-gray-500 FontPublic font-semibold">
-                <MyContent name={"สร้างร้านค้าเมื่อ"} fontSize="small" />
+                <MyContent name={"วันที่สร้างร้านค้า"} fontSize="small" />
               </p>
               <p className="text-red-500 text-xl font-bold FontPublic">
                 <MyContent name={timeAgo} fontSize="small" />

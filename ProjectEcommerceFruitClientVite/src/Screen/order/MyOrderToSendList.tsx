@@ -77,13 +77,16 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
       const total = order
         .filter(
           (x) =>
-            x.shippings?.[0]?.shippingStatus === 1 && x.confirmReceipt === 1
+            x.shippings?.[0]?.shippingStatus === 1 && x.confirmReceipt === 1 
         )
+
         .reduce((acc, currentOrder) => {
-          const shippingFeeTotal = currentOrder.shippings[0].shippingFee;
-          return acc + shippingFeeTotal;
+          const driverHistoryFees = (currentOrder.shippings?.[0]?.driverHistories.filter((x=>x.userId === user?.id)) || [])
+            .reduce((sum, driverHistory) => sum + (driverHistory.shippingFee || 0), 0);
+          return acc + driverHistoryFees;
         }, 0);
-      settotalPrice(total);
+
+        settotalPrice(total);
 
       const shippingSuccess = order.filter(
         (x) => x.shippings?.[0]?.shippingStatus === 1 && x.confirmReceipt === 1
@@ -114,10 +117,17 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
             x.confirmReceipt === 1
           );
         })
+        // .reduce((acc, currentOrder) => {
+        //   const shippingFeeTotal = currentOrder.shippings[0].shippingFee;
+        //   return acc + shippingFeeTotal;
+        // }, 0);
+
         .reduce((acc, currentOrder) => {
-          const shippingFeeTotal = currentOrder.shippings[0].shippingFee;
-          return acc + shippingFeeTotal;
+          const driverHistoryFees = (currentOrder.shippings?.[0]?.driverHistories.filter((x=>x.userId === user?.id)) || [])
+            .reduce((sum, driverHistory) => sum + (driverHistory.shippingFee || 0), 0);
+          return acc + driverHistoryFees;
         }, 0);
+
       settotalPriceForMonth(totalformonth);
     }
   }, [order]);
@@ -351,25 +361,25 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
     ];
 
     worksheet.addRow({
-      item: "รายได้สุทธิทั้งหมด",
+      item: "รายได้สุทธิ",
       value: totalPrice.toLocaleString(),
       unit: "บาท",
     });
 
     worksheet.addRow({
-      item: "ยอดหิ้วที่สำเร็จทั้งหมด",
+      item: "รับหิ้วสำเร็จ",
       value: totalSuccess.toLocaleString(),
       unit: "ครั้ง",
     });
 
     worksheet.addRow({
-      item: "ยอดหิ้วที่สำเร็จของเดือนนี้",
+      item: "รับหิ้วสำเร็จเดือนนี้",
       value: totalSuccessForMonth.toLocaleString(),
       unit: "ครั้ง",
     });
 
     worksheet.addRow({
-      item: "ยอดหิ้วสุทธิของเดือนนี้",
+      item: "รายได้รับหิ้วเดือนนี้",
       value: totalPriceForMonth.toLocaleString(),
       unit: "บาท",
     });
@@ -513,7 +523,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
   };
 
   return (
-    <div className="-mt-12">
+    <div className="FontPublic -mt-12">
       <div className="mt-2 relative flex flex-wrap justify-center items-center gap-10 bg-white p-8 rounded-lg shadow-md border">
         <div className="absolute  top-5 left-5">
           <p className="text-lg font-bold">
@@ -522,7 +532,6 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
         </div>
 
         <a
-          href="#"
           className="mt-6 flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-200 ease-in-out hover:border-gray-400/80 bg-gray-50 hover:bg-gray-100 shadow-sm hover:shadow-md"
         >
           <div className="flex flex-row items-center justify-center">
@@ -541,12 +550,11 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
             </span>
           </div>
           <div className="mt-2 text-sm text-gray-400">
-            <MyContent name="รายได้สุทธิทั้งหมด" fontSize="smaller" />
+            <MyContent name="รายได้สุทธิ" fontSize="smaller" />
           </div>
         </a>
 
         <a
-          href="#"
           className=" mt-6 flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-200 ease-in-out hover:border-gray-400/80 bg-gray-50 hover:bg-gray-100 shadow-md hover:shadow-lg"
         >
           <div className="flex flex-row items-center justify-center">
@@ -563,12 +571,11 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
             <span className="font-bold text-gray-600">{totalSuccess}</span>
           </div>
           <div className="mt-2 text-sm text-gray-400">
-            <MyContent name="ยอดหิ้วที่สำเร็จทั้งหมด" fontSize="smaller" />
+            <MyContent name="รับหิ้วสำเร็จ" fontSize="smaller" />
           </div>
         </a>
 
         <a
-          href="#"
           className=" mt-6 flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-200 ease-in-out hover:border-gray-400/80 bg-gray-50 hover:bg-gray-100 shadow-md hover:shadow-lg"
         >
           <div className="flex flex-row items-center justify-center">
@@ -587,12 +594,11 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
             </span>
           </div>
           <div className="mt-2 text-sm text-gray-400">
-            <MyContent name="ยอดหิ้วที่สำเร็จของเดือนนี้" fontSize="smaller" />
+            <MyContent name="รับหิ้วสำเร็จเดือนนี้" fontSize="smaller" />
           </div>
         </a>
 
         <a
-          href="#"
           className=" mt-6 flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-200 ease-in-out hover:border-gray-400/80 bg-gray-50 hover:bg-gray-100 shadow-md hover:shadow-lg"
         >
           <div className="flex flex-row items-center justify-center">
@@ -611,7 +617,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
             </span>
           </div>
           <div className="mt-2 text-sm text-gray-400">
-            <MyContent name="ยอดหิ้วสุทธิของเดือนนี้" fontSize="smaller" />
+            <MyContent name="รายได้รับหิ้วเดือนนี้" fontSize="smaller" />
           </div>
         </a>
 
@@ -697,7 +703,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
                     </div>
 
                     <div className="mt-2 text-sm text-gray-400">
-                      <MyContent name="รายได้สุทธิทั้งหมด" fontSize="smaller" />
+                      <MyContent name="รายได้สุทธิ" fontSize="smaller" />
                     </div>
                   </a>
 
@@ -724,7 +730,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
 
                     <div className="mt-2 text-sm text-gray-400">
                       <MyContent
-                        name="ยอดหิ้วที่สำเร็จทั้งหมด"
+                        name="รับหิ้วสำเร็จ"
                         fontSize="smaller"
                       />
                     </div>
@@ -753,7 +759,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
 
                     <div className="mt-2 text-sm text-gray-400">
                       <MyContent
-                        name="ยอดหิ้วที่สำเร็จของเดือนนี้"
+                        name="รับหิ้วสำเร็จเดือนนี้"
                         fontSize="smaller"
                       />
                     </div>
@@ -782,7 +788,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
 
                     <div className="mt-2 text-sm text-gray-400">
                       <MyContent
-                        name="ยอดหิ้วสุทธิของเดือนนี้"
+                        name="รายได้รับหิ้วเดือนนี้"
                         fontSize="smaller"
                       />
                     </div>
@@ -1024,7 +1030,9 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
         mt={4}
       >
         <Typography variant="h4" component="h1" gutterBottom align="center">
+          <p className="FontPublic font-semibold">
           <MyContent name="สร้างรายได้" fontSize="large" />
+          </p>
         </Typography>
         <Tabs
           value={value}
@@ -1038,29 +1046,43 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
           }}
         >
           <Tab
-            label={<MyContent name="ทั้งหมด" fontSize="small" />}
-            style={{
-              width: "20%",
-            }}
-          />
-          <Tab
-            label={<MyContent name="ที่ต้องส่ง" fontSize="small" />}
-            style={{
-              width: "20%",
-            }}
-          />
-          <Tab
-            label={<MyContent name="ส่งแล้ว" fontSize="small" />}
+            label={
+              <p className="FontPublic">
+            <MyContent name="ทั้งหมด" fontSize="small" />
+              </p>
+          }
             style={{
               width: "20%",
             }}
           />
           <Tab
             label={
-              <MyContent name="ส่งต่อให้ผู้จัดส่งคนอื่น" fontSize="small" />
-            }
+              <p className="FontPublic">
+            <MyContent name="ที่ต้องส่ง" fontSize="small" />
+                </p>
+          }
             style={{
               width: "20%",
+            }}
+          />
+          <Tab
+            label={
+              <p className="FontPublic">
+            <MyContent name="ส่งแล้ว" fontSize="small" />
+                </p>
+          }
+            style={{
+              width: "20%",
+            }}
+          />
+          <Tab
+            label={
+              <p className="FontPublic">
+              <MyContent name="ส่งต่อให้ผู้จัดส่งคนอื่น" fontSize="small" />
+                  </p>
+            }
+            style={{
+              width: "30%",
             }}
           />
         </Tabs>

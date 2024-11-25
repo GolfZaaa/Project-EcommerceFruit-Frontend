@@ -78,17 +78,19 @@ const MyAccountScreen = () => {
   const drawer = (
     <Box sx={{ display: "flex" }}>
       <List>
-
-      <ListItem
-      >
+        <ListItem>
           <ListItemText
-          sx={{ textAlign: "center" }}
-            primary={<MyContent name="แดชบอร์ดส่วนตัว" fontSize="small" />}
+            sx={{ textAlign: "center" }}
+            primary={
+              <p className="FontPublic font-bold after:content-[''] after:block after:w-full after:h-[1px] after:bg-current after:mt-1">
+                <MyContent name="แดชบอร์ดส่วนตัว" fontSize="normal" />
+              </p>
+            }
           />
         </ListItem>
 
         <ListItem
-        button
+          button
           style={{
             cursor: "pointer",
           }}
@@ -101,12 +103,16 @@ const MyAccountScreen = () => {
             <MdDashboard size={25} />
           </ListItemIcon>
           <ListItemText
-            primary={<MyContent name="สรุปข้อมูล" fontSize="small" />}
+            primary={
+              <p className="FontPublic">
+            <MyContent name="สรุปข้อมูล" fontSize="small" />
+              </p>
+          }
           />
         </ListItem>
 
         <ListItem
-        button
+          button
           style={{
             cursor: "pointer",
           }}
@@ -119,7 +125,11 @@ const MyAccountScreen = () => {
             <PeopleIcon />
           </ListItemIcon>
           <ListItemText
-            primary={<MyContent name="ข้อมูลส่วนตัว" fontSize="small" />}
+            primary={
+            <p className="FontPublic">
+              <MyContent name="ข้อมูลส่วนตัว" fontSize="small" />
+            </p>
+          }
           />
         </ListItem>
 
@@ -131,7 +141,7 @@ const MyAccountScreen = () => {
           </List>
         </Collapse>
         <ListItem
-        button
+          button
           style={{
             cursor: "pointer",
           }}
@@ -144,11 +154,15 @@ const MyAccountScreen = () => {
             <ListAltIcon />
           </ListItemIcon>
           <ListItemText
-            primary={<MyContent name="ที่อยู่" fontSize="small" />}
+            primary={
+              <p className="FontPublic">
+            <MyContent name="ที่อยู่" fontSize="small" />
+              </p>
+          }
           />
         </ListItem>
         <ListItem
-        button
+          button
           style={{
             cursor: "pointer",
           }}
@@ -162,12 +176,16 @@ const MyAccountScreen = () => {
             <ShoppingCartIcon />
           </ListItemIcon>
           <ListItemText
-            primary={<MyContent name="คำสั่งซื้อ" fontSize="small" />}
+            primary={
+              <p className="FontPublic">
+            <MyContent name="คำสั่งซื้อ" fontSize="small" />
+              </p>
+          }
           />
         </ListItem>
 
         <ListItem
-        button
+          button
           style={{
             cursor: "pointer",
           }}
@@ -181,12 +199,16 @@ const MyAccountScreen = () => {
             <MonetizationOnIcon />
           </ListItemIcon>
           <ListItemText
-            primary={<MyContent name="สร้างรายได้" fontSize="small" />}
+            primary={
+              <p className="FontPublic">
+            <MyContent name="สร้างรายได้" fontSize="small" />
+              </p>
+          }
           />
         </ListItem>
 
         <ListItem
-        button
+          button
           style={{
             cursor: "pointer",
           }}
@@ -201,7 +223,9 @@ const MyAccountScreen = () => {
           </ListItemIcon>
           <ListItemText
             primary={
+              <p className="FontPublic">
               <MyContent name="รับ-ส่งต่อ คำสั่งซื้อ" fontSize="small" />
+              </p>
             }
           />
         </ListItem>

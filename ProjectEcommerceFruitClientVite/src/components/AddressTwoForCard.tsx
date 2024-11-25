@@ -5,6 +5,7 @@ import lottiteDelivery from "../assets/lotties/delivery.json";
 import { OrderToReceipt } from "../Screen/order/MyCardOrderReceipt";
 import { User } from "../models/User";
 import { Address } from "../models/Address";
+import MyContent from "./MyContent";
 
 interface props {
   Astore?: {
@@ -19,6 +20,7 @@ interface props {
   };
 }
 
+
 const AddressTwoForCard = ({ Astore, ACustomer }: props) => {
   return (
     <Grid container justifyContent="space-evenly" spacing={4}>
@@ -32,25 +34,41 @@ const AddressTwoForCard = ({ Astore, ACustomer }: props) => {
       >
         <div>
           <Typography fontSize={22}>
-            ชื่อ-ที่อยู่ร้านค้า : {Astore?.address?.user?.fullName}
+            <p className="FontPublic">
+          <MyContent name={`ชื่อ-ที่อยู่ร้านค้า : ${Astore?.address?.user?.fullName}`} fontSize="littlenormal" />
+          </p>            
           </Typography>
           <Typography fontSize={22}>
-            เบอร์ : {Astore?.address?.user?.phoneNumber}
+          <p className="FontPublic">
+            <MyContent name={`เบอร์ : ${Astore?.address?.user?.phoneNumber}`} fontSize="littlenormal" />
+            </p>
+            
           </Typography>
           <Typography fontSize={22}>
-            บ้านเลขที่ {Astore?.address?.detail}
+          <p className="FontPublic">
+            <MyContent name={`บ้านเลขที่ : ${Astore?.address?.detail}`} fontSize="littlenormal" />
+            </p>
           </Typography>
           <Typography fontSize={22}>
-            แขวง/ตำบล {Astore?.address?.subDistrict}
+          <p className="FontPublic">
+            <MyContent name={`แขวง/ตำบล : ${Astore?.address?.subDistrict}`} fontSize="littlenormal" />
+            </p>
+            
           </Typography>
           <Typography fontSize={22}>
-            เขต/อำเภอ {Astore?.address?.district}
+          <p className="FontPublic">
+            <MyContent name={`เขต/อำเภอ : ${Astore?.address?.district}`} fontSize="littlenormal" />
+            </p>
           </Typography>
           <Typography fontSize={22}>
-            จังหวัด {Astore?.address?.province}
+          <p className="FontPublic">
+            <MyContent name={`จังหวัด : ${Astore?.address?.province}`} fontSize="littlenormal" />
+            </p>
           </Typography>
           <Typography fontSize={22}>
-            รหัสไปรษณีย์ {Astore?.address?.postCode}
+          <p className="FontPublic">
+            <MyContent name={`รหัสไปรษณีย์ : ${Astore?.address?.postCode}`} fontSize="littlenormal" />
+            </p>
           </Typography>
         </div>
       </Grid>
@@ -76,25 +94,39 @@ const AddressTwoForCard = ({ Astore, ACustomer }: props) => {
       >
         <div>
           <Typography fontSize={22}>
-            ชื่อ-ที่อยู่ลูกค้า : {ACustomer?.order?.address?.user?.fullName}
+          <p className="FontPublic">
+          <MyContent name={`ชื่อ-ที่อยู่ลูกค้า : ${ACustomer?.order?.address?.user?.fullName}`} fontSize="littlenormal" />
+            </p>
           </Typography>
           <Typography fontSize={22}>
-            เบอร์ : {ACustomer?.order?.address?.user?.phoneNumber}
+          <p className="FontPublic">
+          <MyContent name={`เบอร์ : ${ACustomer?.order?.address?.user?.phoneNumber}`} fontSize="littlenormal" />
+            </p>
           </Typography>
           <Typography fontSize={22}>
-            บ้านเลขที่ {ACustomer?.order?.address?.detail}
+          <p className="FontPublic">
+          <MyContent name={`บ้านเลขที่ : ${ACustomer?.order?.address?.detail}`} fontSize="littlenormal" />
+            </p>
           </Typography>
           <Typography fontSize={22}>
-            แขวง/ตำบล {ACustomer?.order?.address?.subDistrict}
+          <p className="FontPublic">
+          <MyContent name={`แขวง/ตำบล : ${ACustomer?.order?.address?.subDistrict}`} fontSize="littlenormal" />
+            </p>
           </Typography>
           <Typography fontSize={22}>
-            เขต/อำเภอ {ACustomer?.order?.address?.district}
+          <p className="FontPublic">
+          <MyContent name={`เขต/อำเภอ : ${ACustomer?.order?.address?.district}`} fontSize="littlenormal" />
+            </p>
           </Typography>
           <Typography fontSize={22}>
-            จังหวัด {ACustomer?.order?.address?.province}
+          <p className="FontPublic">
+              <MyContent name={`จังหวัด : ${ACustomer?.order?.address?.province}`} fontSize="littlenormal" />
+            </p>
           </Typography>
           <Typography fontSize={22}>
-            รหัสไปรษณีย์ {ACustomer?.order?.address?.postCode}
+            <p className="FontPublic">
+               <MyContent name={`รหัสไปรษณีย์ : ${ACustomer?.order?.address?.postCode}`} fontSize="littlenormal" />
+            </p>
           </Typography>
         </div>
       </Grid>

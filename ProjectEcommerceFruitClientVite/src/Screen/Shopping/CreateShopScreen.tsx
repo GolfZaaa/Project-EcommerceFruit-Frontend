@@ -148,6 +148,20 @@ export default observer(function CreateShopScreen({
                 name="name"
                 autoFocus
                 required
+                InputProps={{
+                  sx: {
+                    fontSize: "1.1rem",
+                    color: "#333",
+                    fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                  },
+                }}
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "1.1rem",
+                    color: "#888",
+                    fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                  },
+                }}
               />
               <TextField
                 defaultValue={dataId?.description}
@@ -157,6 +171,20 @@ export default observer(function CreateShopScreen({
                 margin="normal"
                 name="description"
                 required
+                InputProps={{
+                  sx: {
+                    fontSize: "1.1rem",
+                    color: "#333",
+                    fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                  },
+                }}
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "1.1rem",
+                    color: "#888",
+                    fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                  },
+                }}
               />
 
               <TextField
@@ -167,8 +195,26 @@ export default observer(function CreateShopScreen({
                 margin="normal"
                 name="detail"
                 required
+                InputProps={{
+                  sx: {
+                    fontSize: "1.2rem",
+                    color: "#333",
+                    fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                  },
+                }}
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "1.1rem",
+                    color: "#888",
+                    fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                  },
+                }}
               />
-              <label>รหัสไปรษณีย์</label>
+              <label>
+                <p className="FontPublic">
+                <MyContent name={`รหัสไปรษณีย์`} fontSize="small" />
+                </p>
+              </label>
               <InputThaiAddress.Zipcode
                 value={address["zipcode"]}
                 onChange={handleChange("zipcode")}
@@ -176,8 +222,13 @@ export default observer(function CreateShopScreen({
                 style={{
                   height: "55px",
                 }}
+                className="custom-district-input FontPublic"
               />
-              <label>แขวง/ตำบล</label>
+              <label>
+                <p className="FontPublic">
+                <MyContent name={`แขวง/ตำบล`} fontSize="small" />
+                </p>
+              </label>
               <InputThaiAddress.District
                 value={address["district"]}
                 onChange={handleChange("district")}
@@ -185,8 +236,13 @@ export default observer(function CreateShopScreen({
                 style={{
                   height: "55px",
                 }}
+                className="custom-district-input FontPublic"
               />
-              <label>เขต/อำเภอ</label>
+              <label>
+                <p className="FontPublic">
+                <MyContent name={`เขต/อำเภอ`} fontSize="small" />
+                </p>
+              </label>
               <InputThaiAddress.Amphoe
                 value={address["amphoe"]}
                 onChange={handleChange("amphoe")}
@@ -194,8 +250,13 @@ export default observer(function CreateShopScreen({
                 style={{
                   height: "55px",
                 }}
+                className="custom-district-input FontPublic"
               />
-              <label>จังหวัด</label>
+              <label>
+                <p className="FontPublic">
+                <MyContent name={`จังหวัด`} fontSize="small" />
+                </p>
+              </label>
               <InputThaiAddress.Province
                 value={address["province"]}
                 onChange={handleChange("province")}
@@ -203,6 +264,7 @@ export default observer(function CreateShopScreen({
                 style={{
                   height: "55px",
                 }}
+                className="custom-district-input FontPublic"
               />
 
               <Button
@@ -215,7 +277,9 @@ export default observer(function CreateShopScreen({
                 size="large"
                 fullWidth
               >
+                <p className="FontPublic font-semibold">
                 <MyContent name="บันทึก" fontSize="small" />
+                </p>
               </Button>
             </Box>
           </CardContent>

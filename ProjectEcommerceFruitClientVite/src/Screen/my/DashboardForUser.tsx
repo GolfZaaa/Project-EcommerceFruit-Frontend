@@ -272,7 +272,7 @@ export default observer(function DashboardForUser() {
     ];
 
     worksheet.addRow({
-      item: "ยอดเงินทั้งหมดที่ซื้อ",
+      item: "ยอดเงินรวมที่ซื้อ",
       value: totalPrice,
       unit: "บาท",
     });
@@ -284,13 +284,13 @@ export default observer(function DashboardForUser() {
     });
 
     worksheet.addRow({
-      item: "ยอดคำสั่งซื้อที่สำเร็จ",
+      item: "คำสั่งซื้อที่สำเร็จ",
       value: totalOrderSuccess,
       unit: "ครั้ง",
     });
 
     worksheet.addRow({
-      item: "ยอดคำสั่งซื้อที่ยกเลิก",
+      item: "คำสั่งซื้อที่ยกเลิก",
       value: totalOrderCancel,
       unit: "ครั้ง",
     });
@@ -341,55 +341,61 @@ export default observer(function DashboardForUser() {
 
   return (
     <div className="-ml-10 -mt-16">
-      <div>
+      <div className="FontPublic">
         <div className="mt-2 md:pt-5 sm:pt-5 relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center">
-          <a className="flex md:w-36 h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80">
+          <a className="flex md:w-48 lg:w-44 h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80">
             <div className="flex flex-row items-center justify-center">
               <FaDollarSign size={20}/>
               <span className="font-bold text-gray-600">
-                {totalPrice.toLocaleString()}
+                <MyContent name={totalPrice.toLocaleString()} fontSize="small" />
               </span>
             </div>
             <div className="mt-2 text-sm text-gray-400">
-              {/* <MyContent name="ยอดเงินทั้งหมดที่ซื้อ" fontSize="small" /> */}
-              <p className="text-lg md:text-sm">ยอดเงินทั้งหมดที่ซื้อ</p>
+              <p className=" md:text-sm">
+                <MyContent name="ยอดเงินรวมที่ซื้อ" fontSize="small" />
+                </p>
             </div>
           </a>
 
-          <a className="flex md:w-36 h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80">
+          <a className="flex md:w-48 lg:w-44 h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80">
             <div className="flex flex-row items-center justify-center">
               <FaShoppingCart size={20} className="mr-2"/>
-              <span className="font-bold text-gray-600">{totalQuantity}</span>
+              <span className="font-bold text-gray-600">
+                <MyContent name={totalQuantity} fontSize="small" />
+                </span>
             </div>
             <div className="mt-2 text-sm text-gray-400">
-              {/* <MyContent name="จำนวนสินค้าที่ซื้อ" fontSize="small" /> */}
-              <p className="text-lg md:text-sm">จำนวนสินค้าที่ซื้อ</p>
+              <p className=" md:text-sm">
+                <MyContent name="จำนวนสินค้าที่ซื้อ" fontSize="small" />
+                </p>
             </div>
           </a>
 
-          <a className="flex md:w-36 h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80">
+          <a className="flex md:w-48 lg:w-44 h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80">
             <div className="flex flex-row items-center justify-center">
               <FaCheckCircle  size={20} className="mr-2"/>
               <span className="font-bold text-gray-600">
-                {totalOrderSuccess}
+                <MyContent name={totalOrderSuccess} fontSize="small" />
               </span>
             </div>
             <div className="mt-2 text-sm text-gray-400">
-              {/* <MyContent name="ยอดคำสั่งซื้อที่สำเร็จ" fontSize="small" /> */}
-              <p className="text-lg md:text-sm">ยอดคำสั่งซื้อที่สำเร็จ</p>
+              <p className=" md:text-sm">
+                <MyContent name="คำสั่งซื้อที่สำเร็จ" fontSize="small" />
+              </p>
             </div>
           </a>
 
-          <a className=" flex md:w-36 h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80">
+          <a className=" flex md:w-48 lg:w-44 h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80">
             <div className="flex flex-row items-center justify-center">
               <FaTimesCircle size={20} className="mr-2"/>
               <span className="font-bold text-gray-600">
-                {totalOrderCancel}
+                <MyContent name={totalOrderCancel} fontSize="small" />
               </span>
             </div>
             <div className="mt-2 text-sm text-gray-400">
-              {/* <MyContent name="ยอดคำสั่งซื้อที่ยกเลิก" fontSize="small" /> */}
-              <p className="text-lg md:text-sm">ยอดคำสั่งซื้อที่ยกเลิก</p>
+              <p className=" md:text-sm">
+                <MyContent name="คำสั่งซื้อที่ยกเลิก" fontSize="small" />
+                </p>
             </div>
           </a>
 
@@ -424,7 +430,7 @@ export default observer(function DashboardForUser() {
 
         {modal && (
           <div>
-            <div className="modal fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
+            <div className="FontPublic modal fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
               <div className="modal-overlay absolute w-full h-full bg-gray-900 opacity-50" />
               <div
                 ref={componentRef}
@@ -454,47 +460,24 @@ export default observer(function DashboardForUser() {
                 <div className="modal-content py-4 text-left px-6">
                   <div className="mt-9 relative flex flex-wrap justify-center items-center gap-10 ">
                     <a
-                      href="#"
-                      className="flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80"
+                      className="flex h-28 w-40 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80"
                     >
                       <div className="flex flex-row items-center justify-center">
-                        <svg
-                          className="mr-3 fill-gray-500/95"
-                          xmlns="http://www.w3.org/2000/svg"
-                          version="1.1"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M12,23A1,1 0 0,1 11,22V19H7A2,2 0 0,1 5,17V7A2,2 0 0,1 7,5H21A2,2 0 0,1 23,7V17A2,2 0 0,1 21,19H16.9L13.2,22.71C13,22.89 12.76,23 12.5,23H12M13,17V20.08L16.08,17H21V7H7V17H13M3,15H1V3A2,2 0 0,1 3,1H19V3H3V15M9,9H19V11H9V9M9,13H17V15H9V13Z" />
-                        </svg>
-
+                      <FaDollarSign size={20} />
                         <span className="font-bold text-gray-600">
                           {totalPrice.toLocaleString()}
                         </span>
                       </div>
 
                       <div className="mt-2 text-sm text-gray-400">
-                        ยอดเงินทั้งหมดที่ซื้อ
+                        ยอดเงินรวมที่ซื้อ
                       </div>
                     </a>
-
                     <a
-                      href="#"
-                      className="flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80"
+                      className="flex h-28 w-40 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80"
                     >
                       <div className="flex flex-row items-center justify-center">
-                        <svg
-                          className="mr-3 fill-gray-500/95"
-                          xmlns="http://www.w3.org/2000/svg"
-                          version="1.1"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M5.68,19.74C7.16,20.95 9,21.75 11,21.95V19.93C9.54,19.75 8.21,19.17 7.1,18.31M13,19.93V21.95C15,21.75 16.84,20.95 18.32,19.74L16.89,18.31C15.79,19.17 14.46,19.75 13,19.93M18.31,16.9L19.74,18.33C20.95,16.85 21.75,15 21.95,13H19.93C19.75,14.46 19.17,15.79 18.31,16.9M15,12A3,3 0 0,0 12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12M4.07,13H2.05C2.25,15 3.05,16.84 4.26,18.32L5.69,16.89C4.83,15.79 4.25,14.46 4.07,13M5.69,7.1L4.26,5.68C3.05,7.16 2.25,9 2.05,11H4.07C4.25,9.54 4.83,8.21 5.69,7.1M19.93,11H21.95C21.75,9 20.95,7.16 19.74,5.68L18.31,7.1C19.17,8.21 19.75,9.54 19.93,11M18.32,4.26C16.84,3.05 15,2.25 13,2.05V4.07C14.46,4.25 15.79,4.83 16.9,5.69M11,4.07V2.05C9,2.25 7.16,3.05 5.68,4.26L7.1,5.69C8.21,4.83 9.54,4.25 11,4.07Z" />
-                        </svg>
-
+                      <FaShoppingCart size={20} className="mr-2"/>
                         <span className="font-bold text-gray-600">
                           {totalQuantity}
                         </span>
@@ -506,54 +489,32 @@ export default observer(function DashboardForUser() {
                     </a>
 
                     <a
-                      href="#"
-                      className="flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80"
+                      className="flex h-28 w-40 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80"
                     >
                       <div className="flex flex-row items-center justify-center">
-                        <svg
-                          className="mr-3 fill-gray-500/95"
-                          xmlns="http://www.w3.org/2000/svg"
-                          version="1.1"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M12,23A1,1 0 0,1 11,22V19H7A2,2 0 0,1 5,17V7A2,2 0 0,1 7,5H21A2,2 0 0,1 23,7V17A2,2 0 0,1 21,19H16.9L13.2,22.71C13,22.89 12.76,23 12.5,23H12M13,17V20.08L16.08,17H21V7H7V17H13M3,15H1V3A2,2 0 0,1 3,1H19V3H3V15M9,9H19V11H9V9M9,13H17V15H9V13Z" />
-                        </svg>
-
+                      <FaCheckCircle  size={20} className="mr-2"/>
                         <span className="font-bold text-gray-600">
                           {totalOrderSuccess}
                         </span>
                       </div>
 
                       <div className="mt-2 text-sm text-gray-400">
-                        ยอดคำสั่งซื้อที่สำเร็จ
+                        คำสั่งซื้อที่สำเร็จ
                       </div>
                     </a>
 
                     <a
-                      href="#"
-                      className="flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80"
+                      className="flex h-28 w-40 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80"
                     >
                       <div className="flex flex-row items-center justify-center">
-                        <svg
-                          className="mr-3 fill-gray-500/95"
-                          xmlns="http://www.w3.org/2000/svg"
-                          version="1.1"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M2.5 19.6L3.8 20.2V11.2L1.4 17C1 18.1 1.5 19.2 2.5 19.6M15.2 4.8L20.2 16.8L12.9 19.8L7.9 7.9V7.8L15.2 4.8M15.3 2.8C15 2.8 14.8 2.8 14.5 2.9L7.1 6C6.4 6.3 5.9 7 5.9 7.8V8L11 20.1L20.3 16.5L15.3 2.8M4.2 11.2V20.2L5.6 19.6C6.6 19.2 7.1 18.1 6.7 17L4.2 11.2Z" />
-                        </svg>
-
+                      <FaTimesCircle size={20} className="mr-2"/>
                         <span className="font-bold text-gray-600">
                           {totalOrderCancel}
                         </span>
                       </div>
 
                       <div className="mt-2 text-sm text-gray-400">
-                        ยอดคำสั่งซื้อที่ยกเลิก
+                        คำสั่งซื้อที่ยกเลิก
                       </div>
                     </a>
                   </div>
@@ -562,32 +523,38 @@ export default observer(function DashboardForUser() {
                     <div className="grid grid-cols-4 gap-2 mt-5">
                       <div className="col-span-2 bg-white border rounded-sm overflow-hidden shadow p-2">
                         <div className="flex justify-between items-center">
-                          <p className="font-semibold text-sm">
-                            แสดงจำนวนคำสั่งซื้อในแต่ละเดือน
+                          <p className="font-medium text-sm">
+                          <MyContent
+                  name="แสดงจำนวนคำสั่งซื้อในแต่ละเดือน"
+                  fontSize="small"
+                />
                           </p>
-                          <div className="flex items-center">
-                            <p className="mr-2 text-sm">ปี :</p>
+                          <div className="flex items-center -ml-3">
+                            <p className="mr-1 text-sm">ปี :</p>
                             {selectedYear}
                           </div>
                         </div>
                         <div className="p-2">
                           <ReactECharts
                             option={option}
-                            style={{ height: "200px", width: "300px" }}
+                            style={{ height: "200px", width: "370px" }}
                           />
                         </div>
                       </div>
 
                       <div className="col-span-2 bg-white border rounded-sm overflow-hidden shadow p-2">
                         <div>
-                          <p className="font-semibold text-sm">
-                            สัดส่วนการใช้จ่ายในแต่ละหมวดหมู่สินค้า
+                          <p className="font-medium text-sm">
+                          <MyContent
+                            name="สัดส่วนการใช้จ่ายในแต่ละหมวดหมู่สินค้า"
+                            fontSize="small"
+                          />
                           </p>
                         </div>
                         <div className="p-2">
                           <ReactECharts
                             option={pieOption}
-                            style={{ height: "200px", width: "300px" }}
+                            style={{ height: "200px", width: "360px" }}
                           />
                         </div>
                       </div>
@@ -614,7 +581,7 @@ export default observer(function DashboardForUser() {
         <div className="w-full ml-5">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-5">
             <div className="col-span-1 md:col-span-2  bg-white border rounded-sm overflow-hidden shadow">
-              <div className="p-2 flex justify-between items-center">
+              <div className="p-2 flex justify-between items-center font-semibold">
                 <MyContent
                   name="แสดงจำนวนคำสั่งซื้อในแต่ละเดือน"
                   fontSize="small"
@@ -654,10 +621,12 @@ export default observer(function DashboardForUser() {
 
             <div className="col-span-1 md:col-span-2 bg-white border rounded-sm overflow-hidden shadow">
               <div className="p-2 -mb-3">
+                <p className="font-semibold">
                 <MyContent
                   name="สัดส่วนการใช้จ่ายในแต่ละหมวดหมู่สินค้า"
                   fontSize="small"
                 />
+                </p>
               </div>
               <div className="p-2">
                 {order?.filter((x) => x.confirmReceipt === 1).length > 0 ? (
