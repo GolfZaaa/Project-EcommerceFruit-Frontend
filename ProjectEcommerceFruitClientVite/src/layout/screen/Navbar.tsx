@@ -45,7 +45,7 @@ export default observer(function Navbar() {
 
   const handleHomeScreen = () => {
     resetScroll();
-  }
+  };
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const toggleDrawer = () => setDrawerOpen(!drawerOpen);
@@ -93,10 +93,13 @@ export default observer(function Navbar() {
                         style={{
                           width: 50,
                           height: 50,
-                          borderRadius:'50%'
+                          borderRadius: "50%",
                         }}
                       />
-                      <p className="ml-5 FontLogo font-semibold" style={{color:'#01c446'}}>
+                      <p
+                        className="ml-5 FontLogo font-semibold"
+                        style={{ color: "#01c446" }}
+                      >
                         <MyContent
                           name={systemSetting[0]?.webName}
                           fontSize="large"
@@ -131,7 +134,7 @@ export default observer(function Navbar() {
                 }
               >
                 <p className="FontPublic">
-                <MyContent name={"หน้าหลัก"} fontSize="small" />
+                  <MyContent name={"หน้าหลัก"} fontSize="small" />
                 </p>
               </NavLink>
             </li>
@@ -164,7 +167,7 @@ export default observer(function Navbar() {
                 }
               >
                 <p className="FontPublic">
-                <MyContent name={"สินค้า"} fontSize="small" />
+                  <MyContent name={"สินค้า"} fontSize="small" />
                 </p>
               </NavLink>
             </li>
@@ -200,7 +203,7 @@ export default observer(function Navbar() {
                   }
                 >
                   <p className="FontPublic">
-                  <MyContent name={"สร้างรายได้"} fontSize="small" />
+                    <MyContent name={"สร้างรายได้"} fontSize="small" />
                   </p>
                 </NavLink>
               </li>
@@ -238,7 +241,7 @@ export default observer(function Navbar() {
                   }
                 >
                   <p className="FontPublic">
-                  <MyContent name={"ตั้งค่าระบบ"} fontSize="small" />
+                    <MyContent name={"ตั้งค่าระบบ"} fontSize="small" />
                   </p>
                 </NavLink>
               </li>
@@ -249,7 +252,9 @@ export default observer(function Navbar() {
             <div>
               <ButtonMui color="secondary" onClick={handleClick}>
                 <Typography variant="body1" color="black">
+                  <p className="FontPublic font-semibold">
                   <MyContent name={user?.fullName} fontSize="small" />
+                  </p>
                 </Typography>
               </ButtonMui>
               <Menu
@@ -266,7 +271,9 @@ export default observer(function Navbar() {
                   style={{ textDecoration: "none", color: "#000" }}
                 >
                   <MenuItem onClick={handleClose}>
-                    <MyContent name="ข้อมูลส่วนตัว" fontSize="small" />
+                  <p className="FontPublic ">
+                  <MyContent name="ข้อมูลส่วนตัว" fontSize="small" />
+                  </p>
                   </MenuItem>
                 </NavLink>
 
@@ -276,7 +283,9 @@ export default observer(function Navbar() {
                     style={{ textDecoration: "none", color: "#000" }}
                   >
                     <MenuItem onClick={handleClose}>
-                      <MyContent name={"ร้านค้า"} fontSize="small" />
+                    <p className="FontPublic">
+                    <MyContent name={"ร้านค้า"} fontSize="small" />
+                    </p>
                     </MenuItem>
                   </NavLink>
                 ) : (
@@ -285,7 +294,9 @@ export default observer(function Navbar() {
                     style={{ textDecoration: "none", color: "#000" }}
                   >
                     <MenuItem onClick={handleClose}>
-                      <MyContent name={"ลงทะเบียนร้านค้า"} fontSize="small" />
+                    <p className="FontPublic">
+                    <MyContent name={"ลงทะเบียนร้านค้า"} fontSize="small" />
+                    </p>
                     </MenuItem>
                   </NavLink>
                 )}
@@ -319,7 +330,7 @@ export default observer(function Navbar() {
           ) : (
             <div>
               <NavLink
-                className="hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-green-500 hover:bg-green-700 text-sm text-white font-bold  rounded-xl transition duration-200"
+                className="FontPublic hidden lg:inline-block lg:ml-auto lg:mr-3 py-2 px-6 bg-green-500 hover:bg-green-700 text-sm text-white font-bold  rounded-xl transition duration-200"
                 to={RoutePath.loginScreen}
               >
                 <MyContent name={"เข้าสู่ระบบ"} fontSize="small" />
@@ -397,7 +408,6 @@ export default observer(function Navbar() {
           )}
         </div>
       </div>
-
       <div className="border border-gray-200 mb-20"></div>
     </div>
   );

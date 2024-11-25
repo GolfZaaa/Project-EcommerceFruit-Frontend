@@ -178,7 +178,9 @@ const MyOrderCard = ({ order, index }: props) => {
       <div className="flex justify-between">
         <div>
           <Typography variant="h5">
+            <p className="FontPublic">
             <MyContent name={`จำนวน ${order.length}`} fontSize="normal" />
+            </p>
           </Typography>
         </div>
         <div>
@@ -227,7 +229,7 @@ const MyOrderCard = ({ order, index }: props) => {
 
         console.log("itemeeeee",item)
         return (
-          <div className="mt-5 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6">
+          <div className="FontPublic mt-5 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6">
             <div className="space-y-4">
               <div className="md:flex md:justify-between">
                 <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
@@ -298,7 +300,7 @@ const MyOrderCard = ({ order, index }: props) => {
                         className="shrink-0 md:order-1"
                       >
                         <img
-                          className="hidden h-20 w-20 dark:block"
+                          className="hidden h-20 w-20 dark:block object-cover"
                           src={pathImages.product + item.product.images}
                           alt={item.product.images || "product image"}
                           style={{

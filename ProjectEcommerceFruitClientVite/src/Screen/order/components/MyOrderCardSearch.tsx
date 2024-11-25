@@ -14,6 +14,7 @@ import { useStore } from "../../../store/store";
 import AddressForCard from "../../../components/AddressForCard";
 import { useNavigate } from "react-router-dom";
 import { resetScroll } from "../../../api/agent";
+import MyContent from "../../../component/MyContent";
 
 interface props {
   order: Order[];
@@ -86,8 +87,16 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
   return (
     <div ref={componentRef}>
       <div className="flex justify-between">
-        <div>
-          <Typography variant="h5">จำนวน {order.length}</Typography>
+      <div className="flex items-center">
+          <Typography variant="h5" className="flex items-center">
+            <p className="FontPublic">
+            <MyContent name="จำนวน" fontSize="normal" />
+            </p>
+            <span className="mx-1"></span> 
+            <p className="FontPublic"> 
+            <MyContent name={order.length} fontSize="normal" />
+            </p>
+          </Typography>
         </div>
         <div>
           <button
@@ -199,7 +208,9 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
                         onChange={() => onSelect(item.id)}
                       />
                       <Typography variant="h5" align="left">
-                        เลือกสินค้า
+                        <p className="FontPublic font-semibold">
+                        <MyContent name="เลือกสินค้า" fontSize="normal" />
+                        </p>
                       </Typography>
                     </div>
                     {/* )} */}

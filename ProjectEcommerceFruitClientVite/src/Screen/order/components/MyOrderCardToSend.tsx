@@ -173,7 +173,9 @@ const MyOrderCardToSend = ({ order, index }: props) => {
     <div ref={componentRef} className="p-4">
       <div className="flex flex-col md:flex-row justify-between items-center">
         <Typography variant="h5">
-          <MyContent name={`จำนวน ${order.length}`} fontSize="normal" />
+          <p className="FontPublic font-semibold">
+            <MyContent name={`จำนวน ${order.length}`} fontSize="normal" />
+          </p>
         </Typography>
 
         {order.length > 0 && (
@@ -260,7 +262,7 @@ const MyOrderCardToSend = ({ order, index }: props) => {
         </Grid>
       )}
 
-    {order.map((item) => {
+      {order.map((item) => {
         const status = item?.shippings[0]?.shippingStatus;
 
         const myDriver = item.shippings[0].driverHistories.find(
@@ -319,30 +321,29 @@ const MyOrderCardToSend = ({ order, index }: props) => {
                 />
               </p>
               {index === 1 && !myDriver && (
-                  <div
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    className="mr-2"
                     style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
+                      width: 50,
+                      height: 50,
                     }}
-                  >
-                    <input
-                      type="checkbox"
-                      className="mr-2"
-                      style={{
-                        width: 50,
-                        height: 50,
-                      }}
-                      checked={select.find((x) => x === item.id) !== undefined}
-                      onChange={() => onSelect(item.id)}
-                    />
-                    <Typography variant="h5" align="left">
-                      เลือกสินค้า
-                    </Typography>
-                  </div>
-                )}
-              </div>
-
+                    checked={select.find((x) => x === item.id) !== undefined}
+                    onChange={() => onSelect(item.id)}
+                  />
+                  <Typography variant="h5" align="left">
+                    เลือกสินค้า
+                  </Typography>
+                </div>
+              )}
+            </div>
 
             {item.orderItems.map((orderItem) => {
               const TotalPriceForProduct =
@@ -391,7 +392,7 @@ const MyOrderCardToSend = ({ order, index }: props) => {
               ShippingFee={item?.shippings[0]?.shippingFee}
             />
 
-            <div className="mt-4">
+            <div className="mt-4 ">
               <Grid container spacing={2} className="p-4">
                 <Grid item xs={12}>
                   <Typography
@@ -399,39 +400,74 @@ const MyOrderCardToSend = ({ order, index }: props) => {
                     fontSize={{ xs: 18, sm: 20, md: 22 }}
                     fontWeight="bold"
                   >
-                    ชื่อ-ที่อยู่ลูกค้า : {item?.address?.user?.fullName}
+                    <p className="FontPublic">
+                      <MyContent
+                        name={`ชื่อ-ที่อยู่ลูกค้า : ${item?.address?.user?.fullName}`}
+                        fontSize="littlenormal"
+                      />
+                    </p>
                   </Typography>
                 </Grid>
 
                 <Grid container item xs={12} spacing={2} className="mt-4">
                   <Grid item xs={12} sm={6} md={4}>
                     <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
-                      เบอร์ : {item?.address?.user?.phoneNumber}
+                      <p className="FontPublic">
+                        <MyContent
+                          name={`เบอร์ : ${item?.address?.user?.phoneNumber}`}
+                          fontSize="small"
+                        />
+                      </p>
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6} md={4}>
                     <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
-                      บ้านเลขที่ {item?.address?.detail}
+                      <p className="FontPublic">
+                        <MyContent
+                          name={`บ้านเลขที่ : ${item?.address?.detail}`}
+                          fontSize="small"
+                        />
+                      </p>
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6} md={4}>
                     <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
-                      แขวง/ตำบล {item?.address?.subDistrict}
+                      <p className="FontPublic">
+                        <MyContent
+                          name={`แขวง/ตำบล : ${item?.address?.subDistrict}`}
+                          fontSize="small"
+                        />
+                      </p>
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6} md={4}>
                     <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
-                      เขต/อำเภอ {item?.address?.district}
+                      <p className="FontPublic">
+                        <MyContent
+                          name={`เขต/อำเภอ : ${item?.address?.district}`}
+                          fontSize="small"
+                        />
+                      </p>
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6} md={4}>
                     <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
-                      จังหวัด {item?.address?.province}
+                      <p className="FontPublic">
+                        <MyContent
+                          name={`จังหวัด : ${item?.address?.province}`}
+                          fontSize="small"
+                        />
+                      </p>
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6} md={4}>
                     <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
-                      รหัสไปรษณีย์ {item?.address?.postCode}
+                      <p className="FontPublic">
+                        <MyContent
+                          name={`รหัสไปรษณีย์ : ${item?.address?.postCode}`}
+                          fontSize="small"
+                        />
+                      </p>
                     </Typography>
                   </Grid>
                 </Grid>

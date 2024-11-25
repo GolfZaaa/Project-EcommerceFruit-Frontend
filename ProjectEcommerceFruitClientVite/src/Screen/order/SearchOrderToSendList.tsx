@@ -52,7 +52,7 @@ const SearchOrderToSendList = () => {
   };
 
   return (
-    <>
+    <div className="FontPublic">
       <div>
         <Tabs
           value={value}
@@ -67,13 +67,21 @@ const SearchOrderToSendList = () => {
         >
           <Tab
             onClick={() => setOrder([])}
-            label="ที่ต้องการรับ"
+            label={
+              <p className="FontPublic">
+                  <MyContent name="ที่ต้องการรับ" fontSize="small" />
+              </p>
+          }
             style={{
               width: "100%",
             }}
           />
           <Tab
-            label="ที่ต้องการส่งต่อ"
+            label={
+              <p className="FontPublic">
+                <MyContent name="ที่ต้องการส่งต่อ" fontSize="small" />
+              </p>
+          }
             style={{
               width: "100%",
             }}
@@ -85,9 +93,10 @@ const SearchOrderToSendList = () => {
       <CustomTabPanel value={value} index={0}>
         <div>
           <Typography variant="h4" component="h1" gutterBottom align="center">
+            <p className="FontPublic font-semibold">
             <MyContent name="ค้นหาคำสั่งซื้อที่ต้องการรับ" fontSize="large" />
+            </p>
           </Typography>
-
           <div
             style={{
               fontSize: 30,
@@ -106,6 +115,23 @@ const SearchOrderToSendList = () => {
                   margin="normal"
                   name="district"
                   onChange={handleOrderIdChange}
+
+                  InputProps={{
+                    sx: {
+                      fontSize: '1.5rem', 
+                      color: '#333',   
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+        
+                    },
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      fontSize: '1.2rem',
+                      color: '#888',
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                    },
+                  }}
+
                 />
               </Grid>
               <Grid item xs={2}>
@@ -130,7 +156,9 @@ const SearchOrderToSendList = () => {
                         <CircularProgress size={17} color="inherit" />
                       </div>
                     ) : (
-                      "ค้นหา"
+                      <p className="FontPublic">
+                        <MyContent name="ค้นหา" fontSize="small" />
+                      </p>
                     )}
                   </Button>
                 </div>
@@ -149,7 +177,7 @@ const SearchOrderToSendList = () => {
       <CustomTabPanel value={value} index={1}>
         <MyOrderCardWantToForward order={order} index={1} />
       </CustomTabPanel>
-    </>
+    </div>
   );
 };
 

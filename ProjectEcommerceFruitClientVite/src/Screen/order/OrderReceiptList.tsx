@@ -66,7 +66,9 @@ const OrderReceiptList = () => {
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom align="center">
-          <MyContent name="คำสั่งซื้อที่สามารถรับหิ้วได้" fontSize="large" />
+          <p className="FontPublic font-semibold">
+            <MyContent name="คำสั่งซื้อที่สามารถรับหิ้วได้" fontSize="large" />
+          </p>
         </Typography>
       </div>
 
@@ -79,7 +81,9 @@ const OrderReceiptList = () => {
           }}
         >
           <CircularProgress color="inherit" />
-          <p className="pl-3">กำลังโหลด</p>
+          <p className="pl-3">
+            <MyContent name="กำลังโหลด" fontSize="large" />
+          </p>
         </div>
       ) : (
         <div
@@ -95,7 +99,9 @@ const OrderReceiptList = () => {
             color={"red"}
             marginBottom={-1}
           >
+            <p className="FontPublic font-medium">
             <MyContent name="ค้นหาพื้นที่ที่คุณกำลังจะไป" fontSize="normal" />
+            </p>
           </Typography>
           <div
             style={{
@@ -115,6 +121,21 @@ const OrderReceiptList = () => {
                   margin="normal"
                   name="subDistrict"
                   onChange={(e) => setSubDistrict(e.target.value)}
+                  InputProps={{
+                    sx: {
+                      fontSize: '1rem', 
+                      color: '#333',   
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+        
+                    },
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      fontSize: '1.2rem',
+                      color: '#888',
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                    },
+                  }}
                 />
               </Grid>
               <Grid item xs={5}>
@@ -125,6 +146,21 @@ const OrderReceiptList = () => {
                   margin="normal"
                   name="district"
                   onChange={(e) => setDistrict(e.target.value)}
+                  InputProps={{
+                    sx: {
+                      fontSize: '1rem', 
+                      color: '#333',   
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+        
+                    },
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      fontSize: '1.2rem',
+                      color: '#888',
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                    },
+                  }}
                 />
               </Grid>
               <Grid item xs={2}>
@@ -135,7 +171,7 @@ const OrderReceiptList = () => {
                 >
                   <Button
                     style={{
-                      padding: 15,
+                      padding: 10,
                     }}
                     type="submit"
                     variant="contained"
@@ -144,7 +180,9 @@ const OrderReceiptList = () => {
                     fullWidth
                     onClick={() => onSearchOrder()}
                   >
-                    ค้นหา
+                    <p className="FontPublic">
+                    <MyContent name="ค้นหา" fontSize="littlenormal" />
+                    </p>
                   </Button>
                 </div>
               </Grid>

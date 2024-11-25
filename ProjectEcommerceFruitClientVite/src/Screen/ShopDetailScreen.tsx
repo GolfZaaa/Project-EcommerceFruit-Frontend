@@ -171,7 +171,7 @@ export default observer(function ShopDetailScreen() {
                   </span>
                 </div>
                 <p>
-                <MyContent name="จำนวนสินค้าที่ถูกซื้อ" fontSize="littlenormal" />
+                <MyContent name="จำนวนสินค้าที่ขายแล้ว" fontSize="littlenormal" />
                 </p>
               </div>
 
@@ -188,7 +188,7 @@ export default observer(function ShopDetailScreen() {
                   </span>
                 </div>
                 <p>
-                <MyContent name="ยอดการสั่งซื้อ" fontSize="littlenormal" />
+                <MyContent name="ยอดสั่งซื้อ" fontSize="littlenormal" />
                 </p>
               </div>
 
@@ -203,7 +203,7 @@ export default observer(function ShopDetailScreen() {
                   </span>
                 </div>
                 <p>
-                <MyContent name="สร้างร้านค้าเมื่อ" fontSize="littlenormal" />
+                <MyContent name="วันที่สร้างร้านค้า" fontSize="littlenormal" />
                 </p>
               </div>
             </div>

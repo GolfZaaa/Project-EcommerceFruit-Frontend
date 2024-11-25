@@ -61,6 +61,21 @@ const EditAccount = ({ onChangeCU, userEdit }: props) => {
           name="fullName"
           autoFocus
           required
+          InputProps={{
+            sx: {
+              fontSize: '1.5rem', 
+              color: '#333',   
+              fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+
+            },
+          }}
+          InputLabelProps={{
+            sx: {
+              fontSize: '1.2rem',
+              color: '#888',
+              fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+            },
+          }}
         />
 
         <CardActions sx={{ justifyContent: "center", mt: 2 }}>
@@ -77,7 +92,9 @@ const EditAccount = ({ onChangeCU, userEdit }: props) => {
                 <CircularProgress size={25} color="inherit" />
               </div>
             ) : (
-              <MyContent name="บันทึก" fontSize="small" />
+              <p className="FontPublic font-semibold">
+                <MyContent name="บันทึก" fontSize="small" />
+              </p>
             )}
           </Button>
         </CardActions>

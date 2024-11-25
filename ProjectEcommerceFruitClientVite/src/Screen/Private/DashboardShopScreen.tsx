@@ -335,7 +335,7 @@ export default observer(function DashboardShopScreen() {
     });
 
     worksheet.addRow({
-      item: "จำนวนสินค้าที่ซื้อ",
+      item: "จำนวนสินค้าที่ขายได้",
       value: totalQuantity.toLocaleString(),
       unit: "ครั้ง",
     });
@@ -420,7 +420,7 @@ export default observer(function DashboardShopScreen() {
                   },
                   {
                     icon: <BiCart size={30} />,
-                    label: "จำนวนสินค้าที่ซื้อ",
+                    label: "จำนวนสินค้าที่ขายได้",
                     value: totalQuantity,
                   },
                   {
@@ -556,6 +556,18 @@ export default observer(function DashboardShopScreen() {
           marginTop: "15px"
         }}
       >
+
+<ListItem>
+          <ListItemText
+            sx={{ textAlign: "center" }}
+            primary={
+              <p className="FontPublic font-bold after:content-[''] after:block after:w-full after:h-[1px] after:bg-current after:mt-1">
+                <MyContent name="แดชบอร์ดร้านค้า" fontSize="normal" />
+              </p>
+            }
+          />
+        </ListItem>
+
         <ListItem
         button
           onClick={() => {
@@ -567,7 +579,9 @@ export default observer(function DashboardShopScreen() {
             <DashboardIcon />
           </ListItemIcon>
           <ListItemText
-            primary={<MyContent name="สรุปข้อมูล" fontSize="small" />}
+            primary={
+            <MyContent name="สรุปข้อมูล" fontSize="small" />
+          }
           />
         </ListItem>
         <Collapse timeout="auto" unmountOnExit>
@@ -664,7 +678,7 @@ export default observer(function DashboardShopScreen() {
             {
               <p className="ChangeFont">
                 <MyContent
-                name={`แดชบอร์ดร้านค้า ${usershop && usershop.name}`}
+                name={`ร้านค้า : ${usershop && usershop.name}`}
                 fontSize="normal"
               />
               </p>

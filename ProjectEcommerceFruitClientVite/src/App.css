@@ -1,10 +1,13 @@
 @media print {
     .chart-container {
-      width: 50% !important; /* ลดขนาดลงตามที่ต้องการ */
-      height: 200px !important; /* ปรับความสูงตามต้องการ */
+      width: 50% !important; 
+      height: 200px !important; 
     }
     .hiddenPrint {
       display: none;
+    }
+    .IconPrint {
+      margin-top: 22px;
     }
   }
   
@@ -22,4 +25,10 @@
 .FontPublic {
   font-family: "Noto Sans Thai Looped", sans-serif;
   font-style: normal;
+}
+
+.custom-district-input input {
+  font-family: "Noto Sans Thai Looped", sans-serif;
+  font-style: normal;
+  font-size: 20px !important; 
 }
