@@ -6,6 +6,7 @@ import {
   Image,
   ScrollView,
   StyleSheet,
+  ImageBackground,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -13,6 +14,7 @@ import { router } from "expo-router";
 import styled from "styled-components/native";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/src/store/store";
+import { pathImagesApp } from "@/src/constants/RoutePath";
 
 export const LoginButton: any = ({ children, onPress }: any) => (
   <TouchableOpacity onPress={onPress}>
@@ -59,7 +61,9 @@ export default observer(function SettingScreen() {
     getAddressgotoOrderByUserId,
     myAddressgotoOrder,
   } = useStore().addressStore;
-  const { searchOrdersWantToReceipt, getOrdersByUser } = useStore().orderStore;
+  const { searchOrdersWantToReceipt, getOrdersByUser, getMyOrderToSend } =
+    useStore().orderStore;
+  const { systemSetting } = useStore().systemSettingStore;
 
   useEffect(() => {
     getAddressgotoOrderByUserId();
@@ -74,6 +78,11 @@ export default observer(function SettingScreen() {
     router.push("/orderhistory");
   };
 
+  const handleMyShop = async () => {
+    getOrdersByUser();
+    router.push("/shop");
+  };
+
   const handleAddress = async () => {
     await getAddressByUserId().then(() => {
       router.push("/addresslist");
@@ -81,18 +90,23 @@ export default observer(function SettingScreen() {
     // router.push("/editaddress");
   };
 
-  const handleEarn = async () => {
-    searchOrdersWantToReceipt(new URLSearchParams());
-    router.push("/earn");
+  const handleMyEarn = async () => {
+    // searchOrdersWantToReceipt(new URLSearchParams());
+    await getMyOrderToSend();
+    router.push("/myearn");
   };
 
   const handleCart = async () => {
     router.push("/(tabs)/cart");
   };
 
-  const handleDashboardAdmin = async () => {
+  const handleSearchOrderToSend = async () => {
     // router.push("../admin/dashboardadmin");
-    router.push("/(tabs)/admin");
+    router.push("/searchordertosend");
+  };
+
+  const backgroundImage = {
+    uri: pathImagesApp.image_web + systemSetting[0].image,
   };
 
   return !!user ? (
@@ -110,7 +124,9 @@ export default observer(function SettingScreen() {
           />
           <Text style={styles.userName}>{user.fullName}</Text>
           <Text style={styles.userDetails}>
-            {`${myAddressgotoOrder?.detail} ต.${myAddressgotoOrder?.subDistrict} อ.${myAddressgotoOrder?.district} จ.${myAddressgotoOrder?.province}`}
+            {myAddressgotoOrder
+              ? `${myAddressgotoOrder?.detail} ต.${myAddressgotoOrder?.subDistrict} อ.${myAddressgotoOrder?.district} จ.${myAddressgotoOrder?.province}`
+              : "ยังไม่ได้เพิ่มที่อยู่"}
           </Text>
         </View>
       </LinearGradient>
@@ -124,9 +140,9 @@ export default observer(function SettingScreen() {
             <Text style={styles.menuItemText}>ตะกร้าสินค้า</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem} onPress={handleEarn}>
+          <TouchableOpacity style={styles.menuItem} onPress={handleMyEarn}>
             <View style={styles.iconWrapper}>
-              <Ionicons name="car-outline" size={30} color="#5A67F2" />
+              <Ionicons name="cash-outline" size={30} color="#5A67F2" />
             </View>
             <Text style={styles.menuItemText}>สร้างรายได้</Text>
           </TouchableOpacity>
@@ -164,13 +180,48 @@ export default observer(function SettingScreen() {
 
           <TouchableOpacity
             style={styles.menuItem}
+            onPress={() => handleSearchOrderToSend()}
+          >
+            <View style={styles.iconWrapper}>
+              <Ionicons name="mail-outline" size={30} color="#5A67F2" />
+            </View>
+            <Text style={styles.menuItemText}>รับ-ส่งต่อ คำสั่งซื้อ</Text>
+          </TouchableOpacity>
+
+          {/* <TouchableOpacity
+            style={styles.menuItem}
             onPress={handleDashboardAdmin}
           >
             <View style={styles.iconWrapper}>
               <Ionicons name="settings-outline" size={30} color="#5A67F2" />
             </View>
             <Text style={styles.menuItemText}>ผู้ดูแลระบบ</Text>
+          </TouchableOpacity> */}
+          {/* <TouchableOpacity
+            style={styles.menuItem}
+            onPress={handleDashboardDelivery}
+          >
+            <View style={styles.iconWrapper}>
+              <Ionicons name="settings-outline" size={30} color="#5A67F2" />
+            </View>
+            <Text style={styles.menuItemText}>ผู้ดูแลระบบ</Text>
+          </TouchableOpacity> */}
+        </View>
+
+        <View style={styles.menuRow}>
+          <TouchableOpacity style={styles.menuItem} onPress={handleMyShop}>
+            <View style={styles.iconWrapper}>
+              <Ionicons name="basket-outline" size={30} color="#5A67F2" />
+            </View>
+            <Text style={styles.menuItemText}>ร้านค้าของคุณ</Text>
           </TouchableOpacity>
+
+          {/* <TouchableOpacity style={styles.menuItem} onPress={handleAddress}>
+            <View style={styles.iconWrapper}>
+              <Ionicons name="location-outline" size={30} color="#5A67F2" />
+            </View>
+            <Text style={styles.menuItemText}>ที่อยู่ผู้ใช้งาน</Text>
+          </TouchableOpacity> */}
         </View>
 
         <LogoutButton onPress={() => logout()}>
@@ -181,21 +232,94 @@ export default observer(function SettingScreen() {
       <View style={styles.containercolor}></View>
     </ScrollView>
   ) : (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        backgroundColor: "white",
-      }}
+    // <View
+    //   style={{
+    //     flex: 1,
+    //     justifyContent: "center",
+    //     backgroundColor: "white",
+    //   }}
+    // >
+    //   <LoginButton onPress={() => router.push("/login")}>
+    //     <SaveButtonText>เข้าสู่ระบบ</SaveButtonText>
+    //   </LoginButton>
+    // </View>
+    <ImageBackground
+      source={backgroundImage}
+      style={styles.backgroundUnlogin}
+      resizeMode="cover"
     >
-      <LoginButton onPress={() => router.push("/login")}>
-        <SaveButtonText>เข้าสู่ระบบ</SaveButtonText>
-      </LoginButton>
-    </View>
+      <View style={styles.containerUnlogin}>
+        <TitleLogin>คุณยังไม่ได้เข้าสู่ระบบ</TitleLogin>
+        <DesLogin>กรุณาเข้าสู่ระบบก่อนใช้งาน</DesLogin>
+        {/* <TouchableOpacity
+          style={styles.loginButtonUnlogin}
+          onPress={() => router.push("/login")}
+        > */}
+        {/* <Text style={styles.buttonTextUnlogin}>เข้าสู่ระบบ</Text> */}
+
+        <LoginButton onPress={() => router.push("/login")}>
+          <SaveButtonText>เข้าสู่ระบบ</SaveButtonText>
+        </LoginButton>
+        {/* </TouchableOpacity> */}
+      </View>
+    </ImageBackground>
   );
 });
 
+export const TitleLogin: any = styled.Text`
+  font-size: 25px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+`;
+
+export const DesLogin: any = styled.Text`
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+`;
+
 const styles = StyleSheet.create({
+  backgroundUnlogin: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  containerUnlogin: {
+    justifyContent: "center",
+    // alignItems: "center",
+    backgroundColor: "white", // Semi-transparent white background
+    // backgroundColor: "rgba(255, 255, 255, 0.8)", // Semi-transparent white background
+    width: 300,
+    height: 300,
+    borderRadius: 15,
+    marginHorizontal: 30,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8,
+  },
+  loginButtonUnlogin: {
+    backgroundColor: "#4CAF50",
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  buttonTextUnlogin: {
+    fontSize: 18,
+    color: "#ffffff",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
   container: {
     flex: 1,
   },

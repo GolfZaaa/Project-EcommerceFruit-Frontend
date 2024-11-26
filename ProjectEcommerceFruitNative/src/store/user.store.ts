@@ -25,6 +25,8 @@ export default class UserStore {
 
         runInAction(() => {
           this.user = res;
+
+          this.setLoadingUser(false);
         });
 
         return res;

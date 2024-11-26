@@ -15,7 +15,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import styled from "styled-components/native";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useStore } from "@/src/store/store";
@@ -23,6 +23,8 @@ import { observer } from "mobx-react-lite";
 import { port } from "@/src/api/agent";
 import { Product } from "@/src/models/Product";
 import { pathImagesApp } from "@/src/constants/RoutePath";
+import MyActivityIndicator from "@/components/MyActivityIndicator";
+import { SafeAreaView } from "react-native-safe-area-context";
 const { width } = Dimensions.get("window");
 
 export default observer(function homeScreen() {
@@ -34,8 +36,12 @@ export default observer(function homeScreen() {
     getProductById,
     getFilterProduct,
   } = useStore().productStore;
-  const { user } = useStore().userStore;
+  const { user, loadingUser } = useStore().userStore;
   const { GetCartItemByUserOrderStore } = useStore().cartStore;
+  const { GetShopByUserId } = useStore().shopUserStore;
+  const { GetAddressByStore } = useStore().addressStore;
+  const { getProductGI, getProductByStore } = useStore().productStore;
+  const { getOrderByStore } = useStore().orderStore;
 
   const router = useRouter();
 
@@ -144,13 +150,54 @@ export default observer(function homeScreen() {
     setSelectedCategory(categoryId);
   };
 
-  return (
-    <ScrollView>
+  const handleEditStoreName = async () => {
+    await GetShopByUserId();
+    await GetAddressByStore();
+    router.push("../storeuser/editname");
+  };
+
+  const handleListproductgi = async () => {
+    await getProductGI(1);
+    router.push("../storeuser/listproductgi");
+  };
+
+  const handleListproduct = () => {
+    getProductByStore(user?.stores[0].id || 0);
+    router.push("../storeuser/listproduct");
+  };
+
+  const handleOrderHistoryStore = () => {
+    getOrderByStore(user?.stores[0].id || 0);
+    router.push("../storeuser/orderhistorystore");
+  };
+
+  return loadingUser ? (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        backgroundColor: "white",
+      }}
+    >
+      <MyActivityIndicator size="large" />
+    </View>
+  ) : (
+    <ScrollView
+      style={{
+        marginTop: -20,
+      }}
+    >
       <Container>
         <View style={styles.navbar}>
-          <TouchableOpacity onPress={toggleDrawer}>
-            <Ionicons name="menu-outline" size={30} color="#333" />
-          </TouchableOpacity>
+          {/* {user?.stores?.length !== undefined && !user?.stores?.length ? (
+            <TouchableOpacity onPress={toggleDrawer}>
+              <Ionicons name="menu-outline" size={30} color="#333" />
+            </TouchableOpacity>
+          ) : (
+            <View></View>
+          )} */}
+
+          <View></View>
 
           <Text style={styles.textNavbar}>ข้อมูลสินค้า</Text>
 
@@ -179,22 +226,31 @@ export default observer(function homeScreen() {
         >
           <Text style={styles.drawerTitle}>เมนูเพิ่มเติม</Text>
 
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={handleEditStoreName}
+          >
             <Ionicons name="cart-outline" size={30} color="#333" />
             <Text style={styles.menuText}>แก้ไขร้านค้า</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={handleListproductgi}
+          >
             <Ionicons name="people-outline" size={30} color="#333" />
             <Text style={styles.menuText}>เพิ่มข้อมูลสินค้า (GI)</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={handleListproduct}>
             <Ionicons name="people-outline" size={30} color="#333" />
             <Text style={styles.menuText}>เพิ่มสินค้า</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={handleOrderHistoryStore}
+          >
             <Ionicons name="people-outline" size={30} color="#333" />
             <Text style={styles.menuText}>รายการคำสั่งซื้อ</Text>
           </TouchableOpacity>
@@ -268,89 +324,164 @@ export default observer(function homeScreen() {
           />
 
           <Modal
-            animationType="slide"
+            animationType="fade"
             transparent={true}
             visible={filterModalVisible}
             onRequestClose={() => setFilterModalVisible(false)}
           >
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "rgba(0, 0, 0, 0.5)",
-              }}
+            <TouchableWithoutFeedback
+              onPress={() => setFilterModalVisible(false)}
             >
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: "bold",
-                  marginBottom: 20,
-                  textAlign: "center",
-                }}
-              >
-                ฟิลเตอร์สินค้า
-              </Text>
-              <Text
-                style={{
-                  fontSize: 15,
-                  marginBottom: 20,
-                }}
-              >
-                ฟิลเตอร์สินค้า
-              </Text>
               <View
                 style={{
-                  marginBottom: 10,
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "rgba(0, 0, 0, 0.5)",
                 }}
               >
-                <Button
-                  title="เรียงจากน้อยไปมาก"
-                  onPress={() => {
-                    setSortPrice(1);
-                    setFilterModalVisible(false);
-                    setSortName("เรียงจากน้อยไปมาก");
+                <View
+                  style={{
+                    width: "70%",
+                    backgroundColor: "white",
+                    borderRadius: 15,
+                    padding: 20,
+                    alignItems: "center",
+                    shadowColor: "#000",
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                    elevation: 5,
                   }}
-                  color={"green"}
-                />
-              </View>
-              <View
-                style={{
-                  marginBottom: 10,
-                }}
-              >
-                <Button
-                  title="เรียงจากมากไปน้อย"
-                  onPress={() => {
-                    setSortPrice(2);
-                    setFilterModalVisible(false);
-                    setSortName("เรียงจากมากไปน้อย");
+                >
+                  <Text
+                    style={{
+                      fontSize: 22,
+                      fontWeight: "bold",
+                      marginBottom: 20,
+                      color: "#333",
+                    }}
+                  >
+                    ตัวกรองสินค้า
+                  </Text>
+
+                  <TouchableWithoutFeedback
+                    onPress={() => setFilterModalVisible(false)}
+                  >
+                    <View
+                      style={{
+                        position: "absolute",
+                        right: 10,
+                        top: 5,
+                      }}
+                    >
+                      <FontAwesome name="times" size={25} color="#F44336" />
+                      {/* <Button
+                      title="ปิด"
+                      onPress={() => setFilterModalVisible(false)}
+                      color="#F44336" // Red
+                    /> */}
+                    </View>
+                  </TouchableWithoutFeedback>
+
+                  {/* <Text
+                  style={{
+                    fontSize: 16,
+                    marginBottom: 20,
+                    color: "#666",
                   }}
-                />
+                >
+                  กรุณาเลือกตัวเลือกการฟิลเตอร์
+                </Text> */}
+
+                  <View
+                    style={{
+                      marginBottom: 15,
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <FontAwesome
+                      name="sort-amount-asc"
+                      size={20}
+                      color="#4CAF50"
+                      style={{ marginRight: 10 }}
+                    />
+                    {/* <Button
+                        title="เรียงจากน้อยไปมาก"
+                        onPress={() => {
+                          setSortPrice(1);
+                          setFilterModalVisible(false);
+                          setSortName("เรียงจากน้อยไปมาก");
+                        }}
+                        color="#4CAF50" // Green
+                      /> */}
+                    <Text
+                      style={{
+                        color: "white",
+                        backgroundColor: "#4CAF50",
+                        padding: 8,
+                        fontSize: 20,
+                      }}
+                      onPress={() => {
+                        setSortPrice(1);
+                        setFilterModalVisible(false);
+                        setSortName("เรียงจากน้อยไปมาก");
+                      }}
+                    >
+                      เรียงจากน้อยไปมาก
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      marginBottom: 15,
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <FontAwesome
+                      name="sort-amount-desc"
+                      size={20}
+                      color="#2196F3"
+                      style={{ marginRight: 10 }}
+                    />
+                    {/* <Button
+                      title="เรียงจากมากไปน้อย"
+                      onPress={() => {
+                        setSortPrice(2);
+                        setFilterModalVisible(false);
+                        setSortName("เรียงจากมากไปน้อย");
+                      }}
+                      color="#2196F3" // Blue
+                    /> */}
+                    <Text
+                      style={{
+                        color: "white",
+                        backgroundColor: "#2196F3",
+                        padding: 8,
+                        fontSize: 20,
+                      }}
+                      onPress={() => {
+                        setSortPrice(2);
+                        setFilterModalVisible(false);
+                        setSortName("เรียงจากมากไปน้อย");
+                      }}
+                    >
+                      เรียงจากมากไปน้อย
+                    </Text>
+                  </View>
+
+                  {/* <View style={{ marginBottom: 15, width: "100%" }}>
+                    <Button
+                      title="กรองตามหมวดหมู่"
+                      onPress={() => alert("กรองตามหมวดหมู่")}
+                      color="#FF9800" // Orange
+                    />
+                  </View> */}
+                </View>
               </View>
-              <View
-                style={{
-                  marginBottom: 10,
-                }}
-              >
-                <Button
-                  title="ฟิลเตอร์ตามหมวดหมู่"
-                  onPress={() => alert("ฟิลเตอร์ตามหมวดหมู่")}
-                  color={"orange"}
-                />
-              </View>
-              <View
-                style={{
-                  marginBottom: 10,
-                }}
-              >
-                <Button
-                  title="ปิด"
-                  onPress={() => setFilterModalVisible(false)}
-                  color="red"
-                />
-              </View>
-            </View>
+            </TouchableWithoutFeedback>
           </Modal>
         </View>
       </Container>

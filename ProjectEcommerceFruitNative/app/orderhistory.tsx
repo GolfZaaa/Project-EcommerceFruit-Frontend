@@ -41,9 +41,7 @@ const data = [
 ];
 
 const OrderHistoryScreen = () => {
-  const { order, totalPriceMyOrder } = useStore().orderStore;
-
-  let totalPrice = useRef<number>(0);
+  const { order } = useStore().orderStore;
 
   // const [orders] = useState(data);
   const navigation = useNavigation();
@@ -62,7 +60,7 @@ const OrderHistoryScreen = () => {
   ]);
 
   const renderScene = SceneMap({
-    first: () => <TabOrderScreen item={order} totalPrice={totalPrice} />, //ทั้งหมด
+    first: () => <TabOrderScreen item={order} index={null} />, //ทั้งหมด
     // second: () => (
     //   <TabOrderScreen
     //     item={order?.filter((item) => item?.paymentImage === null)} //ที่ต้องชำระ
@@ -73,7 +71,7 @@ const OrderHistoryScreen = () => {
         item={order.filter(
           (item) => item?.paymentImage !== null && item?.status === 0 //กำลังรออนุมัติ
         )}
-        totalPrice={totalPrice}
+        index={null}
       />
     ),
     fourth: () => (
@@ -85,7 +83,7 @@ const OrderHistoryScreen = () => {
             item.confirmReceipt !== 1 && //อนุมัติแล้ว
             item.confirmReceipt !== 2
         )}
-        totalPrice={totalPrice}
+        index={null}
       />
     ),
     fifth: () => (
@@ -99,7 +97,7 @@ const OrderHistoryScreen = () => {
               item?.confirmReceipt === 0 &&
               item?.status !== 2
         )}
-        totalPrice={totalPrice}
+        index={5}
       />
     ),
     sixth: () => (
@@ -107,7 +105,7 @@ const OrderHistoryScreen = () => {
         item={order.filter(
           (item) => item?.status === 1 && item?.confirmReceipt === 1 //สำเร็จแล้ว
         )}
-        totalPrice={totalPrice}
+        index={null}
       />
     ),
     seventh: () => (
@@ -115,7 +113,7 @@ const OrderHistoryScreen = () => {
         item={order.filter(
           (item) => item?.status === 2 || item?.confirmReceipt === 2 //ยกเลิกแล้ว
         )}
-        totalPrice={totalPrice}
+        index={null}
       />
     ),
   });
@@ -177,10 +175,6 @@ const OrderHistoryScreen = () => {
       // ]}
     />
   );
-
-  useEffect(() => {}, [totalPrice.current]);
-
-  console.log("totalPrice his", totalPrice);
 
   return (
     <Container>

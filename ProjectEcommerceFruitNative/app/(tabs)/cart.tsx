@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,6 +17,7 @@ import { observer } from "mobx-react-lite";
 import { Checkbox, IconButton } from "react-native-paper";
 import { LoginButton, SaveButtonText } from "./setting";
 import { Product } from "@/src/models/Product";
+import { Mytoast } from "@/components/MyToast";
 
 export const formatNumberWithCommas = (number: number) => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -89,7 +91,12 @@ export default observer(function CartScreen() {
 
   const handleCartDetail = async () => {
     if (selectMyCart.length === 0) {
-      alert("กรุณาเลือกร้านค้าที่ท่านจะซื้อก่อน");
+      Alert.alert("เกิดข้อผิดพลาด", "กรุณาเลือกร้านค้าที่ท่านจะซื้อก่อน", [
+        {
+          text: "ตกลง",
+        },
+      ]);
+      Mytoast("กรุณาเลือกร้านค้าที่ท่านจะซื้อก่อน");
     } else {
       await getAddressgotoOrderByUserId().then((res) => {
         console.log("res", res);

@@ -7,16 +7,27 @@ import {
   Animated,
   Dimensions,
   TouchableWithoutFeedback,
+  ImageBackground,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useStore } from "@/src/store/store";
+import { observer } from "mobx-react-lite";
+import { Divider } from "react-native-paper";
+import { DesLogin, LoginButton, SaveButtonText, TitleLogin } from "./setting";
+import { Title } from "../editaddress";
+import { pathImagesApp } from "@/src/constants/RoutePath";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
 
-export default function ShopScreen() {
+export default observer(function ShopScreen() {
   const { GetShopByUserId } = useStore().shopUserStore;
   const { GetAddressByStore } = useStore().addressStore;
+  const { getProductGI, getProductByStore } = useStore().productStore;
+  const { user } = useStore().userStore;
+  const { getOrderByStore } = useStore().orderStore;
+  const { systemSetting } = useStore().systemSettingStore;
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const slideAnim = useRef(new Animated.Value(-width)).current;
@@ -43,19 +54,68 @@ export default function ShopScreen() {
     router.push("../storeuser/editname");
   };
 
-  const handleListproductgi = () => {
+  const handleListproductgi = async () => {
+    await getProductGI(1);
     router.push("../storeuser/listproductgi");
   };
 
   const handleListproduct = () => {
+    getProductByStore(user?.stores[0].id || 0);
     router.push("../storeuser/listproduct");
   };
 
   const handleOrderHistoryStore = () => {
+    getOrderByStore(user?.stores[0].id || 0);
     router.push("../storeuser/orderhistorystore");
   };
 
-  return (
+  // if (!!user?.stores?.length === false) {
+  //   return router.push("../storeuser/editname");
+  // }
+
+  const backgroundImage = {
+    uri: pathImagesApp.image_web + systemSetting[0].image,
+  };
+
+  return !user?.stores?.length ? (
+    // <View
+    //   style={{
+    //     flex: 1,
+    //     justifyContent: "center",
+    //     backgroundColor: "white",
+    //   }}
+    // >
+    //   <Title>คุณไม่ได้ลงทะเบียนร้านค้า</Title>
+    //   <LoginButton onPress={() => router.push("../storeuser/editname")}>
+    //     <SaveButtonText>ลงทะเบียนร้านค้าเลย!</SaveButtonText>
+    //   </LoginButton>
+    // </View>
+    // <SafeAreaView
+    //   style={{
+    //     flex: 1,
+    //   }}
+    // >
+    <ImageBackground
+      source={backgroundImage}
+      style={styles.backgroundUnlogin}
+      resizeMode="cover"
+    >
+      <View style={styles.containerUnlogin}>
+        <TitleLogin>คุณไม่ได้ลงทะเบียนร้านค้า</TitleLogin>
+        {/* <TouchableOpacity
+          style={styles.loginButtonUnlogin}
+          onPress={() => router.push("/login")}
+        > */}
+        {/* <Text style={styles.buttonTextUnlogin}>เข้าสู่ระบบ</Text> */}
+
+        <LoginButton onPress={() => router.push("/storeuser/editname")}>
+          <SaveButtonText>ลงทะเบียนร้านค้าเลย!</SaveButtonText>
+        </LoginButton>
+        {/* </TouchableOpacity> */}
+      </View>
+    </ImageBackground>
+  ) : (
+    // </SafeAreaView>
     <View style={styles.container}>
       <TouchableOpacity style={styles.burgerIcon} onPress={toggleDrawer}>
         <Ionicons name="menu-outline" size={30} color="#333" />
@@ -129,9 +189,46 @@ export default function ShopScreen() {
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
+  backgroundUnlogin: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  containerUnlogin: {
+    justifyContent: "center",
+    // alignItems: "center",
+    backgroundColor: "white", // Semi-transparent white background
+    // backgroundColor: "rgba(255, 255, 255, 0.8)", // Semi-transparent white background
+    width: 320,
+    height: 200,
+    borderRadius: 15,
+    marginHorizontal: 30,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8,
+  },
+  loginButtonUnlogin: {
+    backgroundColor: "#4CAF50",
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  buttonTextUnlogin: {
+    fontSize: 18,
+    color: "#ffffff",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
   container: {
     flex: 1,
     padding: 20,

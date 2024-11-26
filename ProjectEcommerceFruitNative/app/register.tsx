@@ -14,6 +14,8 @@ import { router } from "expo-router";
 import { useStore } from "@/src/store/store";
 import { ButtonGradient } from "./login";
 import axios from "axios";
+import { Label } from "./storeuser/createproductgi";
+import { Mytoast } from "@/components/MyToast";
 // import pathsPubilc from '@/path/publicpath';
 
 export default function RegisterScreen() {
@@ -27,13 +29,23 @@ export default function RegisterScreen() {
   const handleRegister = async () => {
     if (fullName && phone && password && confirmPassword) {
       if (password !== confirmPassword) {
-        Alert.alert("ข้อผิดพลาด", "รหัสผ่านไม่ตรงกัน");
+        Alert.alert("เกิดข้อผิดพลาด", "รหัสผ่านไม่ตรงกัน", [
+          {
+            text: "ตกลง",
+          },
+        ]);
+        Mytoast("รหัสผ่านไม่ตรงกัน");
       } else {
         const result = await onRegister();
         console.log("result register : ", result);
 
         if (result === 400) {
-          Alert.alert("ไม่สามารถลงทะเบียนได้", "มีเบอร์โทรศัพท์นี้แล้ว");
+          Alert.alert("เกิดข้อผิดพลาด", "มีเบอร์โทรศัพท์นี้แล้ว", [
+            {
+              text: "ตกลง",
+            },
+          ]);
+          Mytoast("มีเบอร์โทรศัพท์นี้แล้ว");
         } else {
           Alert.alert("ลงทะเบียนสำเร็จ", `ยินดีต้อนรับ, ${phone}!`, [
             {
@@ -49,7 +61,12 @@ export default function RegisterScreen() {
         }
       }
     } else {
-      Alert.alert("ข้อผิดพลาด", "กรุณากรอกข้อมูลให้ครบถ้วน");
+      Alert.alert("เกิดข้อผิดพลาด", "กรุณากรอกข้อมูลให้ครบถ้วน", [
+        {
+          text: "ตกลง",
+        },
+      ]);
+      Mytoast("กรุณากรอกข้อมูลให้ครบถ้วน");
     }
   };
 
@@ -74,12 +91,15 @@ export default function RegisterScreen() {
         <Title>สร้างบัญชี</Title>
         <SubTitle>ลงทะเบียนเพื่อเริ่มต้นใช้งาน</SubTitle>
 
+        <Label name="ชื่อผู้ใช้" valid={false} />
         <Input
           placeholder="ชื่อผู้ใช้"
           value={fullName}
           onChangeText={setFullName}
           autoCapitalize="none"
         />
+
+        <Label name="เบอร์โทรศัพท์" valid={false} />
         <Input
           placeholder="เบอร์โทรศัพท์"
           value={phone}
@@ -94,12 +114,15 @@ export default function RegisterScreen() {
           keyboardType="phone-pad"
         />
 
+        <Label name="รหัสผ่าน" valid={false} />
         <Input
           placeholder="รหัสผ่าน"
           value={password}
           onChangeText={setPassword}
           secureTextEntry={true}
         />
+
+        <Label name="ยืนยันรหัสผ่าน" valid={false} />
         <Input
           placeholder="ยืนยันรหัสผ่าน"
           value={confirmPassword}

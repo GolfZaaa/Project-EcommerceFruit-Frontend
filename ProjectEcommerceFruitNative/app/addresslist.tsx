@@ -8,9 +8,17 @@ import { LinearGradient } from "expo-linear-gradient";
 import styled from "styled-components/native";
 import { Address } from "@/src/models/Address";
 import { observer } from "mobx-react-lite";
+import { Switch } from "react-native-paper";
 
 const AddressList = () => {
-  const { myAddress, removeAddressById } = useStore().addressStore;
+  const {
+    myAddress,
+    removeAddressById,
+    isUsedAddress,
+    getAddressByUserId,
+    getAddressgotoOrderByUserId,
+  } = useStore().addressStore;
+  const { user } = useStore().userStore;
 
   const navigation = useNavigation();
 
@@ -45,55 +53,132 @@ const AddressList = () => {
     ]);
   };
 
-  const renderItem = ({ item }: { item: Address }) => (
-    <Card>
-      <CardText>บ้านเลขที่ {item.detail}</CardText>
-      <CardDescription>
-        ตำบล {item.subDistrict} อำเภอ {item.district}
-      </CardDescription>
-      <CardDescription>
-        จังหวัด {item.province} {item.postCode}
-      </CardDescription>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <View
-          style={{
-            width: 150,
-          }}
-        >
-          <Button
-            onPress={() =>
-              router.push({
-                pathname: "/editaddress",
-                params: {
-                  title: "แก้ไขที่อยู่",
-                  data: JSON.stringify(item),
-                  setting: JSON.stringify(true),
-                },
-              })
-            }
-          >
-            <ButtonText>แก้ไข</ButtonText>
-          </Button>
-        </View>
-        <View
-          style={{
-            width: 150,
-          }}
-        >
-          <ButtonRemove onPress={() => onRemoveAddress(item.id)}>
-            <ButtonText>ลบ</ButtonText>
-          </ButtonRemove>
-        </View>
-      </View>
-    </Card>
-  );
+  const RenderItem = ({ item }: { item: Address }) => {
+    const onToggleSwitch = async (addressId: number, storeormine: boolean) => {
+      await isUsedAddress({ addressId, storeormine });
+      getAddressByUserId();
+      getAddressgotoOrderByUserId();
+    };
 
-  console.log("myAddress", myAddress);
+    const getAddressTitle = () => {
+      if (item.isUsed) return "ที่อยู่สั่งซื้อ";
+      if (item.isUsed_Store) return "ที่อยู่ร้านค้า";
+      return null;
+    };
+
+    const addressTitle = getAddressTitle();
+
+    return (
+      <Card isStore={item.isUsed_Store}>
+        <View
+          style={{
+            flex: 1,
+            alignItems: "flex-end",
+          }}
+        >
+          {addressTitle && <CardTitle>{addressTitle}</CardTitle>}
+        </View>
+
+        <CardText>บ้านเลขที่ {item.detail}</CardText>
+
+        <CardDescription>
+          ตำบล {item.subDistrict} อำเภอ {item.district}
+        </CardDescription>
+        <CardDescription>
+          จังหวัด {item.province} {item.postCode}
+        </CardDescription>
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+            }}
+          >
+            {!!user?.stores.length === true && (
+              <>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 18,
+                  }}
+                >
+                  ที่อยู่ร้านค้า
+                </Text>
+
+                <Switch
+                  value={item.isUsed_Store}
+                  onValueChange={() => onToggleSwitch(item.id, true)}
+                />
+              </>
+            )}
+          </View>
+          <View
+            style={{
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 18,
+              }}
+            >
+              ตั้งเป็นที่อยู่สั่งซื้อ
+            </Text>
+
+            <Switch
+              value={item.isUsed}
+              onValueChange={() => onToggleSwitch(item.id, false)}
+            />
+          </View>
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <View
+            style={{
+              width: 150,
+            }}
+          >
+            <Button
+              onPress={() =>
+                router.push({
+                  pathname: "/editaddress",
+                  params: {
+                    title: "แก้ไขที่อยู่",
+                    data: JSON.stringify(item),
+                    setting: JSON.stringify(true),
+                    isStore: JSON.stringify(false),
+                  },
+                })
+              }
+            >
+              <ButtonText>แก้ไข</ButtonText>
+            </Button>
+          </View>
+          <View
+            style={{
+              width: 150,
+            }}
+          >
+            <ButtonRemove onPress={() => onRemoveAddress(item.id)}>
+              <ButtonText>ลบ</ButtonText>
+            </ButtonRemove>
+          </View>
+        </View>
+      </Card>
+    );
+  };
 
   return (
     <Container>
@@ -116,9 +201,10 @@ const AddressList = () => {
           router.push({
             pathname: "/editaddress",
             params: {
-              title: "แก้ไขที่อยู่",
+              title: "เพิ่มที่อยู่",
               data: JSON.stringify({ id: 0 }),
               setting: JSON.stringify(true),
+              isStore: JSON.stringify(false),
             },
           })
         }
@@ -129,7 +215,7 @@ const AddressList = () => {
       <FlatList
         data={myAddress}
         keyExtractor={(item) => item.user.fullName + item.id}
-        renderItem={renderItem}
+        renderItem={({ item }) => <RenderItem item={item} />}
       />
     </Container>
   );
@@ -137,11 +223,11 @@ const AddressList = () => {
 
 export default observer(AddressList);
 
-const Card: any = styled(LinearGradient).attrs({
-  colors: ["#ffffff", "#f7f9fc"],
+const Card: any = styled(LinearGradient).attrs((props: any) => ({
+  colors: ["#f7f9fc", props.isStore ? "powderblue" : "#ffffff"], // กำหนด colors ตาม props ถ้าไม่มีใช้ค่าเริ่มต้น
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
-})`
+}))`
   border-radius: 15px;
   padding: 20px;
   margin-bottom: 15px;
@@ -156,6 +242,16 @@ const CardText: any = styled.Text`
   color: #333;
   font-weight: bold;
   margin-bottom: 10px;
+`;
+
+const CardTitle: any = styled.Text`
+  font-size: 25px;
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 10px;
+  background-color: red;
+  padding: 5px 15px;
+  border-radius: 20px;
 `;
 
 const CardDescription: any = styled.Text`

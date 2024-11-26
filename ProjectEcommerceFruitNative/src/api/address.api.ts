@@ -10,5 +10,5 @@ export const Address = {
   removeAddressById: (id: number) =>
     requests.delete(`Address/RemoveAddressById?addressId=${id}`),
   isUsedAddress: (values: any) =>
-    requests.post(`Address/IsUsedAddress`, createFormData(values)),
+    requests.postForm(`Address/IsUsedAddress`, createFormData(values)),
 };

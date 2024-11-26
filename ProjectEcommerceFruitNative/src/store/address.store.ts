@@ -50,6 +50,8 @@ export default class AddressStore {
       const result = await agent.Address.createUpdateAddress(values);
       store.systemSettingStore.setLoading(false);
 
+      this.getAddressgotoOrderByUserId();
+
       return result;
     } catch (error) {
       return error;
@@ -63,6 +65,8 @@ export default class AddressStore {
       console.log("resul t : ", result);
 
       await this.getAddressByUserId();
+
+      this.getAddressgotoOrderByUserId();
 
       return result;
     } catch (error) {

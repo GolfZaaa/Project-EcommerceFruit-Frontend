@@ -13,6 +13,8 @@ import styled from "styled-components/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useStore } from "@/src/store/store";
+import { Label } from "./storeuser/createproductgi";
+import { Mytoast } from "@/components/MyToast";
 
 export default function LoginScreen() {
   const { login } = useStore().commonStore;
@@ -40,6 +42,7 @@ export default function LoginScreen() {
       }
     } else {
       Alert.alert("ข้อมูลไม่ครบ", "กรุณากรอกเบอร์โทรศัพท์และรหัสผ่าน");
+      Mytoast("กรุณากรอกเบอร์โทรศัพท์และรหัสผ่าน");
     }
   };
 
@@ -55,6 +58,7 @@ export default function LoginScreen() {
         <Title>ยินดีต้อนรับ!</Title>
         <SubTitle>เข้าสู่ระบบบัญชีของคุณ</SubTitle>
 
+        <Label name="เบอร์โทรศัพท์" valid={false} />
         <Input
           placeholder="เบอร์โทรศัพท์"
           value={phone}
@@ -68,6 +72,8 @@ export default function LoginScreen() {
           autoCapitalize="none"
           keyboardType="phone-pad"
         />
+
+        <Label name="รหัสผ่าน" valid={false} />
         <Input
           placeholder="รหัสผ่าน"
           value={password}
@@ -79,11 +85,11 @@ export default function LoginScreen() {
           <ButtonText>เข้าสู่ระบบ</ButtonText>
         </ButtonGradient>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => Alert.alert("ลืมรหัสผ่าน", "ไปที่หน้าลืมรหัสผ่าน")}
         >
           <LinkText>ลืมรหัสผ่าน?</LinkText>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity onPress={() => router.push("/register")}>
           <LinkText>ยังไม่มีบัญชี? ลงทะเบียน</LinkText>

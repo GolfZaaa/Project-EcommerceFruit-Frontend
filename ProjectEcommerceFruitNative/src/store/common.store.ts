@@ -50,10 +50,20 @@ export default class CommonStore {
         .then((res) => {
           if (res === "PhoneNumber Wrong") {
             // Mytoast("โปรดตรวจสอบเบอร์โทรศัพท์อีกครั้ง!");
-            Alert.alert("ข้อมูลไม่ครบ", "โปรดตรวจสอบเบอร์โทรศัพท์อีกครั้ง!");
+            Alert.alert("ข้อมูลไม่ครบ", "โปรดตรวจสอบเบอร์โทรศัพท์อีกครั้ง!", [
+              {
+                text: "ตกลง",
+              },
+            ]);
+            Mytoast("โปรดตรวจสอบเบอร์โทรศัพท์อีกครั้ง!");
           } else if (res === "Password Wrong") {
             // Mytoast("โปรดตรวจสอบรหัสผ่านอีกครั้ง!");
-            Alert.alert("ข้อมูลไม่ครบ", "โปรดตรวจสอบรหัสผ่านอีกครั้ง!");
+            Alert.alert("ข้อมูลไม่ครบ", "โปรดตรวจสอบรหัสผ่านอีกครั้ง!", [
+              {
+                text: "ตกลง",
+              },
+            ]);
+            Mytoast("โปรดตรวจสอบรหัสผ่านอีกครั้ง!");
           } else {
             runInAction(() => {
               this.setToken(res);
@@ -61,7 +71,7 @@ export default class CommonStore {
               this.setLoadingCommon(false);
             });
 
-            router.replace("/(tabs)");
+            router.replace("/(tabs)/");
           }
         })
         .catch((err) => {});
@@ -107,6 +117,12 @@ export default class CommonStore {
     this.token = null;
     store.userStore.setUser(null);
     store.cartStore.setSartItemsStore([]);
+    store.shopUserStore.setUserShop(null);
+    store.addressStore.setAddress(null);
+    store.addressStore.setAddressa(null);
+    store.addressStore.setAddressb(null);
+    store.orderStore.setOrderSearch(null);
+    store.orderStore.setOrderForward(null);
     router.push("/login");
   };
 }

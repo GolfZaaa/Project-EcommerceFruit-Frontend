@@ -6,6 +6,7 @@ import { Category, ProductGI } from "../models/ProductGI";
 
 export default class ProductStore {
   product: Product[] = [];
+  productStore: Product[] = [];
   productDetail: Product | null = null;
   productGI: ProductGI[] = [];
   category: Category[] = [];
@@ -50,7 +51,7 @@ export default class ProductStore {
   getProductByStore = async (storeId: number) => {
     try {
       const result = await agent.Product.getProductByStore(storeId);
-      this.product = result;
+      this.productStore = result;
     } catch (error) {
       return error;
     }

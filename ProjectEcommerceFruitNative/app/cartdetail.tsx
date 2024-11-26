@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  Alert,
 } from "react-native";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
@@ -173,7 +174,12 @@ export default observer(function CartDetailScreen() {
     console.log("Data", Data);
 
     if (value === "") {
-      alert("กรุณาเลือกวิธีการชำระเงิน");
+      Alert.alert("เกิดข้อผิดพลาด", "กรุณาเลือกวิธีการชำระเงิน", [
+        {
+          text: "ตกลง",
+        },
+      ]);
+      Mytoast("กรุณาเลือกวิธีการชำระเงิน");
     } else {
       if (value === "image") {
         if (image !== null) {
@@ -184,13 +190,22 @@ export default observer(function CartDetailScreen() {
           if (typeof test === "number") {
             router.push("/successscreen");
           } else {
-            alert("เกิดข้อผิดพลาด");
+            Alert.alert("เกิดข้อผิดพลาด", "เกิดข้อผิดพลาด", [
+              {
+                text: "ตกลง",
+              },
+            ]);
             Mytoast("เกิดข้อผิดพลาด");
           }
 
           // alert("เริ่มการชำระเงินได้");
         } else {
-          alert("กรุณาเพิ่มรูปภาพ");
+          Alert.alert("เกิดข้อผิดพลาด", "กรุณาเพิ่มรูปภาพ", [
+            {
+              text: "ตกลง",
+            },
+          ]);
+          Mytoast("กรุณาเพิ่มรูปภาพ");
         }
       }
     }

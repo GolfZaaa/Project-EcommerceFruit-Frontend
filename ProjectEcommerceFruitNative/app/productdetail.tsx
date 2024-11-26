@@ -7,6 +7,8 @@ import {
   LayoutAnimation,
   Dimensions,
   ToastAndroid,
+  TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import styled from "styled-components/native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -17,6 +19,8 @@ import RenderHTML from "react-native-render-html";
 import { htmlToText } from "html-to-text";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Mytoast } from "@/components/MyToast";
 
 export default function ProductDetailsScreen() {
   const navigation = useNavigation();
@@ -29,6 +33,12 @@ export default function ProductDetailsScreen() {
 
   const [quantity, setQuantity] = useState(1);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const [preViewImage, setPreViewImage] = useState<any>(null);
+
+  const myProduct =
+    user?.id !== undefined &&
+    user?.id === productDetail?.productGI?.store?.user?.id;
 
   const increaseQuantity = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
@@ -58,7 +68,16 @@ export default function ProductDetailsScreen() {
       //   Quantity: quantity,
       // });
     } else {
-      alert("กรุณาเข้าสู่ระบบก่อนทำการเพิ่มสินค้าลงตะกร้า");
+      Alert.alert(
+        "เกิดข้อผิดพลาด",
+        "กรุณาเข้าสู่ระบบก่อนทำการเพิ่มสินค้าลงตะกร้า",
+        [
+          {
+            text: "ตกลง",
+          },
+        ]
+      );
+      Mytoast("กรุณาเข้าสู่ระบบก่อนทำการเพิ่มสินค้าลงตะกร้า");
     }
   };
 
@@ -73,7 +92,7 @@ export default function ProductDetailsScreen() {
   };
 
   return (
-    <View>
+    <SafeAreaView>
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={{
@@ -90,9 +109,42 @@ export default function ProductDetailsScreen() {
         <Container>
           <ProductImage
             source={{
-              uri: pathImagesApp.product + productDetail?.images,
+              uri: !!preViewImage
+                ? preViewImage
+                : pathImagesApp.product + productDetail?.images,
             }}
           />
+
+          <ScrollView
+            horizontal
+            style={{
+              flexDirection: "row",
+            }}
+          >
+            {productDetail?.productGI.images.map((item, i) => (
+              <TouchableWithoutFeedback
+                onPress={() =>
+                  setPreViewImage(
+                    preViewImage === pathImagesApp.product_GI + item.imageName
+                      ? pathImagesApp.product + productDetail?.images
+                      : pathImagesApp.product_GI + item.imageName
+                  )
+                }
+              >
+                <ProductImages
+                  isMarginRight={
+                    productDetail?.productGI.images.length === i + 1
+                  }
+                  isImageMain={
+                    preViewImage === pathImagesApp.product_GI + item.imageName
+                  }
+                  source={{
+                    uri: pathImagesApp.product_GI + item.imageName,
+                  }}
+                />
+              </TouchableWithoutFeedback>
+            ))}
+          </ScrollView>
 
           <ProductTitle>{productDetail?.productGI.name}</ProductTitle>
 
@@ -106,37 +158,44 @@ export default function ProductDetailsScreen() {
 
           <ProductDescription>{plainText}</ProductDescription>
 
-          <QuantityContainer>
-            <QuantityButton onPress={decreaseQuantity}>
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: 24,
-                  width: 10,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                -
-              </Text>
-            </QuantityButton>
-            <QuantityText>{quantity}</QuantityText>
-            <QuantityButton onPress={increaseQuantity}>
-              <Text style={{ color: "#fff", fontSize: 24 }}>+</Text>
-            </QuantityButton>
-          </QuantityContainer>
+          {!myProduct && (
+            <QuantityContainer>
+              <QuantityButton onPress={decreaseQuantity}>
+                <Text
+                  style={{
+                    color: "#fff",
+                    fontSize: 24,
+                    width: 10,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  -
+                </Text>
+              </QuantityButton>
+              <QuantityText>{quantity}</QuantityText>
+              <QuantityButton onPress={increaseQuantity}>
+                <Text style={{ color: "#fff", fontSize: 24 }}>+</Text>
+              </QuantityButton>
+            </QuantityContainer>
+          )}
 
           <TouchableOpacity
             style={{
-              backgroundColor: "#ff6f61",
+              backgroundColor: myProduct ? "gray" : "#ff6f61",
               padding: 15,
               borderRadius: 30,
               alignItems: "center",
               marginTop: 20,
             }}
-            onPress={() => onAddtoCart()}
+            activeOpacity={myProduct ? 1 : 0}
+            onPress={() => !myProduct && onAddtoCart()}
           >
-            <ButtonText>เพิ่มในตะกร้า ({quantity})</ButtonText>
+            <ButtonText>
+              {myProduct
+                ? "นี่คือสินค้าในร้านของคุณ"
+                : `เพิ่มในตะกร้า (${quantity})`}
+            </ButtonText>
           </TouchableOpacity>
 
           {/* <DropdownButton onPress={toggleDropdown}>
@@ -148,7 +207,7 @@ export default function ProductDetailsScreen() {
           )}
         </Container>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -167,6 +226,15 @@ const ProductImage: any = styled.Image`
   border-radius: 20px;
   margin-bottom: 20px;
   margin-top: 70px;
+`;
+
+const ProductImages: any = styled.Image`
+  width: 90px;
+  height: 90px;
+  border-radius: 20px;
+  margin-right: ${(prop: any) => (prop.isMarginRight ? "0" : "20px")};
+  border-width: 2px;
+  border-color: ${(prop: any) => (prop.isImageMain ? "red" : "white")};
 `;
 
 const ProductTitle: any = styled.Text`

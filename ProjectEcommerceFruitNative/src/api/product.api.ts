@@ -8,7 +8,7 @@ export const Product = {
   getProductByStore: (storeId: number) =>
     requests.get(`Product/GetProductByStore?storeId=${storeId}`),
   createUpdateProduct: (values: any) =>
-    requests.post(`Product/CreateUpdateProduct`, createFormData(values)),
+    requests.postForm(`Product/CreateUpdateProduct`, createFormData(values)),
   getProductById: (productId: number) =>
     requests.get(`Product/GetProductById?productId=${productId}`),
   removeProduct: (productId: number) =>
@@ -25,13 +25,20 @@ export const Product = {
   getProductGI: (id?: any | null) =>
     requests.get(`ProductGI/GetProductGI?id=${id}`),
   createUpdateProductGI: (values: any, files: any) => {
+    console.log("values :: ", values);
+    console.log("files :: ", files);
+
     const data = createFormData(values);
 
-    for (var formfile of files) {
-      data.append("formFiles", formfile);
+    if (files !== null) {
+      for (var formfile of files) {
+        data.append("formFiles", formfile);
+      }
     }
 
-    return requests.post(`ProductGI/CreateUpdateProductGI`, data);
+    console.log("data", ...Object.values(data));
+
+    return requests.postForm(`ProductGI/CreateUpdateProductGI`, data);
   },
   removeProductGI: (id: number) =>
     requests.delete(`ProductGI/RemoveProductGI?productGIId=${id}`),

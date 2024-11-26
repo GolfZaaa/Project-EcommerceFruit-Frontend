@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import React, { useState } from "react";
 import styled from "styled-components/native";
 import { Order } from "@/src/models/Order";
@@ -10,14 +10,32 @@ import { useStore } from "@/src/store/store";
 
 const TabOrderScreen = ({
   item,
-  totalPrice: myTotalPrice,
+  index,
 }: {
   item: Order[];
-  totalPrice: any;
+  index: number | null;
 }) => {
-  const { setTotalPriceMyOrder } = useStore().orderStore;
+  const { changeConfirmReceiptOrder } = useStore().orderStore;
 
-  console.log("myTotalPrice", myTotalPrice);
+  const handleConfirm = (values: any) => {
+    Alert.alert(
+      "ท่านแน่ใจหรือไม่ว่าได้รับสินค้าแล้ว",
+      "หากยืนยันแล้ว จะไม่สามารถเปลี่ยนกลับได้",
+      [
+        {
+          text: "ยกเลิก",
+          onPress: () => console.log("cancel successfully"),
+        },
+        {
+          text: "ยืนยัน",
+          onPress: async () =>
+            await changeConfirmReceiptOrder(values).then((res) => {
+              console.log("res as : ", res);
+            }),
+        },
+      ]
+    );
+  };
 
   return item.length ? (
     <ScrollView>
@@ -108,6 +126,43 @@ const TabOrderScreen = ({
               </TotalContainer>
             )}
 
+            {more === true && index === 5 && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginVertical: 20,
+                }}
+              >
+                <View
+                  style={{
+                    width: 150,
+                  }}
+                >
+                  <Button
+                    onPress={() =>
+                      handleConfirm({ orderId: item.id, status: 1 })
+                    }
+                  >
+                    <ButtonText>ได้รับสินค้าแล้ว</ButtonText>
+                  </Button>
+                </View>
+                <View
+                  style={{
+                    width: 150,
+                  }}
+                >
+                  <ButtonRemove
+                    onPress={() =>
+                      handleConfirm({ orderId: item.id, status: 2 })
+                    }
+                  >
+                    <ButtonText>ไม่ได้รับสินค้า</ButtonText>
+                  </ButtonRemove>
+                </View>
+              </View>
+            )}
+
             <TouchableOpacity
               onPress={() => handleMore(item)}
               style={{
@@ -189,7 +244,7 @@ const OrderStatus: any = styled.Text`
       : "gray"};
 `;
 
-const TotalContainer = styled.View`
+export const TotalContainer = styled.View`
   background-color: #ff8c00;
   padding: 25px;
   border-top-left-radius: 20px;
@@ -203,19 +258,39 @@ const TotalContainer = styled.View`
   margin: 10px;
 `;
 
-const TotalRow = styled.View`
+export const TotalRow = styled.View`
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 15px;
 `;
 
-const TotalText = styled.Text`
+export const TotalText = styled.Text`
   font-size: 20px;
   color: #333;
 `;
 
-const TotalAmount = styled.Text`
+export const TotalAmount = styled.Text`
   font-size: 20px;
   color: #333;
+  font-weight: bold;
+`;
+
+const Button: any = styled.TouchableOpacity`
+  background-color: #007bff;
+  padding: 10px;
+  border-radius: 8px;
+  align-items: center;
+`;
+
+const ButtonRemove: any = styled.TouchableOpacity`
+  background-color: red;
+  padding: 10px;
+  border-radius: 8px;
+  align-items: center;
+`;
+
+const ButtonText: any = styled.Text`
+  color: #fff;
+  font-size: 16px;
   font-weight: bold;
 `;

@@ -1,16 +1,23 @@
-import React from 'react';
-import { View, Text, FlatList, Switch, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  Switch,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const users = [
-  { id: 1, name: 'Admin1', phone: '0123456789', status: true },
-  { id: 2, name: 'User Haha', phone: '0987654321', status: true },
-  { id: 3, name: '1', phone: '1111111111', status: true },
-  { id: 4, name: '2', phone: '2222222222', status: true },
+  { id: 1, name: "Admin1", phone: "0123456789", status: true },
+  { id: 2, name: "User Haha", phone: "0987654321", status: true },
+  { id: 3, name: "1", phone: "1111111111", status: true },
+  { id: 4, name: "2", phone: "2222222222", status: true },
 ];
 
 const ListUser = () => {
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: any) => (
     <View style={styles.row}>
       <Text style={styles.cell}>{item.id}</Text>
       <Text style={styles.cell}>{item.name}</Text>
@@ -55,24 +62,24 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   header: {
-    flexDirection: 'row',
-    backgroundColor: '#f0f0f0',
+    flexDirection: "row",
+    backgroundColor: "#f0f0f0",
     paddingVertical: 10,
   },
   headerCell: {
     flex: 1,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
     paddingVertical: 10,
   },
   cell: {
     flex: 1,
-    textAlign: 'center',
-    justifyContent: 'center',
+    textAlign: "center",
+    justifyContent: "center",
   },
 });

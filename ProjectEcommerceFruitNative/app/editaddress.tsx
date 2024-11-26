@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
@@ -16,6 +17,7 @@ import SelectDropdown from "react-native-select-dropdown";
 import { useStore } from "@/src/store/store";
 import { Mytoast } from "@/components/MyToast";
 import { observer } from "mobx-react-lite";
+import { Label } from "./storeuser/createproductgi";
 
 export const Container: any = styled(LinearGradient).attrs({
   colors: ["#E8F0FF", "#F7F9FC"],
@@ -37,11 +39,13 @@ export const Title: any = styled.Text`
 
 export default observer(function EditAddressScreen() {
   const params = useLocalSearchParams();
-  const { title, data: dAtA, goto, setting }: any = params;
+  const { title, data: dAtA, goto, setting, isStore }: any = params;
 
   const datA = JSON.parse(dAtA);
 
   const { createUpdateAddress, getAddressByUserId } = useStore().addressStore;
+  const { GetAddressByStore } = useStore().addressStore;
+  const { GetShopByUserId } = useStore().shopUserStore;
 
   const navigation = useNavigation();
   const [address, setAddress] = useState(datA ? datA.detail : "");
@@ -58,41 +62,62 @@ export default observer(function EditAddressScreen() {
       dataSelect?.district &&
       dataSelect?.province
     ) {
-      console.log("บันทึกได้ !!");
+      if (data.length === 0) {
+        Alert.alert("เกิดข้อผิดพลาด", "รหัสไปรษณีย์ไม่ถูกต้อง", [
+          {
+            text: "ตกลง",
+          },
+        ]);
+        Mytoast("รหัสไปรษณีย์ไม่ถูกต้อง");
+      } else {
+        console.log("บันทึกได้ !!");
 
-      const dataAddress = {
-        id: datA.id,
-        subDistrict: dataSelect.subDistrict,
-        district: dataSelect.district,
-        province: dataSelect.province,
-        postCode: postCode,
-        detail: address,
-        isUsed_Store: false,
-        isUsed: true,
-        gps: "",
-      };
+        const dataAddress = {
+          id: datA.id,
+          subDistrict: dataSelect.subDistrict,
+          district: dataSelect.district,
+          province: dataSelect.province,
+          postCode: postCode,
+          detail: address,
+          isUsed_Store: datA.isUsed_Store ? true : JSON.parse(isStore),
+          isUsed: datA.isUsed_Store ? false : !JSON.parse(isStore),
+          gps: "",
+        };
 
-      await createUpdateAddress(dataAddress).then(async (result) => {
-        console.log("dataAddress", dataAddress);
-        console.log("result", result);
+        await createUpdateAddress(dataAddress).then(async (result) => {
+          console.log("dataAddress", dataAddress);
+          console.log("result", result);
 
-        if (!!result) {
-          Mytoast("เพิ่มที่อยู่สำเร็จ");
-          await getAddressByUserId();
+          if (!!result) {
+            Mytoast("เพิ่มที่อยู่สำเร็จ");
+            await getAddressByUserId();
 
-          console.log("setting", setting);
+            console.log("isStorer", JSON.parse(isStore));
 
-          if (JSON.parse(setting) === true) {
-            router.back();
+            if (JSON.parse(isStore)) {
+              await GetShopByUserId();
+              await GetAddressByStore();
+            }
+
+            console.log("setting", setting);
+
+            if (JSON.parse(setting) === true) {
+              router.back();
+            } else {
+              router.replace("/cartdetail");
+            }
           } else {
-            router.replace("/cartdetail");
+            Mytoast("เกิดข้อผิดพลาด");
           }
-        } else {
-          Mytoast("เกิดข้อผิดพลาด");
-        }
-      });
+        });
+      }
     } else {
-      alert("กรอกข้อมูลไม่ถูกต้อง หรือ ไม่ครบทุกช่อง");
+      Alert.alert("เกิดข้อผิดพลาด", "กรอกข้อมูลไม่ถูกต้อง หรือ ไม่ครบทุกช่อง", [
+        {
+          text: "ตกลง",
+        },
+      ]);
+      Mytoast("กรอกข้อมูลไม่ถูกต้อง หรือ ไม่ครบทุกช่อง");
 
       console.log("Address saved:", {
         address,
@@ -125,8 +150,7 @@ export default observer(function EditAddressScreen() {
     searchByZipCode(Number(postCode));
   }, [postCode]);
 
-  console.log("datA", datA);
-  console.log("address", address);
+  console.log("data.length", data.length);
 
   return (
     <Container>
@@ -145,12 +169,15 @@ export default observer(function EditAddressScreen() {
       <Title>{title}</Title>
 
       <ScrollView contentContainerStyle={styles.formContainer}>
+        <Label name="บ้านเลขที่, หมู่, ซอย, ถนน" valid />
         <TextInput
           style={styles.input}
           placeholder="บ้านเลขที่, หมู่, ซอย, ถนน *"
           value={address}
           onChangeText={setAddress}
         />
+
+        <Label name="รหัสไปรษณีย์" valid />
         <View
           style={{
             flexDirection: "row",
@@ -162,6 +189,7 @@ export default observer(function EditAddressScreen() {
             value={postCode}
             onChangeText={setPostCode}
             keyboardType="numeric"
+            maxLength={5}
           />
 
           {data.length ? (
@@ -203,23 +231,31 @@ export default observer(function EditAddressScreen() {
           )}
         </View>
 
+        <Label name="แขวง/ตำบล" valid />
         <TextInput
           style={styles.input}
           placeholder="แขวง/ตำบล"
           value={dataSelect ? dataSelect.subDistrict : ""}
           // onChangeText={setSubDistrict}
+          readOnly
         />
+
+        <Label name="เขต/อำเภอ" valid />
         <TextInput
           style={styles.input}
           placeholder="เขต/อำเภอ"
           value={dataSelect ? dataSelect.district : ""}
           // onChangeText={setDistrict}
+          readOnly
         />
+
+        <Label name="จังหวัด" valid />
         <TextInput
           style={styles.input}
           placeholder="จังหวัด"
           value={dataSelect ? dataSelect.province : ""}
           // onChangeText={setProvince}
+          readOnly
         />
 
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>

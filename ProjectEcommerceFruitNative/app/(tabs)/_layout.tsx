@@ -6,8 +6,16 @@ import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useStore } from "@/src/store/store";
-import { LogBox, Text, View } from "react-native";
+import {
+  LogBox,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { observer } from "mobx-react-lite";
+import { SafeAreaView } from "react-native-safe-area-context";
 LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
 
@@ -15,12 +23,12 @@ export default observer(function TabLayout() {
   const { getToken } = useStore().commonStore;
   const { getSystemSetting } = useStore().systemSettingStore;
   const { cartItemsStore } = useStore().cartStore;
-  const { user } = useStore().userStore;
+  const { user, loadingUser } = useStore().userStore;
   const colorScheme = useColorScheme();
   const router = useRouter();
 
   useLayoutEffect(() => {
-    const checkToken = async () => {
+    const checkComeFirt = async () => {
       try {
         const comeInStorage = await AsyncStorage.getItem("come-in-frist");
         // console.log("come-in-frist", comeInStorage);
@@ -31,60 +39,85 @@ export default observer(function TabLayout() {
         console.log("Error fetching token:", error);
       }
     };
-    checkToken();
+    checkComeFirt();
     getToken();
     getSystemSetting();
   }, []);
 
-  console.log("user", !!user);
+  // if (!!user?.stores?.length === false) {
+  //   return router.push("../storeuser/editname");
+  // }
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        tabBarInactiveTintColor: "#888",
-        tabBarStyle: {
-          backgroundColor: "#f8f9fa",
-          paddingVertical: 10,
-          height: 70,
-          borderTopWidth: 3,
-        },
-        tabBarLabelStyle: {
-          fontSize: 12, // ขนาดฟอนต์ของชื่อแท็บ
-          fontWeight: "600", // ทำให้ตัวหนาขึ้น
-        },
-        headerShown: false,
+    <SafeAreaView
+      style={{
+        flex: 1,
       }}
     >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "หน้าหลัก",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "home" : "home-outline"}
-              size={focused ? 28 : 24} // ขนาดใหญ่ขึ้นเมื่อถูกเลือก
-              color={color}
-              style={{ transform: [{ scale: focused ? 1.2 : 1 }] }} // แอนิเมชันการขยาย
-            />
-          ),
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+          tabBarInactiveTintColor: "#888",
+          tabBarStyle: {
+            backgroundColor: "#f8f9fa",
+            paddingVertical: 10,
+            height: 70,
+            borderTopWidth: 3,
+            display: loadingUser ? "none" : "flex",
+          },
+          tabBarLabelStyle: {
+            fontSize: 12, // ขนาดฟอนต์ของชื่อแท็บ
+            fontWeight: "600", // ทำให้ตัวหนาขึ้น
+          },
+          headerShown: false,
         }}
-      />
-      <Tabs.Screen
-        name="shop"
-        options={{
-          title: "ร้านค้าของคุณ",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "storefront" : "storefront-outline"}
-              size={focused ? 28 : 24}
-              color={color}
-              style={{ transform: [{ scale: focused ? 1.2 : 1 }] }}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: "หน้าหลัก",
+            tabBarIcon: ({ color, focused }) => (
+              <Ionicons
+                name={focused ? "home" : "home-outline"}
+                size={focused ? 28 : 24} // ขนาดใหญ่ขึ้นเมื่อถูกเลือก
+                color={color}
+                style={{ transform: [{ scale: focused ? 1.2 : 1 }] }} // แอนิเมชันการขยาย
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="shop"
+          options={{
+            title: "ร้านค้าของคุณ",
+            tabBarIcon: ({ color, focused }) => (
+              <Ionicons
+                name={focused ? "storefront" : "storefront-outline"}
+                size={focused ? 28 : 24}
+                color={color}
+                style={{
+                  transform: [{ scale: focused ? 1.2 : 1 }],
+                  // backgroundColor: "powderblue",
+                  // position: "absolute",
+                  // padding: 25,
+                  // borderRadius: 50,
+                  // borderWidth: 1,
+                }}
+              />
+            ),
+            // tabBarButton: (props) => {
+            //   return !!user ? <Pressable {...props} /> : null;
+            // },
+            tabBarButton: (props) => {
+              return !!user ? (
+                !!user?.stores?.length === false ? null : (
+                  <Pressable {...props} />
+                )
+              ) : null;
+            },
+          }}
+        />
+        {/* <Tabs.Screen
         name="admin"
         options={{
           title: "ผู้ดูแลระบบ",
@@ -98,73 +131,76 @@ export default observer(function TabLayout() {
           ),
           // tabBarBadge: user.isAdmin ? 1 : null,
         }}
-      />
-      <Tabs.Screen
-        name="earn"
-        options={{
-          title: "สร้างรายได้",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "cash" : "cash-outline"}
-              size={focused ? 28 : 24}
-              color={color}
-              style={{ transform: [{ scale: focused ? 1.2 : 1 }] }}
-            />
-          ),
-          tabBarStyle: {
-            display: "none",
-          },
-        }}
-      />
-      <Tabs.Screen
-        name="cart"
-        options={{
-          tabBarIcon: ({ color, focused }) => (
-            <View style={{ position: "relative" }}>
+      /> */}
+        <Tabs.Screen
+          name="earn"
+          options={{
+            title: "สร้างรายได้",
+            tabBarIcon: ({ color, focused }) => (
               <Ionicons
-                name={focused ? "cart" : "cart-outline"}
+                name={focused ? "cash" : "cash-outline"}
                 size={focused ? 28 : 24}
                 color={color}
                 style={{ transform: [{ scale: focused ? 1.2 : 1 }] }}
               />
+            ),
+            tabBarButton: (props) => (!!user ? <Pressable {...props} /> : null),
+            // tabBarStyle: {
+            //   display: "none",
+            // },
+          }}
+        />
+        <Tabs.Screen
+          name="cart"
+          options={{
+            tabBarIcon: ({ color, focused }) => (
+              <View style={{ position: "relative" }}>
+                <Ionicons
+                  name={focused ? "cart" : "cart-outline"}
+                  size={focused ? 28 : 24}
+                  color={color}
+                  style={{ transform: [{ scale: focused ? 1.2 : 1 }] }}
+                />
 
-              {cartItemsStore.length > 0 && (
-                <View
-                  style={{
-                    position: "absolute",
-                    right: -6,
-                    top: -3,
-                    backgroundColor: "red",
-                    borderRadius: 8,
-                    width: 16,
-                    height: 16,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={{ color: "white", fontSize: 10 }}>
-                    {cartItemsStore.length}
-                  </Text>
-                </View>
-              )}
-            </View>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="setting"
-        options={{
-          title: "โปรไฟล์",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "person" : "person-outline"}
-              size={focused ? 28 : 24}
-              color={color}
-              style={{ transform: [{ scale: focused ? 1.2 : 1 }] }}
-            />
-          ),
-        }}
-      />
-    </Tabs>
+                {cartItemsStore.length > 0 && (
+                  <View
+                    style={{
+                      position: "absolute",
+                      right: -6,
+                      top: -3,
+                      backgroundColor: "red",
+                      borderRadius: 8,
+                      width: 16,
+                      height: 16,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={{ color: "white", fontSize: 10 }}>
+                      {cartItemsStore.length}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            ),
+            tabBarButton: (props) => (!!user ? <Pressable {...props} /> : null),
+          }}
+        />
+        <Tabs.Screen
+          name="setting"
+          options={{
+            title: "โปรไฟล์",
+            tabBarIcon: ({ color, focused }) => (
+              <Ionicons
+                name={focused ? "person" : "person-outline"}
+                size={focused ? 28 : 24}
+                color={color}
+                style={{ transform: [{ scale: focused ? 1.2 : 1 }] }}
+              />
+            ),
+          }}
+        />
+      </Tabs>
+    </SafeAreaView>
   );
 });

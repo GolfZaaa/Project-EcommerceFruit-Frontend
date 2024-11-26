@@ -14,7 +14,7 @@ export const Order = {
     );
   },
   iWantToTakeOrdertoSend: (valus: any) => {
-    return requests.post(
+    return requests.postForm(
       `Order/IWantToTakeOrdertoSend`,
       createFormDataUseMyName(valus, "orderId")
     );
@@ -22,14 +22,14 @@ export const Order = {
   getMyOrderUserWantToTaketoSend: () =>
     requests.get("Order/GetMyOrderUserWantToTaketoSend"),
   confirmOrderToForward: (values: any | undefined) =>
-    requests.post(`Order/ConfirmOrderToForward`, createFormData(values)),
+    requests.postForm(`Order/ConfirmOrderToForward`, createFormData(values)),
   getMyOrderToSend: () => requests.get("Order/GetMyOrderToSend"),
   getOrderByStore: (storeId: number) =>
     requests.get(`Order/GetOrdersByStore?storeId=${storeId}`),
   confirmOrder: (values: any | undefined) =>
-    requests.post(`Order/ConfirmOrder`, createFormData(values)),
+    requests.postForm(`Order/ConfirmOrder`, createFormData(values)),
   cancelOrder: (values: any | undefined) =>
-    requests.post(`Order/CancelOrder`, createFormData(values)),
+    requests.postForm(`Order/CancelOrder`, createFormData(values)),
   CreateUpdateOrderById: (values: any | undefined) =>
     requests.postForm(`Order/CreateUpdateOrderById`, createFormData(values)),
   getOrdersAll: () => requests.get("Order/GetOrders"),
@@ -42,11 +42,14 @@ export const Order = {
     );
   },
   changeConfirmSendOrder: (valus: any) => {
-    return requests.post(
+    return requests.postForm(
       `Order/ChangeConfirmSendOrder`,
       createFormDataUseMyName(valus, "orderId")
     );
   },
   changeConfirmReceiptOrder: (values: any | undefined) =>
-    requests.post(`Order/ChangeConfirmReceiptOrder`, createFormData(values)),
+    requests.postForm(
+      `Order/ChangeConfirmReceiptOrder`,
+      createFormData(values)
+    ),
 };

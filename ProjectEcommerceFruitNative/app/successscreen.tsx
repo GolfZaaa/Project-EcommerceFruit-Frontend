@@ -18,9 +18,13 @@ const SuccessScreen = () => {
         alignItems: "center",
       }}
     >
-      <Text>1</Text>
+      {/* <Text>1</Text> */}
       <LottieView
         source={require("../assets/lotties/Success_order.json")}
+        style={{
+          width: 300,
+          height: 300,
+        }}
         autoPlay
         loop
       />

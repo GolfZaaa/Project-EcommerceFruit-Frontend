@@ -18,6 +18,14 @@ import { Mytoast } from "@/components/MyToast";
 import { observer } from "mobx-react-lite";
 import { IconButton } from "react-native-paper";
 import MyActivityIndicator from "@/components/MyActivityIndicator";
+import MyCartItem from "@/components/product/MyCartItem";
+import { Order } from "@/src/models/Order";
+import {
+  TotalAmount,
+  TotalContainer,
+  TotalRow,
+  TotalText,
+} from "../order/TabOrder.screen";
 
 export default observer(function TabTwoScreen() {
   const {
@@ -64,6 +72,10 @@ export default observer(function TabTwoScreen() {
     i: i,
   }));
 
+  useEffect(() => {
+    searchOrdersWantToReceipt(new URLSearchParams());
+  }, []);
+
   const onSelect = (id: number) => {
     if (select.find((x) => x === id) !== undefined) {
       setSelect(select.filter((x) => x !== id));
@@ -75,7 +87,29 @@ export default observer(function TabTwoScreen() {
   const RenderItem = ({ items }: any) => {
     const item = items.item;
 
+    const [totalPrice, setTotalPrice] = useState<string>("");
     const [more, setMore] = useState(false);
+
+    const handleMore = (item: any) => {
+      // Calculate total price
+      const total = item.orderItems.reduce(
+        (acc: number, orderItem: any) =>
+          acc + orderItem.product.price * orderItem.quantity,
+        0
+      );
+
+      if (!more) {
+        setTotalPrice((total + item.shippings[0].shippingFee).toString());
+        // setTotalPriceMyOrder(total);
+        // myTotalPrice.current = total;
+        setMore((prev) => !prev);
+      } else {
+        setTotalPrice("");
+        setMore((prev) => !prev);
+      }
+    };
+
+    console.log("item", item.order.address);
 
     return (
       <Card>
@@ -110,15 +144,136 @@ export default observer(function TabTwoScreen() {
             </View>
           </View>
 
-          <CardDescription>{item.description}</CardDescription>
+          {/* <CardDescription>{item.description}</CardDescription> */}
 
           {more && (
-            <View>
-              <Text>Hahaha read more</Text>
+            <View
+              style={{
+                marginBottom: 20,
+              }}
+            >
+              {item.order.orderItems.map((orderItem: any) => (
+                <MyCartItem
+                  key={orderItem.id}
+                  productId={orderItem.productId}
+                  image={orderItem.product.images}
+                  name={orderItem.product.productGI.name}
+                  price={orderItem.product.price}
+                  quantity={orderItem.quantity}
+                />
+              ))}
             </View>
           )}
 
-          <Button onPress={() => setMore((prev) => !prev)}>
+          {totalPrice !== "" && (
+            <TotalContainer
+              style={{
+                marginTop: -15,
+              }}
+            >
+              <TotalRow>
+                <TotalText style={{ fontWeight: "bold", fontSize: 22 }}>
+                  ค่าส่ง
+                </TotalText>
+                <TotalAmount style={{ fontWeight: "bold", fontSize: 22 }}>
+                  {item.order.shippings[0].shippingFee} ฿
+                </TotalAmount>
+              </TotalRow>
+              <TotalRow>
+                <TotalText style={{ fontWeight: "bold", fontSize: 22 }}>
+                  ยอดรวมสุทธิ
+                </TotalText>
+                <TotalAmount style={{ fontWeight: "bold", fontSize: 22 }}>
+                  {totalPrice} ฿
+                </TotalAmount>
+              </TotalRow>
+            </TotalContainer>
+          )}
+
+          {more && (
+            <Card isStore={true}>
+              <View
+                style={{
+                  padding: 20,
+                }}
+              >
+                <CardText>
+                  ชื่อ-ที่อยู่ร้านค้า : {item.address.user?.fullName}
+                </CardText>
+                <CardText>เบอร์ : {item.address.user?.phoneNumber}</CardText>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <CardText>บ้านเลขที่ {item.address.detail}</CardText>
+                </View>
+
+                <CardAddress>
+                  ตำบล {item.address.subDistrict} อำเภอ {item.address.district}
+                </CardAddress>
+                <CardAddress>
+                  จังหวัด {item.address.province} {item.address.postCode}
+                </CardAddress>
+              </View>
+            </Card>
+          )}
+
+          {more && (
+            <View
+              style={{
+                alignItems: "center",
+                marginBottom: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 20,
+                }}
+              >
+                ส่งที่
+              </Text>
+            </View>
+          )}
+
+          {more && (
+            <Card isStore={false}>
+              <View
+                style={{
+                  padding: 20,
+                }}
+              >
+                <CardText>
+                  ชื่อ-ที่อยู่ลูกค้า : {item?.order?.address?.user?.fullName}
+                </CardText>
+                <CardText>
+                  เบอร์ : {item?.order?.address?.user?.phoneNumber}
+                </CardText>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <CardText>บ้านเลขที่ {item?.order?.address.detail}</CardText>
+                </View>
+
+                <CardAddress>
+                  ตำบล {item?.order?.address.subDistrict} อำเภอ{" "}
+                  {item?.order?.address.district}
+                </CardAddress>
+                <CardAddress>
+                  จังหวัด {item?.order?.address.province}{" "}
+                  {item?.order?.address.postCode}
+                </CardAddress>
+              </View>
+            </Card>
+          )}
+
+          <Button onPress={() => handleMore(item.order)}>
             <ButtonText>{!more ? "เพิ่มเติม" : "ปิด"}</ButtonText>
           </Button>
         </View>
@@ -161,9 +316,9 @@ export default observer(function TabTwoScreen() {
 
   return (
     <Container>
-      <BackButton onPress={() => navigation.goBack()}>
+      {/* <BackButton onPress={() => navigation.goBack()}>
         <Ionicons name="arrow-back-outline" size={24} color="#333" />
-      </BackButton>
+      </BackButton> */}
 
       <Title>คำสั่งซื้อที่สามารถรับหิ้วได้</Title>
 
@@ -287,6 +442,7 @@ const Container: any = styled(LinearGradient).attrs({
   padding: 20px;
   background-color: #f8f9fa;
   padding-top: 60px;
+  margin-top: -20;
 `;
 
 const Title: any = styled.Text`
@@ -305,11 +461,11 @@ const TitleSearch: any = styled.Text`
   margin-bottom: 20px;
 `;
 
-const Card: any = styled(LinearGradient).attrs({
-  colors: ["#ffffff", "#f7f9fc"],
+const Card: any = styled(LinearGradient).attrs((props: any) => ({
+  colors: props.isStore ? ["#f7f9fc", "powderblue"] : ["powderblue", "#f7f9fc"],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
-})`
+}))`
   border-radius: 15px;
   margin-bottom: 15px;
   shadow-color: #000;
@@ -327,6 +483,12 @@ const CardText: any = styled.Text`
 
 const CardDescription: any = styled.Text`
   font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+`;
+
+const CardAddress: any = styled.Text`
+  font-size: 18px;
   color: #666;
   margin-bottom: 20px;
 `;

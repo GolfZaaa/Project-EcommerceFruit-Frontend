@@ -4,9 +4,13 @@ import agent from "../api/agent";
 
 export default class OrderStore {
   order: Order[] = [];
+  orderSearch: Order[] = [];
+  orderForward: Order[] = [];
   checkOrderNow: OrderNow[] = [];
   orderid: number = 0;
   loadingOrder: boolean = false;
+  loadingOrderWantToTake: boolean = false;
+  loadingOrderConfirmForward: boolean = false;
   ordertotal: Order[] = [];
   orderWantToReceipt: Order[] = [];
   totalPriceMyOrder: number = 0;
@@ -18,8 +22,14 @@ export default class OrderStore {
   setTotalPriceMyOrder = (state: number) => (this.totalPriceMyOrder = state);
 
   setLoadingOrder = (state: boolean) => (this.loadingOrder = state);
+  setLoadingOrderWantToTake = (state: boolean) =>
+    (this.loadingOrderWantToTake = state);
+  setLoadingOrderConfirmForward = (state: boolean) =>
+    (this.loadingOrderConfirmForward = state);
 
   setOrder = (state: any) => (this.order = state);
+  setOrderSearch = (state: any) => (this.orderSearch = state);
+  setOrderForward = (state: any) => (this.orderForward = state);
 
   getOrdersByUser = async () => {
     try {
@@ -60,7 +70,7 @@ export default class OrderStore {
     this.setLoadingOrder(true);
     try {
       const result = await agent.Order.searchOrderToSendByOrderId(orderId);
-      this.order = result;
+      this.orderSearch = result;
 
       this.setLoadingOrder(false);
 
@@ -72,16 +82,19 @@ export default class OrderStore {
   };
 
   iWantToTakeOrdertoSend = async (values: number[]) => {
-    this.setLoadingOrder(true);
+    this.setLoadingOrderWantToTake(true);
     try {
       const result = await agent.Order.iWantToTakeOrdertoSend(values);
-      this.setOrder([]);
 
-      this.setLoadingOrder(false);
+      if (result === true) {
+        this.setOrderSearch([]);
+      }
+
+      this.setLoadingOrderWantToTake(false);
 
       return result;
     } catch (error) {
-      this.setLoadingOrder(false);
+      this.setLoadingOrderWantToTake(false);
       return error;
     }
   };
@@ -90,7 +103,7 @@ export default class OrderStore {
     this.setLoadingOrder(true);
     try {
       const result = await agent.Order.getMyOrderUserWantToTaketoSend();
-      this.order = result;
+      this.orderForward = result;
 
       this.setLoadingOrder(false);
     } catch (error) {
@@ -100,17 +113,17 @@ export default class OrderStore {
   };
 
   confirmOrderToForward = async (values: any) => {
-    this.setLoadingOrder(true);
+    this.setLoadingOrderConfirmForward(true);
     try {
       const result = await agent.Order.confirmOrderToForward(values);
 
       console.log("result :: ", result);
 
-      this.setLoadingOrder(false);
+      this.setLoadingOrderConfirmForward(false);
 
       this.getMyOrderUserWantToTaketoSend();
     } catch (error) {
-      this.setLoadingOrder(false);
+      this.setLoadingOrderConfirmForward(false);
       return error;
     }
   };

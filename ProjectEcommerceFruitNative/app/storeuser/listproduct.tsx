@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -6,9 +6,16 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useNavigation } from "expo-router";
+import { useStore } from "@/src/store/store";
+import { pathImagesApp } from "@/src/constants/RoutePath";
+import { Product } from "@/src/models/Product";
+import { observer } from "mobx-react-lite";
+import { TotalText } from "../order/TabOrder.screen";
+import { Mytoast } from "@/components/MyToast";
 
 const data = [
   {
@@ -46,29 +53,85 @@ const data = [
 ];
 
 const ListProduct = () => {
+  const {
+    productStore,
+    getProductByStore,
+    isUsedProduct,
+    removeProduct,
+    getProductGI,
+  } = useStore().productStore;
+  const { user } = useStore().userStore;
+
   const navigation = useNavigation();
 
-  const handleCreateProduct = () => {
-    router.push("../storeuser/createproduct"); 
-  }
+  useEffect(() => {
+    getProductByStore(user?.stores[0].id || 0);
+  }, []);
 
-  const renderItem = ({ item }: any) => (
+  const handleCreateProduct = async (item: Product | []) => {
+    await getProductGI(1);
+    router.push({
+      pathname: "../storeuser/createproduct",
+      params: {
+        item: JSON.stringify(item),
+      },
+    });
+  };
+
+  const renderItem = ({ item }: { item: Product }) => (
     <View style={styles.card}>
-      <Image source={{ uri: item.image }} style={styles.image} />
+      <Image
+        source={{ uri: pathImagesApp.product + item.images }}
+        style={styles.image}
+      />
       <View style={styles.infoContainer}>
-        <Text style={styles.name}>ชื่อ: {item.name}</Text>
-        <Text style={styles.category}>ประเภท: {item.category}</Text>
+        <Text style={styles.name}>ชื่อ: {item.productGI.name}</Text>
+        <Text style={styles.category}>
+          ประเภท: {item.productGI.category.name}
+        </Text>
         <View style={styles.iconContainer}>
-          <TouchableOpacity style={styles.editButton}>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => handleCreateProduct(item)}
+          >
             <Ionicons name="pencil-outline" size={20} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.deleteButton}>
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={() => handleRemoveProduct(item.id)}
+          >
             <Ionicons name="trash-outline" size={20} color="white" />
           </TouchableOpacity>
         </View>
       </View>
     </View>
   );
+
+  const handleRemoveProduct = (id: number) => {
+    Alert.alert("ลบสินค้านี้ออกจากฐานข้อมูล", "ยืนยันเพื่อลบ", [
+      {
+        text: "ยกเลิก",
+        onPress: () => console.log("cancel successfully"),
+      },
+      {
+        text: "ยืนยัน",
+        onPress: async () =>
+          await removeProduct(id).then((res) => {
+            console.log("res as : ", res);
+            if (res !== true) {
+              Alert.alert("เกิดข้อผิดพลาด", "เกิดข้อผิดพลาด", [
+                {
+                  text: "ตกลง",
+                },
+              ]);
+              Mytoast("เกิดข้อผิดพลาด");
+            } else {
+              getProductByStore(user?.stores[0].id || 0);
+            }
+          }),
+      },
+    ]);
+  };
 
   return (
     <View style={styles.container}>
@@ -81,7 +144,7 @@ const ListProduct = () => {
 
       <TouchableOpacity
         style={styles.addButton}
-        onPress={handleCreateProduct}
+        onPress={() => handleCreateProduct([])}
       >
         <Ionicons name="add" size={30} color="white" />
       </TouchableOpacity>
@@ -89,15 +152,34 @@ const ListProduct = () => {
       <Text style={styles.title}>เพิ่มข้อมูลสินค้า</Text>
 
       <FlatList
-        data={data}
-        keyExtractor={(item) => item.id}
+        data={productStore}
+        keyExtractor={(item) => "item.id" + item.id}
         renderItem={renderItem}
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
+        ListEmptyComponent={
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <TotalText
+              style={{
+                fontSize: 30,
+              }}
+            >
+              ไม่พบข้อมูลสินค้า
+            </TotalText>
+          </View>
+        }
       />
     </View>
   );
 };
+
+export default observer(ListProduct);
 
 const styles = StyleSheet.create({
   container: {
@@ -131,6 +213,7 @@ const styles = StyleSheet.create({
   listContainer: {
     padding: 10,
     paddingTop: 110,
+    flexGrow: 1,
   },
   card: {
     flexDirection: "row",
@@ -179,5 +262,3 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
 });
-
-export default ListProduct;
