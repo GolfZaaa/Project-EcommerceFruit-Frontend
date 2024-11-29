@@ -61,7 +61,6 @@ const MyOrderCard = ({ order, index }: props) => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Order Data");
 
-    // กำหนดหัวตาราง
     worksheet.columns = [
       { header: "รหัสคำสั่งซื้อ", key: "orderId", width: 20 },
       { header: "สถานะ", key: "status", width: 30 },
@@ -71,14 +70,30 @@ const MyOrderCard = ({ order, index }: props) => {
       { header: "จำนวน", key: "quantity", width: 10 },
       { header: "ราคา", key: "price", width: 15 },
       { header: "ราคารวม", key: "totalPrice", width: 15 },
+      { header: "หน่วย", key: "baht", width: 15 },
     ];
+
+    const headerRow = worksheet.getRow(1);
+    headerRow.font = { bold: true, size: 14, color: { argb: "FFFFFF" } };
+    headerRow.alignment = { horizontal: "center", vertical: "middle" };
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "0070C0" },
+      };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+    });
 
     let grandTotalPrice = 0;
     let grandTotalQuantity = 0;
 
-    // วนลูปผ่านรายการสั่งซื้อ
     order.forEach((orderItem) => {
-      // กำหนดสถานะ
       let statusText = "";
       if (orderItem.confirmReceipt === 2) {
         statusText = "ยกเลิกโดยคุณ";
@@ -101,14 +116,13 @@ const MyOrderCard = ({ order, index }: props) => {
         statusText += " | ยกเลิกแล้ว โดยคุณ";
       }
 
-      // วนลูปผ่านรายการสินค้าในคำสั่งซื้อ
       orderItem.orderItems.forEach((orderProductItem) => {
         const totalProductPrice =
           orderProductItem.product.price * orderProductItem.quantity + 50;
         grandTotalPrice += totalProductPrice;
         grandTotalQuantity += orderProductItem.quantity;
 
-        worksheet.addRow({
+        const row = worksheet.addRow({
           orderId: orderItem.orderId,
           status: statusText,
           productId: orderProductItem.product.id,
@@ -117,20 +131,46 @@ const MyOrderCard = ({ order, index }: props) => {
           quantity: orderProductItem.quantity,
           price: orderProductItem.product.price,
           totalPrice: totalProductPrice,
+          baht: "บาท",
+        });
+
+        row.eachCell((cell, colIndex) => {
+          cell.border = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin" },
+          };
+          cell.alignment = {
+            vertical: "middle",
+            horizontal: colIndex >= 7 ? "right" : "left",
+          };
         });
       });
     });
 
     worksheet.addRow({});
-    worksheet.addRow({
+    const summaryRow = worksheet.addRow({
       productName: "รวมทั้งหมด",
       quantity: grandTotalQuantity,
       totalPrice: grandTotalPrice,
+      baht: "บาท",
     });
 
-    // ทำการจัดรูปแบบเซลล์สรุปยอดให้เป็นตัวหนา
-    const lastRow: any = worksheet.lastRow;
-    lastRow.font = { bold: true };
+    summaryRow.font = { bold: true };
+    summaryRow.eachCell((cell) => {
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FFD966" },
+      };
+    });
 
     workbook.xlsx.writeBuffer().then((data) => {
       const blob = new Blob([data], {
@@ -179,7 +219,7 @@ const MyOrderCard = ({ order, index }: props) => {
         <div>
           <Typography variant="h5">
             <p className="FontPublic">
-            <MyContent name={`จำนวน ${order.length}`} fontSize="normal" />
+              <MyContent name={`จำนวน ${order.length}`} fontSize="normal" />
             </p>
           </Typography>
         </div>
@@ -227,7 +267,7 @@ const MyOrderCard = ({ order, index }: props) => {
         const totalPrice: any = calculateTotalPrice();
         const formattedTotalPrice = formatNumberWithCommas(totalPrice);
 
-        console.log("itemeeeee",item)
+        console.log("itemeeeee", item);
         return (
           <div className="FontPublic mt-5 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6">
             <div className="space-y-4">
@@ -236,14 +276,13 @@ const MyOrderCard = ({ order, index }: props) => {
                   รหัสคำสั่งซื้อ : {item.orderId}
                 </span>
                 <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
-                     ชำระเงินโดย : {item.paymentImage ? "การโอนเงิน" : "เครดิตการ์ด"}
-                 </span>
+                  ชำระเงินโดย :{" "}
+                  {item.paymentImage ? "การโอนเงิน" : "เครดิตการ์ด"}
+                </span>
               </div>
 
               <div className="md:flex md:justify-between">
-                <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
-                 
-                </span>
+                <span className="text-lg font-semibold text-gray-900 dark:text-gray-900"></span>
 
                 <span
                   className={
@@ -275,8 +314,6 @@ const MyOrderCard = ({ order, index }: props) => {
                       (item.confirmReceipt === 2 && "ยกเลิกแล้ว โดยคุณ")}
                   </div>
                 </span>
-
-                
               </div>
 
               {item.orderItems.map((item: OrderItem) => {

@@ -9,13 +9,16 @@ import MyOrderCardToSend from "./components/MyOrderCardToSend";
 import { BiDownload } from "react-icons/bi";
 import { VscFilePdf } from "react-icons/vsc";
 import { RiFileExcel2Line } from "react-icons/ri";
-import { MdExpandMore } from "react-icons/md";
+import { MdAttachMoney, MdExpandMore } from "react-icons/md";
 import ReactECharts from "echarts-for-react";
 import { motion } from "framer-motion";
 import ExcelJS from "exceljs";
 import html2pdf from "html2pdf.js";
 import { useStore } from "../../store/store";
 import MyContent from "../../component/MyContent";
+import { FaBoxOpen } from "react-icons/fa";
+import { AiOutlineCalendar, AiOutlinePieChart } from "react-icons/ai";
+import { GiPayMoney } from "react-icons/gi";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -117,11 +120,6 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
             x.confirmReceipt === 1
           );
         })
-        // .reduce((acc, currentOrder) => {
-        //   const shippingFeeTotal = currentOrder.shippings[0].shippingFee;
-        //   return acc + shippingFeeTotal;
-        // }, 0);
-
         .reduce((acc, currentOrder) => {
           const driverHistoryFees = (currentOrder.shippings?.[0]?.driverHistories.filter((x=>x.userId === user?.id)) || [])
             .reduce((sum, driverHistory) => sum + (driverHistory.shippingFee || 0), 0);
@@ -164,11 +162,11 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
       if (shipping?.shippingStatus === 1) {
         const orderDate: any = new Date(shipping.createdAt);
         const orderYear = orderDate.getFullYear();
-        yearsSet.add(orderYear); // เพิ่มปีที่เจอเข้าไปใน set
+        yearsSet.add(orderYear); 
       }
     });
 
-    return Array.from(yearsSet).sort((a, b) => b - a); // แปลง Set ให้เป็น Array และเรียงจากปีมากไปน้อย
+    return Array.from(yearsSet).sort((a, b) => b - a); 
   };
 
   const [monthlyTotal, setMonthlyTotal] = useState<number[]>([]);
@@ -298,9 +296,9 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
 
   filteredOrders.forEach((o) => {
     o.orderItems.forEach((item) => {
-      const categoryName = item.product.productGI.category.name; // ดึงชื่อประเภทสินค้า
+      const categoryName = item.product.productGI.category.name;
       if (categoryCount[categoryName]) {
-        categoryCount[categoryName] += item.quantity; // นับจำนวน
+        categoryCount[categoryName] += item.quantity;
       } else {
         categoryCount[categoryName] = item.quantity;
       }
@@ -316,7 +314,6 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
     },
     legend: {
       orient: "vertical",
-      // left: 'left',  ให้หัวข้ออยู่ตรงกลาง
     },
     series: [
       {
@@ -360,60 +357,87 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
       { header: "หน่วย", key: "unit", width: 30 },
     ];
 
-    worksheet.addRow({
+    worksheet.getRow(1).font = { bold: true, size: 14, color: { argb: "FFFFFF" }};
+    worksheet.getRow(1).alignment = { horizontal: "center", vertical: "middle" };
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "0070C0" }, 
+      };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+    });
+
+    const addStyledRow = (rowData: any) => {
+      const row = worksheet.addRow(rowData);
+      row.eachCell((cell, colIndex) => {
+        cell.alignment = { vertical: "middle", horizontal: colIndex === 2 ? "center" : "left" };
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
+      });
+    };
+
+    addStyledRow({
       item: "รายได้สุทธิ",
       value: totalPrice.toLocaleString(),
       unit: "บาท",
     });
 
-    worksheet.addRow({
+    addStyledRow({
       item: "รับหิ้วสำเร็จ",
       value: totalSuccess.toLocaleString(),
       unit: "ครั้ง",
     });
 
-    worksheet.addRow({
+    addStyledRow({
       item: "รับหิ้วสำเร็จเดือนนี้",
       value: totalSuccessForMonth.toLocaleString(),
       unit: "ครั้ง",
     });
 
-    worksheet.addRow({
+    addStyledRow({
       item: "รายได้รับหิ้วเดือนนี้",
       value: totalPriceForMonth.toLocaleString(),
       unit: "บาท",
     });
 
-    // เพิ่มแถวสำหรับปีที่เลือก
-    worksheet.addRow({
-      item: "ปีที่เลือก",
-      value: selectedYear.toString(),
-      unit: "",
+    addStyledRow({ item: "รายได้สุทธิของแต่ละเดือน", value: "" });
+    availableYears.forEach((year) => {
+      const monthlyTotals = calculateMonthlyTotal(order, year);
+      addStyledRow({ item: `ปี ${year + 543}`, value: "" }); 
+  
+      data.months.forEach((month, index) => {
+        if (monthlyTotals[index] > 0) {
+          addStyledRow({
+            item: month,
+            value: monthlyTotals[index].toLocaleString(),
+            unit: "บาท",
+          });
+        }
+      });
     });
 
-    worksheet.addRow({ item: "รายได้สุทธิของแต่ละเดือน", value: "" });
-    data.months.forEach((month, index) => {
-      if (monthlyTotal[index] > 0) {
-        worksheet.addRow({
-          item: month,
-          value: monthlyTotal[index].toLocaleString(),
-          unit: "บาท",
-        });
-      }
-    });
-
-    worksheet.addRow({ item: "สัดส่วนจำนวนหิ้วของแต่ละสินค้า", value: "" });
+    addStyledRow({ item: "สัดส่วนจำนวนหิ้วของแต่ละสินค้า", value: "" });
     Object.keys(productCount).forEach((productName) => {
-      worksheet.addRow({
+      addStyledRow({
         item: productName,
         value: productCount[productName].toLocaleString(),
         unit: "ชิ้น",
       });
     });
 
-    worksheet.addRow({ item: "สัดส่วนจำนวนหิ้วตามหมวดหมู่สินค้า", value: "" });
+    addStyledRow({ item: "สัดส่วนจำนวนหิ้วตามหมวดหมู่สินค้า", value: "" });
     Object.keys(categoryCount).forEach((categoryName) => {
-      worksheet.addRow({
+      addStyledRow({
         item: categoryName,
         value: categoryCount[categoryName].toLocaleString(),
         unit: "ชิ้น",
@@ -535,16 +559,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
           className="mt-6 flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-200 ease-in-out hover:border-gray-400/80 bg-gray-50 hover:bg-gray-100 shadow-sm hover:shadow-md"
         >
           <div className="flex flex-row items-center justify-center">
-            <svg
-              className="mr-3 fill-gray-500/95"
-              xmlns="http://www.w3.org/2000/svg"
-              version="1.1"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12,23A1,1 0 0,1 11,22V19H7A2,2 0 0,1 5,17V7A2,2 0 0,1 7,5H21A2,2 0 0,1 23,7V17A2,2 0 0,1 21,19H16.9L13.2,22.71C13,22.89 12.76,23 12.5,23H12M13,17V20.08L16.08,17H21V7H7V17H13M3,15H1V3A2,2 0 0,1 3,1H19V3H3V15M9,9H19V11H9V9M9,13H17V15H9V13Z" />
-            </svg>
+               <MdAttachMoney size={25} />
             <span className="font-bold text-gray-600">
               {totalPrice.toLocaleString()}
             </span>
@@ -558,16 +573,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
           className=" mt-6 flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-200 ease-in-out hover:border-gray-400/80 bg-gray-50 hover:bg-gray-100 shadow-md hover:shadow-lg"
         >
           <div className="flex flex-row items-center justify-center">
-            <svg
-              className="mr-3 fill-gray-500/95"
-              xmlns="http://www.w3.org/2000/svg"
-              version="1.1"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12,23A1,1 0 0,1 11,22V19H7A2,2 0 0,1 5,17V7A2,2 0 0,1 7,5H21A2,2 0 0,1 23,7V17A2,2 0 0,1 21,19H16.9L13.2,22.71C13,22.89 12.76,23 12.5,23H12M13,17V20.08L16.08,17H21V7H7V17H13M3,15H1V3A2,2 0 0,1 3,1H19V3H3V15M9,9H19V11H9V9M9,13H17V15H9V13Z" />
-            </svg>
+            <FaBoxOpen size={25} className="mr-2"/>
             <span className="font-bold text-gray-600">{totalSuccess}</span>
           </div>
           <div className="mt-2 text-sm text-gray-400">
@@ -579,16 +585,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
           className=" mt-6 flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-200 ease-in-out hover:border-gray-400/80 bg-gray-50 hover:bg-gray-100 shadow-md hover:shadow-lg"
         >
           <div className="flex flex-row items-center justify-center">
-            <svg
-              className="mr-3 fill-gray-500/95"
-              xmlns="http://www.w3.org/2000/svg"
-              version="1.1"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12,23A1,1 0 0,1 11,22V19H7A2,2 0 0,1 5,17V7A2,2 0 0,1 7,5H21A2,2 0 0,1 23,7V17A2,2 0 0,1 21,19H16.9L13.2,22.71C13,22.89 12.76,23 12.5,23H12M13,17V20.08L16.08,17H21V7H7V17H13M3,15H1V3A2,2 0 0,1 3,1H19V3H3V15M9,9H19V11H9V9M9,13H17V15H9V13Z" />
-            </svg>
+            <AiOutlineCalendar size={25} className="mr-2"/>
             <span className="font-bold text-gray-600">
               {totalSuccessForMonth}
             </span>
@@ -602,16 +599,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
           className=" mt-6 flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-200 ease-in-out hover:border-gray-400/80 bg-gray-50 hover:bg-gray-100 shadow-md hover:shadow-lg"
         >
           <div className="flex flex-row items-center justify-center">
-            <svg
-              className="mr-3 fill-gray-500/95"
-              xmlns="http://www.w3.org/2000/svg"
-              version="1.1"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path d="M2.5 19.6L3.8 20.2V11.2L1.4 17C1 18.1 1.5 19.2 2.5 19.6M15.2 4.8L20.2 16.8L12.9 19.8L7.9 7.9V7.8L15.2 4.8M15.3 2.8C15 2.8 14.8 2.8 14.5 2.9L7.1 6C6.4 6.3 5.9 7 5.9 7.8V8L11 20.1L20.3 16.5L15.3 2.8M4.2 11.2V20.2L5.6 19.6C6.6 19.2 7.1 18.1 6.7 17L4.2 11.2Z" />
-            </svg>
+            <GiPayMoney size={25} className="mr-2"/>
             <span className="font-bold text-gray-600">
               {totalPriceForMonth}
             </span>
@@ -686,17 +674,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
                     className="flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80"
                   >
                     <div className="flex flex-row items-center justify-center">
-                      <svg
-                        className="mr-3 fill-gray-500/95"
-                        xmlns="http://www.w3.org/2000/svg"
-                        version="1.1"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M12,23A1,1 0 0,1 11,22V19H7A2,2 0 0,1 5,17V7A2,2 0 0,1 7,5H21A2,2 0 0,1 23,7V17A2,2 0 0,1 21,19H16.9L13.2,22.71C13,22.89 12.76,23 12.5,23H12M13,17V20.08L16.08,17H21V7H7V17H13M3,15H1V3A2,2 0 0,1 3,1H19V3H3V15M9,9H19V11H9V9M9,13H17V15H9V13Z" />
-                      </svg>
-
+                    <MdAttachMoney size={25} />
                       <span className="font-bold text-gray-600">
                         {totalPrice.toLocaleString()}
                       </span>
@@ -712,17 +690,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
                     className="flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80"
                   >
                     <div className="flex flex-row items-center justify-center">
-                      <svg
-                        className="mr-3 fill-gray-500/95"
-                        xmlns="http://www.w3.org/2000/svg"
-                        version="1.1"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M5.68,19.74C7.16,20.95 9,21.75 11,21.95V19.93C9.54,19.75 8.21,19.17 7.1,18.31M13,19.93V21.95C15,21.75 16.84,20.95 18.32,19.74L16.89,18.31C15.79,19.17 14.46,19.75 13,19.93M18.31,16.9L19.74,18.33C20.95,16.85 21.75,15 21.95,13H19.93C19.75,14.46 19.17,15.79 18.31,16.9M15,12A3,3 0 0,0 12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12M4.07,13H2.05C2.25,15 3.05,16.84 4.26,18.32L5.69,16.89C4.83,15.79 4.25,14.46 4.07,13M5.69,7.1L4.26,5.68C3.05,7.16 2.25,9 2.05,11H4.07C4.25,9.54 4.83,8.21 5.69,7.1M19.93,11H21.95C21.75,9 20.95,7.16 19.74,5.68L18.31,7.1C19.17,8.21 19.75,9.54 19.93,11M18.32,4.26C16.84,3.05 15,2.25 13,2.05V4.07C14.46,4.25 15.79,4.83 16.9,5.69M11,4.07V2.05C9,2.25 7.16,3.05 5.68,4.26L7.1,5.69C8.21,4.83 9.54,4.25 11,4.07Z" />
-                      </svg>
-
+                    <FaBoxOpen size={25} className="mr-2"/>
                       <span className="font-bold text-gray-600">
                         {totalSuccess}
                       </span>
@@ -741,17 +709,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
                     className="flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80"
                   >
                     <div className="flex flex-row items-center justify-center">
-                      <svg
-                        className="mr-3 fill-gray-500/95"
-                        xmlns="http://www.w3.org/2000/svg"
-                        version="1.1"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M12,23A1,1 0 0,1 11,22V19H7A2,2 0 0,1 5,17V7A2,2 0 0,1 7,5H21A2,2 0 0,1 23,7V17A2,2 0 0,1 21,19H16.9L13.2,22.71C13,22.89 12.76,23 12.5,23H12M13,17V20.08L16.08,17H21V7H7V17H13M3,15H1V3A2,2 0 0,1 3,1H19V3H3V15M9,9H19V11H9V9M9,13H17V15H9V13Z" />
-                      </svg>
-
+                    <AiOutlineCalendar size={25} className="mr-2"/>
                       <span className="font-bold text-gray-600">
                         {totalSuccessForMonth}
                       </span>
@@ -770,17 +728,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
                     className="flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80"
                   >
                     <div className="flex flex-row items-center justify-center">
-                      <svg
-                        className="mr-3 fill-gray-500/95"
-                        xmlns="http://www.w3.org/2000/svg"
-                        version="1.1"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M2.5 19.6L3.8 20.2V11.2L1.4 17C1 18.1 1.5 19.2 2.5 19.6M15.2 4.8L20.2 16.8L12.9 19.8L7.9 7.9V7.8L15.2 4.8M15.3 2.8C15 2.8 14.8 2.8 14.5 2.9L7.1 6C6.4 6.3 5.9 7 5.9 7.8V8L11 20.1L20.3 16.5L15.3 2.8M4.2 11.2V20.2L5.6 19.6C6.6 19.2 7.1 18.1 6.7 17L4.2 11.2Z" />
-                      </svg>
-
+                    <GiPayMoney size={25} className="mr-2"/>
                       <span className="font-bold text-gray-600">
                         {totalPriceForMonth}
                       </span>
@@ -934,7 +882,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
                 >
                   {availableYears.map((year) => (
                     <option key={year} value={year}>
-                      {year}
+                      {year + 543}
                     </option>
                   ))}
                 </select>

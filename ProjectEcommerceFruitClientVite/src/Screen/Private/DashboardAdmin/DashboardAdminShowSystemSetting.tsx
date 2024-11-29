@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import DropZoneImageComponent from "../../../layout/component/DropZoneImageComponent";
 import { pathImages } from "../../../constants/RoutePath";
 import { myToast } from "../../../helper/components";
+import MyContent from "../../../component/MyContent";
 
 const DashboardAdminShowSystemSetting = () => {
   const { systemSetting, createUpdateSystemSetting } =
@@ -58,15 +59,17 @@ const DashboardAdminShowSystemSetting = () => {
   };
 
   return (
-    <div className="-mt-16">
+    <div className="FontPublic">
       <Container
         maxWidth="md"
         style={{
-          marginTop: 110,
+          marginTop: 50,
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom align="center">
-          <p>ตั้งค่าระบบ</p>
+          <p className="font-bold">
+            <MyContent name="ตั้งค่าระบบ" fontSize="larger" />
+          </p>
         </Typography>
         <Box
           mt={2}
@@ -74,7 +77,7 @@ const DashboardAdminShowSystemSetting = () => {
           onSubmit={handleSubmit}
           style={{
             backgroundColor: "white",
-            padding: 20,
+            // padding: 20,
           }}
         >
           <div
@@ -108,6 +111,20 @@ const DashboardAdminShowSystemSetting = () => {
             margin="normal"
             name="webName"
             required
+            InputProps={{
+              sx: {
+                fontSize: '1.3rem', 
+                color: '#333',   
+                fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+              },
+            }}
+            InputLabelProps={{
+              sx: {
+                fontSize: '1.2rem',
+                color: '#888',
+                fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+              },
+            }}
           />
           <TextField
             defaultValue={data?.description}
@@ -117,6 +134,20 @@ const DashboardAdminShowSystemSetting = () => {
             margin="normal"
             name="description"
             required
+            InputProps={{
+              sx: {
+                fontSize: '1.3rem', 
+                color: '#333',   
+                fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+              },
+            }}
+            InputLabelProps={{
+              sx: {
+                fontSize: '1.2rem',
+                color: '#888',
+                fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+              },
+            }}
           />
           <TextField
             defaultValue={data?.shippingCost}
@@ -127,6 +158,20 @@ const DashboardAdminShowSystemSetting = () => {
             margin="normal"
             name="shippingCost"
             required
+            InputProps={{
+              sx: {
+                fontSize: '1.3rem', 
+                color: '#333',   
+                fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+              },
+            }}
+            InputLabelProps={{
+              sx: {
+                fontSize: '1.2rem',
+                color: '#888',
+                fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+              },
+            }}
           />
           <CardActions sx={{ justifyContent: "center", mt: 2 }}>
             <Button
@@ -136,7 +181,9 @@ const DashboardAdminShowSystemSetting = () => {
               size="large"
               fullWidth
             >
-              บันทึก
+              <p className="FontPublic">
+              <MyContent name="บันทึก" fontSize="small" />
+              </p>
             </Button>
           </CardActions>{" "}
         </Box>

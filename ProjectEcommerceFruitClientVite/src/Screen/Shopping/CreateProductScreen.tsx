@@ -113,7 +113,9 @@ export default observer(function CreateProductScreen({
           <Grid item xs={1}>
             <Fab variant="extended" color="primary" onClick={onChangeCU}>
               <ArrowBackIosIcon sx={{ mr: 1 }} />
+              <p className="FontPublic">
               <MyContent name="กลับ" fontSize="small" />
+              </p>
             </Fab>
           </Grid>
           <Grid item xs={11} />
@@ -121,7 +123,9 @@ export default observer(function CreateProductScreen({
 
         <CardContent>
           <Typography variant="h4" component="h1" gutterBottom align="center">
+            <p className="FontPublic font-bold">
             <MyContent name="สร้างสินค้า" fontSize="large" />
+            </p>
           </Typography>
 
           <Grid container spacing={2}>
@@ -151,10 +155,16 @@ export default observer(function CreateProductScreen({
                       color: "red",
                     }}
                   >
+                    <p className="FontPublic">
                     <MyContent name="กรุณาใส่รูปภาพสินค้า" fontSize="small" />
+                    </p>
                   </div>
                 )}
               </div>
+              <p className="font-semibold FontPublic items-center text-center mb-5" style={{ color: "#ff0000" }}>
+                <MyContent name="ใช้ได้เฉพาะไฟล์ jpeg และ png ขนาดไม่เกิน 5MB เท่านั้น" fontSize="smaller" />
+                </p>
+
             </Grid>
             <Grid item xs={6}>
               <Grid>
@@ -165,7 +175,9 @@ export default observer(function CreateProductScreen({
                   disabled={id === 0}
                   required
                 >
-                  <InputLabel>ข้อมูลผลไม้ (GI)</InputLabel>
+                  <InputLabel sx={{ fontSize: "1.2rem",fontFamily: '"Noto Sans Thai Looped", sans-serif', }}>
+                  ข้อมูลผลไม้ (GI)
+                  </InputLabel>
                   <Select
                     defaultValue={dataEdit?.productGIId}
                     label="ข้อมูลผลไม้ (GI)"
@@ -176,7 +188,9 @@ export default observer(function CreateProductScreen({
                         value={item.id}
                         onClick={() => onSelectGI(item.id)}
                       >
+                        <p className="FontPublic">
                         {item.name}
+                        </p>
                       </MenuItem>
                     ))}
                   </Select>
@@ -192,6 +206,21 @@ export default observer(function CreateProductScreen({
                   margin="normal"
                   name="weight"
                   required
+                  InputProps={{
+                    sx: {
+                      fontSize: '1.2rem', 
+                      color: '#333',   
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+        
+                    },
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      fontSize: '1.2rem',
+                      color: '#888',
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                    },
+                  }}
                 />
               </Grid>
               <Grid>
@@ -204,6 +233,21 @@ export default observer(function CreateProductScreen({
                   margin="normal"
                   name="price"
                   required
+                  InputProps={{
+                    sx: {
+                      fontSize: '1.2rem', 
+                      color: '#333',   
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+        
+                    },
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      fontSize: '1.2rem',
+                      color: '#888',
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                    },
+                  }}
                 />
               </Grid>
               <Grid>
@@ -216,13 +260,35 @@ export default observer(function CreateProductScreen({
                   margin="normal"
                   name="quantity"
                   required
+                  InputProps={{
+                    sx: {
+                      fontSize: '1.2rem', 
+                      color: '#333',   
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+        
+                    },
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      fontSize: '1.2rem',
+                      color: '#888',
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                    },
+                  }}
                 />
               </Grid>
             </Grid>
+            
+           
+
           </Grid>
+          
+
 
           <Typography variant="h6" component="h2" gutterBottom>
-            คำอธิบาย & รูปภาพ
+            <p className="FontPublic font-semibold">
+            <MyContent name="คำอธิบาย & รูปภาพ" fontSize="small" />
+            </p>
           </Typography>
           <div className="editor-container">
             <ReactQuill
@@ -230,7 +296,7 @@ export default observer(function CreateProductScreen({
               onChange={handleChange}
               modules={modules}
               formats={formats}
-              className="vertical-text-editor" // Add custom class here
+              className="vertical-text-editor" 
             />
           </div>
         </CardContent>
@@ -242,7 +308,9 @@ export default observer(function CreateProductScreen({
             size="large"
             fullWidth
           >
-            บันทึก
+            <p className="FontPublic">
+            <MyContent name="บันทึก" fontSize="small" />
+            </p>
           </Button>
         </CardActions>
       </Card>

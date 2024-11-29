@@ -13,6 +13,7 @@ import { BiDownload } from "react-icons/bi";
 import html2pdf from "html2pdf.js";
 import { VscFilePdf } from "react-icons/vsc";
 import { RiFileExcel2Line } from "react-icons/ri";
+import MyContent from "../../../component/MyContent";
 
 export default observer(function DashboardAdminShowProduct() {
   const { getProduct, product, DeleteProduct } = useStore().productStore;
@@ -46,6 +47,16 @@ export default observer(function DashboardAdminShowProduct() {
       month: "long",
       day: "numeric",
       weekday: "long",
+    };
+    return new Intl.DateTimeFormat("th-TH", options).format(date);
+  };
+
+  const formatDateToThaiShort = (dateString: string) => {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     };
     return new Intl.DateTimeFormat("th-TH", options).format(date);
   };
@@ -147,7 +158,7 @@ export default observer(function DashboardAdminShowProduct() {
           id={0}
         />
       ) : (
-        <div className="p-4">
+        <div className="FontPublic p-4">
           <div className="flex flex-col">
             <div className=" overflow-x-auto">
               <div className="min-w-full inline-block align-middle">
@@ -255,47 +266,61 @@ export default observer(function DashboardAdminShowProduct() {
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tl-lg"
                         >
-                          ลำดับ
+                          <p>
+                            <MyContent name="ลำดับ" fontSize="small" />
+                          </p>
                         </th>
                         <th
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                         >
-                          รูปภาพ
+                           <p>
+                            <MyContent name="รูปภาพ" fontSize="small" />
+                          </p>
                         </th>
                         <th
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                         >
-                          ชื่อผลไม้
+                           <p>
+                            <MyContent name="ชื่อผลไม้" fontSize="small" />
+                          </p>
                         </th>
                         <th
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                         >
-                          ราคา
+                          <p>
+                            <MyContent name="ราคา" fontSize="small" />
+                          </p>
                         </th>
                         <th
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                         >
-                          วันที่สร้าง
+                           <p>
+                            <MyContent name="วันที่สร้าง" fontSize="small" />
+                          </p>
                         </th>
                         <th
                           scope="col"
-                          className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
+                          className="p-5 whitespace-nowrap text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                         >
-                          สถานะการใช้งาน
+                           <p>
+                            <MyContent name="สถานะการใช้งาน" fontSize="small" />
+                          </p>
                         </th>
                         <th
                           scope="col"
-                          className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
+                          className="p-5  text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                         ></th>
                         <th
                           scope="col"
-                          className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tr-lg"
+                          className="p-5 whitespace-nowrap text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tr-lg"
                         >
-                          ตั้งค่า
+                           <p>
+                            <MyContent name="ตั้งค่า" fontSize="small" />
+                          </p>
                         </th>
                       </tr>
                     </thead>
@@ -308,38 +333,39 @@ export default observer(function DashboardAdminShowProduct() {
                             className="bg-white transition-all duration-500 hover:bg-gray-50"
                           >
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
-                              {" "}
-                              {index + 1}
+                              <p className="font-normal">
+                                <MyContent name={index + 1} fontSize="small" />
+                              </p>
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               {" "}
                               <img
                                 src={pathImageProduct + userItem.images}
-                                className="w-20"
+                                className="w-20 object-cover"
                               />
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               {" "}
-                              {userItem.productGI.name}
+                              <p className="font-normal">
+                                <MyContent name={userItem.productGI.name} fontSize="small" />
+                              </p>
+                              
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               {" "}
-                              {userItem.price}
+                              <p className="font-normal">
+                                <MyContent name={userItem.price} fontSize="small" />
+                              </p>
+                              
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               {" "}
-                              {formatDateToThai(userItem.createdAt)}
+                              <p className="font-normal">
+                                <MyContent name={formatDateToThaiShort(userItem.createdAt)} fontSize="small" />
+                              </p>
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               <div
-                              //   className={`
-                              //   py-1 px-3 border font-semibold rounded-full
-                              //   ${
-                              //     userItem.status
-                              //       ? "text-green-500 bg-green-100 border-green-500"
-                              //       : "text-red-500 bg-red-100 border-red-500"
-                              //   }
-                              // `}
                               >
                                 <MySwitch
                                   handleChange={() => handleDelete(userItem)}
@@ -427,23 +453,6 @@ export default observer(function DashboardAdminShowProduct() {
                                     ></path>
                                   </svg>
                                 </button> */}
-                                <button className="p-2 rounded-full  group transition-all duration-500  flex item-center">
-                                  <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      className="stroke-black "
-                                      d="M10.0161 14.9897V15.0397M10.0161 9.97598V10.026M10.0161 4.96231V5.01231"
-                                      stroke="black"
-                                      stroke-width="2.5"
-                                      stroke-linecap="round"
-                                    ></path>
-                                  </svg>
-                                </button>
                               </div>
                             </td>
                           </tr>

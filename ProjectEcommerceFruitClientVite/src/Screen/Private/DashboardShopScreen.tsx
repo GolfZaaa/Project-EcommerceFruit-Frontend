@@ -41,6 +41,7 @@ import ExcelJS from "exceljs";
 
 import "moment/locale/th";
 import MyContent from "../../component/MyContent";
+import dayjs from "dayjs";
 moment.locale("th");
 const drawerWidth = 240;
 
@@ -97,6 +98,7 @@ export default observer(function DashboardShopScreen() {
   const [selectedYear, setSelectedYear] = useState(moment().year());
   const [monthlyOrderData, setMonthlyOrderData] = useState([]);
   const [yearOptions, setYearOptions] = useState([]);
+  const [monthlyAndYearOrderData, setMonthlyAndYearOrderData] = useState([]);
 
   useEffect(() => {
     if (order) {
@@ -139,7 +141,7 @@ export default observer(function DashboardShopScreen() {
     setTotalOrderFailed(totalOrderFailed);
 
     const years: any = [
-      ...new Set(order.map((o) => moment(o.createdAt).year())),
+      ...new Set(order.map((o) => moment(o.createdAt).year() + 543)),
     ].sort((a, b) => a - b);
     setYearOptions(years.map((year: any) => ({ value: year, label: year })));
 
@@ -150,6 +152,7 @@ export default observer(function DashboardShopScreen() {
         if (orderYear !== selectedYear) return acc;
 
         const month = moment(currentOrder.createdAt).format("MMMM");
+        const year = dayjs(currentOrder.createdAt).year() + 543; 
         const orderTotal = currentOrder.orderItems.reduce(
           (itemAcc, orderItem) =>
             itemAcc + orderItem.quantity * orderItem.product.price,
@@ -180,8 +183,49 @@ export default observer(function DashboardShopScreen() {
     setMonthlyOrderData(monthlyData);
   }, [order, selectedYear]);
 
+
+  useEffect(() => {
+    if (order) {
+      const years: any = [
+        ...new Set(order.map((o) => dayjs(o.createdAt).year() + 543)),
+      ].sort((a, b) => a - b);
+      setYearOptions(years.map((year: any) => ({ value: year, label: year })));
+
+      const ordersByYearAndMonth = order
+      .filter((x) => x.confirmReceipt === 1)
+      .reduce((acc: any, currentOrder) => {
+        const month = dayjs(currentOrder.createdAt).format("MMMM");
+        const year = dayjs(currentOrder.createdAt).year() + 543; 
+        const key = `${month}-${year}`;
+    
+        const orderTotal = currentOrder.orderItems.reduce(
+          (itemAcc, orderItem) =>
+            itemAcc + orderItem.quantity * orderItem.product.price,
+          0
+        );
+    
+        if (!acc[key]) {
+          acc[key] = { month, year, total: 0 };
+        }
+    
+        acc[key].total += orderTotal;
+    
+        return acc;
+      }, {});
+    
+    const monthlyData:any = Object.values(ordersByYearAndMonth);
+    monthlyData.sort(
+      (a: any, b: any) =>
+        dayjs(`${a.month} ${a.year - 543}`).valueOf() -
+        dayjs(`${b.month} ${b.year - 543}`).valueOf()
+    );
+    setMonthlyAndYearOrderData(monthlyData);
+    }
+  }, [order, selectedYear]);
+
+
   const handleYearChange = (selectedOption: any) => {
-    setSelectedYear(selectedOption.value);
+    setSelectedYear(selectedOption.value - 543);
   };
 
   const handleDrawerToggle = () => {
@@ -328,45 +372,84 @@ export default observer(function DashboardShopScreen() {
       { header: "หน่วย", key: "unit", width: 30 },
     ];
 
-    worksheet.addRow({
+    worksheet.getRow(1).font = { bold: true, size: 14, color: { argb: "FFFFFF" }};
+    worksheet.getRow(1).alignment = { horizontal: "center", vertical: "middle" };
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "0070C0" }, 
+      };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+    });
+
+    const addStyledRow = (rowData: any) => {
+      const row = worksheet.addRow(rowData);
+      row.eachCell((cell, colIndex) => {
+        cell.alignment = { vertical: "middle", horizontal: colIndex === 2 ? "center" : "left" };
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
+      });
+    };
+
+    addStyledRow({
       item: "กำไรจากการขาย",
       value: totalPrice.toLocaleString(),
       unit: "บาท",
     });
 
-    worksheet.addRow({
+    addStyledRow({
       item: "จำนวนสินค้าที่ขายได้",
       value: totalQuantity.toLocaleString(),
       unit: "ครั้ง",
     });
 
-    worksheet.addRow({
+    addStyledRow({
       item: "ยอดคำสั่งซื้อที่สำเร็จ",
       value: totalOrderSuccess.toLocaleString(),
       unit: "ครั้ง",
     });
 
-    worksheet.addRow({
+    addStyledRow({
       item: "ยอดคำสั่งซื้อที่ยกเลิก",
       value: totalOrderFailed.toLocaleString(),
       unit: "ครั้ง",
     });
 
-    worksheet.addRow({ item: "กำไรต่อเดือน", value: "", unit: "" });
+    // addStyledRow({ item: "กำไรสุทธิต่อเดือน", value: "", unit: "" });
 
-    monthlyOrderData.forEach((data: any) => {
-      const monthIndex = parseInt(moment().month(data.month).format("M")) - 1;
-      const monthInThai = thaiMonths[monthIndex];
-      worksheet.addRow({
-        item: `  ${monthInThai}`,
-        value: data.total.toLocaleString(),
+    // monthlyOrderData.forEach((data: any) => {
+    //   const monthIndex = parseInt(moment().month(data.month).format("M")) - 1;
+    //   const monthInThai = thaiMonths[monthIndex];
+    //   addStyledRow({
+    //     item: `  ${monthInThai}`,
+    //     value: data.total.toLocaleString(),
+    //     unit: "บาท",
+    //   });
+    // });
+
+    worksheet.addRow({ item: "กำไรสุทธิต่อเดือน", value: "" });
+    monthlyAndYearOrderData.forEach((monthData:any) => {
+      worksheet.addRow({ item: `ปี ${monthData.year}`, value: "" }); 
+      addStyledRow({
+        item: `${monthData.month}`,
+        value: monthData.total.toLocaleString(),
         unit: "บาท",
       });
     });
 
-    worksheet.addRow({ item: "จำนวนสินค้าต่อหมวดหมู่", value: "", unit: "" });
+    addStyledRow({ item: "จำนวนสินค้าต่อหมวดหมู่", value: "", unit: "" });
     pieChartData.forEach((data: any) => {
-      worksheet.addRow({
+      addStyledRow({
         item: `  ${data.name}`,
         value: data.value.toLocaleString(),
         unit: "ชิ้น",
@@ -398,8 +481,7 @@ export default observer(function DashboardShopScreen() {
         return <OrderList />;
       case "dashboard":
         return (
-          <div className="-mt-16">
-            {/* Card Image Section */}
+          <div className="mt-24">
             <Card style={{ marginBottom: "20px" }}>
               <CardMedia
                 component="img"
@@ -410,30 +492,64 @@ export default observer(function DashboardShopScreen() {
             </Card>
 
             <div ref={componentRef}>
-              {/* Stat Cards Section */}
               <div className="mt-2 relative flex flex-wrap justify-center items-center gap-4 sm:gap-8 md:gap-10">
                 {[
                   {
                     icon: <BiDollar size={30} />,
-                    label: "กำไรจากการขาย",
-                    value: totalPrice.toLocaleString(),
+                    label: (
+                      <p className="FontPublic">
+                        <MyContent name="กำไรจากการขาย" fontSize="small" />
+                      </p>
+                    ),
+                    value: (
+                      <p>
+                        <MyContent
+                          name={totalPrice.toLocaleString()}
+                          fontSize="small"
+                        />
+                      </p>
+                    ),
                   },
                   {
                     icon: <BiCart size={30} />,
-                    label: "จำนวนสินค้าที่ขายได้",
-                    value: totalQuantity,
+                    label: (
+                      <p className="FontPublic">
+                        <MyContent name="จำนวนยอดขาย" fontSize="small" />
+                      </p>
+                    ),
+                    value: (
+                      <p>
+                        <MyContent name={totalQuantity} fontSize="small" />
+                      </p>
+                    ),
                   },
                   {
                     icon: <BiCheck size={30} />,
-                    label: "ยอดคำสั่งซื้อที่สำเร็จ",
-                    value: totalOrderSuccess,
+                    label: (
+                      <p className="FontPublic">
+                        <MyContent name="ออเดอร์ที่สำเร็จ" fontSize="small" />
+                      </p>
+                    ),
+                    value: (
+                      <p>
+                        <MyContent name={totalOrderSuccess} fontSize="small" />
+                      </p>
+                    ),
                   },
                   {
                     icon: <BiX size={30} />,
-                    label: "ยอดคำสั่งซื้อที่ยกเลิก",
-                    value: totalOrderFailed,
+                    label: (
+                      <p className="FontPublic">
+                        <MyContent name="ออเดอร์ที่ยกเลิก" fontSize="small" />
+                      </p>
+                    ),
+                    value: (
+                      <p>
+                        <MyContent name={totalOrderFailed} fontSize="small" />
+                      </p>
+                    ),
                   },
-                ].map((stat, idx) => (
+                ].map((stat: any, idx) => (
                   <a
                     key={idx}
                     className="flex h-28 w-40 sm:w-44 md:w-48 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80"
@@ -480,21 +596,23 @@ export default observer(function DashboardShopScreen() {
               )}
 
               {/* Graphs Section */}
-              <div className="w-full mt-5 flex flex-col lg:flex-row gap-4">
+              <div className="FontPublic w-full mt-5 flex flex-col lg:flex-row gap-4">
                 {/* Monthly Sales Graph */}
                 <div className="w-full lg:w-2/3 bg-white border rounded-sm overflow-hidden shadow">
                   <div className="p-2 flex justify-between items-center">
-                    <MyContent
-                      name="กราฟแสดงยอดขายในแต่ละเดือน"
-                      fontSize="normal"
-                    />
+                    <p className="font-medium">
+                      <MyContent
+                        name="กราฟแสดงยอดขายในแต่ละเดือน"
+                        fontSize="small"
+                      />
+                    </p>
                     {order.filter((x) => x.confirmReceipt === 1).length > 0 && (
                       <div className="flex items-center">
                         <p className="mr-2">ปี :</p>
                         <Select
                           options={yearOptions}
                           value={yearOptions.find(
-                            (option: any) => option.value === selectedYear
+                            (option: any) => option.value === selectedYear + 543
                           )}
                           onChange={handleYearChange}
                           placeholder="Select Year"
@@ -520,10 +638,12 @@ export default observer(function DashboardShopScreen() {
                 {/* Category Sales Pie Chart */}
                 <div className="w-full lg:w-1/3 bg-white border rounded-sm overflow-hidden shadow">
                   <div className="p-2 -mb-3">
-                    <MyContent
-                      name="สัดส่วนยอดขายตามหมวดหมู่ผลิตภัณฑ์"
-                      fontSize="normal"
-                    />
+                    <p className="font-medium">
+                      <MyContent
+                        name="สัดส่วนยอดขายประเภทสินค้า"
+                        fontSize="small"
+                      />
+                    </p>
                   </div>
                   <div className="p-2">
                     {order?.filter((x) => x.confirmReceipt === 1).length > 0 ? (
@@ -550,26 +670,24 @@ export default observer(function DashboardShopScreen() {
     <div>
       <Toolbar sx={{ minHeight: 0 }} /> {/* ลดขนาด Toolbar เพื่อเขยิบขึ้น */}
       <Divider />
+      <ListItem sx={{ marginTop: 3 }}>
+        <ListItemText
+          sx={{ textAlign: "center" }}
+          primary={
+            <p className="FontPublic font-bold after:content-[''] after:block after:w-full after:h-[1px] after:bg-current after:mt-1">
+              <MyContent name="แดชบอร์ดร้านค้า" fontSize="normal" />
+            </p>
+          }
+        />
+      </ListItem>
       <List
         style={{
           cursor: "pointer",
-          marginTop: "15px"
+          marginTop: "-5px",
         }}
       >
-
-<ListItem>
-          <ListItemText
-            sx={{ textAlign: "center" }}
-            primary={
-              <p className="FontPublic font-bold after:content-[''] after:block after:w-full after:h-[1px] after:bg-current after:mt-1">
-                <MyContent name="แดชบอร์ดร้านค้า" fontSize="normal" />
-              </p>
-            }
-          />
-        </ListItem>
-
         <ListItem
-        button
+          button
           onClick={() => {
             setScreenComponent("dashboard");
             handleDrawerClose();
@@ -580,8 +698,10 @@ export default observer(function DashboardShopScreen() {
           </ListItemIcon>
           <ListItemText
             primary={
-            <MyContent name="สรุปข้อมูล" fontSize="small" />
-          }
+              <p className="FontPublic">
+                <MyContent name="สรุปข้อมูล" fontSize="small" />
+              </p>
+            }
           />
         </ListItem>
         <Collapse timeout="auto" unmountOnExit>
@@ -592,7 +712,7 @@ export default observer(function DashboardShopScreen() {
           </List>
         </Collapse>
         <ListItem
-        button
+          button
           onClick={() => {
             setScreenComponent("CreateShop");
             handleDrawerClose();
@@ -602,11 +722,15 @@ export default observer(function DashboardShopScreen() {
             <ShoppingCartIcon />
           </ListItemIcon>
           <ListItemText
-            primary={<MyContent name="แก้ไขร้านค้า" fontSize="small" />}
+            primary={
+              <p className="FontPublic">
+                <MyContent name="แก้ไขร้านค้า" fontSize="small" />
+              </p>
+            }
           />
         </ListItem>
         <ListItem
-        button
+          button
           onClick={() => {
             setScreenComponent("ProductGIList");
             handleDrawerClose();
@@ -616,11 +740,15 @@ export default observer(function DashboardShopScreen() {
             <PeopleIcon />
           </ListItemIcon>
           <ListItemText
-            primary={<MyContent name="เพิ่มข้อมูล GI " fontSize="small" />}
+            primary={
+              <p className="FontPublic">
+                <MyContent name="เพิ่มข้อมูล GI " fontSize="small" />
+              </p>
+            }
           />
         </ListItem>
         <ListItem
-        button
+          button
           onClick={() => {
             setScreenComponent("ProductList");
             handleDrawerClose();
@@ -630,11 +758,15 @@ export default observer(function DashboardShopScreen() {
             <BarChartIcon />
           </ListItemIcon>
           <ListItemText
-            primary={<MyContent name="เพิ่มสินค้า" fontSize="small" />}
+            primary={
+              <p className="FontPublic">
+                <MyContent name="เพิ่มสินค้า" fontSize="small" />
+              </p>
+            }
           />
         </ListItem>
         <ListItem
-        button
+          button
           onClick={() => {
             setScreenComponent("OrderList");
             handleDrawerClose();
@@ -644,7 +776,11 @@ export default observer(function DashboardShopScreen() {
             <ReceiptLongIcon />
           </ListItemIcon>
           <ListItemText
-            primary={<MyContent name="คำสั่งซื้อ" fontSize="small" />}
+            primary={
+              <p className="FontPublic">
+                <MyContent name="คำสั่งซื้อ" fontSize="small" />
+              </p>
+            }
           />
         </ListItem>
       </List>
@@ -658,10 +794,9 @@ export default observer(function DashboardShopScreen() {
         position="fixed"
         sx={{
           backgroundColor: "#3f51b5",
-          zIndex: (theme) => theme.zIndex.drawer, // ทำให้ AppBar อยู่ใต้ Drawer เมื่อ Drawer เปิด
-          height:81,
-          justifyContent:'center',
-
+          zIndex: (theme) => theme.zIndex.drawer, 
+          height: 81,
+          justifyContent: "center",
         }}
       >
         <Toolbar sx={{ minHeight: 80 }}>
@@ -674,13 +809,13 @@ export default observer(function DashboardShopScreen() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} >
+          <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
             {
               <p className="ChangeFont">
                 <MyContent
-                name={`ร้านค้า : ${usershop && usershop.name}`}
-                fontSize="normal"
-              />
+                  name={`ร้านค้า : ${usershop && usershop.name}`}
+                  fontSize="normal"
+                />
               </p>
             }
           </Typography>
@@ -689,7 +824,9 @@ export default observer(function DashboardShopScreen() {
               to={RoutePath.homeScreen}
               style={{ textDecoration: "none", color: "#fff" }}
             >
+              <p className="FontPublic font-semibold">
               <MyContent name="กลับหน้าหลัก" fontSize="normal" />
+              </p>
             </NavLink>
           </div>
           <div
@@ -697,10 +834,12 @@ export default observer(function DashboardShopScreen() {
               marginLeft: 20,
             }}
           >
+            <p className="FontPublic font-semibold">
             <MyContent
               name={usershop && usershop.user.fullName}
               fontSize="normal"
             />
+            </p>
           </div>
         </Toolbar>
       </AppBar>
@@ -719,15 +858,15 @@ export default observer(function DashboardShopScreen() {
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: "block", sm: "none" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
-              zIndex: (theme) => theme.zIndex.modal + 1, // ทำให้ Drawer ทับ AppBar
-              position: "absolute", // ทำให้ Drawer อยู่ในตำแหน่งทับ AppBar
+              zIndex: (theme) => theme.zIndex.modal + 1, 
+              position: "absolute", 
             },
           }}
         >
@@ -741,7 +880,7 @@ export default observer(function DashboardShopScreen() {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
-              zIndex: (theme) => theme.zIndex.appBar - 1, // ให้ Drawer ปกติอยู่ใต้ AppBar
+              zIndex: (theme) => theme.zIndex.appBar - 1,
             },
           }}
           open
@@ -756,6 +895,7 @@ export default observer(function DashboardShopScreen() {
           flexGrow: 1,
           p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
+          marginTop:-20
         }}
       >
         <Toolbar />

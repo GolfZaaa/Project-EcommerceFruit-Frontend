@@ -87,26 +87,39 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
   return (
     <div ref={componentRef}>
       <div className="flex justify-between">
-      <div className="flex items-center">
+        {order.length < 0 ? (
+          <div className="flex items-center">
           <Typography variant="h5" className="flex items-center">
             <p className="FontPublic">
             <MyContent name="จำนวน" fontSize="normal" />
             </p>
             <span className="mx-1"></span> 
+            
             <p className="FontPublic"> 
             <MyContent name={order.length} fontSize="normal" />
             </p>
           </Typography>
         </div>
-        <div>
-          <button
-            id="downloadButton"
-            onClick={generatePDF}
-            className=" p-2 bg-blue-500 text-white rounded-md"
-          >
-            <BsFillPrinterFill />
-          </button>
-        </div>
+        ):(
+          <div></div>
+        )}
+
+        {/* {order.length < 0 ? (
+ <div>
+
+</div>
+        ):(
+          <div>
+             <button
+   id="downloadButton"
+   onClick={generatePDF}
+   className=" p-2 bg-blue-500 text-white rounded-md"
+ >
+   <BsFillPrinterFill />
+ </button>
+          </div>
+        )}
+        */}
       </div>
 
       {select.length ? (
@@ -118,15 +131,21 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
     marginBottom: 35,
   }}
   justifyContent="space-between"
-  alignItems="center"  // Aligns items vertically in the center
+  alignItems="center"
 >
   <Grid item xs={4} sm={8} md={8} lg={8} xl={8}>
-    <Typography variant="h5">จำนวนที่เลือก {select.length}</Typography>
+    <Typography variant="h5">
+      <p className="FontPublic font-semibold">
+      <MyContent name={`จำนวนที่เลือก : ${select.length}`} fontSize="littlenormal" />
+      </p>
+      </Typography>
   </Grid>
   <Grid item >
     <Fab variant="extended" color="primary" onClick={handleConfirm}  sx={{ zIndex: 1 }} >
       <EditIcon sx={{ mr: 1 }} />
-      ยืนยันการเลือก
+      <p className="FontPublic font-semibold">
+      <MyContent name={`ยืนยันการเลือก`} fontSize="smaller" />
+      </p>
     </Fab>
   </Grid>
 </Grid>

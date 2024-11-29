@@ -7,8 +7,6 @@ export default observer(function CheckOrderScreen() {
   const { checkOrderNow, getOrderItemByOrderId, orderid } =
     useStore().orderStore;
 
-  //   console.log("orderid",orderid)
-
   useEffect(() => {
     getOrderItemByOrderId(orderid);
     // getOrderItemByOrderId(23)

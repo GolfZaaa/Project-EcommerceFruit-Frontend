@@ -99,13 +99,42 @@ const MyOrderCardToSend = ({ order, index }: props) => {
       { header: "หน่วย", key: "unit", width: 30 },
     ];
 
+    worksheet.getRow(1).font = { bold: true, size: 14, color: { argb: "FFFFFF" }};
+    worksheet.getRow(1).alignment = { horizontal: "center", vertical: "middle" };
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "0070C0" }, 
+      };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+    });
+
+    const addStyledRow = (rowData: any) => {
+      const row = worksheet.addRow(rowData);
+      row.eachCell((cell, colIndex) => {
+        cell.alignment = { vertical: "middle", horizontal: colIndex === 2 ? "center" : "left" };
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
+      });
+    };
+
     let totalPrice = 0;
     let totalQuantity = 0;
     let totalOrderSuccess = 0;
     let totalOrderCancel = 0;
     let totalShippingFee = 0;
 
-    worksheet.addRow({
+    addStyledRow({
       item: "จำนวนรายการ",
       value: order.length,
       unit: "รายการ",
@@ -137,14 +166,14 @@ const MyOrderCardToSend = ({ order, index }: props) => {
         totalOrderCancel += 1;
       }
 
-      worksheet.addRow({
+      addStyledRow({
         orderId: item.orderId,
         item: "ค่าจัดส่งจากผู้จัดส่ง",
         value: myDriverFee,
         unit: "บาท",
       });
 
-      worksheet.addRow({
+      addStyledRow({
         item: "จำนวนสินค้าที่หิ้วทั้งหมด",
         value: totalQuantity,
         unit: "ชิ้น",
