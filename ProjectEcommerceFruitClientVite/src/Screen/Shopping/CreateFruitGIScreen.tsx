@@ -141,14 +141,18 @@ export default observer(function CreateFruitGIScreen({
           <Grid item xs={1}>
             <Fab variant="extended" color="primary" onClick={onChangeCU}>
               <ArrowBackIosIcon sx={{ mr: 1 }} />
+              <p className="FontPublic">
               <MyContent name="กลับ" fontSize="small" />
+              </p>
             </Fab>
           </Grid>
           <Grid item xs={11} />
         </Grid>
         <CardContent>
           <Typography variant="h5" component="h2" gutterBottom align="center">
+            <p className="FontPublic font-bold">
             <MyContent name="สร้างข้อมูล GI" fontSize="large" />
+            </p>
           </Typography>
 
           <div style={{ marginBottom: 20 }}>
@@ -163,6 +167,20 @@ export default observer(function CreateFruitGIScreen({
                   name="name"
                   autoFocus
                   required
+                  InputProps={{
+                    sx: {
+                      fontSize: "1.3rem",
+                      color: "#333",
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                    },
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      fontSize: "1.1rem",
+                      color: "#888",
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                    },
+                  }}
                 />
               </Grid>
               <Grid item xs={4}>
@@ -172,15 +190,19 @@ export default observer(function CreateFruitGIScreen({
                   margin="normal"
                   required
                 >
-                  <InputLabel>ประเภท</InputLabel>
-                  <Select defaultValue={dataEdit?.categoryId} label="ประเภท">
+                  <InputLabel sx={{ fontSize: "1.2rem",fontFamily: '"Noto Sans Thai Looped", sans-serif', }}>
+                  ประเภท
+                  </InputLabel>
+                  <Select defaultValue={dataEdit?.categoryId} label="ประเภท"  sx={{ fontSize: "1.3rem" }} >
                     {category.map((item) => (
                       <MenuItem
                         key={item.id}
                         value={item.id}
                         onClick={() => onSelectCate(item.id)}
                       >
-                        {item.name}
+                        <p className="FontPublic">
+                        <MyContent name={item.name} fontSize="small" />
+                        </p>
                       </MenuItem>
                     ))}
                   </Select>
@@ -189,13 +211,13 @@ export default observer(function CreateFruitGIScreen({
             </Grid>
           </div>
 
-          <div style={{ marginBottom: 30 }} className="editor-container">
+          <div style={{ marginBottom: 30 }} className="editor-container ">
             <ReactQuill
               value={editorHtml}
               onChange={handleChange}
               modules={modules}
               formats={formats}
-              className="vertical-text-editor"
+              className="vertical-text-editor "
             />
           </div>
 
@@ -208,9 +230,13 @@ export default observer(function CreateFruitGIScreen({
               previewText="รูปภาพ"
               showPreviews
               showPreviewsInDropzone={false}
-              dropzoneText="ลากและวางไฟล์ที่นี่หรือคลิก"
+              dropzoneText="กรุณาวางไฟล์หรือคลิกเพื่อเลือกไฟล์"
               filesLimit={5}
             />
+            <p className="font-semibold FontPublic mt-2" style={{ color: "#ff0000" }}>
+              <MyContent name="ใช้ได้เฉพาะไฟล์ jpeg และ png ขนาดไม่เกิน 5MB เท่านั้น" fontSize="small" />
+            </p>
+
           </div>
 
           <div
@@ -236,8 +262,8 @@ export default observer(function CreateFruitGIScreen({
                       <div className="delete-icon">
                         <DeleteIcon
                           style={{
-                            borderRadius: "50%", // ทำให้ badge เป็นวงกลม
-                            width: "40px", // กำหนดขนาดตามที่ต้องการ
+                            borderRadius: "50%", 
+                            width: "40px", 
                             height: "40px",
                             display: "flex",
                             justifyContent: "center",
@@ -305,7 +331,9 @@ export default observer(function CreateFruitGIScreen({
             size="large"
             fullWidth
           >
+            <p className="font-semibold">
             <MyContent name="บันทึก" fontSize="small" />
+            </p>
           </Button>
         </CardContent>
       </Card>

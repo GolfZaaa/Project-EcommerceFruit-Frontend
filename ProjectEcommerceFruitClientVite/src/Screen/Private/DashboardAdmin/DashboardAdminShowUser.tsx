@@ -10,6 +10,7 @@ import { BiDownload } from "react-icons/bi";
 import html2pdf from "html2pdf.js";
 import { VscFilePdf } from "react-icons/vsc";
 import { RiFileExcel2Line } from "react-icons/ri";
+import MyContent from "../../../component/MyContent";
 
 export default observer(function DashboardAdminShowUser() {
   const { getUserAll, userAll, DeleteUser } = useStore().userStore;
@@ -126,7 +127,7 @@ export default observer(function DashboardAdminShowUser() {
       {editMode ? (
         <EditAccount onChangeCU={onChangeCU} userEdit={dataEdit} />
       ) : (
-        <div className="p-4">
+        <div className="FontPublic p-4">
           <div className="flex flex-col">
             <div className=" overflow-x-auto">
               <div
@@ -225,25 +226,33 @@ export default observer(function DashboardAdminShowUser() {
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tl-lg"
                         >
-                          ลำดับ
+                          <p>
+                            <MyContent name="ลำดับ" fontSize="small" />
+                          </p>
                         </th>
                         <th
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                         >
-                          ชื่อ - นามสกุล
+                          <p>
+                            <MyContent name="ชื่อ - นามสกุล" fontSize="small" />
+                          </p>
                         </th>
                         <th
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                         >
-                          เบอร์โทรศัพท์
+                          <p>
+                            <MyContent name="เบอร์โทรศัพท์" fontSize="small" />
+                          </p>
                         </th>
                         <th
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                         >
-                          สถานะการใช้งาน
+                          <p>
+                            <MyContent name="สถานะการใช้งาน" fontSize="small" />
+                          </p>
                         </th>
                         <th
                           scope="col"
@@ -253,7 +262,9 @@ export default observer(function DashboardAdminShowUser() {
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tr-lg"
                         >
-                          ตั้งค่า
+                          <p>
+                            <MyContent name="ตั้งค่า" fontSize="small" />
+                          </p>
                         </th>
                       </tr>
                     </thead>
@@ -266,28 +277,30 @@ export default observer(function DashboardAdminShowUser() {
                             className="bg-white transition-all duration-500 hover:bg-gray-50"
                           >
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
-                              {" "}
-                              {index + 1}
+                              <p className="font-normal">
+                                <MyContent name={index + 1} fontSize="small" />
+                              </p>
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               {" "}
-                              {userItem.fullName}
+                              <p className="font-normal">
+                                <MyContent
+                                  name={userItem.fullName}
+                                  fontSize="small"
+                                />
+                              </p>
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               {" "}
-                              {userItem.phoneNumber}
+                              <p className="font-normal">
+                                <MyContent
+                                  name={userItem.phoneNumber}
+                                  fontSize="small"
+                                />
+                              </p>
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                              <div
-                              //     className={`
-                              //   py-1 px-3 border font-semibold rounded-full
-                              //   ${
-                              //     userItem.hidden
-                              //       ? "text-red-500 bg-red-100 border-red-500 w-36"
-                              //       : "text-green-500 bg-green-100 border-green-500 w-28 "
-                              //   }
-                              // `}
-                              >
+                              <div>
                                 <MySwitch
                                   handleChange={() =>
                                     handleDeleteUser(userItem.id)

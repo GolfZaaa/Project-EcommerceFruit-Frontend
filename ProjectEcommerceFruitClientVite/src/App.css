@@ -32,3 +32,10 @@
   font-style: normal;
   font-size: 20px !important; 
 }
+
+.vertical-text-editor .ql-editor {
+  font-size: 20px; 
+  font-family: "Noto Sans Thai Looped", sans-serif;
+
+}
+

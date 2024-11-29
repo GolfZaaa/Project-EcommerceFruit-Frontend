@@ -28,6 +28,7 @@ export default observer(function DashboardForUser() {
   const [monthlyOrderData, setMonthlyOrderData] = useState([]);
   const [yearOptions, setYearOptions] = useState([]);
   const [selectedYear, setSelectedYear] = useState(moment().year());
+  const [monthlyAndYearOrderData, setMonthlyAndYearOrderData] = useState([]);
 
   useEffect(() => {
     getOrdersByUser();
@@ -77,7 +78,7 @@ export default observer(function DashboardForUser() {
       setTotalOrderCancel(totalOrderFailed);
 
       const years: any = [
-        ...new Set(order.map((o) => dayjs(o.createdAt).year())),
+        ...new Set(order.map((o) => dayjs(o.createdAt).year() + 543)),
       ].sort((a, b) => a - b);
       setYearOptions(years.map((year: any) => ({ value: year, label: year })));
 
@@ -102,27 +103,66 @@ export default observer(function DashboardForUser() {
 
           return acc;
         }, {});
-
       const monthlyData: any = Object.entries(ordersByMonth).map(
         ([month, total]) => ({
           month,
+          year: selectedYear + 543,
           total,
         })
       );
-
       monthlyData.sort(
         (a: any, b: any) =>
           dayjs().month(a.month).valueOf() - dayjs().month(b.month).valueOf()
       );
-
       setMonthlyOrderData(monthlyData);
+
+
+    }
+  }, [order, selectedYear]);
+
+  useEffect(() => {
+    if (order) {
+      const years: any = [
+        ...new Set(order.map((o) => dayjs(o.createdAt).year() + 543)),
+      ].sort((a, b) => a - b);
+      setYearOptions(years.map((year: any) => ({ value: year, label: year })));
+
+      const ordersByYearAndMonth = order
+      .filter((x) => x.confirmReceipt === 1)
+      .reduce((acc: any, currentOrder) => {
+        const month = dayjs(currentOrder.createdAt).format("MMMM");
+        const year = dayjs(currentOrder.createdAt).year() + 543; 
+        const key = `${month}-${year}`;
+    
+        const orderTotal = currentOrder.orderItems.reduce(
+          (itemAcc, orderItem) =>
+            itemAcc + orderItem.quantity * orderItem.product.price,
+          0
+        );
+    
+        if (!acc[key]) {
+          acc[key] = { month, year, total: 0 };
+        }
+    
+        acc[key].total += orderTotal;
+    
+        return acc;
+      }, {});
+    
+    const monthlyData:any = Object.values(ordersByYearAndMonth);
+    monthlyData.sort(
+      (a: any, b: any) =>
+        dayjs(`${a.month} ${a.year - 543}`).valueOf() -
+        dayjs(`${b.month} ${b.year - 543}`).valueOf()
+    );
+    setMonthlyAndYearOrderData(monthlyData);
     }
   }, [order, selectedYear]);
 
   console.log("Ordersss", order);
 
   const handleYearChange = (selectedOption: any) => {
-    setSelectedYear(selectedOption.value);
+    setSelectedYear(selectedOption.value - 543);
   };
 
   const option = {
@@ -226,6 +266,8 @@ export default observer(function DashboardForUser() {
     setOpenDropdown(!openDropdown);
   };
 
+
+  
   const componentRef = useRef(null);
   function generatePDF() {
     const opt = {
@@ -264,58 +306,97 @@ export default observer(function DashboardForUser() {
   const generateExcel = () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Dashboard Data");
-
+  
     worksheet.columns = [
-      { header: "รายการ", key: "item", width: 30 },
-      { header: "ข้อมูล", key: "value", width: 30 },
-      { header: "หน่วย", key: "unit", width: 30 },
+      { header: "รายการ", key: "item", width: 40 },
+      { header: "ข้อมูล", key: "value", width: 20 },
+      { header: "หน่วย", key: "unit", width: 15 },
     ];
-
-    worksheet.addRow({
+  
+    worksheet.getRow(1).font = { bold: true, size: 14, color: { argb: "FFFFFF" }};
+    worksheet.getRow(1).alignment = { horizontal: "center", vertical: "middle" };
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "0070C0" }, 
+      };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+    });
+  
+    const addStyledRow = (rowData: any) => {
+      const row = worksheet.addRow(rowData);
+      row.eachCell((cell, colIndex) => {
+        cell.alignment = { vertical: "middle", horizontal: colIndex === 2 ? "center" : "left" };
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
+      });
+    };
+  
+    addStyledRow({
       item: "ยอดเงินรวมที่ซื้อ",
       value: totalPrice,
       unit: "บาท",
     });
-
-    worksheet.addRow({
+  
+    addStyledRow({
       item: "จำนวนสินค้าที่ซื้อ",
       value: totalQuantity,
       unit: "ชิ้น",
     });
-
-    worksheet.addRow({
+  
+    addStyledRow({
       item: "คำสั่งซื้อที่สำเร็จ",
       value: totalOrderSuccess,
       unit: "ครั้ง",
     });
-
-    worksheet.addRow({
+  
+    addStyledRow({
       item: "คำสั่งซื้อที่ยกเลิก",
       value: totalOrderCancel,
       unit: "ครั้ง",
     });
+  
+    // worksheet.addRow({});
+    // addStyledRow({ item: "ยอดคำสั่งซื้อในแต่ละเดือน", value: "", unit: "" });
+    // monthlyAndYearOrderData.forEach((monthData: any) => {
+    //   addStyledRow({
+    //     item: `${monthData.month} ${monthData.year}`,
+    //     value: monthData.total,
+    //     unit: "บาท",
+    //   });
+    // });
 
     worksheet.addRow({ item: "ยอดคำสั่งซื้อในแต่ละเดือน", value: "" });
-    monthlyOrderData.forEach((monthData: any) => {
-      worksheet.addRow({
-        item: monthData.month,
+    monthlyAndYearOrderData.forEach((monthData:any) => {
+      worksheet.addRow({ item: `ปี ${monthData.year}`, value: "" }); 
+      addStyledRow({
+        item: `${monthData.month}`,
         value: monthData.total,
         unit: "บาท",
       });
     });
-
-    worksheet.addRow({
-      item: "สัดส่วนการใช้จ่ายในแต่ละหมวดหมู่สินค้า",
-      value: "",
-    });
+  
+    worksheet.addRow({});
+    addStyledRow({ item: "สัดส่วนการใช้จ่ายในแต่ละหมวดหมู่สินค้า", value: "", unit: "" });
+  
     pieChartData.forEach((categoryData: any) => {
-      worksheet.addRow({
+      addStyledRow({
         item: categoryData.name,
         value: categoryData.value,
         unit: "ชิ้น",
       });
     });
-
+  
     workbook.xlsx.writeBuffer().then((data) => {
       const blob = new Blob([data], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -328,6 +409,7 @@ export default observer(function DashboardForUser() {
       URL.revokeObjectURL(url);
     });
   };
+  
 
   const [modal, setmodal] = useState(false);
 
@@ -525,13 +607,13 @@ export default observer(function DashboardForUser() {
                         <div className="flex justify-between items-center">
                           <p className="font-medium text-sm">
                           <MyContent
-                  name="แสดงจำนวนคำสั่งซื้อในแต่ละเดือน"
-                  fontSize="small"
-                />
+                            name="แสดงจำนวนคำสั่งซื้อในแต่ละเดือน"
+                            fontSize="small"
+                          />
                           </p>
                           <div className="flex items-center -ml-3">
                             <p className="mr-1 text-sm">ปี :</p>
-                            {selectedYear}
+                            {selectedYear + 543}
                           </div>
                         </div>
                         <div className="p-2">
@@ -592,7 +674,7 @@ export default observer(function DashboardForUser() {
                     <Select
                       options={yearOptions}
                       value={yearOptions.find(
-                        (option: any) => option.value === selectedYear
+                        (option: any) => option.value === selectedYear + 543
                       )}
                       onChange={handleYearChange}
                       placeholder="Select Year"

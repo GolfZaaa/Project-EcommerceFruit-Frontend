@@ -20,6 +20,7 @@ import { useStore } from "../../store/store";
 import { formats, modules, myToast } from "../../helper/components";
 import { NEWS } from "../../models/NEWS";
 import ReactQuill from "react-quill";
+import MyContent from "../../component/MyContent";
 
 interface props {
   onChangeCU?: any;
@@ -90,7 +91,9 @@ const CreateUpdateNEWS = ({ onChangeCU, dataEdit }: props) => {
           <Grid item xs={1}>
             <Fab variant="extended" color="primary" onClick={onChangeCU}>
               <ArrowBackIosIcon sx={{ mr: 1 }} />
-              กลับ
+              <p className="FontPublic">
+                            <MyContent name="กลับ" fontSize="small" />
+              </p>
             </Fab>
           </Grid>
           <Grid item xs={11} />
@@ -98,7 +101,9 @@ const CreateUpdateNEWS = ({ onChangeCU, dataEdit }: props) => {
 
         <CardContent>
           <Typography variant="h4" component="h1" gutterBottom align="center">
-            ข่าวประชาสัมพันธ์
+          <p className="font-semibold">
+                            <MyContent name="ข่าวประชาสัมพันธ์" fontSize="larger" />
+                          </p>
           </Typography>
 
           <div
@@ -147,7 +152,7 @@ const CreateUpdateNEWS = ({ onChangeCU, dataEdit }: props) => {
               onChange={handleChange}
               modules={modules}
               formats={formats}
-              className="vertical-text-editor" // Add custom class here
+              className="vertical-text-editor"
             />
           </div>
         </CardContent>

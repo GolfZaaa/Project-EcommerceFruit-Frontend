@@ -118,13 +118,6 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
 
   const calculateTotalPrice = () => {
     return dataEdit?.orderItems.reduce((total, item: OrderItem) => {
-      // const storeTotal = item.product.reduce(
-      //   (storeSum: number, product: Product) => {
-      //     return storeSum + item.quantity * product.price;
-      //   },
-      //   0
-      // );
-
       total = item.product.price * item.quantity + total;
 
       return total;
@@ -154,14 +147,18 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
           <Grid item xs={1}>
             <Fab variant="extended" color="primary" onClick={onChangeCU}>
               <ArrowBackIosIcon sx={{ mr: 1 }} />
-              กลับ
+              <p className="FontPublic">
+              <MyContent name="กลับ" fontSize="small" />
+              </p>
             </Fab>
           </Grid>
           <Grid item xs={11} />
         </Grid>
         <CardContent>
           <Typography variant="h4" component="h1" gutterBottom align="center">
-            คำสั่งซื้อ
+            <p className="FontPublic font-semibold">
+            <MyContent name="คำสั่งซื้อ" fontSize="large" />
+            </p>
           </Typography>
           <Grid container spacing={2}>
             <Grid
@@ -181,7 +178,6 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                   width={200}
                 />
               ) : (
-                // <MyContent name="เครดิตการ์ด" fontSize="large" />
                 <img
                   src={imagecraditcart}
                   alt="เครดิตการ์ด"
@@ -204,11 +200,17 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                       dataEdit?.status == 2
                     }
                   >
-                    <InputLabel>เลือกบริษัทขนส่ง</InputLabel>
+                    <InputLabel sx={{ fontSize: "1.2rem",fontFamily: '"Noto Sans Thai Looped", sans-serif', }}>
+                    เลือกบริษัทขนส่ง
+                  </InputLabel>
                     <Select
                       label="เลือกบริษัทขนส่ง"
                       value={selectCate}
                       defaultValue={dataEdit?.shippingType || "อื่น ๆ"}
+                      sx={{
+                        fontSize: "1.2rem",
+                        fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                      }}
                     >
                       {categorySend.map((item) => (
                         <MenuItem
@@ -216,25 +218,13 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                           value={item.name}
                           onClick={() => onSelectCate(item.name)}
                         >
+                          <p className="FontPublic">
                           {item.name}
+                          </p>
                         </MenuItem>
                       ))}
                     </Select>
                   </FormControl>
-                  {/* <Typography gutterBottom align="left">
-                    ประเภทการขนส่ง : {dataEdit?.shippingType}
-                  </Typography> */}
-                  {/* <TextField
-                    defaultValue={dataEdit?.shippingType}
-                    fullWidth
-                    label="ประเภทการขนส่ง"
-                    variant="outlined"
-                    margin="normal"
-                    name="shippingType"
-                    autoFocus
-                    required
-                    disabled={dataEdit?.status == 1}
-                  /> */}
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
@@ -254,17 +244,43 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                       dataEdit?.status == 2 ||
                       selectCate === "อื่น ๆ"
                     }
+                    InputProps={{
+                      sx: {
+                        fontSize: '1.2rem', 
+                        color: '#333',   
+                        fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                      },
+                    }}
+                    InputLabelProps={{
+                      sx: {
+                        fontSize: '1.2rem',
+                        color: '#888',
+                        fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                      },
+                    }}
                   />
                 </Grid>
 
                 <Grid item xs={12}>
-                  <label>ที่อยู่ผู้สั่งซื้อ</label>
+                  <label className="FontPublic font-semibold">
+                  <MyContent name="ที่อยู่ผู้สั่งซื้อ" fontSize="littlenormal" />
+                    </label>
                   <Typography gutterBottom align="left">
-                    {dataEdit?.address?.detail} แขวง/ตำบล
-                    {dataEdit?.address?.subDistrict} เขต/อำเภอ
-                    {dataEdit?.address?.district} จังหวัด
-                    {dataEdit?.address?.province} รหัสไปรษณีย์{" "}
-                    {dataEdit?.address?.postCode}
+                    <p className="FontPublic">
+                    <MyContent name={`${dataEdit?.address?.detail}`} fontSize="small" />
+                    </p>
+                    <p className="FontPublic">
+                    <MyContent name={`แขวง/ตำบล ${dataEdit?.address?.subDistrict}  `} fontSize="small" />
+                    </p>
+                    <p className="FontPublic">
+                    <MyContent name={`เขต/อำเภอ ${dataEdit?.address?.district}   `} fontSize="small" />
+                    </p>
+                    <p className="FontPublic">
+                    <MyContent name={`จังหวัด ${dataEdit?.address?.province}   `} fontSize="small" />
+                    </p>
+                    <p className="FontPublic">
+                    <MyContent name={`รหัสไปรษณีย์ ${dataEdit?.address?.postCode}`} fontSize="small" />
+                    </p>
                   </Typography>
                 </Grid>
               </Grid>
@@ -277,29 +293,30 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
             <Grid item xs={12} mt={2}>
               <div className="space-y-6">
                 <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6">
-                  <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
+                  <div className="FontPublic space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                     <img
-                      className="hidden h-20 w-20 dark:block"
+                      className="hidden h-20 w-20 dark:block object-cover"
                       src={pathImages.product + item.product.images || ""}
                       alt={item.product.images || "product image"}
                     />
-                    <label className="sr-only">Choose quantity:</label>
                     <div className="flex items-center justify-between md:order-3 md:justify-end">
                       <div className="flex items-center">
-                        จำนวน {item.quantity} ชิ้น
+                    <MyContent name={`จำนวน ${item.quantity}  ชิ้น`} fontSize="small" />
                       </div>
                       <div className="text-end md:order-4 md:w-32">
                         <p className="text-base font-bold text-gray-900 dark:text-gray-900">
-                          {item.product.price * item.quantity} บาท
+                    <MyContent name={` ${item.product.price * item.quantity}  บาท`} fontSize="small" />
                         </p>
                       </div>
                     </div>
 
                     <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
-                      <p className="text-sm text-gray-500 font-bold">
-                        ประเภท : {item.product.productGI.category.name}
+                      <p className="text-sm text-gray-500 font-bold -mb-3">
+                    <MyContent name={` ${item.product.productGI.category.name} `} fontSize="small" />
                       </p>
-                      ชื่อ : {item.product.productGI.name}
+                      <p className="font-bold">
+                      <MyContent name={` ${item.product.productGI.name} `} fontSize="littlenormal" />
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -307,28 +324,32 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
             </Grid>
           </Grid>
         ))}
-        <div className="rounded-sm flex flex-col px-4 xl:p-6 w-full bg-white">
+        <div className="FontPublic rounded-sm flex flex-col px-4 xl:p-6 w-full bg-white">
           <div className="flex justify-between items-center w-full mb-3">
-            <p className="text-base leading-4 text-gray-800">ราคารวม</p>
+            <p className="text-base leading-4 text-gray-800">
+              
+              <MyContent name={`ราคารวม`} fontSize="normal" />
+              </p>
             <p className="text-base leading-4 text-gray-600">
-              {formattedTotalPrice} บาท
+            <MyContent name={`${formattedTotalPrice} บาท`} fontSize="normal" />
             </p>
           </div>
           <div className="flex justify-between items-center w-full mb-3">
-            <p className="text-base leading-4 text-gray-800">ค่าจัดส่ง</p>
+            <p className="text-base leading-4 text-gray-800">
+            <MyContent name={`ค่าจัดส่ง`} fontSize="normal" />
+              </p>
             <p className="text-base leading-4 text-gray-600">
-              {/* {systemSetting[0]?.shippingCost} บาท */}
-              {dataEdit?.shippings[0]?.shippingFee} บาท
+            <MyContent name={`${dataEdit?.shippings[0]?.shippingFee} บาท`} fontSize="normal" />
             </p>
           </div>
           <div className="flex justify-between items-center w-full">
             <p className="text-base font-semibold leading-4 text-gray-800">
-              ราคารวมทั้งหมด
+            <MyContent name={`ราคารวมทั้งหมด`} fontSize="normal" />
             </p>
             <p className="text-base font-semibold leading-4 text-gray-600">
-              {parseFloat(formattedTotalPrice) +
-                (dataEdit?.shippings[0]?.shippingFee || 0)}{" "}
-              บาท
+            <MyContent name={`${parseFloat(formattedTotalPrice) +
+                (dataEdit?.shippings[0]?.shippingFee || 0)}
+              บาท`} fontSize="normal" />
             </p>
           </div>
         </div>
@@ -347,11 +368,10 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                   color="success"
                   size="large"
                   fullWidth
-                  // disabled={
-                  //   !trackingId || dataEdit?.status == 1 || dataEdit?.status == 2
-                  // }
                 >
-                  ยืนยันคำสั่งซื้อ
+                  <p className="FontPublic">
+            <MyContent name={`ยืนยันคำสั่งซื้อ`} fontSize="small" />
+                  </p>
                 </Button>
               ) : (
                 <Button
@@ -360,16 +380,13 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                   color="success"
                   size="large"
                   fullWidth
-                  // disabled={
-                  //   !trackingId || dataEdit?.status == 1 || dataEdit?.status == 2
-                  // }
                   disabled={!!dataEdit?.tag || dataEdit?.status == 2}
                 >
                   {!!dataEdit?.tag
-                    ? "เสร็จสิ้น"
+                    ? <p className="FontPublic"><MyContent name={`เสร็จสิ้น`} fontSize="small" /></p>
                     : selectCate === "อื่น ๆ"
-                    ? "บันทึก"
-                    : "บันทึกหมายเลขพัสดุ"}
+                    ? <p className="FontPublic"><MyContent name={`บันทึก`} fontSize="small" /></p>
+                    : <p className="FontPublic"><MyContent name={`บันทึกหมายเลขพัสดุ`} fontSize="small" /></p>}
                 </Button>
               )}
             </CardActions>
@@ -384,7 +401,9 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                 fullWidth
                 disabled={dataEdit?.status == 1 || dataEdit?.status == 2}
               >
-                ยกเลิกคำสั่งซื้อ
+                <p className="FontPublic ">
+                <MyContent name={`ยกเลิกคำสั่งซื้อ`} fontSize="small" />
+                </p>
               </Button>
             </CardActions>
           </Grid>

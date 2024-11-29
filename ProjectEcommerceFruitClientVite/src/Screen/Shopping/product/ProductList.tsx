@@ -177,14 +177,16 @@ const ProductList = () => {
   };
 
   return (
-<div className="responsive-container">
+<div className="responsive-container" style={{marginTop:102}}>
       {onCreate ? (
         <CreateProductScreen onChangeCU={onChangeCU} dataEdit={dataEdit} id={1} />
       ) : (
         <Container maxWidth="lg">
           <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
             <Typography variant="h4" component="h1" gutterBottom align="center">
+              <p className="FontPublic font-bold">
               <MyContent name="เพิ่มสินค้า" fontSize="large" />
+              </p>
             </Typography>
             <Grid container justifyContent="flex-end" mb={2} spacing={2}>
               <Grid item>
@@ -197,7 +199,9 @@ const ProductList = () => {
                   }}
                 >
                   <AddIcon sx={{ mr: 1 }} />
+                  <p className="FontPublic">
                   <MyContent name="เพิ่ม" fontSize="small" />
+                  </p>
                 </Fab>
               </Grid>
             </Grid>
@@ -208,7 +212,9 @@ const ProductList = () => {
                   <TableRow>
                     {columns.map((column) => (
                       <TableCell key={column.id} align="center">
+                        <p className="FontPublic">
                         <MyContent name={column.label} fontSize="small" />
+                        </p>
                       </TableCell>
                     ))}
                   </TableRow>
@@ -223,7 +229,10 @@ const ProductList = () => {
                   ).map((row) => (
                     <TableRow key={row.id}>
                       <TableCell component="th" scope="row">
-                        <MyContent name={row.productGI.name} fontSize="small" />
+                      <p className="FontPublic overflow-hidden text-ellipsis whitespace-nowrap">
+                        <MyContent name={row.productGI.name.length > 8 ? `${row.productGI.name.slice(0, 8)}...` : row.productGI.name} fontSize="small" />
+                    </p>
+
                       </TableCell>
                       <TableCell align="center">
                         {row.images ? (
@@ -242,16 +251,24 @@ const ProductList = () => {
                         )}
                       </TableCell>
                       <TableCell align="center">
+                        <p className="FontPublic ">
                         <MyContent name={row?.productGI?.category.name} fontSize="small" />
+                        </p>
                       </TableCell>
                       <TableCell align="center">
+                        <p className="FontPublic">
                         <MyContent name={row?.price} fontSize="small" />
+                        </p>
                       </TableCell>
                       <TableCell align="center">
-                        <MyContent name={row?.weight} fontSize="small" />
+                      <p className="FontPublic">
+                      <MyContent name={row?.weight} fontSize="small" />
+                      </p>
                       </TableCell>
                       <TableCell align="center">
-                        <MyContent name={row?.quantity} fontSize="small" />
+                      <p className="FontPublic">
+                      <MyContent name={row?.quantity} fontSize="small" />
+                      </p>
                       </TableCell>
                       <TableCell align="center">
                         <MySwitch
@@ -274,7 +291,9 @@ const ProductList = () => {
                           size="small"
                         >
                           <EditIcon sx={{ mr: 1 }} />
+                          <p className="FontPublic">
                           <MyContent name="แก้ไข" fontSize="small" />
+                          </p>
                         </Fab>
                       </TableCell>
                       <TableCell align="center">
@@ -285,17 +304,35 @@ const ProductList = () => {
                           size="small"
                         >
                           <RemoveIcon sx={{ mr: 1 }} />
+                          <p className="FontPublic">
                           <MyContent name="ลบ" fontSize="small" />
+                          </p>
                         </Fab>
                         <Dialog open={open} onClose={handleClose}>
-                          <DialogTitle>{"ลบข้อมูลนี้ออกจากฐานข้อมูล"}</DialogTitle>
+                          <DialogTitle sx={{ textAlign: "center" }}>
+                          <p className="FontPublic font-semibold">
+                              <MyContent
+                                name="ลบข้อมูลออกจากระบบฐานข้อมูล"
+                                fontSize="littlenormal"
+                              />
+                            </p>
+                            </DialogTitle>
                           <DialogContent>
                             <DialogContentText>
-                              ลบข้อมูลนี้ออกจากฐานข้อมูล ยืนยันเพื่อลบ
+                            <p className="FontPublic">
+                                <MyContent
+                                  name="การดำเนินการนี้ต้องได้รับการยืนยันก่อนดำเนินการ"
+                                  fontSize="small"
+                                />
+                              </p>
                             </DialogContentText>
                           </DialogContent>
                           <DialogActions>
-                            <Button onClick={handleClose}>ยกเลิก</Button>
+                            <Button onClick={handleClose}>
+                              <p className="FontPublic">
+                                <MyContent name="ยกเลิก" fontSize="small" />
+                              </p>
+                              </Button>
                             <Button
                               onClick={async () => {
                                 await removeProduct(row.id).then(() => {
@@ -305,7 +342,9 @@ const ProductList = () => {
                               }}
                               autoFocus
                             >
-                              ยืนยัน
+                              <p className="FontPublic">
+                                <MyContent name="ยืนยัน" fontSize="small" />
+                              </p>
                             </Button>
                           </DialogActions>
                         </Dialog>

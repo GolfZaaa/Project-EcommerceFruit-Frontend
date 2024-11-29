@@ -13,6 +13,7 @@ import { BiDownload } from "react-icons/bi";
 import html2pdf from "html2pdf.js";
 import { VscFilePdf } from "react-icons/vsc";
 import { RiFileExcel2Line } from "react-icons/ri";
+import MyContent from "../../../component/MyContent";
 
 export default observer(function DashboardAdminShowStore() {
   const { getStoreAll, shopAll, DeleteStore } = useStore().shopuserStore;
@@ -47,6 +48,16 @@ export default observer(function DashboardAdminShowStore() {
       month: "long",
       day: "numeric",
       weekday: "long",
+    };
+    return new Intl.DateTimeFormat("th-TH", options).format(date);
+  };
+
+  const formatDateToThaiShort = (dateString: string) => {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     };
     return new Intl.DateTimeFormat("th-TH", options).format(date);
   };
@@ -243,7 +254,7 @@ export default observer(function DashboardAdminShowStore() {
 
 
                   </div>
-                  <div className="overflow-hidden ">
+                  <div className="FontPublic overflow-hidden ">
                     <table className="min-w-full border border-gray-300 rounded-tl-lg rounded-tr-lg overflow-hidden">
                       <thead className="bg-slate-200">
                         <tr>
@@ -251,31 +262,41 @@ export default observer(function DashboardAdminShowStore() {
                             scope="col"
                             className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tl-lg"
                           >
-                            ลำดับ
+                            <p>
+                            <MyContent name="ลำดับ" fontSize="small" />
+                          </p>
                           </th>
                           <th
                             scope="col"
                             className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                           >
-                            ชื่อร้าน
+                            <p>
+                            <MyContent name="ชื่อร้าน" fontSize="small" />
+                          </p>
                           </th>
                           <th
                             scope="col"
                             className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                           >
-                            ชื่อผู้สร้าง
+                             <p>
+                            <MyContent name="ชื่อผู้สร้าง" fontSize="small" />
+                          </p>
                           </th>
                           <th
                             scope="col"
                             className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                           >
-                            วันที่สร้าง
+                             <p>
+                            <MyContent name="วันที่สร้าง" fontSize="small" />
+                          </p>
                           </th>
                           <th
                             scope="col"
                             className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                           >
-                            สถานะการใช้งาน
+                             <p>
+                            <MyContent name="สถานะการใช้งาน" fontSize="small" />
+                          </p>
                           </th>
                           <th
                             scope="col"
@@ -285,7 +306,9 @@ export default observer(function DashboardAdminShowStore() {
                             scope="col"
                             className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tr-lg"
                           >
-                            ตั้งค่า
+                             <p>
+                            <MyContent name="ตั้งค่า" fontSize="small" />
+                          </p>
                           </th>
                         </tr>
                       </thead>
@@ -298,31 +321,27 @@ export default observer(function DashboardAdminShowStore() {
                               className="bg-white transition-all duration-500 hover:bg-gray-50"
                             >
                               <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
-                                {" "}
-                                {index + 1}
+                                <p className="font-normal">
+                                <MyContent name={index + 1} fontSize="small" />
+                              </p>
                               </td>
                               <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                                {" "}
-                                {userItem.name}
+                                <p className="font-normal">
+                                <MyContent name={userItem.name} fontSize="small" />
+                              </p>
                               </td>
                               <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                                {" "}
-                                {userItem.user.fullName}
+                              <p className="font-normal">
+                                <MyContent name={userItem.user.fullName} fontSize="small" />
+                              </p>
                               </td>
                               <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                                {formatDateToThai(userItem.createdAt)}
+                              <p className="font-normal">
+                                <MyContent name={formatDateToThaiShort(userItem.createdAt)} fontSize="small" />
+                              </p>
                               </td>
                               <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                                 <div
-                                //         className={`
-                                //     py-1 px-3 border font-semibold rounded-full
-                                //     ${
-                                //       userItem.hidden
-                                //         ? " text-red-500 bg-red-100 border-red-500 w-36"
-                                //         : "text-green-500 bg-green-100 border-green-500 w-28"
-                                //     }
-                                //   `
-                                // }
                                 >
                                   <MySwitch
                                     handleChange={() =>
@@ -411,23 +430,6 @@ export default observer(function DashboardAdminShowStore() {
                                   ></path>
                                 </svg>
                               </button> */}
-                                  <button className="p-2 rounded-full group transition-all duration-500 flex item-center">
-                                    <svg
-                                      width="20"
-                                      height="20"
-                                      viewBox="0 0 20 20"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        className="stroke-black "
-                                        d="M10.0161 14.9897V15.0397M10.0161 9.97598V10.026M10.0161 4.96231V5.01231"
-                                        stroke="black"
-                                        stroke-width="2.5"
-                                        stroke-linecap="round"
-                                      ></path>
-                                    </svg>
-                                  </button>
                                 </div>
                               </td>
                             </tr>

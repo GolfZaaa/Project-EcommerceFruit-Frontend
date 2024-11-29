@@ -223,7 +223,7 @@ export default observer(function SummaryScreen() {
   };
 
   return (
-    <div className="bg-gray-50 -mt-8">
+    <div className="FontPublic bg-gray-50 -mt-8">
       <div className="ml-10 mr-10">
         <div className="mt-8 flex justify-center flex-col md:flex-row items-stretch w-full space-y-4 md:space-y-0 md:space-x-6 xl:space-x-8">
           <div className="flex flex-col px-4 py-6 md:p-6 xl:p-8 w-full bg-white space-y-6 shadow-md rounded-sm">
@@ -243,7 +243,7 @@ export default observer(function SummaryScreen() {
                 <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />
                 <circle cx="12" cy="10" r="3" />
               </svg>
-              <h3 className="text-xl font-medium leading-5 text-gray-700">
+              <h3 className="text-xl font-bold leading-5 text-gray-700">
                 <MyContent name="ที่อยู่ในการจัดส่ง" fontSize="normal" />
               </h3>
             </div>

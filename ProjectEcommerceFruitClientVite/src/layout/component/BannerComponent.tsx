@@ -39,8 +39,7 @@ export default observer(function BannerComponent() {
               </span>
               <div className="flex-1 p-2">
                 <p className="text-base dark:text-red-600 font-semibold">
-                  ท่านสามารถชำระเงินได้
-                  โดยกรุณาเลือกดำเนินการทีละหนึ่งร้านเท่านั้น
+                สามารถชำระเงินได้ โดยเลือกดำเนินการทีละหนึ่งร้านเท่านั้น
                 </p>
               </div>
             </div>

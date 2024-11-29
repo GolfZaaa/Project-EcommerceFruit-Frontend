@@ -199,7 +199,7 @@ export default observer(function CartScreen() {
   const { setLoadingUser, loadingUser } = useStore().userStore;
 
   return (
-    <div>
+    <div className="FontPublic">
       <BannerComponent />
       <section className="bg-white py-8 antialiased md:py-16">
         <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 2xl:px-0">
@@ -294,7 +294,7 @@ export default observer(function CartScreen() {
                                           className="shrink-0 md:order-1"
                                         >
                                           <img
-                                            className="hidden h-20 w-20 dark:block"
+                                            className="hidden h-20 w-20 dark:block object-cover"
                                             src={
                                               pathImages.product +
                                               product.images
@@ -303,9 +303,6 @@ export default observer(function CartScreen() {
                                           />
                                         </a>
                                       </div>
-                                      <label className="sr-only">
-                                        Choose quantity:
-                                      </label>
                                       <div className="flex items-center justify-between md:order-3 md:justify-end">
                                         <div className="flex items-center">
                                           <button
@@ -383,12 +380,19 @@ export default observer(function CartScreen() {
                                           />
                                         </p>
                                         <a
-                                          href="#"
-                                          className="text-base font-medium text-gray-900 hover:underline dark:text-gray-800"
+                                         onClick={() => {
+                                          navigate(
+                                            RoutePath.productDetail(
+                                              product.id
+                                            )
+                                          );
+                                          resetScroll();
+                                        }}
+                                          className="cursor-pointer text-base font-semibold text-gray-900 hover:underline dark:text-gray-800"
                                         >
                                           <MyContent
                                             name={item.productName}
-                                            fontSize="small"
+                                            fontSize="normal"
                                           />
                                         </a>
                                         <div className="flex items-center gap-4">
@@ -443,7 +447,7 @@ export default observer(function CartScreen() {
                       <dt className="text-base font-bold text-gray-800">
                         <MyContent name="ราคารวม" fontSize="small" />
                       </dt>
-                      <dd className="text-base font-medium text-green-600">
+                      <dd className="text-base font-bold text-green-600">
                         <MyContent
                           name={`${!checkedItem ? 0 : formattedTotalPrice} บาท`}
                           fontSize="small"

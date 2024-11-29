@@ -140,7 +140,6 @@ const OrderList = () => {
     getOrderByStore(user?.stores[0].id || 0);
   }, [open, onCreate]);
 
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - order.length) : 0;
 
@@ -228,7 +227,6 @@ const OrderList = () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Order Data");
 
-    // กำหนดหัวตารางให้ตรงกับข้อมูลที่แสดงในตาราง
     worksheet.columns = [
       { header: "รหัสคำสั่งซื้อ", key: "orderId", width: 20 },
       { header: "รูปภาพสลิป", key: "paymentImage", width: 30 },
@@ -238,7 +236,36 @@ const OrderList = () => {
       { header: "สถานะพัสดุ", key: "confirmReceipt", width: 30 },
     ];
 
-    // วนลูปผ่านรายการ order เพื่อเพิ่มข้อมูลลงใน Excel
+    
+    worksheet.getRow(1).font = { bold: true, size: 14, color: { argb: "FFFFFF" }};
+    worksheet.getRow(1).alignment = { horizontal: "center", vertical: "middle" };
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "0070C0" }, 
+      };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+    });
+
+    const addStyledRow = (rowData: any) => {
+      const row = worksheet.addRow(rowData);
+      row.eachCell((cell, colIndex) => {
+        cell.alignment = { vertical: "middle", horizontal: colIndex === 2 ? "center" : "left" };
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
+      });
+    };
+
     for (const row of order) {
       const statusText =
         row.status === 0
@@ -262,7 +289,6 @@ const OrderList = () => {
         .add(543, "year")
         .format("DD/MM/YYYY");
 
-      // เพิ่มข้อมูลข้อความ
       const addedRow = worksheet.addRow({
         orderId: row.orderId,
         paymentImage: row.paymentImage ? "มีรูปภาพ" : "ไม่มีรูปภาพ",
@@ -272,24 +298,20 @@ const OrderList = () => {
         confirmReceipt: confirmReceiptText,
       });
 
-      // ถ้ามีรูปภาพ ให้เพิ่มลงใน Excel
       if (row.paymentImage) {
         try {
-          // แปลงรูปภาพเป็นบัฟเฟอร์โดยตรง
           const imageUrl = pathImages.paymentImage + row.paymentImage;
           const response = await fetch(imageUrl);
           const arrayBuffer = await response.arrayBuffer();
 
-          // เพิ่มรูปภาพใน workbook
           const imageId = workbook.addImage({
-            buffer: arrayBuffer, // ใช้บัฟเฟอร์ของรูปภาพ
-            extension: "jpeg", // ใช้ "png" หรือ "jpeg" ตามประเภทของไฟล์ภาพ
+            buffer: arrayBuffer, 
+            extension: "jpeg", 
           });
 
-          // กำหนดให้แสดงรูปภาพในเซลล์ที่ตรงกับแถวที่เพิ่มข้อมูล
           worksheet.addImage(imageId, {
-            tl: { col: 1, row: addedRow.number - 1 }, // ตำแหน่งเริ่มต้น (col: 1 คือ column ที่ 2)
-            ext: { width: 100, height: 100 }, // ขนาดของรูปภาพ
+            tl: { col: 1, row: addedRow.number - 1 }, 
+            ext: { width: 100, height: 100 },
           });
         } catch (error) {
           console.error("Error adding image to Excel:", error);
@@ -297,7 +319,6 @@ const OrderList = () => {
       }
     }
 
-    // บันทึกไฟล์ Excel และทำให้ดาวน์โหลดได้
     workbook.xlsx.writeBuffer().then((data) => {
       const blob = new Blob([data], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -312,7 +333,7 @@ const OrderList = () => {
   };
 
   return (
-    <div className="-mt-16">
+    <div style={{ marginTop: 102 }}>
       {onCreate ? (
         <EditOrderScreen onChangeCU={onChangeCU} dataEdit={dataEdit} />
       ) : (
@@ -325,7 +346,9 @@ const OrderList = () => {
             mt={4}
           >
             <Typography variant="h4" component="h1" gutterBottom align="center">
-              <MyContent name="คำสั่งซื้อ" fontSize="large" />
+              <p className="FontPublic font-bold">
+                <MyContent name="คำสั่งซื้อ" fontSize="large" />
+              </p>
             </Typography>
 
             <div className="flex justify-end w-full mb-5">
@@ -338,7 +361,7 @@ const OrderList = () => {
             </div>
 
             {openDropdown && (
-              <div className="absolute right-16 top-52 mt-2 bg-white border rounded shadow-md w-20">
+              <div className="absolute right-16 top-44 mt-2 bg-white border rounded shadow-md w-20">
                 <ul>
                   <li
                     className="p-2 hover:bg-gray-200 cursor-pointer flex items-center "
@@ -375,7 +398,9 @@ const OrderList = () => {
                         // align={i > 2 ? "center" : "left"}
                         align="center"
                       >
-                        <MyContent name={column.label} fontSize="small" />
+                        <p className="FontPublic">
+                          <MyContent name={column.label} fontSize="small" />
+                        </p>
                       </TableCell>
                     ))}
                   </TableRow>
@@ -394,10 +419,12 @@ const OrderList = () => {
                         scope="row"
                         align="center"
                         style={{
-                          width: 140,
+                          width: 170,
                         }}
                       >
-                        <MyContent name={row.orderId} fontSize="smaller" />
+                        <p className="FontPublic">
+                          <MyContent name={row.orderId} fontSize="smaller" />
+                        </p>
                       </TableCell>
                       <TableCell component="th" scope="row" align="center">
                         {row.paymentImage ? (
@@ -409,7 +436,7 @@ const OrderList = () => {
                             width={130}
                           />
                         ) : (
-                          <MyContent name="ไม่มีรูปภาพ" fontSize="small" />
+                          <MyContent name="-" fontSize="normal" />
                         )}
                       </TableCell>
                       <TableCell style={{ width: 250 }} align="center">
@@ -418,22 +445,28 @@ const OrderList = () => {
                             row.status !== 2
                               ? !!row.tag
                                 ? ""
-                                : "text-yellow-500 bg-yellow-100 border border-yellow-500 px-3 py-1 rounded-full font-semibold"
+                                : "text-yellow-500 bg-yellow-100 border border-yellow-500 px-3 py-1 rounded-full"
                               : ""
                           }
                         >
                           {row.status === 2 ? (
-                            <MyContent
-                              name="ยกเลิกคำสั่งซื้อแล้ว"
-                              fontSize="small"
-                            />
+                            <p className="FontPublic">
+                              <MyContent
+                                name="ยกเลิกคำสั่งซื้อแล้ว"
+                                fontSize="smaller"
+                              />
+                            </p>
                           ) : !!row.tag ? (
-                            <MyContent name={row.tag} fontSize="small" />
+                            <p className="FontPublic">
+                              <MyContent name={row.tag} fontSize="smaller" />
+                            </p>
                           ) : (
-                            <MyContent
-                              name="ยังไม่ได้กรอกหมายเลขพัสดุ"
-                              fontSize="smaller"
-                            />
+                            <p className="FontPublic ">
+                              <MyContent
+                                name="ยังไม่ได้กรอกหมายเลขพัสดุ"
+                                fontSize="smaller"
+                              />
+                            </p>
                           )}
                         </div>
                       </TableCell>
@@ -443,16 +476,19 @@ const OrderList = () => {
                           width: 200,
                         }}
                       >
-                        <MyContent
-                          name={formatDateThai(row.createdAt, +543, 1)}
-                          fontSize="small"
-                        />
-
-                        {/* {dayjs(row.createdAt)
-                          .add(543, "year")
-                          .format("DD/MM/YYYY")} */}
+                        <p className="FontPublic ">
+                          <MyContent
+                            name={formatDateThai(row.createdAt, +543, 1)}
+                            fontSize="smaller"
+                          />
+                        </p>
                       </TableCell>
-                      <TableCell align="center">
+                      <TableCell
+                        align="center"
+                        style={{
+                          width: 160,
+                        }}
+                      >
                         <div
                           className={
                             (row.status === 0
@@ -465,25 +501,33 @@ const OrderList = () => {
                           }
                         >
                           {row.status === 0 ? (
-                            <MyContent
-                              name="กำลังรออนุมัติ"
-                              fontSize="smaller"
-                            />
+                            <p className="FontPublic font-semibold">
+                              <MyContent
+                                name="กำลังรออนุมัติ"
+                                fontSize="smaller"
+                              />
+                            </p>
                           ) : row.status === 1 ? (
-                            <MyContent
-                              name="ยืนยันคำสั่งซื้อแล้ว"
-                              fontSize="smaller"
-                            />
+                            <p className="FontPublic font-semibold">
+                              <MyContent
+                                name="ยืนยันคำสั่งซื้อแล้ว"
+                                fontSize="smaller"
+                              />
+                            </p>
                           ) : row.status === 2 ? (
-                            <MyContent
-                              name="ยกเลิกคำสั่งซื้อแล้ว"
-                              fontSize="smaller"
-                            />
+                            <p className="FontPublic font-semibold">
+                              <MyContent
+                                name="ยกเลิกคำสั่งซื้อแล้ว"
+                                fontSize="smaller"
+                              />
+                            </p>
                           ) : (
-                            <MyContent
-                              name="เพิ่มสถานะด้วย"
-                              fontSize="smaller"
-                            />
+                            <p>
+                              <MyContent
+                                name="กรุณาเพิ่มสถานะ"
+                                fontSize="smaller"
+                              />
+                            </p>
                           )}
                         </div>
                       </TableCell>
@@ -494,13 +538,33 @@ const OrderList = () => {
                         }}
                       >
                         {row.confirmReceipt === 0 ? (
-                          <MyContent name="กำลังดำเนินการ" fontSize="small" />
+                          <p className="FontPublic ">
+                            <MyContent
+                              name="กำลังดำเนินการ"
+                              fontSize="smaller"
+                            />
+                          </p>
                         ) : row.confirmReceipt === 1 ? (
-                          "ได้รับพัสดุแล้ว"
+                          <p className="FontPublic ">
+                            <MyContent
+                              name="ได้รับพัสดุแล้ว"
+                              fontSize="smaller"
+                            />
+                          </p>
                         ) : row.confirmReceipt === 2 ? (
-                          "ไม่ได้รับพัสดุ"
+                          <p className="FontPublic ">
+                            <MyContent
+                              name="ไม่ได้รับพัสดุ"
+                              fontSize="smaller"
+                            />
+                          </p>
                         ) : (
-                          "เพิ่มสถานะด้วย"
+                          <p className="FontPublic ">
+                            <MyContent
+                              name="กรุณาเพิ่มสถานะ"
+                              fontSize="smaller"
+                            />
+                          </p>
                         )}
                       </TableCell>
                       <TableCell
@@ -517,8 +581,9 @@ const OrderList = () => {
                             onChangeCU();
                           }}
                         >
-                          {/* <EditIcon sx={{ mr: 1 }} /> */}
-                          <MyContent name="เพิ่มเติม" fontSize="small" />
+                          <p className="FontPublic font-semibold">
+                            <MyContent name="เพิ่มเติม" fontSize="smaller" />
+                          </p>
                         </Fab>
                       </TableCell>
                       {/* <TableCell style={{ width: 100 }}>
@@ -539,16 +604,36 @@ const OrderList = () => {
                         aria-labelledby="alert-dialog-title"
                         aria-describedby="alert-dialog-description"
                       >
-                        <DialogTitle id="alert-dialog-title">
-                          {"ลบข้อมูลนี้ออกจากฐานข้อมูล"}
+                        <DialogTitle
+                          id="alert-dialog-title"
+                          sx={{ textAlign: "center" }}
+                        >
+                          <p className="FontPublic font-semibold">
+                            <MyContent
+                              name="ลบข้อมูลออกจากระบบฐานข้อมูล"
+                              fontSize="littlenormal"
+                            />
+                          </p>
                         </DialogTitle>
                         <DialogContent>
-                          <DialogContentText id="alert-dialog-description">
-                            ลบข้อมูลนี้ออกจากฐานข้อมูล ยืนยันเพื่อลบ
+                          <DialogContentText
+                            id="alert-dialog-description"
+                            sx={{ textAlign: "center" }}
+                          >
+                            <p className="FontPublic">
+                              <MyContent
+                                name="การดำเนินการนี้ต้องได้รับการยืนยันก่อนดำเนินการ"
+                                fontSize="small"
+                              />
+                            </p>
                           </DialogContentText>
                         </DialogContent>
                         <DialogActions>
-                          <Button onClick={handleClose}>ยกเลิก</Button>
+                          <Button onClick={handleClose}>
+                            <p className="FontPublic">
+                              <MyContent name="ยกเลิก" fontSize="small" />
+                            </p>
+                          </Button>
                           <Button
                             onClick={() => {
                               //   removeProduct(row.id);
@@ -557,7 +642,9 @@ const OrderList = () => {
                             }}
                             autoFocus
                           >
-                            ยืนยัน
+                            <p className="FontPublic">
+                              <MyContent name="ยืนยัน" fontSize="small" />
+                            </p>
                           </Button>
                         </DialogActions>
                       </Dialog>

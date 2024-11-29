@@ -18,6 +18,7 @@ import { useState } from "react";
 import { useStore } from "../../store/store";
 import { myToast } from "../../helper/components";
 import { observer } from "mobx-react-lite";
+import MyContent from "../../component/MyContent";
 
 interface props {
   onChangeCU?: any | null;
@@ -75,7 +76,9 @@ export default observer(function CreateSlideShow({
           <Grid item xs={1}>
             <Fab variant="extended" color="primary" onClick={onChangeCU}>
               <ArrowBackIosIcon sx={{ mr: 1 }} />
-              กลับ
+              <p className="FontPublic">
+                <MyContent name="กลับ" fontSize="small" />
+              </p>
             </Fab>
           </Grid>
           <Grid item xs={11} />
@@ -83,7 +86,9 @@ export default observer(function CreateSlideShow({
 
         <CardContent>
           <Typography variant="h4" component="h1" gutterBottom align="center">
-            รูปภาพหน้าเว็บ
+            <p className="FontPublic font-semibold">
+              <MyContent name="รูปภาพหน้าเว็บ" fontSize="larger" />
+            </p>
           </Typography>
 
           <div
@@ -122,7 +127,9 @@ export default observer(function CreateSlideShow({
             size="large"
             fullWidth
           >
-            บันทึก
+            <p className="FontPublic">
+              <MyContent name="บันทึก" fontSize="small" />
+            </p>
           </Button>
         </CardActions>
       </Card>

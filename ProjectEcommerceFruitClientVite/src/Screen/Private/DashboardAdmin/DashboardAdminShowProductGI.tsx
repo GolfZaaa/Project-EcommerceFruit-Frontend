@@ -12,6 +12,7 @@ import { BiDownload } from "react-icons/bi";
 import html2pdf from "html2pdf.js";
 import { VscFilePdf } from "react-icons/vsc";
 import { RiFileExcel2Line } from "react-icons/ri";
+import MyContent from "../../../component/MyContent";
 
 export default observer(function DashboardAdminShowProductGI() {
   const { productGI, getProductGIAll, HiddenProductGI } =
@@ -133,7 +134,7 @@ export default observer(function DashboardAdminShowProductGI() {
       {editMode ? (
         <CreateFruitGIScreen onChangeCU={onChangeCU} dataEdit={dataEdit} />
       ) : (
-        <div className="p-4">
+        <div className="FontPublic p-4">
           <div className="flex flex-col">
             <div className=" overflow-x-auto">
               <div className="min-w-full inline-block align-middle" ref={componentRef}>
@@ -243,32 +244,46 @@ export default observer(function DashboardAdminShowProductGI() {
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tl-lg"
                         >
-                          ลำดับ
+                          <p>
+                            <MyContent name="ลำดับ" fontSize="small" />
+                          </p>
                         </th>
                         <th
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                         >
-                          ชื่อผลไม้
+                          <p>
+                            <MyContent name="ชื่อผลไม้" fontSize="small" />
+                          </p>
+                          
                         </th>
                         <th
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                         >
-                          ประเภท
+                           <p>
+                            <MyContent name="ประเภท" fontSize="small" />
+                          </p>
+                          
                         </th>
 
                         <th
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                         >
-                          ชื่อร้าน
+                           <p>
+                            <MyContent name="ชื่อร้าน" fontSize="small" />
+                          </p>
+                          
                         </th>
                         <th
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                         >
-                          สถานะ
+                           <p>
+                            <MyContent name="สถานะ" fontSize="small" />
+                          </p>
+                          
                         </th>
                         <th
                           scope="col"
@@ -278,7 +293,9 @@ export default observer(function DashboardAdminShowProductGI() {
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tr-lg"
                         >
-                          ตั้งค่า
+                          <p>
+                            <MyContent name="ตั้งค่า" fontSize="small" />
+                          </p>
                         </th>
                       </tr>
                     </thead>
@@ -291,20 +308,26 @@ export default observer(function DashboardAdminShowProductGI() {
                             className="bg-white transition-all duration-500 hover:bg-gray-50"
                           >
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
-                              {" "}
-                              {index + 1}
+                              <p className="font-normal">
+                                <MyContent name={index + 1} fontSize="small" />
+                              </p>
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                              {" "}
-                              {userItem.name}
+                              <p className="font-normal">
+                                <MyContent name={userItem.name} fontSize="small" />
+                              </p>
+                              
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                              {" "}
-                              {userItem.categoryName}
+                              <p className="font-normal">
+                                <MyContent name={userItem.categoryName} fontSize="small" />
+                              </p>
+                              
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                              {" "}
-                              {userItem.storeName}
+                              <p className="font-normal">
+                                <MyContent name={userItem.storeName} fontSize="small" />
+                              </p>
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               <div
@@ -409,23 +432,6 @@ export default observer(function DashboardAdminShowProductGI() {
                                     ></path>
                                   </svg>
                                 </button> */}
-                                <button className="p-2 rounded-full  group transition-all duration-500  flex item-center">
-                                  <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      className="stroke-black "
-                                      d="M10.0161 14.9897V15.0397M10.0161 9.97598V10.026M10.0161 4.96231V5.01231"
-                                      stroke="black"
-                                      stroke-width="2.5"
-                                      stroke-linecap="round"
-                                    ></path>
-                                  </svg>
-                                </button>
                               </div>
                             </td>
                           </tr>

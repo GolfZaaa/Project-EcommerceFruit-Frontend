@@ -110,41 +110,79 @@ export default observer(function DashboardAdminHomePageScreen() {
     <div>
       <Toolbar sx={{ minHeight: 0 }} />
       <Divider />
+      <ListItem sx={{ marginTop: 3 }}>
+        <ListItemText
+          sx={{ textAlign: "center" }}
+          primary={
+            <p className="FontPublic font-bold after:content-[''] after:block after:w-full after:h-[1px] after:bg-current after:mt-1">
+              <MyContent name="แดชบอร์ดผู้ดูแล" fontSize="normal" />
+            </p>
+          }
+        />
+      </ListItem>
       <List
         style={{
           cursor: "pointer",
-          marginTop: "15px"
+          marginTop: "-5px"
         }}
       >
         <ListItem button onClick={() => setScreenComponent("DashboardAdminShowUser")}>
           <ListItemIcon>
             <FaUser className="text-2xl" />
           </ListItemIcon>
-          <ListItemText primary="ข้อมูลผู้ใช้งาน" />
+          <ListItemText primary={
+            <p>
+            <MyContent name="ข้อมูลผู้ใช้งาน" fontSize="small" />
+          </p>
+         } 
+        />
         </ListItem>
         <ListItem button onClick={handleDashboardAdminShowStore}>
           <ListItemIcon>
             <FaStore className="text-2xl" />
           </ListItemIcon>
-          <ListItemText primary="ข้อมูลร้านค้าทั้งหมด" />
+          <ListItemText primary={
+           <p>
+           <MyContent name="ข้อมูลร้านค้า" fontSize="small" />
+         </p>
+         }
+          />
         </ListItem>
         <ListItem button onClick={handleDashboardAdminShowProduct}>
           <ListItemIcon>
             <FaBoxOpen className="text-2xl" />
           </ListItemIcon>
-          <ListItemText primary="ข้อมูลสินค้าทั้งหมด" />
+          <ListItemText primary=
+          {
+            <p>
+           <MyContent name="ข้อมูลสินค้า" fontSize="small" />
+         </p>
+          }
+          />
         </ListItem>
         <ListItem button onClick={handleDashboardAdminShowProductGI}>
           <ListItemIcon>
             <GiCardboardBox className="text-2xl" />
           </ListItemIcon>
-          <ListItemText primary="ข้อมูล GI ทั้งหมด" />
+          <ListItemText primary=
+          {
+            <p>
+           <MyContent name="ข้อมูล GI" fontSize="small" />
+         </p>
+          }
+           />
         </ListItem>
         <ListItem button onClick={handleDashboardAdminShowOrder}>
           <ListItemIcon>
             <FaClipboardList className="text-2xl" />
           </ListItemIcon>
-          <ListItemText primary="คำสั่งซื้อสินค้าทั้งหมด" />
+          <ListItemText primary=
+          {
+            <p>
+          <MyContent name="คำสั่งซื้อสินค้า" fontSize="small" />
+        </p>
+          }
+         />
         </ListItem>
       </List>
       <Divider />
@@ -153,19 +191,34 @@ export default observer(function DashboardAdminHomePageScreen() {
           <ListItemIcon>
             <FaCog className="text-2xl" />
           </ListItemIcon>
-          <ListItemText primary="ตั้งค่าเว็บไซต์" />
+          <ListItemText primary=
+          {
+            <p>
+            <MyContent name="ตั้งค่าเว็บไซต์" fontSize="small" />
+          </p>
+          }
+          />
         </ListItem>
         <ListItem button onClick={handleDashboardAdminSlideShow}>
           <ListItemIcon>
             <FaImage className="text-2xl" />
           </ListItemIcon>
-          <ListItemText primary="รูปภาพหน้าเว็บ" />
+          <ListItemText primary={
+            <p>
+            <MyContent name="รูปภาพหน้าเว็บ" fontSize="small" />
+          </p>
+          }
+          />
         </ListItem>
         <ListItem button onClick={handleDashboardAdminNEWS}>
           <ListItemIcon>
             <FaNewspaper className="text-2xl" />
           </ListItemIcon>
-          <ListItemText primary="ข่าวประชาสัมพันธ์" />
+          <ListItemText primary={
+            <p>
+            <MyContent name="ข่าวประชาสัมพันธ์" fontSize="small" />
+          </p>
+          } />
         </ListItem>
       </List>
     </div>
@@ -194,13 +247,17 @@ export default observer(function DashboardAdminHomePageScreen() {
           </IconButton>
 
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
-            แดชบอร์ด
+            <p className="FontPublic font-semibold">
+            <MyContent name="แดชบอร์ดผู้ดูแลระบบ" fontSize="normal" />
+            </p>
           </Typography>
           <NavLink
             to={RoutePath.firstscreen}
             style={{ textDecoration: "none", color: "#fff" }}
           >
-            กลับหน้าหลัก
+            <p className="FontPublic font-semibold">
+            <MyContent name="กลับหน้าหลัก" fontSize="normal" />
+            </p>
           </NavLink>
         </Toolbar>
       </AppBar>
@@ -211,6 +268,7 @@ export default observer(function DashboardAdminHomePageScreen() {
           width: { sm: drawerWidth },
           flexShrink: { sm: 0 },
           position: "relative",
+          zIndex:1
         }}
         aria-label="mailbox folders"
       >

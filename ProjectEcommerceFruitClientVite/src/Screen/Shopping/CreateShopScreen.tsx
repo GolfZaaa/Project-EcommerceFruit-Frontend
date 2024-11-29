@@ -114,7 +114,7 @@ export default observer(function CreateShopScreen({
   };
 
   return (
-    <div className="-mt-16">
+    <div className="">
       <Container maxWidth="md">
         <Box
           display="flex"
@@ -129,11 +129,11 @@ export default observer(function CreateShopScreen({
           <CardContent>
             <Typography variant="h4" component="h1" gutterBottom align="center">
               {dataId && dataId?.id ? (
-                <p>
-                  <MyContent name="แก้ไขรายละเอียด" fontSize="large" />
+                <p className="FontPublic font-bold">
+                  <MyContent name="ข้อมูลร้านค้า" fontSize="large" />
                 </p>
               ) : (
-                <p>
+                <p className="FontPublic font-bold">
                   <MyContent name="สร้างร้านค้า" fontSize="large" />
                 </p>
               )}
@@ -150,7 +150,7 @@ export default observer(function CreateShopScreen({
                 required
                 InputProps={{
                   sx: {
-                    fontSize: "1.1rem",
+                    fontSize: "1.3rem",
                     color: "#333",
                     fontFamily: '"Noto Sans Thai Looped", sans-serif',
                   },
@@ -173,7 +173,7 @@ export default observer(function CreateShopScreen({
                 required
                 InputProps={{
                   sx: {
-                    fontSize: "1.1rem",
+                    fontSize: "1.3rem",
                     color: "#333",
                     fontFamily: '"Noto Sans Thai Looped", sans-serif',
                   },
@@ -197,7 +197,7 @@ export default observer(function CreateShopScreen({
                 required
                 InputProps={{
                   sx: {
-                    fontSize: "1.2rem",
+                    fontSize: "1.3rem",
                     color: "#333",
                     fontFamily: '"Noto Sans Thai Looped", sans-serif',
                   },

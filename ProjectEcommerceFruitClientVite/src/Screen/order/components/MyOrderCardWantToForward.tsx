@@ -106,17 +106,28 @@ const MyOrderCardWantToForward = ({ order }: props) => {
     <div ref={componentRef}>
       <div className="flex justify-between">
         <div>
-          <Typography variant="h5">จำนวน {order?.length}</Typography>
+          {order?.length < 0 ? (
+            <Typography variant="h5">จำนวน {order?.length}</Typography>
+          ):(
+            <div></div>
+          )}
         </div>
-        <div>
-          <button
+        {order?.length <= 0 ? (
+          <div>
+         
+        </div>
+        ):(
+          <div>
+             <button
             id="downloadButton"
             onClick={generatePDF}
             className=" p-2 bg-blue-500 text-white rounded-md"
           >
             <BsFillPrinterFill />
           </button>
-        </div>
+          </div>
+        )}
+        
       </div>
 
       {order?.length ? (
@@ -147,9 +158,9 @@ const MyOrderCardWantToForward = ({ order }: props) => {
                       รหัสคำสั่งซื้อ : {item?.orderId}
                     </span>
                     <div className="flex justify-between items-center mb-3">
-                      <p className="text-base leading-4 text-gray-800">
+                      <p className="text-base leading-4 text-gray-800 font-semibold">
                         {/* ได้รับค่าจัดส่ง : {item?.shippings[0]?.shippingFee} บาท */}
-                        ได้รับค่าจัดส่ง : {myDriverFee?.shippingFee} บาท
+                        <MyContent name={`ได้รับค่าจัดส่ง : ${myDriverFee?.shippingFee}  บาท`} fontSize="small" />
                       </p>
                     </div>
                     <span
@@ -295,12 +306,16 @@ const MyOrderCardWantToForward = ({ order }: props) => {
                           <Grid key={driver?.id} container spacing={2}>
                             <Grid item xs={4}>
                               <Typography variant="h5">
-                                ชื่อ : {driver?.user?.fullName}
+                                <p className="FontPublic font-medium">
+                                <MyContent name={`ชื่อ : ${driver?.user?.fullName}`} fontSize="littlenormal" />
+                                </p>
                               </Typography>
                             </Grid>
                             <Grid item xs={4}>
                               <Typography variant="h5">
-                                เบอร์ : {driver?.user?.phoneNumber}
+                                <p className="FontPublic font-medium">
+                                <MyContent name={`เบอร์ : ${driver?.user?.phoneNumber}`} fontSize="littlenormal" />
+                                </p>
                               </Typography>
                             </Grid>
                             <Grid item xs={4} textAlign="end">
@@ -316,7 +331,9 @@ const MyOrderCardWantToForward = ({ order }: props) => {
                                 }
                               >
                                 <CheckIcon sx={{ mr: 1 }} />
+                                <p className="FontPublic font-bold">
                                 <MyContent name="ส่งต่อ" fontSize="small" />
+                                </p>
                               </Fab>
                             </Grid>
                           </Grid>
