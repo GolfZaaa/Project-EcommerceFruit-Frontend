@@ -41,12 +41,15 @@ export const Order = {
       createFormDataUseMyName(valus, "orderId")
     );
   },
+
   changeConfirmSendOrder: (valus: any) => {
-    return requests.post(
-      `Order/ChangeConfirmSendOrder`,
-      createFormDataUseMyName(valus, "orderId")
-    );
+    // return requests.post(
+    //   `Order/ChangeConfirmSendOrder`,
+    //   createFormDataUseMyName(valus, "orderId")
+    // );
+    return requests.post(`Order/ChangeConfirmSendOrder`, createFormData(valus));
   },
+  
   changeConfirmReceiptOrder: (values: any | undefined) =>
     requests.post(`Order/ChangeConfirmReceiptOrder`, createFormData(values)),
 };

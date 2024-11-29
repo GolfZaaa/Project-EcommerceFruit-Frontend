@@ -214,6 +214,9 @@ export default observer(function CreateProductScreen({
         
                     },
                   }}
+                  inputProps={{
+                    step: 0.1,
+                  } }
                   InputLabelProps={{
                     sx: {
                       fontSize: '1.2rem',

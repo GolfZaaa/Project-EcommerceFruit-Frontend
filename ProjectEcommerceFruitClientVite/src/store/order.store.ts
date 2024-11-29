@@ -181,7 +181,8 @@ export default class OrderStore {
   createOrderToReceipt = async (valus: any) => {
     try {
       const result = await agent.Order.createOrderToReceipt(valus);
-      this.getOrdersWantToReceipt();
+      // this.getOrdersWantToReceipt();
+      this.searchOrdersWantToReceipt(new URLSearchParams());
       return result;
     } catch (error) {
       return error;
