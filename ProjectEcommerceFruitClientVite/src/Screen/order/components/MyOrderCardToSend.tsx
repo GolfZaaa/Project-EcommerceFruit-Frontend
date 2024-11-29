@@ -8,6 +8,7 @@ import html2pdf from "html2pdf.js";
 import { BsFillPrinterFill } from "react-icons/bs";
 import { Fab, Grid, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import PhotoSizeSelectActualIcon from "@mui/icons-material/PhotoSizeSelectActual";
 import { useStore } from "../../../store/store";
 import Swal from "sweetalert2";
 import TotalPrice from "./TotalPrice";
@@ -18,6 +19,8 @@ import { RiFileExcel2Line } from "react-icons/ri";
 import MyContent from "../../../component/MyContent";
 import { useNavigate } from "react-router-dom";
 import { resetScroll } from "../../../api/agent";
+import "./style.css";
+import ModalImageToSend from "./ModalImageToSend";
 
 interface props {
   order: Order[];
@@ -31,7 +34,7 @@ const MyOrderCardToSend = ({ order, index }: props) => {
   const { changeConfirmSendOrder } = useStore().orderStore;
   const { user } = useStore().userStore;
 
-  const [select, setSelect] = useState<any[]>([]);
+  // const [select, setSelect] = useState<any[]>([]);
 
   function generatePDF() {
     const opt = {
@@ -59,34 +62,192 @@ const MyOrderCardToSend = ({ order, index }: props) => {
       });
   }
 
-  const onSelect = (id: number) => {
-    if (select.find((x) => x === id) !== undefined) {
-      setSelect(select.filter((x) => x !== id));
-    } else {
-      setSelect([...select, id]);
-    }
-  };
+  // const onSelect = (id: number) => {
+  //   if (select.find((x) => x === id) !== undefined) {
+  //     setSelect(select.filter((x) => x !== id));
+  //   } else {
+  //     setSelect([...select, id]);
+  //   }
+  // };
 
-  const handleConfirm = () => {
-    Swal.fire({
-      title: "ท่านแน่ใจหรือไม่ว่าส่งสินค้าถึงมือลูกค้าแล้ว?",
-      text: "หากยืนยันแล้ว หมายถึงสินค้าได้ส่งถึงมือลูกค้าแล้ว",
-      icon: "warning",
+  const handleConfirm = async (id: number) => {
+    await Swal.fire({
+      title: "อัพโหลดรูปภาพหลักฐานการส่ง",
+      input: "file",
+      inputAttributes: {
+        accept: "image/*",
+        "aria-label": "Select Image",
+      },
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
       confirmButtonText: "ยืนยัน",
       cancelButtonText: "ยกเลิก",
-    }).then((result) => {
+      customClass: {
+        input: "custom-file-input",
+        confirmButton: "custom-confirm-button",
+        cancelButton: "custom-cancel-button",
+      },
+      didOpen: () => {
+        const confirmButton: any = Swal.getConfirmButton();
+        confirmButton.disabled = true;
+
+        const input: any = Swal.getInput();
+        const previewImage = document.createElement("img");
+        previewImage.style.width = "100%";
+        previewImage.style.marginTop = "10px";
+
+        // ใช้ getHtmlContainer() เพื่อเพิ่มภาพตัวอย่าง
+        const htmlContainer = Swal.getHtmlContainer();
+        if (htmlContainer) {
+          htmlContainer.appendChild(previewImage);
+        }
+
+        input.addEventListener("change", () => {
+          if (input.files.length) {
+            confirmButton.disabled = false;
+            const file = input.files[0];
+            previewImage.src = URL.createObjectURL(file); // แสดงภาพตัวอย่าง
+          } else {
+            confirmButton.disabled = true;
+            previewImage.src = ""; // รีเซ็ตเมื่อไม่มีไฟล์
+          }
+        });
+      },
+      preConfirm: (file) => {
+        return new Promise((resolve, reject) => {
+          if (!file) {
+            Swal.showValidationMessage("กรุณาเลือกรูปภาพก่อนกด ยืนยัน");
+            reject("No file selected");
+          } else {
+            resolve(file); // ส่งไฟล์ที่เป็น Object ไป (ไม่ใช้ base64)
+          }
+        });
+      },
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire("ส่งเรียบร้อยแล้ว", "ท่านส่งสินค้าเรียบร้อยแล้ว", "success");
+        const file = result.value;
 
-        changeConfirmSendOrder({ ...select.map((item) => item) });
+        Swal.fire({
+          title: "กำลังอัพโหลดรูปภาพ",
+          imageUrl: URL.createObjectURL(file),
+          imageHeight: 550,
+          imageWidth: "100%",
+          imageAlt: "The uploaded picture",
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
 
-        setSelect([]);
+        const dataForm = {
+          orderId: id,
+          imageFile: file,
+        };
+
+        changeConfirmSendOrder(dataForm)
+          .then((result) => {
+            if (result) {
+              Swal.close();
+              Swal.fire({
+                title: "อัพโหลดรูปภาพเสร็จสิ้น",
+                icon: "success",
+                timer: 2000,
+                showConfirmButton: false,
+              });
+            }
+          })
+          .catch((err) => {
+            console.error("เกิดข้อผิดพลาด:", err);
+            Swal.close();
+            Swal.fire({
+              title: "เกิดข้อผิดพลาด",
+              text: "ไม่สามารถอัปโหลดรูปภาพได้",
+              icon: "error",
+            });
+          });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: "การอัปโหลดถูกยกเลิก",
+          icon: "error",
+          timer: 2000,
+          showConfirmButton: false,
+        });
       }
     });
   };
+
+  // const handleConfirm = async () => {
+  //   await Swal.fire({
+  //     title: "อัพโหลดรูปภาพหลักฐานการส่ง",
+  //     input: "file",
+  //     inputAttributes: {
+  //       accept: "image/*",
+  //       "aria-label": "Select Image",
+  //     },
+  //     showLoaderOnConfirm: true,
+  //     preConfirm: (result) => {
+  //       console.log("result: ", result);
+  //       const reader = new FileReader();
+  //       console.log("file");
+  //       reader.onload = (e: any) => {
+  //         let timerInterval;
+  //         Swal.fire({
+  //           title: "Wait for Upload",
+  //           imageUrl: e.target.result,
+  //           imageHeight: 200, // Corrected from 'iamgeHeight'
+  //           imageWidth: 200,
+  //           imageAlt: "The uploaded picture",
+  //           didOpen: () => {
+  //             Swal.showLoading();
+
+  //             // return fetch(${MY_SERVER_URL}, {
+  //             //   method: "POST",
+  //             //   headers: {
+  //             //     Accept: "application/json",
+  //             //   },
+  //             //   body: reader,
+  //             // })
+  //             //   .then((response) => {
+  //             //     // console.log(response);
+  //             //     if (!response.ok) {
+  //             //       throw new Error(response.statusText);
+  //             //     }
+  //             //     return response.json();
+  //             //   })
+  //             //   .catch((error) => {
+  //             //     Swal.showValidationMessage(Request failed: ${error});
+  //             //   });
+  //           },
+  //           willClose: () => {
+  //             console.log("Nothing");
+  //           },
+  //         }).then((result) => {
+  //           /* Read more about handling dismissals below */
+  //           if (result.dismiss === Swal.DismissReason.timer) {
+  //             console.log("I was closed by the timer");
+  //           }
+  //         });
+  //       };
+  //       reader.readAsDataURL(result);
+  //     },
+  //   });
+  //   // Swal.fire({
+  //   //   title: "ท่านแน่ใจหรือไม่ว่าส่งสินค้าถึงมือลูกค้าแล้ว?",
+  //   //   text: "หากยืนยันแล้ว หมายถึงสินค้าได้ส่งถึงมือลูกค้าแล้ว",
+  //   //   icon: "warning",
+  //   //   showCancelButton: true,
+  //   //   confirmButtonColor: "#3085d6",
+  //   //   cancelButtonColor: "#d33",
+  //   //   confirmButtonText: "ยืนยัน",
+  //   //   cancelButtonText: "ยกเลิก",
+  //   // }).then((result) => {
+  //   //   if (result.isConfirmed) {
+  //   //     Swal.fire("ส่งเรียบร้อยแล้ว", "ท่านส่งสินค้าเรียบร้อยแล้ว", "success");
+
+  //   //     changeConfirmSendOrder({ ...select.map((item) => item) });
+
+  //   //     setSelect([]);
+  //   //   }
+  //   // });
+  // };
 
   const generateExcel = () => {
     const workbook = new ExcelJS.Workbook();
@@ -99,42 +260,13 @@ const MyOrderCardToSend = ({ order, index }: props) => {
       { header: "หน่วย", key: "unit", width: 30 },
     ];
 
-    worksheet.getRow(1).font = { bold: true, size: 14, color: { argb: "FFFFFF" }};
-    worksheet.getRow(1).alignment = { horizontal: "center", vertical: "middle" };
-    worksheet.getRow(1).eachCell((cell) => {
-      cell.fill = {
-        type: "pattern",
-        pattern: "solid",
-        fgColor: { argb: "0070C0" }, 
-      };
-      cell.border = {
-        top: { style: "thin" },
-        left: { style: "thin" },
-        bottom: { style: "thin" },
-        right: { style: "thin" },
-      };
-    });
-
-    const addStyledRow = (rowData: any) => {
-      const row = worksheet.addRow(rowData);
-      row.eachCell((cell, colIndex) => {
-        cell.alignment = { vertical: "middle", horizontal: colIndex === 2 ? "center" : "left" };
-        cell.border = {
-          top: { style: "thin" },
-          left: { style: "thin" },
-          bottom: { style: "thin" },
-          right: { style: "thin" },
-        };
-      });
-    };
-
     let totalPrice = 0;
     let totalQuantity = 0;
     let totalOrderSuccess = 0;
     let totalOrderCancel = 0;
     let totalShippingFee = 0;
 
-    addStyledRow({
+    worksheet.addRow({
       item: "จำนวนรายการ",
       value: order.length,
       unit: "รายการ",
@@ -166,14 +298,14 @@ const MyOrderCardToSend = ({ order, index }: props) => {
         totalOrderCancel += 1;
       }
 
-      addStyledRow({
+      worksheet.addRow({
         orderId: item.orderId,
         item: "ค่าจัดส่งจากผู้จัดส่ง",
         value: myDriverFee,
         unit: "บาท",
       });
 
-      addStyledRow({
+      worksheet.addRow({
         item: "จำนวนสินค้าที่หิ้วทั้งหมด",
         value: totalQuantity,
         unit: "ชิ้น",
@@ -236,7 +368,7 @@ const MyOrderCardToSend = ({ order, index }: props) => {
         </div>
       )}
 
-      {select.length > 0 && (
+      {/* {select.length > 0 && (
         <Grid
           container
           spacing={2}
@@ -289,7 +421,7 @@ const MyOrderCardToSend = ({ order, index }: props) => {
             </Fab>
           </Grid>
         </Grid>
-      )}
+      )} */}
 
       {order.map((item) => {
         const status = item?.shippings[0]?.shippingStatus;
@@ -349,7 +481,7 @@ const MyOrderCardToSend = ({ order, index }: props) => {
                   fontSize="small"
                 />
               </p>
-              {index === 1 && !myDriver && (
+              {/* {index === 1 && !myDriver && (
                 <div
                   style={{
                     display: "flex",
@@ -371,7 +503,34 @@ const MyOrderCardToSend = ({ order, index }: props) => {
                     เลือกสินค้า
                   </Typography>
                 </div>
+              )} */}
+
+              {index === 1 && !myDriver && (
+                <div>
+                  <Fab
+                    variant="extended"
+                    color="primary"
+                    onClick={() => handleConfirm(item.id)}
+                    sx={{
+                      zIndex:1
+                    }}
+                  >
+                    <EditIcon sx={{ mr: 1 }} />
+                    <MyContent name="ยืนยันการส่ง" fontSize="smaller" />
+                  </Fab>
+                </div>
               )}
+
+              {index === 2 &&
+                !myDriver &&
+                !!item?.shippings[0]?.sendedOrderImage && (
+                  <ModalImageToSend
+                    image={
+                      pathImages.sendedOrder +
+                      item?.shippings[0]?.sendedOrderImage
+                    }
+                  />
+                )}
             </div>
 
             {item.orderItems.map((orderItem) => {
