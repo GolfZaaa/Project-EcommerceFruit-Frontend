@@ -145,6 +145,7 @@ export default observer(function SettingScreen() {
               <Ionicons name="cash-outline" size={30} color="#5A67F2" />
             </View>
             <Text style={styles.menuItemText}>สร้างรายได้</Text>
+            <Text style={styles.menuItemText}>ของฉัน</Text>
           </TouchableOpacity>
         </View>
 
@@ -156,7 +157,7 @@ export default observer(function SettingScreen() {
             <View style={styles.iconWrapper}>
               <Ionicons name="basket-outline" size={30} color="#5A67F2" />
             </View>
-            <Text style={styles.menuItemText}>ประวัติคำสั่งซื้อ</Text>
+            <Text style={styles.menuItemText}>คำสั่งซื้อของฉัน</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.menuItem} onPress={handleAddress}>
@@ -322,6 +323,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    backgroundColor: "#F7F9FC",
   },
   containercolor: {
     flex: 1,

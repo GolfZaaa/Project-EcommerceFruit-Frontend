@@ -67,8 +67,6 @@ const MyEarn = () => {
     />
   );
 
-  console.log("order", order);
-
   return (
     <Container>
       <TouchableOpacity

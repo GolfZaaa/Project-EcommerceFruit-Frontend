@@ -102,21 +102,47 @@ const MyImagesShow = ({
   );
 };
 
-export const Label = ({ name, valid }: { name: string; valid: boolean }) => (
-  <Text>
-    {name}{" "}
-    {valid && (
-      <Text
-        style={{
-          color: "red",
-        }}
-      >
-        {" "}
-        *
-      </Text>
-    )}
-  </Text>
-);
+interface sizeProps {
+  smaller: string;
+  small: string;
+  normal: string;
+  large: string;
+  larger: string;
+}
+
+export const Label = ({
+  name,
+  valid,
+  size = "small",
+}: {
+  name: string;
+  valid: boolean;
+  size?: keyof sizeProps;
+}) => {
+  const ConvertSize: any = {
+    smaller: 15,
+    small: 18,
+    normal: 25,
+    large: 35,
+    larger: 50,
+  };
+
+  return (
+    <Text style={{ fontSize: ConvertSize[size] }}>
+      {name}{" "}
+      {valid && (
+        <Text
+          style={{
+            color: "red",
+          }}
+        >
+          {" "}
+          *
+        </Text>
+      )}
+    </Text>
+  );
+};
 
 export default observer(function CreateProductGI() {
   const { item }: any = useLocalSearchParams();

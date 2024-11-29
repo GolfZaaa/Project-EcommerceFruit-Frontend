@@ -246,12 +246,12 @@ export default observer(function CreateProduct() {
               alignItems: "center",
             }}
           >
-            <Text style={styles.uploadText}>ลากและวางไฟล์ที่นี่หรือคลิก</Text>
+            <Text style={styles.uploadText}>กดเพื่ออัพโหลดรูปภาพ</Text>
             <TouchableOpacity
               style={styles.uploadButton}
               onPress={handleChangeImage}
             >
-              <Text style={styles.uploadButtonText}>Upload</Text>
+              <Text style={styles.uploadButtonText}>อัพโหลด</Text>
             </TouchableOpacity>
           </View>
         )}

@@ -15,4 +15,5 @@ export const pathImagesApp = {
   image_web: `${path}image-web/`,
   slideShow: `${path}slide-show/`,
   news: `${path}image-news/`,
+  sendedOrder: `${path}sendedOrder/`,
 };

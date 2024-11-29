@@ -25,6 +25,7 @@ export interface Shipping {
   shippingFee: number;
   shippingStatus: number;
   createdAt: Date;
+  sendedOrderImage: string | null;
 
   orderId: number;
   order: Order;

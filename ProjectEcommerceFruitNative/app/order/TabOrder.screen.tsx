@@ -1,4 +1,12 @@
-import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  Image,
+  StyleSheet,
+} from "react-native";
 import React, { useState } from "react";
 import styled from "styled-components/native";
 import { Order } from "@/src/models/Order";
@@ -7,6 +15,8 @@ import MyCartItem from "@/components/product/MyCartItem";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/src/store/store";
+import { Label } from "../storeuser/createproductgi";
+import { pathImagesApp } from "@/src/constants/RoutePath";
 
 const TabOrderScreen = ({
   item,
@@ -62,6 +72,11 @@ const TabOrderScreen = ({
           }
         };
 
+        console.log(
+          "image " + index,
+          pathImagesApp.sendedOrder + item?.shippings[0]?.sendedOrderImage
+        );
+
         return (
           <OrderCard key={item.id}>
             <OrderInfo>
@@ -72,21 +87,31 @@ const TabOrderScreen = ({
                 </OrderDate>
               </View>
               <View>
-                <OrderAmount>ไม่ใช่รหัส {item.id}</OrderAmount>
-                <OrderStatus
-                  status={item.status}
-                  confirmReceipt={item.confirmReceipt}
+                {/* <OrderAmount>ไม่ใช่รหัส {item.id}</OrderAmount> */}
+                <View
+                  style={{
+                    backgroundColor: `${item.status === 0 ? "red" : "white"}`,
+                    paddingVertical: item.status === 0 ? 5 : 0,
+                    paddingHorizontal: item.status === 0 ? 12 : 0,
+                    borderRadius: 50,
+                    width: "100%",
+                  }}
                 >
-                  {item.confirmReceipt === 2
-                    ? "ยกเลิกโดยคุณ"
-                    : item.status === 0
-                    ? "กำลังรออนุมัติ"
-                    : item.status === 1
-                    ? "ยืนยันคำสั่งซื้อแล้ว"
-                    : item.status === 2
-                    ? "ยกเลิกคำสั่งซื้อแล้ว"
-                    : "เพิ่มสถานะด้วย"}
-                </OrderStatus>
+                  <OrderStatus
+                    status={item.status}
+                    confirmReceipt={item.confirmReceipt}
+                  >
+                    {item.confirmReceipt === 2
+                      ? "ยกเลิกโดยคุณ"
+                      : item.status === 0
+                      ? "กำลังรออนุมัติ"
+                      : item.status === 1
+                      ? "ยืนยันคำสั่งซื้อแล้ว"
+                      : item.status === 2
+                      ? "ยกเลิกคำสั่งซื้อแล้ว"
+                      : "เพิ่มสถานะด้วย"}
+                  </OrderStatus>
+                </View>
                 <OrderStatus
                   status={item.status}
                   confirmReceipt={item.confirmReceipt}
@@ -125,6 +150,22 @@ const TabOrderScreen = ({
                 </TotalRow>
               </TotalContainer>
             )}
+
+            {((more === true && index === 5) ||
+              (more === true && index === 3)) &&
+              !!item?.shippings[0]?.sendedOrderImage && (
+                <View>
+                  <Label name="รูปภาพหลักฐานการส่ง" valid={false} />
+                  <Image
+                    source={{
+                      uri:
+                        pathImagesApp.sendedOrder +
+                        item?.shippings[0]?.sendedOrderImage,
+                    }}
+                    style={styles.imageSended}
+                  />
+                </View>
+              )}
 
             {more === true && index === 5 && (
               <View
@@ -194,6 +235,14 @@ const TabOrderScreen = ({
 };
 
 export default observer(TabOrderScreen);
+
+const styles = StyleSheet.create({
+  imageSended: {
+    width: 300,
+    height: 550,
+    marginVertical: 10,
+  },
+});
 
 const OrderCard: any = styled.View`
   background-color: #fff;

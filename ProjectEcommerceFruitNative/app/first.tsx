@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, Image } from "react-native";
+import { Text, StyleSheet, View, Image, ScrollView } from "react-native";
 import React, { Component } from "react";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -12,7 +12,7 @@ export default class first extends Component {
     };
 
     return (
-      <View>
+      <ScrollView>
         <Image
           source={require("../assets/images/firstPage.jpg")}
           style={{ width: "100%", height: 450 }}
@@ -48,7 +48,7 @@ export default class first extends Component {
             </Text>
           </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -66,6 +66,6 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: "#34d83c",
     borderRadius: 99,
-    marginTop: "25%",
+    marginTop: "5%",
   },
 });

@@ -105,7 +105,7 @@ const OrderHistoryScreen = () => {
         item={order.filter(
           (item) => item?.status === 1 && item?.confirmReceipt === 1 //สำเร็จแล้ว
         )}
-        index={null}
+        index={3}
       />
     ),
     seventh: () => (

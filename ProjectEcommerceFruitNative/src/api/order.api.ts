@@ -44,7 +44,7 @@ export const Order = {
   changeConfirmSendOrder: (valus: any) => {
     return requests.postForm(
       `Order/ChangeConfirmSendOrder`,
-      createFormDataUseMyName(valus, "orderId")
+      createFormData(valus)
     );
   },
   changeConfirmReceiptOrder: (values: any | undefined) =>
