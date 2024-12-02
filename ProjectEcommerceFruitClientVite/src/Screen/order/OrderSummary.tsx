@@ -66,7 +66,7 @@ const OrderSummary = () => {
           <div className="pt-10 flex flex-wrap items-center justify-center">
             {data.map((item) => (
               <div
-                className="w-52 h-16 relative lg:mt-0 mt-4 mb-8"
+                className="w-62 h-16 relative lg:mt-0 mt-4 mb-8"
                 // onClick={() => onChangePaging(item.id)}
               >
                 <img
@@ -93,7 +93,7 @@ const OrderSummary = () => {
                         : "text-white")
                     }
                   >
-                    <MyContent name={item.name} fontSize="small" />
+                    <MyContent name={item.name} fontSize="littlenormal" />
                   </p>
                   <p
                     className={
@@ -106,7 +106,7 @@ const OrderSummary = () => {
                         : "text-white")
                     }
                   >
-                    <MyContent name={item.description} fontSize="smaller" />
+                    <MyContent name={item.description} fontSize="small" />
                   </p>
                 </div>
               </div>

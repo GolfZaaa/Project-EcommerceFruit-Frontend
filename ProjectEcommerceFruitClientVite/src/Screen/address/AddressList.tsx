@@ -122,7 +122,7 @@ const AddressList = ({ confirmChangeAddress }: any) => {
             >
               <ArrowBackIosIcon sx={{ mr: 1 }} />
               <p className="FontPublic">
-              <MyContent name="กลับ" fontSize="small" />
+                <MyContent name="กลับ" fontSize="littlenormal" />
               </p>
             </Fab>
           )}
@@ -151,19 +151,19 @@ const AddressList = ({ confirmChangeAddress }: any) => {
             }}
             sx={{
               minWidth: "95%",
-              maxWidth: "250px", 
+              maxWidth: "250px",
               boxShadow: 3,
               "&:hover": {
                 backgroundColor: "primary.dark",
               },
               transition: "all 0.3s ease-in-out",
               ml: 1,
-              zIndex:1
+              zIndex: 1,
             }}
           >
             <AddIcon sx={{ mr: 1 }} />
             <p className="FontPublic">
-            <MyContent name="เพิ่ม" fontSize="small" />
+              <MyContent name="เพิ่ม" fontSize="littlenormal" />
             </p>
           </Fab>
         </Grid>
@@ -178,22 +178,25 @@ const AddressList = ({ confirmChangeAddress }: any) => {
                 <Grid item xs={12} md={5}>
                   <CardContent>
                     {/* <MyContent name={item?.detail} fontSize="small" /> */}
-                    <MyContent  name={`บ้านเลขที่, หมู่, ซอย, ถนน : ${item?.detail}`} fontSize="small" />
+                    <MyContent
+                      name={`บ้านเลขที่, หมู่, ซอย, ถนน : ${item?.detail}`}
+                      fontSize="littlenormal"
+                    />
                     <MyContent
                       name={`แขวง/ตำบล : ${item?.subDistrict}`}
-                      fontSize="small"
+                      fontSize="littlenormal"
                     />
                     <MyContent
                       name={`เขต/อำเภอ : ${item?.district}`}
-                      fontSize="small"
+                      fontSize="littlenormal"
                     />
                     <MyContent
                       name={`จังหวัด : ${item?.province}`}
-                      fontSize="small"
+                      fontSize="littlenormal"
                     />
                     <MyContent
                       name={`รหัสไปรษณีย์ : ${item?.postCode}`}
-                      fontSize="small"
+                      fontSize="littlenormal"
                     />
                   </CardContent>
                 </Grid>
@@ -201,7 +204,10 @@ const AddressList = ({ confirmChangeAddress }: any) => {
                 {/* สวิตช์ที่อยู่ร้านค้า */}
                 <Grid item xs={12} sm={6} md={2} className="flex-center">
                   <div className="text-center">
-                    <MyContent name="ตั้งเป็นที่อยู่ร้านค้า" fontSize="small" />
+                    <MyContent
+                      name="ตั้งเป็นที่อยู่ร้านค้า"
+                      fontSize="littlenormal"
+                    />
                     <Switch
                       checked={item.isUsed_Store}
                       onClick={() => handleAddressUpdate(item.id, true)}
@@ -215,7 +221,7 @@ const AddressList = ({ confirmChangeAddress }: any) => {
                   <div className="text-center">
                     <MyContent
                       name="ตั้งเป็นที่อยู่สั่งซื้อ"
-                      fontSize="small"
+                      fontSize="littlenormal"
                     />
                     <Switch
                       checked={item.isUsed}
@@ -265,12 +271,12 @@ const AddressList = ({ confirmChangeAddress }: any) => {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
-                      zIndex:1
+                      zIndex: 1,
                     }}
                   >
                     <EditIcon sx={{ mr: 1 }} />
                     <p className="FontPublic">
-                    <MyContent name="แก้ไข" fontSize="small" />
+                      <MyContent name="แก้ไข" fontSize="littlenormal" />
                     </p>
                   </Fab>
                 </Grid>
@@ -287,10 +293,10 @@ const AddressList = ({ confirmChangeAddress }: any) => {
               justifyContent: "center",
               alignItems: "center",
               fontSize: 30,
-              fontWeight: 600
+              fontWeight: 600,
             }}
           >
-         <MyContent name="กรุณาเพิ่มที่อยู่" fontSize="large" />
+            <MyContent name="กรุณาเพิ่มที่อยู่" fontSize="large" />
           </div>
         </div>
       )}
@@ -298,10 +304,15 @@ const AddressList = ({ confirmChangeAddress }: any) => {
   ) : (
     <>
       <Grid item xs={1}>
-        <Fab variant="extended" color="primary" onClick={onChangeCU} sx={{zIndex:1}}>
+        <Fab
+          variant="extended"
+          color="primary"
+          onClick={onChangeCU}
+          sx={{ zIndex: 1 }}
+        >
           <ArrowBackIosIcon sx={{ mr: 1 }} />
           <p className="FontPublic">
-          <MyContent name="กลับ" fontSize="small" />
+            <MyContent name="กลับ" fontSize="littlenormal" />
           </p>
         </Fab>
       </Grid>
@@ -317,22 +328,22 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           required
           InputProps={{
             sx: {
-              fontSize: '1.2rem', 
-              color: '#333',   
-              fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+              fontSize: "1.2rem",
+              color: "#333",
+              fontFamily: '"Noto Sans Thai Looped", sans-serif',
             },
           }}
           InputLabelProps={{
             sx: {
-              fontSize: '1.2rem',
-              color: '#888',
-              fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+              fontSize: "1.2rem",
+              color: "#888",
+              fontFamily: '"Noto Sans Thai Looped", sans-serif',
             },
           }}
         />
         <label className="FontPublic">
           <MyContent name="รหัสไปรษณีย์" fontSize="small" />
-          </label>
+        </label>
         <InputThaiAddress.Zipcode
           value={address["zipcode"]}
           onChange={handleChange("zipcode")}
@@ -341,11 +352,10 @@ const AddressList = ({ confirmChangeAddress }: any) => {
             height: "55px",
           }}
           className="custom-district-input FontPublic"
-          
         />
         <label className="FontPublic">
           <MyContent name="แขวง/ตำบล" fontSize="small" />
-          </label>
+        </label>
         <InputThaiAddress.District
           value={address["district"]}
           onChange={handleChange("district")}
@@ -357,7 +367,7 @@ const AddressList = ({ confirmChangeAddress }: any) => {
         />
         <label className="FontPublic">
           <MyContent name="เขต/อำเภอ" fontSize="small" />
-          </label>
+        </label>
         <InputThaiAddress.Amphoe
           value={address["amphoe"]}
           onChange={handleChange("amphoe")}
@@ -402,8 +412,8 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           ) : (
             <div className="flex justify-center items-center h-full ">
               <p className="FontPublic">
-                <MyContent name="บันทึก" fontSize="small" />
-                </p>
+                <MyContent name="บันทึก" fontSize="littlenormal" />
+              </p>
             </div>
           )}
         </Button>

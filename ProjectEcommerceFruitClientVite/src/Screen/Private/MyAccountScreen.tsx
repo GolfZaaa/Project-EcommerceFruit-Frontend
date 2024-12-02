@@ -38,7 +38,7 @@ const drawerWidth = 240;
 
 const MyAccountScreen = () => {
   const { getAddressByUserId } = useStore().addressStore;
-  const { order, getOrdersByUser, getMyOrderToSend, setOrder } =
+  const { order, orderToSend, getOrdersByUser, getMyOrderToSend, setOrder } =
     useStore().orderStore;
 
   const [screenComponent, setScreenComponent] = useState("my-dashboard");
@@ -64,7 +64,7 @@ const MyAccountScreen = () => {
       case "orderList":
         return <MyOrderList order={order} />;
       case "orderToSendList":
-        return <MyOrderToSendList order={order} />;
+        return <MyOrderToSendList order={orderToSend} />;
       case "searchorderToSendList":
         return <SearchOrderToSendList />;
       case "my-account":
@@ -105,9 +105,9 @@ const MyAccountScreen = () => {
           <ListItemText
             primary={
               <p className="FontPublic">
-            <MyContent name="สรุปข้อมูล" fontSize="small" />
+                <MyContent name="สรุปข้อมูล" fontSize="small" />
               </p>
-          }
+            }
           />
         </ListItem>
 
@@ -126,10 +126,10 @@ const MyAccountScreen = () => {
           </ListItemIcon>
           <ListItemText
             primary={
-            <p className="FontPublic">
-              <MyContent name="ข้อมูลส่วนตัว" fontSize="small" />
-            </p>
-          }
+              <p className="FontPublic">
+                <MyContent name="ข้อมูลส่วนตัว" fontSize="small" />
+              </p>
+            }
           />
         </ListItem>
 
@@ -156,9 +156,9 @@ const MyAccountScreen = () => {
           <ListItemText
             primary={
               <p className="FontPublic">
-            <MyContent name="ที่อยู่" fontSize="small" />
+                <MyContent name="ที่อยู่" fontSize="small" />
               </p>
-          }
+            }
           />
         </ListItem>
         <ListItem
@@ -178,9 +178,9 @@ const MyAccountScreen = () => {
           <ListItemText
             primary={
               <p className="FontPublic">
-            <MyContent name="คำสั่งซื้อ" fontSize="small" />
+                <MyContent name="คำสั่งซื้อของฉัน" fontSize="small" />
               </p>
-          }
+            }
           />
         </ListItem>
 
@@ -201,9 +201,9 @@ const MyAccountScreen = () => {
           <ListItemText
             primary={
               <p className="FontPublic">
-            <MyContent name="สร้างรายได้" fontSize="small" />
+                <MyContent name="สร้างรายได้ของฉัน" fontSize="small" />
               </p>
-          }
+            }
           />
         </ListItem>
 
@@ -224,7 +224,7 @@ const MyAccountScreen = () => {
           <ListItemText
             primary={
               <p className="FontPublic">
-              <MyContent name="รับ-ส่งต่อ คำสั่งซื้อ" fontSize="small" />
+                <MyContent name="รับ-ส่งต่อ คำสั่งซื้อ" fontSize="small" />
               </p>
             }
           />

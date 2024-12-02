@@ -17,6 +17,7 @@ import ExcelJS from "exceljs";
 import MyContent from "../../../component/MyContent";
 import { useNavigate } from "react-router-dom";
 import { resetScroll } from "../../../api/agent";
+import ModalImageToSend from "./ModalImageToSend";
 
 interface props {
   order: Order[];
@@ -392,22 +393,20 @@ const MyOrderCard = ({ order, index }: props) => {
             />
 
             {index === 3 && (
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  {/* <Typography align="center" color={"red"}>
-              * โปรดใส่หมายเลขพัสดุก่อนยืนยันคำสั่งซื้อ
-            </Typography> */}
-
-                  <CardActions sx={{ justifyContent: "center" }}>
+              <Grid
+                container
+                spacing={2}
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Grid item xs={12} sm={6} md={4}>
+                  <CardActions>
                     <Button
                       type="submit"
                       variant="contained"
                       color="success"
                       size="large"
                       fullWidth
-                      // disabled={
-                      //   !trackingId || dataEdit?.status == 1 || dataEdit?.status == 2
-                      // }
                       onClick={() =>
                         handleConfirm({ orderId: item.id, status: 1 })
                       }
@@ -416,8 +415,24 @@ const MyOrderCard = ({ order, index }: props) => {
                     </Button>
                   </CardActions>
                 </Grid>
-                <Grid item xs={6}>
-                  <CardActions sx={{ justifyContent: "center" }}>
+
+                <Grid item xs={12} sm={6} md={3}>
+                  <CardActions
+                    style={{
+                      justifyContent: "center",
+                    }}
+                  >
+                    <ModalImageToSend
+                      image={
+                        pathImages.sendedOrder +
+                        item?.shippings[0]?.sendedOrderImage
+                      }
+                    />
+                  </CardActions>
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={4}>
+                  <CardActions>
                     <Button
                       onClick={() =>
                         handleConfirm({ orderId: item.id, status: 2 })
@@ -426,7 +441,6 @@ const MyOrderCard = ({ order, index }: props) => {
                       color="error"
                       size="large"
                       fullWidth
-                      // disabled={dataEdit?.status == 1 || dataEdit?.status == 2}
                     >
                       ไม่ได้รับสินค้า
                     </Button>

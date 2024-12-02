@@ -42,7 +42,7 @@ export default function ModalImageToSend({ image }: { image: string | null }) {
             className="h-96 rounded-t-lg object-cover"
             style={{
               width: "100%",
-              height: "100%",
+              height: 700,
             }}
             alt="image main"
             src={image || ""}

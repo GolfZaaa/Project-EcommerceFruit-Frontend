@@ -4,6 +4,7 @@ import agent from "../api/agent";
 
 export default class OrderStore {
   order: Order[] = [];
+  orderToSend: Order[] = [];
   checkOrderNow: OrderNow[] = [];
   orderid: number = 0;
   loadingOrder: boolean = false;
@@ -115,7 +116,7 @@ export default class OrderStore {
   getMyOrderToSend = async () => {
     try {
       const result = await agent.Order.getMyOrderToSend();
-      this.order = result;
+      this.orderToSend = result;
     } catch (error) {
       return error;
     }
@@ -162,7 +163,7 @@ export default class OrderStore {
     try {
       const result = await agent.Order.getOrdersAll();
       this.order = result;
-      console.log("Test",result)
+      console.log("Test", result);
       return result;
     } catch (error) {
       return error;

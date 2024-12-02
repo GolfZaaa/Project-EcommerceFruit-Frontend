@@ -52,11 +52,8 @@ export default observer(function SummaryScreen() {
     getAddressByUserId,
   } = useStore().addressStore;
 
-  const {
-    GetCartItemByUser,
-    GetCartItemByUserOrderStore,
-    selectMyCart,
-  } = useStore().cartStore;
+  const { GetCartItemByUser, GetCartItemByUserOrderStore, selectMyCart } =
+    useStore().cartStore;
 
   const { CreateUpdateOrderById } = useStore().orderStore;
   const { systemSetting } = useStore().systemSettingStore;
@@ -87,7 +84,7 @@ export default observer(function SummaryScreen() {
     setDropZoneImage(null);
   };
 
-  console.log("DropZoneImage",dropZoneImage)
+  console.log("DropZoneImage", dropZoneImage);
 
   const confirmChangeAddress = () => {
     setOnChangeAddress(false);
@@ -146,11 +143,14 @@ export default observer(function SummaryScreen() {
     }, 700);
 
     const Data = {
+      id: 0,
       PaymentImage: dropZoneImage,
       Tag: tag,
       StoreId: value[0].storeId,
       PaymentMethod: selectedPaymentMethod,
     };
+
+    console.log("Data", Data);
 
     const test = await CreateUpdateOrderById(Data);
 
@@ -255,7 +255,7 @@ export default observer(function SummaryScreen() {
                     <MyContent
                       name={`${myAddressgotoOrder?.user?.fullName} เบอร์ :
             ${myAddressgotoOrder?.user?.phoneNumber}`}
-                      fontSize="small"
+                      fontSize="littlenormal"
                     />
                   </p>
                 </div>
@@ -263,11 +263,11 @@ export default observer(function SummaryScreen() {
                   <p className="text-lg leading-4 text-gray-800 font-medium">
                     <MyContent
                       name={`${myAddressgotoOrder?.detail} แขวง/ตำบล
-            ${myAddressgotoOrder?.subDistrict} เขต/อำเภอ
-            ${myAddressgotoOrder?.district} จังหวัด
-            ${myAddressgotoOrder?.province} รหัสไปรษณีย์
-            ${myAddressgotoOrder?.postCode}`}
-                      fontSize="small"
+                          ${myAddressgotoOrder?.subDistrict} เขต/อำเภอ
+                          ${myAddressgotoOrder?.district} จังหวัด
+                          ${myAddressgotoOrder?.province} รหัสไปรษณีย์
+                          ${myAddressgotoOrder?.postCode}`}
+                      fontSize="littlenormal"
                     />
                   </p>
                 </div>
@@ -279,7 +279,7 @@ export default observer(function SummaryScreen() {
                     }}
                     className="text-lg leading-4 text-blue-700 font-medium"
                   >
-                    <MyContent name="เปลี่ยน" fontSize="small" />
+                    <MyContent name="เปลี่ยน" fontSize="littlenormal" />
                   </button>
                 </div>
               </div>
@@ -300,23 +300,23 @@ export default observer(function SummaryScreen() {
                   <p className="text-base font-medium leading-6 text-gray-600">
                     <MyContent
                       name={formatDateThai(new Date(), 0, 2)}
-                      fontSize="small"
+                      fontSize="littlenormal"
                     />
                   </p>
                 </div>
 
                 <div className="flex justify-between w-full px-4">
                   <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800 w-1/4">
-                    <MyContent name="ตะกร้าสินค้า" fontSize="small" />
+                    <MyContent name="ตะกร้าสินค้า" fontSize="littlenormal" />
                   </p>
                   <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800 w-1/4 text-center">
-                    <MyContent name="ราคาสินค้า" fontSize="small" />
+                    <MyContent name="ราคาสินค้า" fontSize="littlenormal" />
                   </p>
                   <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800 w-1/4 text-center">
-                    <MyContent name="จำนวน" fontSize="small" />
+                    <MyContent name="จำนวน" fontSize="littlenormal" />
                   </p>
                   <p className="text-lg md:text-xl font-semibold leading-6 xl:leading-5 text-gray-800 w-1/4 text-right">
-                    <MyContent name="ราคารวม" fontSize="small" />
+                    <MyContent name="ราคารวม" fontSize="littlenormal" />
                   </p>
                 </div>
 
@@ -349,7 +349,7 @@ export default observer(function SummaryScreen() {
                                 <h3 className="text-base xl:text-lg font-semibold leading-6 text-gray-800">
                                   <MyContent
                                     name={items.productName}
-                                    fontSize="small"
+                                    fontSize="littlenormal"
                                   />
                                 </h3>
                               </div>
@@ -359,7 +359,7 @@ export default observer(function SummaryScreen() {
                                 <p className="text-base xl:text-lg leading-6">
                                   <MyContent
                                     name={`${item.price.toLocaleString()} บาท`}
-                                    fontSize="small"
+                                    fontSize="littlenormal"
                                   />
                                 </p>
                               </div>
@@ -368,7 +368,7 @@ export default observer(function SummaryScreen() {
                                 <p className="text-base xl:text-lg leading-6 text-gray-800">
                                   <MyContent
                                     name={item.quantityInCartItem}
-                                    fontSize="small"
+                                    fontSize="littlenormal"
                                   />
                                 </p>
                               </div>
@@ -377,7 +377,7 @@ export default observer(function SummaryScreen() {
                                 <p className="text-base xl:text-lg font-semibold leading-6 text-gray-800">
                                   <MyContent
                                     name={`${formatTotalPriceForProduct} บาท`}
-                                    fontSize="small"
+                                    fontSize="littlenormal"
                                   />
                                 </p>
                               </div>
@@ -417,7 +417,7 @@ export default observer(function SummaryScreen() {
                             : "text-gray-800"
                         }`}
                       >
-                        <MyContent name="บัตรเครดิต" fontSize="small" />
+                        <MyContent name="บัตรเครดิต" fontSize="littlenormal" />
                       </span>
                     </label>
                     <label
@@ -447,7 +447,7 @@ export default observer(function SummaryScreen() {
                             : "text-gray-800"
                         }`}
                       >
-                        <MyContent name="สลีปการโอน" fontSize="small" />
+                        <MyContent name="สลีปการโอน" fontSize="littlenormal" />
                       </span>
                     </label>
                   </div>
@@ -479,7 +479,7 @@ export default observer(function SummaryScreen() {
                           >
                             <MyContent
                               name="กรุณาอัปโหลดรูปภาพสลีปการโอน"
-                              fontSize="small"
+                              fontSize="littlenormal"
                             />
                           </div>
                         )}
@@ -492,7 +492,10 @@ export default observer(function SummaryScreen() {
                           <div className="flex flex-col space-y-1">
                             <label className="text-gray-600">
                               {" "}
-                              <MyContent name="หมายเลขบัตร" fontSize="small" />
+                              <MyContent
+                                name="หมายเลขบัตร"
+                                fontSize="littlenormal"
+                              />
                             </label>
                             <CardNumberElement
                               options={cardStyle}
@@ -504,7 +507,10 @@ export default observer(function SummaryScreen() {
                           <div className="flex space-x-4 mt-4">
                             <div className="flex flex-col space-y-1 flex-1">
                               <label className="text-gray-600 ">
-                                <MyContent name="วันหมดอายุ" fontSize="small" />
+                                <MyContent
+                                  name="วันหมดอายุ"
+                                  fontSize="littlenormal"
+                                />
                               </label>
                               <CardExpiryElement
                                 options={cardStyle}
@@ -515,7 +521,10 @@ export default observer(function SummaryScreen() {
 
                             <div className="flex flex-col space-y-1 flex-1">
                               <label className="text-gray-600">
-                                <MyContent name="รหัส CVC" fontSize="small" />
+                                <MyContent
+                                  name="รหัส CVC"
+                                  fontSize="littlenormal"
+                                />
                               </label>
                               <CardCvcElement
                                 options={cardStyle}
@@ -537,47 +546,53 @@ export default observer(function SummaryScreen() {
                   <div className="flex justify-center items-center w-full space-y-4 flex-col border-gray-200 border-b pb-4">
                     <div className="flex justify-between items-center w-full">
                       <p className="text-base leading-4 text-gray-800">
-                        <MyContent name="รายการทั้งหมด" fontSize="small" />
+                        <MyContent
+                          name="รายการทั้งหมด"
+                          fontSize="littlenormal"
+                        />
                       </p>
                       <p className="text-base leading-4 text-gray-600">
                         <MyContent
                           name={`${selectMyCart.length} รายการ`}
-                          fontSize="small"
+                          fontSize="littlenormal"
                         />
                       </p>
                     </div>
                     <div className="flex justify-between items-center w-full">
                       <p className="text-base leading-4 text-gray-800">
-                        <MyContent name="ราคารวม" fontSize="small" />
+                        <MyContent name="ราคารวม" fontSize="littlenormal" />
                       </p>
                       <p className="text-base leading-4 text-gray-600">
                         <MyContent
                           name={`${totalPrice.toLocaleString()} บาท`}
-                          fontSize="small"
+                          fontSize="littlenormal"
                         />
                       </p>
                     </div>
 
                     <div className="flex justify-between items-center w-full">
                       <p className="text-base leading-4 text-gray-800">
-                        <MyContent name="ค่าจัดส่ง" fontSize="small" />
+                        <MyContent name="ค่าจัดส่ง" fontSize="littlenormal" />
                       </p>
                       <p className="text-base leading-4 text-gray-600">
                         <MyContent
                           name={`${systemSetting[0]?.shippingCost} บาท`}
-                          fontSize="small"
+                          fontSize="littlenormal"
                         />
                       </p>
                     </div>
                   </div>
                   <div className="flex justify-between items-center w-full">
                     <p className="text-base font-semibold leading-4 text-gray-800">
-                      <MyContent name="ราคารวมทั้งหมด" fontSize="small" />
+                      <MyContent
+                        name="ราคารวมทั้งหมด"
+                        fontSize="littlenormal"
+                      />
                     </p>
                     <p className="text-base font-semibold leading-4 text-gray-600">
                       <MyContent
                         name={`${formattedTotalPrice} บาท`}
-                        fontSize="small"
+                        fontSize="littlenormal"
                       />
                     </p>
                   </div>
@@ -597,7 +612,10 @@ export default observer(function SummaryScreen() {
                         ) : (
                           <div>
                             <p>
-                              <MyContent name="ชำระเงิน" fontSize="small" />
+                              <MyContent
+                                name="ชำระเงิน"
+                                fontSize="littlenormal"
+                              />
                             </p>
                           </div>
                         )}
@@ -622,7 +640,10 @@ export default observer(function SummaryScreen() {
                         ) : (
                           <div>
                             <p>
-                              <MyContent name="ชำระเงิน" fontSize="small" />
+                              <MyContent
+                                name="ชำระเงิน"
+                                fontSize="littlenormal"
+                              />
                             </p>
                           </div>
                         )}

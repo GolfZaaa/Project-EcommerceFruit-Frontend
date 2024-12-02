@@ -10,6 +10,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import MyContent from "../component/MyContent";
 import MyLottie from "../helper/components/MyLottie";
 import LottieCart from "../assets/lotties/cartisemty.json";
+
 interface Product {
   id: string;
   price: number;
@@ -246,7 +247,7 @@ export default observer(function CartScreen() {
                           <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
                             <MyContent
                               name={`ชื่อร้านค้า : ${storeName}`}
-                              fontSize="small"
+                              fontSize="littlenormal"
                             />
                           </span>
 
@@ -333,7 +334,7 @@ export default observer(function CartScreen() {
                                           <p className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-gray-800">
                                             <MyContent
                                               name={product.quantityInCartItem}
-                                              fontSize="small"
+                                              fontSize="littlenormal"
                                             />
                                           </p>
                                           <button
@@ -366,7 +367,7 @@ export default observer(function CartScreen() {
                                           <p className="text-base font-bold text-gray-900 dark:text-gray-900">
                                             <MyContent
                                               name={`${formatTotalPriceForProduct} บาท`}
-                                              fontSize="small"
+                                              fontSize="littlenormal"
                                             />
                                           </p>
                                         </div>
@@ -380,14 +381,14 @@ export default observer(function CartScreen() {
                                           />
                                         </p>
                                         <a
-                                         onClick={() => {
-                                          navigate(
-                                            RoutePath.productDetail(
-                                              product.id
-                                            )
-                                          );
-                                          resetScroll();
-                                        }}
+                                          onClick={() => {
+                                            navigate(
+                                              RoutePath.productDetail(
+                                                product.id
+                                              )
+                                            );
+                                            resetScroll();
+                                          }}
                                           className="cursor-pointer text-base font-semibold text-gray-900 hover:underline dark:text-gray-800"
                                         >
                                           <MyContent
@@ -445,12 +446,12 @@ export default observer(function CartScreen() {
                   <div className="mt-4 mb-5">
                     <dl className="flex items-center justify-between">
                       <dt className="text-base font-bold text-gray-800">
-                        <MyContent name="ราคารวม" fontSize="small" />
+                        <MyContent name="ราคารวม" fontSize="littlenormal" />
                       </dt>
                       <dd className="text-base font-bold text-green-600">
                         <MyContent
                           name={`${!checkedItem ? 0 : formattedTotalPrice} บาท`}
-                          fontSize="small"
+                          fontSize="littlenormal"
                         />
                       </dd>
                     </dl>
@@ -467,18 +468,21 @@ export default observer(function CartScreen() {
                     {loadingUser ? (
                       <CircularProgress size={17} color="inherit" />
                     ) : (
-                      <MyContent name="ดำเนินการชำระเงิน" fontSize="small" />
+                      <MyContent
+                        name="ดำเนินการชำระเงิน"
+                        fontSize="littlenormal"
+                      />
                     )}
                   </button>
                   <div className="mt-4 items-center justify-center flex">
                     <span className="text-sm font-normal text-gray-800">
-                      <MyContent name="หรือ" fontSize="small" />
+                      <MyContent name="หรือ" fontSize="littlenormal" />
                     </span>
                     <button
                       onClick={handleBackHomeScreen}
                       className="ml-2 text-sm font-medium text-primary-700 underline hover:no-underline"
                     >
-                      <MyContent name="ช้อปปิ้งต่อ" fontSize="small" />
+                      <MyContent name="ช้อปปิ้งต่อ" fontSize="littlenormal" />
                     </button>
                   </div>
                 </div>

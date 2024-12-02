@@ -68,13 +68,21 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
             <div>
               <Typography variant="h5">
                 <p className="FontPublic font-semibold">
-                  <MyContent name={`จำนวน ${select.length}`} fontSize="littlenormal" />
+                  <MyContent
+                    name={`จำนวน ${select.length}`}
+                    fontSize="littlenormal"
+                  />
                 </p>
-                </Typography>
+              </Typography>
             </div>
           </Grid>
           <Grid item xs={1.8}>
-            <Fab variant="extended" color="primary" onClick={handleConfirm} sx={{ zIndex: 1 }}>
+            <Fab
+              variant="extended"
+              color="primary"
+              onClick={handleConfirm}
+              sx={{ zIndex: 1 }}
+            >
               <EditIcon sx={{ mr: 1 }} />
               ยืนยันการเลือก
             </Fab>
@@ -113,14 +121,19 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
                   }}
                   className="text-lg font-semibold text-gray-900 dark:text-gray-900"
                 >
-                    <p className="FontPublic font-semibold mr-1">
-                    <MyContent name="รหัสคำสั่งซื้อ : " fontSize="littlenormal" />
-                    </p>
+                  <p className="FontPublic font-semibold mr-1">
+                    <MyContent
+                      name="รหัสคำสั่งซื้อ : "
+                      fontSize="littlenormal"
+                    />
+                  </p>
 
-                    <p className="FontPublic">
-                    <MyContent name={item?.order?.orderId} fontSize="littlenormal" />
-                    </p>
-
+                  <p className="FontPublic">
+                    <MyContent
+                      name={item?.order?.orderId}
+                      fontSize="littlenormal"
+                    />
+                  </p>
                 </Typography>
                 <Typography
                   variant="h5"
@@ -142,16 +155,21 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
                   }
                 >
                   <p className="FontPublic mr-1 font-semibold">
-                  <MyContent name="สถานะ :" fontSize="littlenormal" />
+                    <MyContent name="สถานะ :" fontSize="littlenormal" />
                   </p>
                   <p className="FontPublic">
-          <MyContent name={`${item?.order?.status === 0
-                    ? "กำลังรออนุมัติ"
-                    : item?.order?.status === 1
-                    ? "ยืนยันคำสั่งซื้อแล้ว"
-                    : item?.order?.status === 2
-                    ? "ยกเลิกคำสั่งซื้อแล้ว"
-                    : "เพิ่มสถานะด้วย"}`} fontSize="littlenormal" />
+                    <MyContent
+                      name={`${
+                        item?.order?.status === 0
+                          ? "กำลังรออนุมัติ"
+                          : item?.order?.status === 1
+                          ? "ยืนยันคำสั่งซื้อแล้ว"
+                          : item?.order?.status === 2
+                          ? "ยกเลิกคำสั่งซื้อแล้ว"
+                          : "เพิ่มสถานะด้วย"
+                      }`}
+                      fontSize="littlenormal"
+                    />
                   </p>
                 </Typography>
                 <div
@@ -175,7 +193,7 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
                   />
                   <Typography variant="h5" align="left">
                     <p className="FontPublic font-semibold">
-                    <MyContent name="เลือกสินค้า" fontSize="normal" />
+                      <MyContent name="เลือกสินค้า" fontSize="normal" />
                     </p>
                   </Typography>
                 </div>
@@ -203,25 +221,35 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
                       <div className="flex items-center justify-between md:order-3 md:justify-end">
                         <div className="flex items-center">
                           <p className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-gray-800">
-                            <MyContent name={item?.quantity} fontSize="littlenormal" />
+                            <MyContent
+                              name={item?.quantity}
+                              fontSize="littlenormal"
+                            />
                           </p>
                         </div>
                         <div className="text-end md:order-4 md:w-32">
                           <p className="text-base font-bold text-gray-900 dark:text-gray-900">
-                            <MyContent name={`${formatTotalPriceForProduct} บาท`} fontSize="littlenormal" />
+                            <MyContent
+                              name={`${formatTotalPriceForProduct} บาท`}
+                              fontSize="littlenormal"
+                            />
                           </p>
                         </div>
                       </div>
 
                       <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
                         <p className="text-sm text-gray-500 font-bold FontPublic">
-                          <MyContent name={`${item?.product?.productGI?.category?.name}`} fontSize="smaller" />
+                          <MyContent
+                            name={`${item?.product?.productGI?.category?.name}`}
+                            fontSize="smaller"
+                          />
                         </p>
-                        <a
-                          className="text-base font-medium text-gray-900 hover:underline dark:text-gray-800"
-                        >
+                        <a className="text-base font-medium text-gray-900 hover:underline dark:text-gray-800">
                           <p className="FontPublic font-semibold">
-                          <MyContent name={`${item?.product?.productGI?.name}`} fontSize="littlenormal" />
+                            <MyContent
+                              name={`${item?.product?.productGI?.name}`}
+                              fontSize="littlenormal"
+                            />
                           </p>
                         </a>
                       </div>
@@ -235,31 +263,42 @@ const MyCardOrderReceipt = ({ data }: { data: OrderToReceipt[] }) => {
               <div className="rounded-sm flex flex-col px-4 w-full bg-white">
                 <div className="flex justify-between items-center w-full mb-3">
                   <p className="text-base leading-4 text-gray-800">
-                    
                     <MyContent name={"ราคารวม"} fontSize="littlenormal" />
-                    </p>
+                  </p>
                   <p className="text-base leading-4 text-gray-600">
-                    
-                    <MyContent name={`${formattedTotalPrice} บาท`} fontSize="littlenormal" />
+                    <MyContent
+                      name={`${formattedTotalPrice} บาท`}
+                      fontSize="littlenormal"
+                    />
                   </p>
                 </div>
                 <div className="flex justify-between items-center w-full mb-3">
                   <p className="text-base leading-4 text-gray-800">
                     <MyContent name={"ค่าจัดส่ง"} fontSize="littlenormal" />
-                    </p>
+                  </p>
                   <p className="text-base leading-4 text-gray-600">
-                    
-                    <MyContent name={`${systemSetting[0]?.shippingCost} บาท`} fontSize="littlenormal" />
+                    <MyContent
+                      name={`${systemSetting[0]?.shippingCost} บาท`}
+                      fontSize="littlenormal"
+                    />
                   </p>
                 </div>
                 <div className="flex justify-between items-center w-full">
                   <p className="text-base font-semibold leading-4 text-gray-800">
-                    <MyContent name={"ราคารวมทั้งหมด"} fontSize="littlenormal" />
+                    <MyContent
+                      name={"ราคารวมทั้งหมด"}
+                      fontSize="littlenormal"
+                    />
                   </p>
                   <p className="text-base font-semibold leading-4 text-gray-600">
-                  <MyContent name={`${parseFloat(formattedTotalPrice) +
-                      systemSetting[0]?.shippingCost}
-                     บาท`} fontSize="littlenormal" />
+                    <MyContent
+                      name={`${
+                        parseFloat(formattedTotalPrice) +
+                        systemSetting[0]?.shippingCost
+                      }
+                     บาท`}
+                      fontSize="littlenormal"
+                    />
                   </p>
                 </div>
               </div>
