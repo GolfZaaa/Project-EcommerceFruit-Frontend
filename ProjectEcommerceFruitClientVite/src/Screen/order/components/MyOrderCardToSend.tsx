@@ -21,6 +21,8 @@ import { useNavigate } from "react-router-dom";
 import { resetScroll } from "../../../api/agent";
 import "./style.css";
 import ModalImageToSend from "./ModalImageToSend";
+import MyLottie from "../../../helper/components/MyLottie";
+import lottiteEmpty from "../../../assets/lotties/lf20_qh5z2fdq.json";
 
 interface props {
   order: Order[];
@@ -423,65 +425,67 @@ const MyOrderCardToSend = ({ order, index }: props) => {
         </Grid>
       )} */}
 
-      {order.map((item) => {
-        const status = item?.shippings[0]?.shippingStatus;
+      {order.length ? (
+        <div>
+          {order.map((item) => {
+            const status = item?.shippings[0]?.shippingStatus;
 
-        const myDriver = item.shippings[0].driverHistories.find(
-          (x) => x.statusDriver === 3 && x.userId === user?.id
-        );
+            const myDriver = item.shippings[0].driverHistories.find(
+              (x) => x.statusDriver === 3 && x.userId === user?.id
+            );
 
-        const myDriverFee = item.shippings[0].driverHistories.find(
-          (x) => x.userId === user?.id
-        );
+            const myDriverFee = item.shippings[0].driverHistories.find(
+              (x) => x.userId === user?.id
+            );
 
-        const calculateTotalPrice = () => {
-          return item?.orderItems?.reduce((total, item: OrderItem) => {
-            total = item.product.price * item.quantity + total;
+            const calculateTotalPrice = () => {
+              return item?.orderItems?.reduce((total, item: OrderItem) => {
+                total = item.product.price * item.quantity + total;
 
-            return total;
-          }, 0);
-        };
+                return total;
+              }, 0);
+            };
 
-        const totalPrice: any = calculateTotalPrice();
-        const formattedTotalPrice = formatNumberWithCommas(totalPrice);
+            const totalPrice: any = calculateTotalPrice();
+            const formattedTotalPrice = formatNumberWithCommas(totalPrice);
 
-        return (
-          <div
-            key={item.orderId}
-            className="mt-5 rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
-          >
-            <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
-              <span className="text-lg font-semibold text-gray-900">
-                รหัสคำสั่งซื้อ : {item.orderId}
-              </span>
-              <span
-                className={`text-lg font-semibold text-${
-                  status === 0
-                    ? "yellow-500"
-                    : status === 1
-                    ? "green-500"
-                    : status === 2
-                    ? "red-500"
-                    : "gray-500"
-                }`}
+            return (
+              <div
+                key={item.orderId}
+                className="mt-5 rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
               >
-                สถานะ :{" "}
-                {status === 0
-                  ? "กำลังจัดส่ง"
-                  : status === 1
-                  ? "จัดส่งสำเร็จ"
-                  : status === 2
-                  ? "จัดส่งไม่สำเร็จ"
-                  : "เพิ่มสถานะด้วย"}{" "}
-                {!!myDriver && "(ส่งต่อให้ผู้จัดส่งคนอื่นแล้ว)"}
-              </span>
-              <p className="text-base leading-4 text-gray-800">
-                <MyContent
-                  name={`ได้รับค่าจัดส่ง : ${myDriverFee?.shippingFee} บาท`}
-                  fontSize="small"
-                />
-              </p>
-              {/* {index === 1 && !myDriver && (
+                <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
+                  <span className="text-lg font-semibold text-gray-900">
+                    รหัสคำสั่งซื้อ : {item.orderId}
+                  </span>
+                  <span
+                    className={`text-lg font-semibold text-${
+                      status === 0
+                        ? "yellow-500"
+                        : status === 1
+                        ? "green-500"
+                        : status === 2
+                        ? "red-500"
+                        : "gray-500"
+                    }`}
+                  >
+                    สถานะ :{" "}
+                    {status === 0
+                      ? "กำลังจัดส่ง"
+                      : status === 1
+                      ? "จัดส่งสำเร็จ"
+                      : status === 2
+                      ? "จัดส่งไม่สำเร็จ"
+                      : "เพิ่มสถานะด้วย"}{" "}
+                    {!!myDriver && "(ส่งต่อให้ผู้จัดส่งคนอื่นแล้ว)"}
+                  </span>
+                  <p className="text-base leading-4 text-gray-800">
+                    <MyContent
+                      name={`ได้รับค่าจัดส่ง : ${myDriverFee?.shippingFee} บาท`}
+                      fontSize="small"
+                    />
+                  </p>
+                  {/* {index === 1 && !myDriver && (
                 <div
                   style={{
                     display: "flex",
@@ -505,165 +509,183 @@ const MyOrderCardToSend = ({ order, index }: props) => {
                 </div>
               )} */}
 
-              {index === 1 && !myDriver && (
-                <div>
-                  <Fab
-                    variant="extended"
-                    color="primary"
-                    onClick={() => handleConfirm(item.id)}
-                    sx={{
-                      zIndex:1
-                    }}
-                  >
-                    <EditIcon sx={{ mr: 1 }} />
-                    <MyContent name="ยืนยันการส่ง" fontSize="smaller" />
-                  </Fab>
-                </div>
-              )}
+                  {index === 1 && !myDriver && (
+                    <div>
+                      <Fab
+                        variant="extended"
+                        color="primary"
+                        onClick={() => handleConfirm(item.id)}
+                        sx={{
+                          zIndex: 1,
+                        }}
+                      >
+                        <EditIcon sx={{ mr: 1 }} />
+                        <MyContent name="ยืนยันการส่ง" fontSize="smaller" />
+                      </Fab>
+                    </div>
+                  )}
 
-              {index === 2 &&
-                !myDriver &&
-                !!item?.shippings[0]?.sendedOrderImage && (
-                  <ModalImageToSend
-                    image={
-                      pathImages.sendedOrder +
-                      item?.shippings[0]?.sendedOrderImage
-                    }
-                  />
-                )}
-            </div>
-
-            {item.orderItems.map((orderItem) => {
-              const TotalPriceForProduct =
-                orderItem.product.price * orderItem.quantity;
-              const formatTotalPriceForProduct =
-                formatNumberWithCommas(TotalPriceForProduct);
-
-              return (
-                <div
-                  key={orderItem.product.id}
-                  className="mt-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm flex flex-col md:flex-row justify-between items-center"
-                >
-                  <a
-                    onClick={() => {
-                      navigate(
-                        RoutePath.productDetail(String(orderItem.product.id))
-                      );
-                      resetScroll();
-                    }}
-                    className="cursor-pointer"
-                  >
-                    <img
-                      className="h-20 w-20 object-cover"
-                      src={pathImages.product + orderItem.product.images}
-                      alt={orderItem.product.images || "product image"}
-                    />
-                  </a>
-                  <p className="text-sm font-bold text-gray-500 mt-2 md:mt-0">
-                    {orderItem.product.productGI.category.name}
-                  </p>
-                  <a className="text-base font-medium text-gray-900 hover:underline mt-1 md:mt-0">
-                    {orderItem.product.productGI.name}
-                  </a>
-                  <div className="text-center md:w-20 font-semibold text-gray-900">
-                    {orderItem.quantity}
-                  </div>
-                  <p className="text-base font-bold text-gray-900">
-                    {formatTotalPriceForProduct} บาท
-                  </p>
-                </div>
-              );
-            })}
-
-            <TotalPrice
-              formattedTotalPrice={parseFloat(formattedTotalPrice)}
-              ShippingFee={item?.shippings[0]?.shippingFee}
-            />
-
-            <div className="mt-4 ">
-              <Grid container spacing={2} className="p-4">
-                <Grid item xs={12}>
-                  <Typography
-                    variant="h6"
-                    fontSize={{ xs: 18, sm: 20, md: 22 }}
-                    fontWeight="bold"
-                  >
-                    <p className="FontPublic">
-                      <MyContent
-                        name={`ชื่อ-ที่อยู่ลูกค้า : ${item?.address?.user?.fullName}`}
-                        fontSize="littlenormal"
+                  {index === 2 &&
+                    !myDriver &&
+                    !!item?.shippings[0]?.sendedOrderImage && (
+                      <ModalImageToSend
+                        image={
+                          pathImages.sendedOrder +
+                          item?.shippings[0]?.sendedOrderImage
+                        }
                       />
-                    </p>
-                  </Typography>
-                </Grid>
+                    )}
+                </div>
 
-                <Grid container item xs={12} spacing={2} className="mt-4">
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
-                      <p className="FontPublic">
-                        <MyContent
-                          name={`เบอร์ : ${item?.address?.user?.phoneNumber}`}
-                          fontSize="small"
+                {item.orderItems.map((orderItem) => {
+                  const TotalPriceForProduct =
+                    orderItem.product.price * orderItem.quantity;
+                  const formatTotalPriceForProduct =
+                    formatNumberWithCommas(TotalPriceForProduct);
+
+                  return (
+                    <div
+                      key={orderItem.product.id}
+                      className="mt-3 rounded-lg border border-gray-200 bg-white p-3 shadow-sm flex flex-col md:flex-row justify-between items-center"
+                    >
+                      <a
+                        onClick={() => {
+                          navigate(
+                            RoutePath.productDetail(
+                              String(orderItem.product.id)
+                            )
+                          );
+                          resetScroll();
+                        }}
+                        className="cursor-pointer"
+                      >
+                        <img
+                          className="h-20 w-20 object-cover"
+                          src={pathImages.product + orderItem.product.images}
+                          alt={orderItem.product.images || "product image"}
                         />
+                      </a>
+                      <p className="text-sm font-bold text-gray-500 mt-2 md:mt-0">
+                        {orderItem.product.productGI.category.name}
                       </p>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
-                      <p className="FontPublic">
-                        <MyContent
-                          name={`บ้านเลขที่ : ${item?.address?.detail}`}
-                          fontSize="small"
-                        />
+                      <a className="text-base font-medium text-gray-900 hover:underline mt-1 md:mt-0">
+                        {orderItem.product.productGI.name}
+                      </a>
+                      <div className="text-center md:w-20 font-semibold text-gray-900">
+                        {orderItem.quantity}
+                      </div>
+                      <p className="text-base font-bold text-gray-900">
+                        {formatTotalPriceForProduct} บาท
                       </p>
-                    </Typography>
+                    </div>
+                  );
+                })}
+
+                <TotalPrice
+                  formattedTotalPrice={parseFloat(formattedTotalPrice)}
+                  ShippingFee={item?.shippings[0]?.shippingFee}
+                />
+
+                <div className="mt-4 ">
+                  <Grid container spacing={2} className="p-4">
+                    <Grid item xs={12}>
+                      <Typography
+                        variant="h6"
+                        fontSize={{ xs: 18, sm: 20, md: 22 }}
+                        fontWeight="bold"
+                      >
+                        <p className="FontPublic">
+                          <MyContent
+                            name={`ชื่อ-ที่อยู่ลูกค้า : ${item?.address?.user?.fullName}`}
+                            fontSize="littlenormal"
+                          />
+                        </p>
+                      </Typography>
+                    </Grid>
+
+                    <Grid container item xs={12} spacing={2} className="mt-4">
+                      <Grid item xs={12} sm={6} md={4}>
+                        <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+                          <p className="FontPublic">
+                            <MyContent
+                              name={`เบอร์ : ${item?.address?.user?.phoneNumber}`}
+                              fontSize="small"
+                            />
+                          </p>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={6} md={4}>
+                        <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+                          <p className="FontPublic">
+                            <MyContent
+                              name={`บ้านเลขที่ : ${item?.address?.detail}`}
+                              fontSize="small"
+                            />
+                          </p>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={6} md={4}>
+                        <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+                          <p className="FontPublic">
+                            <MyContent
+                              name={`แขวง/ตำบล : ${item?.address?.subDistrict}`}
+                              fontSize="small"
+                            />
+                          </p>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={6} md={4}>
+                        <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+                          <p className="FontPublic">
+                            <MyContent
+                              name={`เขต/อำเภอ : ${item?.address?.district}`}
+                              fontSize="small"
+                            />
+                          </p>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={6} md={4}>
+                        <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+                          <p className="FontPublic">
+                            <MyContent
+                              name={`จังหวัด : ${item?.address?.province}`}
+                              fontSize="small"
+                            />
+                          </p>
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={6} md={4}>
+                        <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
+                          <p className="FontPublic">
+                            <MyContent
+                              name={`รหัสไปรษณีย์ : ${item?.address?.postCode}`}
+                              fontSize="small"
+                            />
+                          </p>
+                        </Typography>
+                      </Grid>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
-                      <p className="FontPublic">
-                        <MyContent
-                          name={`แขวง/ตำบล : ${item?.address?.subDistrict}`}
-                          fontSize="small"
-                        />
-                      </p>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
-                      <p className="FontPublic">
-                        <MyContent
-                          name={`เขต/อำเภอ : ${item?.address?.district}`}
-                          fontSize="small"
-                        />
-                      </p>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
-                      <p className="FontPublic">
-                        <MyContent
-                          name={`จังหวัด : ${item?.address?.province}`}
-                          fontSize="small"
-                        />
-                      </p>
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Typography fontSize={{ xs: 16, sm: 18, md: 20 }}>
-                      <p className="FontPublic">
-                        <MyContent
-                          name={`รหัสไปรษณีย์ : ${item?.address?.postCode}`}
-                          fontSize="small"
-                        />
-                      </p>
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div>
+          <MyLottie lottieFile={lottiteEmpty} />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: 30,
+            }}
+          >
+            ไม่มีข้อมูล
           </div>
-        );
-      })}
+        </div>
+      )}
     </div>
   );
 };

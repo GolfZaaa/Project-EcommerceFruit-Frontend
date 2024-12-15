@@ -4,6 +4,8 @@ import AddressScreen from "../AddressScreen";
 import SummaryScreen from "../SummaryScreen";
 import { useStore } from "../../store/store";
 import MyContent from "../../component/MyContent";
+import SuccessComponent from "../../layout/component/SuccessComponent";
+import { imageLocal } from "../../constants/RoutePath";
 
 const OrderSummary = () => {
   const { getAddressgotoOrderByUserId } = useStore().addressStore;
@@ -56,7 +58,8 @@ const OrderSummary = () => {
 
   const screens = [
     <AddressScreen onChangePaging={onChangePaging} />,
-    <SummaryScreen />,
+    <SummaryScreen onChangePaging={onChangePaging} />,
+    <SuccessComponent />,
   ];
 
   return (
@@ -71,12 +74,15 @@ const OrderSummary = () => {
               >
                 <img
                   src={
-                    item.image +
-                    (item.id === paging
-                      ? "wNZ4nzy/Steps2.png"
-                      : item.id === paging + 1
-                      ? "XCdjrhm/Steps4.png"
-                      : "DwNs7zG/Steps.png")
+                    // item.image +
+                    item.id === paging
+                      ? // ? "wNZ4nzy/Steps2.png"
+                        imageLocal.step2
+                      : item.id >= paging + 1
+                      ? // ? "XCdjrhm/Steps4.png"
+                        imageLocal.step4
+                      : // : "DwNs7zG/Steps.png")
+                        imageLocal.step
                   }
                   alt={"step" + item.id}
                   className="w-full h-full"
@@ -88,7 +94,7 @@ const OrderSummary = () => {
                       " " +
                       (item.id === paging
                         ? "text-gray-500"
-                        : item.id === paging + 1
+                        : item.id >= paging + 1
                         ? "text-indigo-800"
                         : "text-white")
                     }
@@ -101,7 +107,7 @@ const OrderSummary = () => {
                       " " +
                       (item.id === paging
                         ? "text-gray-500"
-                        : item.id === paging + 1
+                        : item.id >= paging + 1
                         ? "text-indigo-800"
                         : "text-white")
                     }

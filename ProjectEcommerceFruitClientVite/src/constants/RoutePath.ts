@@ -20,7 +20,6 @@ export const RoutePath = {
   successScreen: `${HOST}order-success-screen`,
   checkorderScreen: `${HOST}check-order-user`,
 
-
   addressScreen: `${HOST}Address-screen`,
   summaryScreen: `${HOST}summary-screen`,
 
@@ -57,3 +56,30 @@ export const pathImages = {
   news: `${path}image-news/`,
   sendedOrder: `${path}sendedOrder/`,
 };
+
+const ass = HOST + "assets/";
+
+const local = "../assets/images/";
+const local_assets = "/src/assets/images/";
+
+export const imageLocal = {
+  noPicture: `${
+    config.baseURL ? ass + "1-00f046f9" : local_assets + "no-pictures"
+  }.png`,
+  step: `${config.baseURL ? ass + "1-0" : local_assets + "Steps"}.png`,
+  step2: `${config.baseURL ? ass + "1-0" : local_assets + "Steps2"}.png`,
+  step4: `${config.baseURL ? ass + "1-0" : local_assets + "Steps4"}.png`,
+};
+
+// export const imageLocal = {
+//   kru: `${config.baseURL ? ass + "KRU-690f1497" : local_assets + "KRU"}.png`,
+//   image1: `${config.baseURL ? ass + "1-00f046f9" : local + "1"}.jpg`,
+//   image6: `${config.baseURL ? ass + "6-68784b1a" : local + "6"}.jpg`,
+//   image3: `${config.baseURL ? ass + "3-822327b0" : local + "3"}.jpg`,
+//   image4: `${config.baseURL ? ass + "4-9f07937a" : local + "4"}.jpg`,
+//   image7: `${config.baseURL ? ass + "7-71686636" : local + "7"}.jpg`,
+//   image8: `${config.baseURL ? ass + "8-aa5ad172" : local + "8"}.jpg`,
+//   userImage: `${
+//     config.baseURL ? ass + "userImage-3ec890e4" : local_assets + "userImage"
+//   }.webp`,
+// };

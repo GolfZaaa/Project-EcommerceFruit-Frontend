@@ -18,6 +18,8 @@ import MyContent from "../../../component/MyContent";
 import { useNavigate } from "react-router-dom";
 import { resetScroll } from "../../../api/agent";
 import ModalImageToSend from "./ModalImageToSend";
+import MyLottie from "../../../helper/components/MyLottie";
+import lottiteEmpty from "../../../assets/lotties/lf20_qh5z2fdq.json";
 
 interface props {
   order: Order[];
@@ -255,202 +257,226 @@ const MyOrderCard = ({ order, index }: props) => {
           )}
         </div>
       </div>
+      {order.length ? (
+        <div>
+          {order.map((item) => {
+            const calculateTotalPrice = () => {
+              return item?.orderItems?.reduce((total, item: OrderItem) => {
+                total = item.product.price * item.quantity + total;
 
-      {order.map((item) => {
-        const calculateTotalPrice = () => {
-          return item?.orderItems?.reduce((total, item: OrderItem) => {
-            total = item.product.price * item.quantity + total;
+                return total;
+              }, 0);
+            };
 
-            return total;
-          }, 0);
-        };
+            const totalPrice: any = calculateTotalPrice();
+            const formattedTotalPrice = formatNumberWithCommas(totalPrice);
 
-        const totalPrice: any = calculateTotalPrice();
-        const formattedTotalPrice = formatNumberWithCommas(totalPrice);
+            console.log("image : ", item?.shippings[0]?.sendedOrderImage);
 
-        console.log("itemeeeee", item);
-        return (
-          <div className="FontPublic mt-5 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6">
-            <div className="space-y-4">
-              <div className="md:flex md:justify-between">
-                <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
-                  รหัสคำสั่งซื้อ : {item.orderId}
-                </span>
-                <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
-                  ชำระเงินโดย :{" "}
-                  {item.paymentImage ? "การโอนเงิน" : "เครดิตการ์ด"}
-                </span>
-              </div>
-
-              <div className="md:flex md:justify-between">
-                <span className="text-lg font-semibold text-gray-900 dark:text-gray-900"></span>
-
-                <span
-                  className={
-                    "text-lg font-semibold text-gray-900 text-" +
-                    (item.confirmReceipt === 2
-                      ? "red-500"
-                      : item.status === 0
-                      ? "yellow-500"
-                      : item.status === 1
-                      ? "green-500"
-                      : item.status === 2
-                      ? "red-500"
-                      : "gray-500")
-                  }
-                >
-                  สถานะ :{" "}
-                  {item.confirmReceipt === 2
-                    ? "ยกเลิกโดยคุณ"
-                    : item.status === 0
-                    ? "กำลังรออนุมัติ"
-                    : item.status === 1
-                    ? "ยืนยันคำสั่งซื้อแล้ว"
-                    : item.status === 2
-                    ? "ยกเลิกคำสั่งซื้อแล้ว"
-                    : "เพิ่มสถานะด้วย"}
-                  <div>
-                    {item.confirmReceipt === 1 && "ได้รับสินค้าแล้ว"}
-                    {(item.status === 2 && "ยกเลิกแล้ว โดยร้านค้า") ||
-                      (item.confirmReceipt === 2 && "ยกเลิกแล้ว โดยคุณ")}
+            return (
+              <div className="FontPublic mt-5 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6">
+                <div className="space-y-4">
+                  <div className="md:flex md:justify-between">
+                    <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
+                      รหัสคำสั่งซื้อ : {item.orderId}
+                    </span>
+                    <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
+                      ชำระเงินโดย :{" "}
+                      {item.paymentImage ? "การโอนเงิน" : "เครดิตการ์ด"}
+                    </span>
                   </div>
-                </span>
-              </div>
 
-              {item.orderItems.map((item: OrderItem) => {
-                const TotalPriceForProduct = item.product.price * item.quantity;
-                const formatTotalPriceForProduct =
-                  formatNumberWithCommas(TotalPriceForProduct);
+                  <div className="md:flex md:justify-between">
+                    <span className="text-lg font-semibold text-gray-900 dark:text-gray-900"></span>
 
-                return (
-                  <div
-                    key={item.product.id}
-                    className="rounded-lg border border-gray-200 bg-white p-2 shadow-sm dark:border-gray-700 dark:bg-white"
-                  >
-                    <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
-                      <a
-                        onClick={() => {
-                          navigate(
-                            RoutePath.productDetail(String(item.product.id))
-                          );
-                          resetScroll();
-                        }}
-                        className="shrink-0 md:order-1"
+                    <span
+                      className={
+                        "text-lg font-semibold text-gray-900 text-" +
+                        (item.confirmReceipt === 2
+                          ? "red-500"
+                          : item.status === 0
+                          ? "yellow-500"
+                          : item.status === 1
+                          ? "green-500"
+                          : item.status === 2
+                          ? "red-500"
+                          : "gray-500")
+                      }
+                    >
+                      สถานะ :{" "}
+                      {item.confirmReceipt === 2
+                        ? "ยกเลิกโดยคุณ"
+                        : item.status === 0
+                        ? "กำลังรออนุมัติ"
+                        : item.status === 1
+                        ? "ยืนยันคำสั่งซื้อแล้ว"
+                        : item.status === 2
+                        ? "ยกเลิกคำสั่งซื้อแล้ว"
+                        : "เพิ่มสถานะด้วย"}
+                      <div>
+                        {item.confirmReceipt === 1 && "ได้รับสินค้าแล้ว"}
+                        {(item.status === 2 && "ยกเลิกแล้ว โดยร้านค้า") ||
+                          (item.confirmReceipt === 2 && "ยกเลิกแล้ว โดยคุณ")}
+                      </div>
+                    </span>
+                  </div>
+
+                  {item.orderItems.map((item: OrderItem) => {
+                    const TotalPriceForProduct =
+                      item.product.price * item.quantity;
+                    const formatTotalPriceForProduct =
+                      formatNumberWithCommas(TotalPriceForProduct);
+
+                    return (
+                      <div
+                        key={item.product.id}
+                        className="rounded-lg border border-gray-200 bg-white p-2 shadow-sm dark:border-gray-700 dark:bg-white"
                       >
-                        <img
-                          className="hidden h-20 w-20 dark:block object-cover"
-                          src={pathImages.product + item.product.images}
-                          alt={item.product.images || "product image"}
-                          style={{
-                            cursor: "pointer",
-                          }}
-                        />
-                      </a>
-                      <label className="sr-only">Choose quantity:</label>
-                      <div className="flex items-center justify-between md:order-3 md:justify-end">
-                        <div className="flex items-center">
-                          <p className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-gray-800">
-                            <MyContent name={item.quantity} fontSize="small" />
-                          </p>
-                        </div>
-                        <div className="text-end md:order-4 md:w-32">
-                          <p className="text-base font-bold text-gray-900 dark:text-gray-900">
-                            <MyContent
-                              name={`${formatTotalPriceForProduct} บาท`}
-                              fontSize="small"
+                        <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
+                          <a
+                            onClick={() => {
+                              navigate(
+                                RoutePath.productDetail(String(item.product.id))
+                              );
+                              resetScroll();
+                            }}
+                            className="shrink-0 md:order-1"
+                          >
+                            <img
+                              className="hidden h-20 w-20 dark:block object-cover"
+                              src={pathImages.product + item.product.images}
+                              alt={item.product.images || "product image"}
+                              style={{
+                                cursor: "pointer",
+                              }}
                             />
-                          </p>
+                          </a>
+                          <label className="sr-only">Choose quantity:</label>
+                          <div className="flex items-center justify-between md:order-3 md:justify-end">
+                            <div className="flex items-center">
+                              <p className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-gray-800">
+                                <MyContent
+                                  name={item.quantity}
+                                  fontSize="small"
+                                />
+                              </p>
+                            </div>
+                            <div className="text-end md:order-4 md:w-32">
+                              <p className="text-base font-bold text-gray-900 dark:text-gray-900">
+                                <MyContent
+                                  name={`${formatTotalPriceForProduct} บาท`}
+                                  fontSize="small"
+                                />
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
+                            <p className="text-sm text-gray-500 font-bold">
+                              <MyContent
+                                name={item.product.productGI.category.name}
+                                fontSize="small"
+                              />
+                            </p>
+                            <p className="text-base font-medium text-gray-900 dark:text-gray-800">
+                              <MyContent
+                                name={item.product.productGI.name}
+                                fontSize="small"
+                              />
+                            </p>
+                          </div>
                         </div>
                       </div>
+                    );
+                  })}
+                </div>
 
-                      <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
-                        <p className="text-sm text-gray-500 font-bold">
-                          <MyContent
-                            name={item.product.productGI.category.name}
-                            fontSize="small"
-                          />
-                        </p>
-                        <p className="text-base font-medium text-gray-900 dark:text-gray-800">
-                          <MyContent
-                            name={item.product.productGI.name}
-                            fontSize="small"
-                          />
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+                <TotalPrice
+                  formattedTotalPrice={parseFloat(formattedTotalPrice)}
+                  ShippingFee={
+                    item?.shippings[0]?.shippingFee !== undefined
+                      ? item?.shippings[0]?.shippingFee
+                      : systemSetting[0]?.shippingCost
+                  }
+                />
 
-            <TotalPrice
-              formattedTotalPrice={parseFloat(formattedTotalPrice)}
-              ShippingFee={
-                item?.shippings[0]?.shippingFee !== undefined
-                  ? item?.shippings[0]?.shippingFee
-                  : systemSetting[0]?.shippingCost
-              }
-            />
-
-            {index === 3 && (
-              <Grid
-                container
-                spacing={2}
-                justifyContent="center"
-                alignItems="center"
-              >
-                <Grid item xs={12} sm={6} md={4}>
-                  <CardActions>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="success"
-                      size="large"
-                      fullWidth
-                      onClick={() =>
-                        handleConfirm({ orderId: item.id, status: 1 })
-                      }
-                    >
-                      ได้รับสินค้าแล้ว
-                    </Button>
-                  </CardActions>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={3}>
-                  <CardActions
-                    style={{
-                      justifyContent: "center",
-                    }}
+                {index === 3 && (
+                  <Grid
+                    container
+                    spacing={2}
+                    justifyContent="center"
+                    alignItems="center"
                   >
-                    <ModalImageToSend
-                      image={
-                        pathImages.sendedOrder +
-                        item?.shippings[0]?.sendedOrderImage
-                      }
-                    />
-                  </CardActions>
-                </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <CardActions>
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          color="success"
+                          size="large"
+                          fullWidth
+                          onClick={() =>
+                            handleConfirm({ orderId: item.id, status: 1 })
+                          }
+                        >
+                          ได้รับสินค้าแล้ว
+                        </Button>
+                      </CardActions>
+                    </Grid>
 
-                <Grid item xs={12} sm={6} md={4}>
-                  <CardActions>
-                    <Button
-                      onClick={() =>
-                        handleConfirm({ orderId: item.id, status: 2 })
-                      }
-                      variant="contained"
-                      color="error"
-                      size="large"
-                      fullWidth
-                    >
-                      ไม่ได้รับสินค้า
-                    </Button>
-                  </CardActions>
-                </Grid>
-              </Grid>
-            )}
+                    {!!item?.shippings[0]?.sendedOrderImage && (
+                      <Grid item xs={12} sm={6} md={3}>
+                        <CardActions
+                          style={{
+                            justifyContent: "center",
+                          }}
+                        >
+                          <ModalImageToSend
+                            image={
+                              pathImages.sendedOrder +
+                              item?.shippings[0]?.sendedOrderImage
+                            }
+                          />
+                        </CardActions>
+                      </Grid>
+                    )}
+
+                    <Grid item xs={12} sm={6} md={4}>
+                      <CardActions>
+                        <Button
+                          onClick={() =>
+                            handleConfirm({ orderId: item.id, status: 2 })
+                          }
+                          variant="contained"
+                          color="error"
+                          size="large"
+                          fullWidth
+                        >
+                          ไม่ได้รับสินค้า
+                        </Button>
+                      </CardActions>
+                    </Grid>
+                  </Grid>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div>
+          <MyLottie lottieFile={lottiteEmpty} />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: 30,
+            }}
+          >
+            ไม่มีข้อมูล
           </div>
-        );
-      })}
+        </div>
+      )}
     </div>
   );
 };

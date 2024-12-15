@@ -35,6 +35,7 @@ const AddressList = ({ confirmChangeAddress }: any) => {
   } = useStore().addressStore;
 
   const { loadings } = useStore().systemSettingStore;
+  const { user } = useStore().userStore;
 
   const [form, setForm] = useState(false);
   const [dataEdit, setDataEdit] = useState<Address | null>(null);
@@ -70,25 +71,35 @@ const AddressList = ({ confirmChangeAddress }: any) => {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const formData: any = Object.fromEntries(data.entries());
 
-    const dataAddress = {
-      id: dataEdit?.id || 0,
-      subDistrict: address.district,
-      district: address.amphoe,
-      province: address.province,
-      postCode: address.zipcode,
-      detail: formData.detail,
-      isUsed_Store: false,
-      isUsed: true,
-      gps: "",
-    };
+    if (
+      address.district === "" ||
+      address.amphoe === "" ||
+      address.province === "" ||
+      address.zipcode === ""
+    ) {
+      myToast("กรุณากรอกข้อมูลที่อยู่ให้ครบถ้วน");
+    } else {
+      const data = new FormData(event.currentTarget);
+      const formData: any = Object.fromEntries(data.entries());
 
-    await createUpdateAddress(dataAddress);
-    myToast((dataEdit?.id ? "แก้ไข" : "เพิ่ม") + "ที่อยู่สำเร็จ");
-    onChangeCU();
-    getAddressByUserId();
+      const dataAddress = {
+        id: dataEdit?.id || 0,
+        subDistrict: address.district,
+        district: address.amphoe,
+        province: address.province,
+        postCode: address.zipcode,
+        detail: formData.detail,
+        isUsed_Store: false,
+        isUsed: true,
+        gps: "",
+      };
+
+      await createUpdateAddress(dataAddress);
+      myToast((dataEdit?.id ? "แก้ไข" : "เพิ่ม") + "ที่อยู่สำเร็จ");
+      onChangeCU();
+      getAddressByUserId();
+    }
   };
 
   const handleChange = (scope: string) => (value: string) => {
@@ -203,17 +214,19 @@ const AddressList = ({ confirmChangeAddress }: any) => {
 
                 {/* สวิตช์ที่อยู่ร้านค้า */}
                 <Grid item xs={12} sm={6} md={2} className="flex-center">
-                  <div className="text-center">
-                    <MyContent
-                      name="ตั้งเป็นที่อยู่ร้านค้า"
-                      fontSize="littlenormal"
-                    />
-                    <Switch
-                      checked={item.isUsed_Store}
-                      onClick={() => handleAddressUpdate(item.id, true)}
-                      color="primary"
-                    />
-                  </div>
+                  {!!user?.stores.length === true && (
+                    <div className="text-center">
+                      <MyContent
+                        name="ตั้งเป็นที่อยู่ร้านค้า"
+                        fontSize="littlenormal"
+                      />
+                      <Switch
+                        checked={item.isUsed_Store}
+                        onClick={() => handleAddressUpdate(item.id, true)}
+                        color="primary"
+                      />
+                    </div>
+                  )}
                 </Grid>
 
                 {/* สวิตช์ที่อยู่สั่งซื้อ */}
@@ -341,6 +354,7 @@ const AddressList = ({ confirmChangeAddress }: any) => {
             },
           }}
         />
+
         <label className="FontPublic">
           <MyContent name="รหัสไปรษณีย์" fontSize="small" />
         </label>
@@ -353,39 +367,48 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           }}
           className="custom-district-input FontPublic"
         />
+
         <label className="FontPublic">
           <MyContent name="แขวง/ตำบล" fontSize="small" />
         </label>
         <InputThaiAddress.District
           value={address["district"]}
-          onChange={handleChange("district")}
+          // onChange={handleChange("district")}
           onSelect={(e: any) => handleSelect(e)}
           style={{
             height: "55px",
+            pointerEvents: "none",
+            opacity: 0.6,
           }}
           className="custom-district-input FontPublic"
         />
+
         <label className="FontPublic">
           <MyContent name="เขต/อำเภอ" fontSize="small" />
         </label>
         <InputThaiAddress.Amphoe
           value={address["amphoe"]}
-          onChange={handleChange("amphoe")}
+          // onChange={handleChange("amphoe")}
           onSelect={(e: any) => handleSelect(e)}
           style={{
             height: "55px",
+            pointerEvents: "none",
+            opacity: 0.6,
           }}
           className="custom-district-input FontPublic"
         />
+
         <label className="FontPublic">
           <MyContent name="จังหวัด" fontSize="small" />
         </label>
         <InputThaiAddress.Province
           value={address["province"]}
-          onChange={handleChange("province")}
+          // onChange={handleChange("province")}
           onSelect={(e: any) => handleSelect(e)}
           style={{
             height: "55px",
+            pointerEvents: "none",
+            opacity: 0.6,
           }}
           className="custom-district-input FontPublic"
         />

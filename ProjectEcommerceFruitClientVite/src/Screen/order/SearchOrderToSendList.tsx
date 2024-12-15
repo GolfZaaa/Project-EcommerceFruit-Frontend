@@ -69,9 +69,9 @@ const SearchOrderToSendList = () => {
             onClick={() => setOrder([])}
             label={
               <p className="FontPublic">
-                  <MyContent name="ที่ต้องการรับ" fontSize="small" />
+                <MyContent name="ที่ต้องการรับ" fontSize="small" />
               </p>
-          }
+            }
             style={{
               width: "100%",
             }}
@@ -81,7 +81,7 @@ const SearchOrderToSendList = () => {
               <p className="FontPublic">
                 <MyContent name="ที่ต้องการส่งต่อ" fontSize="small" />
               </p>
-          }
+            }
             style={{
               width: "100%",
             }}
@@ -94,7 +94,7 @@ const SearchOrderToSendList = () => {
         <div>
           <Typography variant="h4" component="h1" gutterBottom align="center">
             <p className="FontPublic font-semibold">
-            <MyContent name="ค้นหาคำสั่งซื้อที่ต้องการรับ" fontSize="large" />
+              <MyContent name="ค้นหาคำสั่งซื้อที่ต้องการรับ" fontSize="large" />
             </p>
           </Typography>
           <div
@@ -115,23 +115,20 @@ const SearchOrderToSendList = () => {
                   margin="normal"
                   name="district"
                   onChange={handleOrderIdChange}
-
                   InputProps={{
                     sx: {
-                      fontSize: '1.5rem', 
-                      color: '#333',   
-                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
-        
+                      fontSize: "1.5rem",
+                      color: "#333",
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif',
                     },
                   }}
                   InputLabelProps={{
                     sx: {
-                      fontSize: '1.2rem',
-                      color: '#888',
-                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                      fontSize: "1.2rem",
+                      color: "#888",
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif',
                     },
                   }}
-
                 />
               </Grid>
               <Grid item xs={2}>

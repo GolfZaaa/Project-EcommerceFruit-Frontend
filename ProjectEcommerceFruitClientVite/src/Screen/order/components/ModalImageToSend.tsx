@@ -10,7 +10,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 550,
+  // width: "auto",
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -39,12 +39,12 @@ export default function ModalImageToSend({ image }: { image: string | null }) {
       >
         <Box sx={style}>
           <img
-            className="h-96 rounded-t-lg object-cover"
+            className="rounded-t-lg object-cover"
             style={{
               width: "100%",
               height: 700,
             }}
-            alt="image main"
+            alt="image to send"
             src={image || ""}
           />
         </Box>

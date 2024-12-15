@@ -35,7 +35,7 @@ const formatNumberWithCommas = (number: number) => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
-export default observer(function SummaryScreen() {
+export default observer(function SummaryScreen({ onChangePaging }: any) {
   const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
@@ -150,8 +150,6 @@ export default observer(function SummaryScreen() {
       PaymentMethod: selectedPaymentMethod,
     };
 
-    console.log("Data", Data);
-
     const test = await CreateUpdateOrderById(Data);
 
     console.log("test", test);
@@ -192,7 +190,8 @@ export default observer(function SummaryScreen() {
         console.error("Error making API request:", error);
       }
     } else if (test) {
-      navigate(RoutePath.successScreen);
+      // navigate(RoutePath.successScreen);
+      onChangePaging(3);
       resetScroll();
     } else {
       alert("error");

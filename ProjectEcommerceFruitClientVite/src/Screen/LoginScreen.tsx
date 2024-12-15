@@ -53,6 +53,8 @@ export default observer(function LoginScreen() {
 
     const user = await login(formData);
     if (user) {
+      console.log("user", user);
+
       if (user === "PhoneNumber Wrong") {
         setShowToast(true);
         setCheckToast("PhoneNumber Wrong");
@@ -97,10 +99,7 @@ export default observer(function LoginScreen() {
             ></div>
             <div className="w-full p-8 lg:w-1/2">
               <div className="align-middle justify-center flex items-center">
-                <img
-                  className="h-24"
-                  src={LogoKru}
-                />
+                <img className="h-24" src={LogoKru} />
               </div>
               <h2 className="FontPublic text-xl font-bold text-gray-600 text-center">
                 <MyContent
@@ -139,8 +138,8 @@ export default observer(function LoginScreen() {
                   //   }
                   // }}
                   onInput={(e: any) => {
-                    const value = e.target.value.replace(/[^0-9]/g, ""); 
-                    e.target.value = value.slice(0, 10); 
+                    const value = e.target.value.replace(/[^0-9]/g, "");
+                    e.target.value = value.slice(0, 10);
                   }}
                 />
                 {phoneNumberError && (
@@ -188,7 +187,7 @@ export default observer(function LoginScreen() {
                 >
                   {loadingUser ? (
                     <div>
-                      <CircularProgress color="inherit" size={32}/>
+                      <CircularProgress color="inherit" size={32} />
                     </div>
                   ) : (
                     <div>

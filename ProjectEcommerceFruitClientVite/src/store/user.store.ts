@@ -87,6 +87,10 @@ export default class UserStore {
     try {
       if (store.commonStore.token !== null) {
         await agent.User.getUserDetailbyId().then((result) => {
+          console.log("result", result);
+
+          store.addressStore.GetAddressByStore();
+
           if (result?.response?.request?.status !== undefined) {
             if (result.response.request.status === 401) {
               this.logout();
@@ -103,6 +107,7 @@ export default class UserStore {
         });
       }
     } catch (error) {
+      this.logout();
       store.systemSettingStore.setLoading(false);
       return error;
     }

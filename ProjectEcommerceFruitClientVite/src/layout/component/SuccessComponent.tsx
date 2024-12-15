@@ -24,10 +24,11 @@ export default observer(function SuccessComponent() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const { myAddressgotoOrder, getAddressgotoOrderByUserId } =
     useStore().addressStore;
-  const { GetCartItemByUser, GetCartItemByUserOrderStore } =
+  const { GetCartItemByUser, GetCartItemByUserOrderStore, setselectMyCart } =
     useStore().cartStore;
 
   useEffect(() => {
+    setselectMyCart([]);
     GetCartItemByUser();
     getAddressgotoOrderByUserId();
     GetCartItemByUserOrderStore();
@@ -43,8 +44,8 @@ export default observer(function SuccessComponent() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <section className="bg-white py-8 antialiased dark:bg-white md:py-16 rounded-lg">
+    <div className="container mx-auto pb-4">
+      <section className="bg-white antialiased dark:bg-white rounded-lg">
         <div className="flex items-center justify-center mb-8">
           <video
             className="w-40 h-40 md:w-52 md:h-52 lg:w-56 lg:h-56"

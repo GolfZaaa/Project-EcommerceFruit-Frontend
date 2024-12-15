@@ -10,6 +10,7 @@ import { resetScroll } from "../api/agent";
 import MyContent from "../component/MyContent";
 import { MdAccessTimeFilled } from "react-icons/md";
 import { BsFillBarChartLineFill } from "react-icons/bs";
+import { Fab, Grid } from "@mui/material";
 
 export default observer(function ShopDetailScreen() {
   const { id: userId } = useParams<{ id: any }>();
@@ -19,11 +20,15 @@ export default observer(function ShopDetailScreen() {
     shopProductDetail,
     GetStoreProductUser,
     shopProductUser,
+    loadingShopProducts,
   } = useStore().shopuserStore;
 
   const { getOrderByStore, order } = useStore().orderStore;
 
   const shopDetail = shopProductDetail?.[0];
+
+  const [selectedCategory, setSelectedCategory] = useState(0);
+  const [sortPrice, setSortPrice] = useState<"asc" | "desc" | null>(null);
 
   useEffect(() => {
     GetStoreDetailByUserId(userId);
@@ -33,9 +38,17 @@ export default observer(function ShopDetailScreen() {
     getCategory();
     if (shopDetail) {
       getOrderByStore(shopDetail?.id);
-      GetStoreProductUser(shopDetail?.userId);
+      GetStoreProductUser(
+        new URLSearchParams({
+          userId: shopDetail?.userId.toString() || "",
+        })
+      );
     }
   }, [shopDetail]);
+
+  useEffect(() => {
+    handleSearch();
+  }, [selectedCategory, sortPrice]);
 
   const totalQuantity = order.reduce((total, currentOrder) => {
     const orderItemsQuantity = currentOrder.orderItems.reduce(
@@ -49,8 +62,6 @@ export default observer(function ShopDetailScreen() {
 
   const createdAt = dayjs(shopDetail?.createdAt);
   const timeAgo = createdAt ? createdAt.fromNow() : "N/A";
-
-  const [selectedCategory, setSelectedCategory] = useState(0);
 
   const onSelectCate = (categoryId: number) => {
     setSelectedCategory(categoryId);
@@ -77,7 +88,7 @@ export default observer(function ShopDetailScreen() {
 
   const navigate = useNavigate();
 
-  const [sortPrice, setSortPrice] = useState<"asc" | "desc" | null>(null);
+  const [searchProduct, setSearchProduct] = useState("");
 
   const onSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
@@ -88,27 +99,54 @@ export default observer(function ShopDetailScreen() {
     }
   };
 
-  let filterProduct =
-    selectedCategory === 0
-      ? shopProductUser
-      : shopProductUser.filter(
-          (x) => x.productGI.category.id === selectedCategory
-        );
+  // let filterProduct =
+  //   selectedCategory === 0
+  //     ? shopProductUser
+  //     : shopProductUser.filter(
+  //         (x) => x.productGI.category.id === selectedCategory
+  //       );
 
-  if (sortPrice === "asc") {
-    filterProduct = [...filterProduct].sort((a, b) => a.price - b.price);
-  } else if (sortPrice === "desc") {
-    filterProduct = [...filterProduct].sort((a, b) => b.price - a.price);
-  }
+  // if (sortPrice === "asc") {
+  //   filterProduct = [...filterProduct].sort((a, b) => a.price - b.price);
+  // } else if (sortPrice === "desc") {
+  //   filterProduct = [...filterProduct].sort((a, b) => b.price - a.price);
+  // }
 
-  const handleResetSort = async () => {
-    setLoadingUser(true);
-    await setSelectedCategory(0);
-    getProduct(0);
-    await setSortPrice(null);
-    setTimeout(() => {
-      setLoadingUser(false);
-    }, 700);
+  // const handleResetSort = async () => {
+  //   setLoadingUser(true);
+  //   await setSelectedCategory(0);
+  //   getProduct(0);
+  //   await setSortPrice(null);
+  //   setTimeout(() => {
+  //     setLoadingUser(false);
+  //   }, 700);
+  // };
+
+  const handleSearch = async () => {
+    const queryParams = new URLSearchParams({
+      userId: shopDetail?.userId.toString() || "",
+      productName: searchProduct || "",
+      categoryId: selectedCategory.toString(),
+      sortPrice: (sortPrice === "asc"
+        ? 1
+        : sortPrice === "desc"
+        ? 2
+        : 0
+      ).toString(),
+    });
+
+    await GetStoreProductUser(queryParams);
+  };
+
+  const handleResetSearch = async () => {
+    setSearchProduct("");
+    setSelectedCategory(0);
+    setSortPrice(null);
+    await GetStoreProductUser(
+      new URLSearchParams({
+        userId: shopDetail?.userId.toString() || "",
+      })
+    );
   };
 
   return (
@@ -154,7 +192,10 @@ export default observer(function ShopDetailScreen() {
                   </span>
                 </div>
                 <p>
-                <MyContent name="รายการสินค้า" fontSize="littlenormal" />
+                  <MyContent
+                    name="รายการสินค้าทั้งหมด"
+                    fontSize="littlenormal"
+                  />
                 </p>
               </div>
 
@@ -171,39 +212,35 @@ export default observer(function ShopDetailScreen() {
                   </span>
                 </div>
                 <p>
-                <MyContent name="จำนวนสินค้าที่ขายแล้ว" fontSize="littlenormal" />
+                  <MyContent
+                    name="จำนวนสินค้าที่ขายแล้ว"
+                    fontSize="littlenormal"
+                  />
                 </p>
               </div>
 
               <div className="flex flex-col items-center FontPublic">
                 <div className="flex">
                   <span className="text-red-500  font-bold mr-1">
-                    <MyContent
-                      name={OrderByStore}
-                      fontSize="littlenormal"
-                    />
+                    <MyContent name={OrderByStore} fontSize="littlenormal" />
                   </span>
                   <span className="text-red-500  font-bold">
                     <MyContent name="รายการ" fontSize="littlenormal" />
                   </span>
                 </div>
                 <p>
-                <MyContent name="ยอดสั่งซื้อ" fontSize="littlenormal" />
+                  <MyContent name="ยอดสั่งซื้อรวม" fontSize="littlenormal" />
                 </p>
               </div>
-
 
               <div className="flex flex-col items-center FontPublic">
                 <div className="flex">
                   <span className="text-red-500  font-bold mr-1">
-                    <MyContent
-                      name={timeAgo}
-                      fontSize="littlenormal"
-                    />
+                    <MyContent name={timeAgo} fontSize="littlenormal" />
                   </span>
                 </div>
                 <p>
-                <MyContent name="วันที่สร้างร้านค้า" fontSize="littlenormal" />
+                  <MyContent name="เข้าร่วมเมื่อ" fontSize="littlenormal" />
                 </p>
               </div>
             </div>
@@ -224,46 +261,53 @@ export default observer(function ShopDetailScreen() {
                         className="FontPublic flex flex-col items-center lg:flex-row lg:space-x-4"
                         key={i}
                       >
-
                         <div className="mr-5">
                           <span className="text-red-500 text-xl font-bold">
-                <MyContent name={address.detail} fontSize="littlenormal" />
+                            <MyContent
+                              name={address.detail}
+                              fontSize="littlenormal"
+                            />
                           </span>
                           <p>
-                <MyContent name="บ้านเลขที่" fontSize="littlenormal" />
-                            </p>
+                            <MyContent
+                              name="บ้านเลขที่"
+                              fontSize="littlenormal"
+                            />
+                          </p>
                         </div>
 
                         <div className="mr-5">
                           <span className="text-red-500 text-xl font-bold">
-                            
-                <MyContent name={address.subDistrict} fontSize="littlenormal" />
-
+                            <MyContent
+                              name={address.subDistrict}
+                              fontSize="littlenormal"
+                            />
                           </span>
                           <p>
-                <MyContent name="ตำบล" fontSize="littlenormal" />
-
+                            <MyContent name="ตำบล" fontSize="littlenormal" />
                           </p>
                         </div>
                         <div className="mr-5">
                           <span className="text-red-500 text-xl font-bold">
-                <MyContent name={address.district} fontSize="littlenormal" />
-
-                            
+                            <MyContent
+                              name={address.district}
+                              fontSize="littlenormal"
+                            />
                           </span>
                           <p>
-                <MyContent name="อำเภอ" fontSize="littlenormal" />
-                            </p>
+                            <MyContent name="อำเภอ" fontSize="littlenormal" />
+                          </p>
                         </div>
                         <div>
                           <span className="text-red-500 text-xl font-bold">
-                            
-                <MyContent name={address.province} fontSize="littlenormal" />
+                            <MyContent
+                              name={address.province}
+                              fontSize="littlenormal"
+                            />
                           </span>
                           <p>
-                <MyContent name="จังหวัด" fontSize="littlenormal" />
-                
-                            </p>
+                            <MyContent name="จังหวัด" fontSize="littlenormal" />
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -337,36 +381,120 @@ export default observer(function ShopDetailScreen() {
         </div>
       </div> */}
 
-
       <div className="pl-14 pr-14 mt-10">
-              <div className="bg-white p-4 shadow-md rounded-md -mb-6 border ">
-                <h2 className="text-lg font-semibold mb-4 FontPublic">
-                  <MyContent name={"กรองข้อมูลสินค้า"} fontSize="normal" />
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="flex items-center space-x-4">
-                    <label className="text-sm font-medium text-gray-700 FontPublic">
-                      <MyContent name={"ประเภทผลไม้"} fontSize="small" />
-                    </label>
-                    <select
-                      value={selectedCategory}
-                      onChange={(e) => onSelectCate(Number(e.target.value))}
-                      className="block w-52 bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:ring focus:ring-indigo-200"
-                    >
-                      {categories.map((item, i: number) => (
-                        <option key={i} value={item.id} className="FontPublic">
-                          {/* {item.name} */}
-                          <MyContent name={item.name} fontSize="small" />
-                        </option>
-                      ))}
-                    </select>
+        <Grid
+          container
+          spacing={2}
+          alignItems="center"
+          style={{
+            marginBottom: 30,
+          }}
+        >
+          <Grid item xs={10}>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none">
+                <svg
+                  className="w-5 h-5"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M17.5 17.5L15.4167 15.4167M15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333C11.0005 15.8333 12.6614 15.0929 13.8667 13.8947C15.0814 12.6872 15.8333 11.0147 15.8333 9.16667Z"
+                    stroke="#9CA3AF"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M17.5 17.5L15.4167 15.4167M15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333C11.0005 15.8333 12.6614 15.0929 13.8667 13.8947C15.0814 12.6872 15.8333 11.0147 15.8333 9.16667Z"
+                    stroke="black"
+                    stroke-opacity="0.2"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </div>
+              <input
+                type="text"
+                id="default-search"
+                className="block h-14 pr-16 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none bg-white"
+                placeholder="ค้นหาสินค้า"
+                style={{
+                  width: "100%",
+                }}
+                value={searchProduct}
+                onChange={(e) => setSearchProduct(e.target.value)}
+              />
+            </div>
+          </Grid>
+          <Grid item xs={2}>
+            <div>
+              <Fab
+                variant="extended"
+                color="primary"
+                onClick={() => {
+                  handleSearch();
+                }}
+                sx={{
+                  width: "100%",
+                  height: 50,
+                  boxShadow: 3,
+                  "&:hover": {
+                    backgroundColor: "primary.dark",
+                  },
+                  transition: "all 0.3s ease-in-out",
+                  zIndex: 1,
+                }}
+                disabled={loadingShopProducts}
+              >
+                {loadingShopProducts ? (
+                  <div
+                    style={{
+                      position: "relative",
+                      top: 3,
+                    }}
+                  >
+                    <CircularProgress size={19} color="inherit" />
                   </div>
+                ) : (
+                  <div>
+                    <p className="FontPublic">
+                      <MyContent name="ค้นหา" fontSize="littlenormal" />
+                    </p>
+                  </div>
+                )}
+              </Fab>
+            </div>
+          </Grid>
+        </Grid>
+        <div className="bg-white p-4 shadow-md rounded-md -mb-6 border ">
+          <h2 className="text-lg font-semibold mb-4 FontPublic">
+            <MyContent name={"กรองข้อมูลสินค้า"} fontSize="normal" />
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="flex items-center space-x-4">
+              <label className="text-sm font-medium text-gray-700 FontPublic">
+                <MyContent name={"ประเภทผลไม้"} fontSize="small" />
+              </label>
+              <select
+                value={selectedCategory}
+                onChange={(e) => onSelectCate(Number(e.target.value))}
+                className="block w-52 bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:ring focus:ring-indigo-200"
+              >
+                {categories.map((item, i: number) => (
+                  <option key={i} value={item.id} className="FontPublic">
+                    {/* {item.name} */}
+                    <MyContent name={item.name} fontSize="small" />
+                  </option>
+                ))}
+              </select>
+            </div>
 
-                  <div className="flex items-center space-x-3">
-                    <label className="FontPublic text-sm font-medium text-gray-700">
-                      <MyContent name={"ช่วงราคาสินค้า"} fontSize="small" />
-                    </label>
-                    <select
+            <div className="flex items-center space-x-3">
+              <label className="FontPublic text-sm font-medium text-gray-700">
+                <MyContent name={"ช่วงราคาสินค้า"} fontSize="small" />
+              </label>
+              <select
                 value={sortPrice || ""}
                 onChange={onSortChange}
                 className="block w-full md:w-52 bg-gray-100 border border-gray-300 rounded-md p-2 text-gray-900 focus:outline-none focus:ring focus:ring-indigo-200"
@@ -381,40 +509,40 @@ export default observer(function ShopDetailScreen() {
                 <option value="lowToHigh">ราคา: จากน้อยไปมาก</option>
                 <option value="highToLow">ราคา: จากมากไปน้อย</option>
               </select>
-                  </div>
+            </div>
 
-                  <div className="flex items-center space-x-4  sm:w-full md:ml-11 md:w-36 lg:w-60">
-                    <button
-                      onClick={handleResetSort}
-                      className="text-base rounded-md bg-green-600 py-2 px-4 border border-transparent text-center text-white transition-all shadow-md hover:shadow-lg active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:opacity-50 disabled:shadow-none ml-2"
-                      style={{
-                        width: "100%",
-                      }}
-                      type="button"
-                      disabled={loadingUser}
-                    >
-                      {loadingUser ? (
-                        <div>
-                          <CircularProgress size={17} color="inherit" />
-                        </div>
-                      ) : (
-                        <div>
-                          <p className="FontPublic">
-                            <MyContent
-                              name={"รีเซ็ตกรองข้อมูลสินค้า"}
-                              fontSize="small"
-                            />
-                          </p>
-                        </div>
-                      )}
-                    </button>
+            <div className="flex items-center space-x-4  sm:w-full md:ml-11 md:w-36 lg:w-60">
+              <button
+                onClick={handleResetSearch}
+                className="text-base rounded-md bg-green-600 py-2 px-4 border border-transparent text-center text-white transition-all shadow-md hover:shadow-lg active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:opacity-50 disabled:shadow-none ml-2"
+                style={{
+                  width: "100%",
+                }}
+                type="button"
+                disabled={loadingUser}
+              >
+                {loadingUser ? (
+                  <div>
+                    <CircularProgress size={17} color="inherit" />
                   </div>
-                </div>
-              </div>
+                ) : (
+                  <div>
+                    <p className="FontPublic">
+                      <MyContent
+                        name={"รีเซ็ตกรองข้อมูลสินค้า"}
+                        fontSize="small"
+                      />
+                    </p>
+                  </div>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 pl-16 pr-16 mt-10">
-        {filterProduct.map((product: Product, i: number) => {
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 pl-16 pr-16 mt-10 mb-10">
+        {shopProductUser.map((product: Product, i: number) => {
           const userid = user?.id;
           const timePassed = dayjs(product.createdAt).locale("th").fromNow();
           return (
@@ -431,61 +559,45 @@ export default observer(function ShopDetailScreen() {
                 />
                 <div className="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
                 <div className="text-xs absolute top-0 right-0 bg-indigo-600 px-4 py-2 text-white mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                <p className="FontPublic">
-                                    <MyContent
-                                      name={product.productGI.category.name}
-                                      fontSize="smaller"
-                                    />
-                                  </p>
+                  <p className="FontPublic">
+                    <MyContent
+                      name={product.productGI.category.name}
+                      fontSize="smaller"
+                    />
+                  </p>
                 </div>
 
                 {userid == product?.productGI?.store?.userId && (
                   <div className="absolute top-0 left-0 bg-green-600 px-4 py-2 text-white mt-3 ml-3 text-xs font-bold rounded">
-                     <p className="FontPublic">
-                                      <MyContent
-                                        name="สินค้าของคุณ"
-                                        fontSize="small"
-                                      />
-                                    </p>
+                    <p className="FontPublic">
+                      <MyContent name="สินค้าของคุณ" fontSize="small" />
+                    </p>
                   </div>
                 )}
               </div>
               <div className="px-6 py-4 mb-auto">
                 <div className="font-medium text-lg hover:text-indigo-600 transition duration-500 ease-in-out flex justify-between mb-2">
-                  <span className="FontPublic">
-                                    {product.productGI.name}
-                                  </span>
-                                  <span className="FontPublic">
-                                    {product.price} บาท
-                   </span>
+                  <span className="FontPublic">{product.productGI.name}</span>
+                  <span className="FontPublic">{product.price} บาท</span>
                 </div>
               </div>
               <div className="px-6 py-3 flex flex-row items-center justify-between bg-gray-100">
                 <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
-                <MdAccessTimeFilled size={20} />
-                                  <span className="ml-1 FontPublic">
-                                    {" "}
-                                    <MyContent
-                                      name={timePassed}
-                                      fontSize="small"
-                                    />
-                                  </span>
+                  <MdAccessTimeFilled size={20} />
+                  <span className="ml-1 FontPublic">
+                    {" "}
+                    <MyContent name={timePassed} fontSize="small" />
+                  </span>
                 </span>
 
                 <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
-                <BsFillBarChartLineFill size={20} />
-                <span className="ml-1 flex FontPublic">
-                                    <MyContent
-                                      name={product.sold}
-                                      fontSize="small"
-                                    />
-                                    <p style={{ paddingLeft: 5 }}>
-                                      <MyContent
-                                        name={"ยอดขาย"}
-                                        fontSize="small"
-                                      />
-                                    </p>
-                                  </span>
+                  <BsFillBarChartLineFill size={20} />
+                  <span className="ml-1 flex FontPublic">
+                    <MyContent name={product.sold} fontSize="small" />
+                    <p style={{ paddingLeft: 5 }}>
+                      <MyContent name={"ยอดขาย"} fontSize="small" />
+                    </p>
+                  </span>
                 </span>
               </div>
             </div>

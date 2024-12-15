@@ -25,7 +25,7 @@ import { CartItem } from "../../models/CartItem";
 import { formatNumberWithCommas } from "../../helper/components";
 import { OrderItem } from "../../models/OrderItem";
 import MyContent from "../../component/MyContent";
-import imagecraditcart from "../../image/craditcard.png"
+import imagecraditcart from "../../image/craditcard.png";
 interface props {
   onChangeCU?: any | null;
   dataEdit?: Order | null;
@@ -135,7 +135,6 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
       component="form"
       onSubmit={handleSubmit}
     >
-
       <Card
         sx={{
           width: "100%",
@@ -148,7 +147,7 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
             <Fab variant="extended" color="primary" onClick={onChangeCU}>
               <ArrowBackIosIcon sx={{ mr: 1 }} />
               <p className="FontPublic">
-              <MyContent name="กลับ" fontSize="small" />
+                <MyContent name="กลับ" fontSize="small" />
               </p>
             </Fab>
           </Grid>
@@ -157,7 +156,7 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
         <CardContent>
           <Typography variant="h4" component="h1" gutterBottom align="center">
             <p className="FontPublic font-semibold">
-            <MyContent name="คำสั่งซื้อ" fontSize="large" />
+              <MyContent name="คำสั่งซื้อ" fontSize="large" />
             </p>
           </Typography>
           <Grid container spacing={2}>
@@ -200,9 +199,14 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                       dataEdit?.status == 2
                     }
                   >
-                    <InputLabel sx={{ fontSize: "1.2rem",fontFamily: '"Noto Sans Thai Looped", sans-serif', }}>
-                    เลือกบริษัทขนส่ง
-                  </InputLabel>
+                    <InputLabel
+                      sx={{
+                        fontSize: "1.2rem",
+                        fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                      }}
+                    >
+                      เลือกบริษัทขนส่ง
+                    </InputLabel>
                     <Select
                       label="เลือกบริษัทขนส่ง"
                       value={selectCate}
@@ -218,9 +222,7 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                           value={item.name}
                           onClick={() => onSelectCate(item.name)}
                         >
-                          <p className="FontPublic">
-                          {item.name}
-                          </p>
+                          <p className="FontPublic">{item.name}</p>
                         </MenuItem>
                       ))}
                     </Select>
@@ -246,16 +248,16 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                     }
                     InputProps={{
                       sx: {
-                        fontSize: '1.2rem', 
-                        color: '#333',   
-                        fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                        fontSize: "1.2rem",
+                        color: "#333",
+                        fontFamily: '"Noto Sans Thai Looped", sans-serif',
                       },
                     }}
                     InputLabelProps={{
                       sx: {
-                        fontSize: '1.2rem',
-                        color: '#888',
-                        fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                        fontSize: "1.2rem",
+                        color: "#888",
+                        fontFamily: '"Noto Sans Thai Looped", sans-serif',
                       },
                     }}
                   />
@@ -263,23 +265,47 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
 
                 <Grid item xs={12}>
                   <label className="FontPublic font-semibold">
-                  <MyContent name="ที่อยู่ผู้สั่งซื้อ" fontSize="littlenormal" />
-                    </label>
+                    <MyContent
+                      name="ที่อยู่ผู้สั่งซื้อ"
+                      fontSize="littlenormal"
+                    />
+                  </label>
                   <Typography gutterBottom align="left">
                     <p className="FontPublic">
-                    <MyContent name={`${dataEdit?.address?.detail}`} fontSize="small" />
+                      <MyContent
+                        name={`เบอร์โทรศัพท์ ${dataEdit?.address.user.phoneNumber}`}
+                        fontSize="small"
+                      />
                     </p>
                     <p className="FontPublic">
-                    <MyContent name={`แขวง/ตำบล ${dataEdit?.address?.subDistrict}  `} fontSize="small" />
+                      <MyContent
+                        name={`บ้านเลขที่ ${dataEdit?.address?.detail}`}
+                        fontSize="small"
+                      />
                     </p>
                     <p className="FontPublic">
-                    <MyContent name={`เขต/อำเภอ ${dataEdit?.address?.district}   `} fontSize="small" />
+                      <MyContent
+                        name={`แขวง/ตำบล ${dataEdit?.address?.subDistrict}  `}
+                        fontSize="small"
+                      />
                     </p>
                     <p className="FontPublic">
-                    <MyContent name={`จังหวัด ${dataEdit?.address?.province}   `} fontSize="small" />
+                      <MyContent
+                        name={`เขต/อำเภอ ${dataEdit?.address?.district}   `}
+                        fontSize="small"
+                      />
                     </p>
                     <p className="FontPublic">
-                    <MyContent name={`รหัสไปรษณีย์ ${dataEdit?.address?.postCode}`} fontSize="small" />
+                      <MyContent
+                        name={`จังหวัด ${dataEdit?.address?.province}   `}
+                        fontSize="small"
+                      />
+                    </p>
+                    <p className="FontPublic">
+                      <MyContent
+                        name={`รหัสไปรษณีย์ ${dataEdit?.address?.postCode}`}
+                        fontSize="small"
+                      />
                     </p>
                   </Typography>
                 </Grid>
@@ -301,21 +327,33 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                     />
                     <div className="flex items-center justify-between md:order-3 md:justify-end">
                       <div className="flex items-center">
-                    <MyContent name={`จำนวน ${item.quantity}  ชิ้น`} fontSize="small" />
+                        <MyContent
+                          name={`จำนวน ${item.quantity}  ชิ้น`}
+                          fontSize="small"
+                        />
                       </div>
                       <div className="text-end md:order-4 md:w-32">
                         <p className="text-base font-bold text-gray-900 dark:text-gray-900">
-                    <MyContent name={` ${item.product.price * item.quantity}  บาท`} fontSize="small" />
+                          <MyContent
+                            name={` ${item.product.price * item.quantity}  บาท`}
+                            fontSize="small"
+                          />
                         </p>
                       </div>
                     </div>
 
                     <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
                       <p className="text-sm text-gray-500 font-bold -mb-3">
-                    <MyContent name={` ${item.product.productGI.category.name} `} fontSize="small" />
+                        <MyContent
+                          name={` ${item.product.productGI.category.name} `}
+                          fontSize="small"
+                        />
                       </p>
                       <p className="font-bold">
-                      <MyContent name={` ${item.product.productGI.name} `} fontSize="littlenormal" />
+                        <MyContent
+                          name={` ${item.product.productGI.name} `}
+                          fontSize="littlenormal"
+                        />
                       </p>
                     </div>
                   </div>
@@ -327,29 +365,39 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
         <div className="FontPublic rounded-sm flex flex-col px-4 xl:p-6 w-full bg-white">
           <div className="flex justify-between items-center w-full mb-3">
             <p className="text-base leading-4 text-gray-800">
-              
               <MyContent name={`ราคารวม`} fontSize="normal" />
-              </p>
+            </p>
             <p className="text-base leading-4 text-gray-600">
-            <MyContent name={`${formattedTotalPrice} บาท`} fontSize="normal" />
+              <MyContent
+                name={`${formattedTotalPrice} บาท`}
+                fontSize="normal"
+              />
             </p>
           </div>
           <div className="flex justify-between items-center w-full mb-3">
             <p className="text-base leading-4 text-gray-800">
-            <MyContent name={`ค่าจัดส่ง`} fontSize="normal" />
-              </p>
+              <MyContent name={`ค่าจัดส่ง`} fontSize="normal" />
+            </p>
             <p className="text-base leading-4 text-gray-600">
-            <MyContent name={`${dataEdit?.shippings[0]?.shippingFee} บาท`} fontSize="normal" />
+              <MyContent
+                name={`${dataEdit?.shippings[0]?.shippingFee} บาท`}
+                fontSize="normal"
+              />
             </p>
           </div>
           <div className="flex justify-between items-center w-full">
             <p className="text-base font-semibold leading-4 text-gray-800">
-            <MyContent name={`ราคารวมทั้งหมด`} fontSize="normal" />
+              <MyContent name={`ราคารวมทั้งหมด`} fontSize="normal" />
             </p>
             <p className="text-base font-semibold leading-4 text-gray-600">
-            <MyContent name={`${parseFloat(formattedTotalPrice) +
-                (dataEdit?.shippings[0]?.shippingFee || 0)}
-              บาท`} fontSize="normal" />
+              <MyContent
+                name={`${
+                  parseFloat(formattedTotalPrice) +
+                  (dataEdit?.shippings[0]?.shippingFee || 0)
+                }
+              บาท`}
+                fontSize="normal"
+              />
             </p>
           </div>
         </div>
@@ -370,7 +418,7 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                   fullWidth
                 >
                   <p className="FontPublic">
-            <MyContent name={`ยืนยันคำสั่งซื้อ`} fontSize="small" />
+                    <MyContent name={`ยืนยันคำสั่งซื้อ`} fontSize="small" />
                   </p>
                 </Button>
               ) : (
@@ -382,11 +430,19 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                   fullWidth
                   disabled={!!dataEdit?.tag || dataEdit?.status == 2}
                 >
-                  {!!dataEdit?.tag
-                    ? <p className="FontPublic"><MyContent name={`เสร็จสิ้น`} fontSize="small" /></p>
-                    : selectCate === "อื่น ๆ"
-                    ? <p className="FontPublic"><MyContent name={`บันทึก`} fontSize="small" /></p>
-                    : <p className="FontPublic"><MyContent name={`บันทึกหมายเลขพัสดุ`} fontSize="small" /></p>}
+                  {!!dataEdit?.tag ? (
+                    <p className="FontPublic">
+                      <MyContent name={`เสร็จสิ้น`} fontSize="small" />
+                    </p>
+                  ) : selectCate === "อื่น ๆ" ? (
+                    <p className="FontPublic">
+                      <MyContent name={`บันทึก`} fontSize="small" />
+                    </p>
+                  ) : (
+                    <p className="FontPublic">
+                      <MyContent name={`บันทึกหมายเลขพัสดุ`} fontSize="small" />
+                    </p>
+                  )}
                 </Button>
               )}
             </CardActions>
@@ -402,7 +458,7 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                 disabled={dataEdit?.status == 1 || dataEdit?.status == 2}
               >
                 <p className="FontPublic ">
-                <MyContent name={`ยกเลิกคำสั่งซื้อ`} fontSize="small" />
+                  <MyContent name={`ยกเลิกคำสั่งซื้อ`} fontSize="small" />
                 </p>
               </Button>
             </CardActions>

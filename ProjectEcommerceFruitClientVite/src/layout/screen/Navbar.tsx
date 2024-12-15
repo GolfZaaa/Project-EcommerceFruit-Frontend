@@ -49,6 +49,9 @@ export default observer(function Navbar() {
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const toggleDrawer = () => setDrawerOpen(!drawerOpen);
+
+  console.log("image : ", systemSetting[0]?.image);
+
   return (
     <div className="hiddenPrint">
       <Backdrop
@@ -71,7 +74,7 @@ export default observer(function Navbar() {
               <CircularProgress />
             ) : (
               <>
-                {systemSetting[0]?.image !== undefined ? (
+                {systemSetting[0]?.id !== undefined ? (
                   <div
                     className="text-3xl leading-none"
                     style={{
@@ -88,7 +91,11 @@ export default observer(function Navbar() {
 
                     <div className="hidden md:flex items-center justify-start ">
                       <img
-                        src={pathImages.image_web + systemSetting[0]?.image}
+                        src={
+                          systemSetting[0]?.image
+                            ? pathImages.image_web + systemSetting[0]?.image
+                            : "https://png.pngtree.com/png-clipart/20230917/original/pngtree-no-image-available-icon-flatvector-illustration-blank-avatar-modern-vector-png-image_12323065.png"
+                        }
                         alt="image"
                         style={{
                           width: 50,
@@ -253,7 +260,7 @@ export default observer(function Navbar() {
               <ButtonMui color="secondary" onClick={handleClick}>
                 <Typography variant="body1" color="black">
                   <p className="FontPublic font-semibold">
-                  <MyContent name={user?.fullName} fontSize="small" />
+                    <MyContent name={user?.fullName} fontSize="small" />
                   </p>
                 </Typography>
               </ButtonMui>
@@ -271,9 +278,9 @@ export default observer(function Navbar() {
                   style={{ textDecoration: "none", color: "#000" }}
                 >
                   <MenuItem onClick={handleClose}>
-                  <p className="FontPublic ">
-                  <MyContent name="ข้อมูลส่วนตัว" fontSize="small" />
-                  </p>
+                    <p className="FontPublic ">
+                      <MyContent name="ข้อมูลส่วนตัว" fontSize="small" />
+                    </p>
                   </MenuItem>
                 </NavLink>
 
@@ -283,9 +290,9 @@ export default observer(function Navbar() {
                     style={{ textDecoration: "none", color: "#000" }}
                   >
                     <MenuItem onClick={handleClose}>
-                    <p className="FontPublic">
-                    <MyContent name={"ร้านค้า"} fontSize="small" />
-                    </p>
+                      <p className="FontPublic">
+                        <MyContent name={"ร้านค้า"} fontSize="small" />
+                      </p>
                     </MenuItem>
                   </NavLink>
                 ) : (
@@ -294,9 +301,9 @@ export default observer(function Navbar() {
                     style={{ textDecoration: "none", color: "#000" }}
                   >
                     <MenuItem onClick={handleClose}>
-                    <p className="FontPublic">
-                    <MyContent name={"ลงทะเบียนร้านค้า"} fontSize="small" />
-                    </p>
+                      <p className="FontPublic">
+                        <MyContent name={"ลงทะเบียนร้านค้า"} fontSize="small" />
+                      </p>
                     </MenuItem>
                   </NavLink>
                 )}

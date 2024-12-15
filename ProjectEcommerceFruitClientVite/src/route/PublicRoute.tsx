@@ -35,31 +35,11 @@ export const PublicRoute: any = [
     path: RoutePath.loginScreen,
     element: <LoginScreen />,
   },
-  {
-    id: 2,
-    path: RoutePath.createShopScreen,
-    element: <CreateShopScreen />,
-  },
-  {
-    id: 3,
-    path: RoutePath.successShopScreen,
-    element: <SuccessShopScreen />,
-  },
-  {
-    id: 4,
-    path: RoutePath.shopAddressScreen,
-    element: <ShopAddressScreen />,
-  },
   // {
   //   id: 5,
   //   path: "/create-fruitGI-screen",
   //   element: <CreateFruitGIScreen />,
   // },
-  {
-    id: 6,
-    path: RoutePath.createProductScreen,
-    element: <CreateProductScreen />,
-  },
   {
     id: 7,
     path: RoutePath.homeScreen,
@@ -76,11 +56,6 @@ export const PublicRoute: any = [
   //   element: <FirstScreen />,
   // },
   {
-    id: 10,
-    path: RoutePath.cartScreen,
-    element: <CartScreen />,
-  },
-  {
     id: 11,
     path: RoutePath.firstscreen + "product-detail-screen/:id",
     element: <ProductDetailScreen />,
@@ -89,46 +64,6 @@ export const PublicRoute: any = [
     id: 12,
     path: RoutePath.firstscreen,
     element: <FirstScreenNew />,
-  },
-  {
-    id: 13,
-    path: RoutePath.addressScreen,
-    element: <AddressScreen />,
-  },
-  {
-    id: 14,
-    path: RoutePath.myaccountScreen,
-    element: <MyAccountScreen />,
-  },
-  {
-    id: 15,
-    path: RoutePath.orderSummary,
-    element: <OrderSummary />,
-  },
-  {
-    id: 16,
-    path: RoutePath.summaryScreen,
-    element: <SummaryScreen />,
-  },
-  {
-    id: 17,
-    path: RoutePath.successScreen,
-    element: <SuccessComponent />,
-  },
-  {
-    id: 18,
-    path: RoutePath.dashboardforuser,
-    element: <DashboardForUser />,
-  },
-  {
-    id: 19,
-    path: RoutePath.checkorderScreen,
-    element: <CheckOrderScreen />,
-  },
-  {
-    id: 20,
-    path: RoutePath.orderReceiptList,
-    element: <OrderReceiptList />,
   },
   {
     id: 21,

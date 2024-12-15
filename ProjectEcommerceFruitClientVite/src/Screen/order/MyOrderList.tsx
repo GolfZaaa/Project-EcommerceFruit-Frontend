@@ -64,7 +64,7 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
       >
         <Typography variant="h4" component="h1" gutterBottom align="center">
           <p className="FontPublic font-semibold">
-          <MyContent name="คำสั่งซื้อของฉัน" fontSize="large" />
+            <MyContent name="คำสั่งซื้อของฉัน" fontSize="large" />
           </p>
         </Typography>
         <Tabs
@@ -81,9 +81,9 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
           <Tab
             label={
               <p className="FontPublic">
-            <MyContent name="ทั้งหมด" fontSize="small" />
+                <MyContent name="ทั้งหมด" fontSize="small" />
               </p>
-          }
+            }
             style={{
               width: "20%",
             }}
@@ -91,9 +91,9 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
           <Tab
             label={
               <p className="FontPublic">
-            <MyContent name="กำลังรออนุมัติ" fontSize="small" />
+                <MyContent name="กำลังรออนุมัติ" fontSize="small" />
               </p>
-          }
+            }
             style={{
               width: "20%",
             }}
@@ -101,9 +101,9 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
           <Tab
             label={
               <p className="FontPublic">
-            <MyContent name="อนุมัติแล้ว" fontSize="small" />
+                <MyContent name="อนุมัติแล้ว" fontSize="small" />
               </p>
-          }
+            }
             style={{
               width: "20%",
             }}
@@ -111,9 +111,9 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
           <Tab
             label={
               <p className="FontPublic">
-            <MyContent name="ที่ต้องได้รับ" fontSize="small" />
+                <MyContent name="ที่ต้องได้รับ" fontSize="small" />
               </p>
-          }
+            }
             style={{
               width: "20%",
             }}
@@ -121,9 +121,9 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
           <Tab
             label={
               <p className="FontPublic">
-            <MyContent name="สำเร็จแล้ว" fontSize="small" />
+                <MyContent name="สำเร็จแล้ว" fontSize="small" />
               </p>
-          }
+            }
             style={{
               width: "20%",
             }}
@@ -131,9 +131,9 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
           <Tab
             label={
               <p className="FontPublic">
-            <MyContent name="ยกเลิกแล้ว" fontSize="small" />
+                <MyContent name="ยกเลิกแล้ว" fontSize="small" />
               </p>
-          }
+            }
             style={{
               width: "20%",
             }}
@@ -141,15 +141,12 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
         </Tabs>
 
         <CustomTabPanel value={value} index={0}>
-          <MyOrderCard
-            order={order}
-            index={0}
-          />
+          <MyOrderCard order={order} index={0} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           <MyOrderCard
             order={order.filter(
-              (item) =>  item?.status === 0 //กำลังรออนุมัติ
+              (item) => item?.status === 0 //กำลังรออนุมัติ
             )}
             index={1}
           />
@@ -158,7 +155,6 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
           <MyOrderCard
             order={order.filter(
               (item) =>
-                item?.paymentImage !== null &&
                 item?.status === 1 &&
                 item.confirmReceipt !== 1 && //อนุมัติแล้ว
                 item.confirmReceipt !== 2
@@ -170,11 +166,12 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
           <MyOrderCard
             order={order.filter((item) =>
               item?.shippings[0]?.shippingStatus !== undefined
-                ? item?.shippings[0]?.shippingStatus === 1 && //ที่ต้องได้รับ
+                ? //ที่ต้องได้รับ
                   item?.confirmReceipt === 0
                 : item?.tag !== "จัดส่งผ่านผู้รับหิ้ว" &&
                   item?.tag !== null &&
-                  item?.confirmReceipt === 0 &&
+                  item?.confirmReceipt !== 1 &&
+                  item?.confirmReceipt !== 2 &&
                   item?.status !== 2
             )}
             index={3}

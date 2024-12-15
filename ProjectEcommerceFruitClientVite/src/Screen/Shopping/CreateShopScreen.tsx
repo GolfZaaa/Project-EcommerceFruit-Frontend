@@ -19,6 +19,7 @@ import { CreateInput } from "thai-address-autocomplete-react";
 import MyContent from "../../component/MyContent";
 
 const InputThaiAddress = CreateInput();
+type Props = Parameters<typeof CreateInput>[0];
 
 interface props {
   onChangeCU?: any;
@@ -32,7 +33,7 @@ export default observer(function CreateShopScreen({
   const navigate = useNavigate();
   const { usershop, GetShopByUserId, createandupdate } =
     useStore().shopuserStore;
-  const { getUserDetailbyId } = useStore().userStore;
+  const { getUserDetailbyId, user } = useStore().userStore;
   const { address: addressed, createUpdateAddress }: any =
     useStore().addressStore;
 
@@ -76,41 +77,57 @@ export default observer(function CreateShopScreen({
   };
 
   const handleSubmit = async (event: any) => {
+    console.log("address", address);
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const formData: any = Object.fromEntries(data.entries());
 
-    const dataForm = {
-      id: dataId?.id || 0,
-      name: formData.name,
-      description: formData.description,
-    };
+    if (
+      address.district === "" ||
+      address.amphoe === "" ||
+      address.province === "" ||
+      address.zipcode === ""
+    ) {
+      myToast("กรุณากรอกข้อมูลที่อยู่ให้ครบถ้วน");
+    } else {
+      const data = new FormData(event.currentTarget);
+      const formData: any = Object.fromEntries(data.entries());
 
-    await createandupdate(dataForm).then(async (result) => {
-      if (result) {
-        const dataAddress = {
-          id: addresss?.id || 0,
-          subDistrict: address.district,
-          district: address.amphoe,
-          province: address.province,
-          postCode: address.zipcode,
-          detail: formData.detail,
-          isUsed_Store: true,
-          isUsed: false,
-          gps: "",
-        };
+      const dataForm = {
+        id: dataId?.id || 0,
+        name: formData.name,
+        description: formData.description,
+      };
 
-        await createUpdateAddress(dataAddress);
-        myToast("ลงทะเบียนร้านค้าสำเร็จ");
-        getUserDetailbyId();
+      await createandupdate(dataForm).then(async (result) => {
+        if (result) {
+          const dataAddress = {
+            id: addresss?.id || 0,
+            subDistrict: address.district,
+            district: address.amphoe,
+            province: address.province,
+            postCode: address.zipcode,
+            detail: formData.detail,
+            isUsed_Store: true,
+            isUsed: false,
+            gps: "",
+          };
 
-        if (dataEdit) {
-          onChangeCU();
-        } else {
-          navigate(RoutePath.dashboardShopScreen);
+          await createUpdateAddress(dataAddress);
+          if (user?.stores.length) {
+            myToast("บันทึกสำเร็จ");
+          } else {
+            myToast("ลงทะเบียนร้านค้าสำเร็จ");
+          }
+
+          getUserDetailbyId();
+
+          if (dataEdit) {
+            onChangeCU();
+          } else {
+            navigate(RoutePath.dashboardShopScreen);
+          }
         }
-      }
-    });
+      });
+    }
   };
 
   return (
@@ -210,9 +227,10 @@ export default observer(function CreateShopScreen({
                   },
                 }}
               />
+
               <label>
                 <p className="FontPublic">
-                <MyContent name={`รหัสไปรษณีย์`} fontSize="small" />
+                  <MyContent name={`รหัสไปรษณีย์`} fontSize="small" />
                 </p>
               </label>
               <InputThaiAddress.Zipcode
@@ -224,45 +242,54 @@ export default observer(function CreateShopScreen({
                 }}
                 className="custom-district-input FontPublic"
               />
+
               <label>
                 <p className="FontPublic">
-                <MyContent name={`แขวง/ตำบล`} fontSize="small" />
+                  <MyContent name={`แขวง/ตำบล`} fontSize="small" />
                 </p>
               </label>
               <InputThaiAddress.District
                 value={address["district"]}
-                onChange={handleChange("district")}
+                // onChange={handleChange("district")}
                 onSelect={(e: any) => handleSelect(e)}
                 style={{
                   height: "55px",
+                  pointerEvents: "none",
+                  opacity: 0.6,
                 }}
                 className="custom-district-input FontPublic"
               />
+
               <label>
                 <p className="FontPublic">
-                <MyContent name={`เขต/อำเภอ`} fontSize="small" />
+                  <MyContent name={`เขต/อำเภอ`} fontSize="small" />
                 </p>
               </label>
               <InputThaiAddress.Amphoe
                 value={address["amphoe"]}
-                onChange={handleChange("amphoe")}
+                // onChange={handleChange("amphoe")}
                 onSelect={(e: any) => handleSelect(e)}
                 style={{
                   height: "55px",
+                  pointerEvents: "none",
+                  opacity: 0.6,
                 }}
                 className="custom-district-input FontPublic"
               />
+
               <label>
                 <p className="FontPublic">
-                <MyContent name={`จังหวัด`} fontSize="small" />
+                  <MyContent name={`จังหวัด`} fontSize="small" />
                 </p>
               </label>
               <InputThaiAddress.Province
                 value={address["province"]}
-                onChange={handleChange("province")}
+                // onChange={handleChange("province")}
                 onSelect={(e: any) => handleSelect(e)}
                 style={{
                   height: "55px",
+                  pointerEvents: "none",
+                  opacity: 0.6,
                 }}
                 className="custom-district-input FontPublic"
               />
@@ -278,7 +305,7 @@ export default observer(function CreateShopScreen({
                 fullWidth
               >
                 <p className="FontPublic font-semibold">
-                <MyContent name="บันทึก" fontSize="small" />
+                  <MyContent name="บันทึก" fontSize="small" />
                 </p>
               </Button>
             </Box>

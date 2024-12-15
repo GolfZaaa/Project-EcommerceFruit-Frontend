@@ -19,6 +19,7 @@ import MyContent from "../../component/MyContent";
 import { FaBoxOpen } from "react-icons/fa";
 import { AiOutlineCalendar, AiOutlinePieChart } from "react-icons/ai";
 import { GiPayMoney } from "react-icons/gi";
+import lottiteEmpty from "../../assets/lotties/lf20_qh5z2fdq.json";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -80,16 +81,22 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
       const total = order
         .filter(
           (x) =>
-            x.shippings?.[0]?.shippingStatus === 1 && x.confirmReceipt === 1 
+            x.shippings?.[0]?.shippingStatus === 1 && x.confirmReceipt === 1
         )
 
         .reduce((acc, currentOrder) => {
-          const driverHistoryFees = (currentOrder.shippings?.[0]?.driverHistories.filter((x=>x.userId === user?.id)) || [])
-            .reduce((sum, driverHistory) => sum + (driverHistory.shippingFee || 0), 0);
+          const driverHistoryFees = (
+            currentOrder.shippings?.[0]?.driverHistories.filter(
+              (x) => x.userId === user?.id
+            ) || []
+          ).reduce(
+            (sum, driverHistory) => sum + (driverHistory.shippingFee || 0),
+            0
+          );
           return acc + driverHistoryFees;
         }, 0);
 
-        settotalPrice(total);
+      settotalPrice(total);
 
       const shippingSuccess = order.filter(
         (x) => x.shippings?.[0]?.shippingStatus === 1 && x.confirmReceipt === 1
@@ -121,8 +128,14 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
           );
         })
         .reduce((acc, currentOrder) => {
-          const driverHistoryFees = (currentOrder.shippings?.[0]?.driverHistories.filter((x=>x.userId === user?.id)) || [])
-            .reduce((sum, driverHistory) => sum + (driverHistory.shippingFee || 0), 0);
+          const driverHistoryFees = (
+            currentOrder.shippings?.[0]?.driverHistories.filter(
+              (x) => x.userId === user?.id
+            ) || []
+          ).reduce(
+            (sum, driverHistory) => sum + (driverHistory.shippingFee || 0),
+            0
+          );
           return acc + driverHistoryFees;
         }, 0);
 
@@ -162,11 +175,11 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
       if (shipping?.shippingStatus === 1) {
         const orderDate: any = new Date(shipping.createdAt);
         const orderYear = orderDate.getFullYear();
-        yearsSet.add(orderYear); 
+        yearsSet.add(orderYear);
       }
     });
 
-    return Array.from(yearsSet).sort((a, b) => b - a); 
+    return Array.from(yearsSet).sort((a, b) => b - a);
   };
 
   const [monthlyTotal, setMonthlyTotal] = useState<number[]>([]);
@@ -357,13 +370,20 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
       { header: "หน่วย", key: "unit", width: 30 },
     ];
 
-    worksheet.getRow(1).font = { bold: true, size: 14, color: { argb: "FFFFFF" }};
-    worksheet.getRow(1).alignment = { horizontal: "center", vertical: "middle" };
+    worksheet.getRow(1).font = {
+      bold: true,
+      size: 14,
+      color: { argb: "FFFFFF" },
+    };
+    worksheet.getRow(1).alignment = {
+      horizontal: "center",
+      vertical: "middle",
+    };
     worksheet.getRow(1).eachCell((cell) => {
       cell.fill = {
         type: "pattern",
         pattern: "solid",
-        fgColor: { argb: "0070C0" }, 
+        fgColor: { argb: "0070C0" },
       };
       cell.border = {
         top: { style: "thin" },
@@ -376,7 +396,10 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
     const addStyledRow = (rowData: any) => {
       const row = worksheet.addRow(rowData);
       row.eachCell((cell, colIndex) => {
-        cell.alignment = { vertical: "middle", horizontal: colIndex === 2 ? "center" : "left" };
+        cell.alignment = {
+          vertical: "middle",
+          horizontal: colIndex === 2 ? "center" : "left",
+        };
         cell.border = {
           top: { style: "thin" },
           left: { style: "thin" },
@@ -413,8 +436,8 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
     addStyledRow({ item: "รายได้สุทธิของแต่ละเดือน", value: "" });
     availableYears.forEach((year) => {
       const monthlyTotals = calculateMonthlyTotal(order, year);
-      addStyledRow({ item: `ปี ${year + 543}`, value: "" }); 
-  
+      addStyledRow({ item: `ปี ${year + 543}`, value: "" });
+
       data.months.forEach((month, index) => {
         if (monthlyTotals[index] > 0) {
           addStyledRow({
@@ -555,11 +578,9 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
           </p>
         </div>
 
-        <a
-          className="mt-6 flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-200 ease-in-out hover:border-gray-400/80 bg-gray-50 hover:bg-gray-100 shadow-sm hover:shadow-md"
-        >
+        <a className="mt-6 flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-200 ease-in-out hover:border-gray-400/80 bg-gray-50 hover:bg-gray-100 shadow-sm hover:shadow-md">
           <div className="flex flex-row items-center justify-center">
-               <MdAttachMoney size={25} />
+            <MdAttachMoney size={25} />
             <span className="font-bold text-gray-600">
               {totalPrice.toLocaleString()}
             </span>
@@ -569,11 +590,9 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
           </div>
         </a>
 
-        <a
-          className=" mt-6 flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-200 ease-in-out hover:border-gray-400/80 bg-gray-50 hover:bg-gray-100 shadow-md hover:shadow-lg"
-        >
+        <a className=" mt-6 flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-200 ease-in-out hover:border-gray-400/80 bg-gray-50 hover:bg-gray-100 shadow-md hover:shadow-lg">
           <div className="flex flex-row items-center justify-center">
-            <FaBoxOpen size={25} className="mr-2"/>
+            <FaBoxOpen size={25} className="mr-2" />
             <span className="font-bold text-gray-600">{totalSuccess}</span>
           </div>
           <div className="mt-2 text-sm text-gray-400">
@@ -581,11 +600,9 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
           </div>
         </a>
 
-        <a
-          className=" mt-6 flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-200 ease-in-out hover:border-gray-400/80 bg-gray-50 hover:bg-gray-100 shadow-md hover:shadow-lg"
-        >
+        <a className=" mt-6 flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-200 ease-in-out hover:border-gray-400/80 bg-gray-50 hover:bg-gray-100 shadow-md hover:shadow-lg">
           <div className="flex flex-row items-center justify-center">
-            <AiOutlineCalendar size={25} className="mr-2"/>
+            <AiOutlineCalendar size={25} className="mr-2" />
             <span className="font-bold text-gray-600">
               {totalSuccessForMonth}
             </span>
@@ -595,11 +612,9 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
           </div>
         </a>
 
-        <a
-          className=" mt-6 flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-200 ease-in-out hover:border-gray-400/80 bg-gray-50 hover:bg-gray-100 shadow-md hover:shadow-lg"
-        >
+        <a className=" mt-6 flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-200 ease-in-out hover:border-gray-400/80 bg-gray-50 hover:bg-gray-100 shadow-md hover:shadow-lg">
           <div className="flex flex-row items-center justify-center">
-            <GiPayMoney size={25} className="mr-2"/>
+            <GiPayMoney size={25} className="mr-2" />
             <span className="font-bold text-gray-600">
               {totalPriceForMonth}
             </span>
@@ -674,7 +689,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
                     className="flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80"
                   >
                     <div className="flex flex-row items-center justify-center">
-                    <MdAttachMoney size={25} />
+                      <MdAttachMoney size={25} />
                       <span className="font-bold text-gray-600">
                         {totalPrice.toLocaleString()}
                       </span>
@@ -690,17 +705,14 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
                     className="flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80"
                   >
                     <div className="flex flex-row items-center justify-center">
-                    <FaBoxOpen size={25} className="mr-2"/>
+                      <FaBoxOpen size={25} className="mr-2" />
                       <span className="font-bold text-gray-600">
                         {totalSuccess}
                       </span>
                     </div>
 
                     <div className="mt-2 text-sm text-gray-400">
-                      <MyContent
-                        name="รับหิ้วสำเร็จ"
-                        fontSize="smaller"
-                      />
+                      <MyContent name="รับหิ้วสำเร็จ" fontSize="smaller" />
                     </div>
                   </a>
 
@@ -709,7 +721,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
                     className="flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80"
                   >
                     <div className="flex flex-row items-center justify-center">
-                    <AiOutlineCalendar size={25} className="mr-2"/>
+                      <AiOutlineCalendar size={25} className="mr-2" />
                       <span className="font-bold text-gray-600">
                         {totalSuccessForMonth}
                       </span>
@@ -728,7 +740,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
                     className="flex h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80"
                   >
                     <div className="flex flex-row items-center justify-center">
-                    <GiPayMoney size={25} className="mr-2"/>
+                      <GiPayMoney size={25} className="mr-2" />
                       <span className="font-bold text-gray-600">
                         {totalPriceForMonth}
                       </span>
@@ -979,7 +991,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
       >
         <Typography variant="h4" component="h1" gutterBottom align="center">
           <p className="FontPublic font-semibold">
-          <MyContent name="สร้างรายได้" fontSize="large" />
+            <MyContent name="สร้างรายได้" fontSize="large" />
           </p>
         </Typography>
         <Tabs
@@ -996,9 +1008,9 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
           <Tab
             label={
               <p className="FontPublic">
-            <MyContent name="ทั้งหมด" fontSize="small" />
+                <MyContent name="ทั้งหมด" fontSize="small" />
               </p>
-          }
+            }
             style={{
               width: "20%",
             }}
@@ -1006,9 +1018,9 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
           <Tab
             label={
               <p className="FontPublic">
-            <MyContent name="ที่ต้องส่ง" fontSize="small" />
-                </p>
-          }
+                <MyContent name="ที่ต้องส่ง" fontSize="small" />
+              </p>
+            }
             style={{
               width: "20%",
             }}
@@ -1016,9 +1028,9 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
           <Tab
             label={
               <p className="FontPublic">
-            <MyContent name="ส่งแล้ว" fontSize="small" />
-                </p>
-          }
+                <MyContent name="ส่งแล้ว" fontSize="small" />
+              </p>
+            }
             style={{
               width: "20%",
             }}
@@ -1026,8 +1038,8 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
           <Tab
             label={
               <p className="FontPublic">
-              <MyContent name="ส่งต่อให้ผู้จัดส่งคนอื่น" fontSize="small" />
-                  </p>
+                <MyContent name="ส่งต่อให้ผู้จัดส่งคนอื่น" fontSize="small" />
+              </p>
             }
             style={{
               width: "30%",

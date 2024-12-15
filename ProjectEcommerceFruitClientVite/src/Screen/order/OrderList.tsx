@@ -236,14 +236,20 @@ const OrderList = () => {
       { header: "สถานะพัสดุ", key: "confirmReceipt", width: 30 },
     ];
 
-    
-    worksheet.getRow(1).font = { bold: true, size: 14, color: { argb: "FFFFFF" }};
-    worksheet.getRow(1).alignment = { horizontal: "center", vertical: "middle" };
+    worksheet.getRow(1).font = {
+      bold: true,
+      size: 14,
+      color: { argb: "FFFFFF" },
+    };
+    worksheet.getRow(1).alignment = {
+      horizontal: "center",
+      vertical: "middle",
+    };
     worksheet.getRow(1).eachCell((cell) => {
       cell.fill = {
         type: "pattern",
         pattern: "solid",
-        fgColor: { argb: "0070C0" }, 
+        fgColor: { argb: "0070C0" },
       };
       cell.border = {
         top: { style: "thin" },
@@ -256,16 +262,33 @@ const OrderList = () => {
     const addStyledRow = (rowData: any) => {
       const row = worksheet.addRow(rowData);
       row.eachCell((cell, colIndex) => {
-        cell.alignment = { vertical: "middle", horizontal: colIndex === 2 ? "center" : "left" };
+        cell.alignment = {
+          vertical: "middle",
+          horizontal: colIndex === 2 ? "center" : "left",
+        };
         cell.border = {
           top: { style: "thin" },
           left: { style: "thin" },
           bottom: { style: "thin" },
           right: { style: "thin" },
         };
+
+        console.log("rowData.paymentImage", rowData.paymentImage);
+
+        // If there is a payment image, add a hyperlink to the "paymentImage" column
+        if (colIndex === 2 && rowData.paymentImage !== "ไม่มีรูปภาพ") {
+          // 2 corresponds to the 'paymentImage' column
+          const imageUrl = `https://localhost:8168/paymentImage/${rowData.paymentImage}`; // Replace with your actual image path
+          cell.value = {
+            text: "มีรูปภาพ",
+            hyperlink: imageUrl, // Set the hyperlink to the image URL
+          };
+          cell.font = { color: { argb: "0000FF" }, underline: true }; // Make the text blue and underlined (standard for links)
+        }
       });
     };
 
+    // Iterate over the 'order' array and call addStyledRow for each row of data
     for (const row of order) {
       const statusText =
         row.status === 0
@@ -289,34 +312,15 @@ const OrderList = () => {
         .add(543, "year")
         .format("DD/MM/YYYY");
 
-      const addedRow = worksheet.addRow({
+      // Add the row data to the Excel sheet
+      addStyledRow({
         orderId: row.orderId,
-        paymentImage: row.paymentImage ? "มีรูปภาพ" : "ไม่มีรูปภาพ",
+        paymentImage: row.paymentImage ? row.paymentImage : "ไม่มีรูปภาพ",
         description: row.tag || "ยังไม่ได้กรอกหมายเลขพัสดุ",
         createdAt: createdAtFormatted,
         status: statusText,
         confirmReceipt: confirmReceiptText,
       });
-
-      if (row.paymentImage) {
-        try {
-          const imageUrl = pathImages.paymentImage + row.paymentImage;
-          const response = await fetch(imageUrl);
-          const arrayBuffer = await response.arrayBuffer();
-
-          const imageId = workbook.addImage({
-            buffer: arrayBuffer, 
-            extension: "jpeg", 
-          });
-
-          worksheet.addImage(imageId, {
-            tl: { col: 1, row: addedRow.number - 1 }, 
-            ext: { width: 100, height: 100 },
-          });
-        } catch (error) {
-          console.error("Error adding image to Excel:", error);
-        }
-      }
     }
 
     workbook.xlsx.writeBuffer().then((data) => {
@@ -331,6 +335,125 @@ const OrderList = () => {
       URL.revokeObjectURL(url);
     });
   };
+
+  // const generateExcel = async () => {
+  //   const workbook = new ExcelJS.Workbook();
+  //   const worksheet = workbook.addWorksheet("Order Data");
+
+  //   worksheet.columns = [
+  //     { header: "รหัสคำสั่งซื้อ", key: "orderId", width: 20 },
+  //     { header: "รูปภาพสลิป", key: "paymentImage", width: 30 },
+  //     { header: "หมายเลขพัสดุ", key: "description", width: 30 },
+  //     { header: "สร้างเมื่อวันที่", key: "createdAt", width: 20 },
+  //     { header: "สถานะคำสั่งซื้อ", key: "status", width: 30 },
+  //     { header: "สถานะพัสดุ", key: "confirmReceipt", width: 30 },
+  //   ];
+
+  //   worksheet.getRow(1).font = {
+  //     bold: true,
+  //     size: 14,
+  //     color: { argb: "FFFFFF" },
+  //   };
+  //   worksheet.getRow(1).alignment = {
+  //     horizontal: "center",
+  //     vertical: "middle",
+  //   };
+  //   worksheet.getRow(1).eachCell((cell) => {
+  //     cell.fill = {
+  //       type: "pattern",
+  //       pattern: "solid",
+  //       fgColor: { argb: "0070C0" },
+  //     };
+  //     cell.border = {
+  //       top: { style: "thin" },
+  //       left: { style: "thin" },
+  //       bottom: { style: "thin" },
+  //       right: { style: "thin" },
+  //     };
+  //   });
+
+  //   const addStyledRow = (rowData: any) => {
+  //     const row = worksheet.addRow(rowData);
+  //     row.eachCell((cell, colIndex) => {
+  //       cell.alignment = {
+  //         vertical: "middle",
+  //         horizontal: colIndex === 2 ? "center" : "left",
+  //       };
+  //       cell.border = {
+  //         top: { style: "thin" },
+  //         left: { style: "thin" },
+  //         bottom: { style: "thin" },
+  //         right: { style: "thin" },
+  //       };
+  //     });
+  //   };
+
+  //   for (const row of order) {
+  //     const statusText =
+  //       row.status === 0
+  //         ? "กำลังรออนุมัติ"
+  //         : row.status === 1
+  //         ? "ยืนยันคำสั่งซื้อแล้ว"
+  //         : row.status === 2
+  //         ? "ยกเลิกคำสั่งซื้อแล้ว"
+  //         : "เพิ่มสถานะด้วย";
+
+  //     const confirmReceiptText =
+  //       row.confirmReceipt === 0
+  //         ? "กำลังดำเนินการ"
+  //         : row.confirmReceipt === 1
+  //         ? "ได้รับพัสดุแล้ว"
+  //         : row.confirmReceipt === 2
+  //         ? "ไม่ได้รับพัสดุ"
+  //         : "เพิ่มสถานะด้วย";
+
+  //     const createdAtFormatted = dayjs(row.createdAt)
+  //       .add(543, "year")
+  //       .format("DD/MM/YYYY");
+
+  //     const addedRow = worksheet.addRow({
+  //       orderId: row.orderId,
+  //       paymentImage: row.paymentImage ? "มีรูปภาพ" : "ไม่มีรูปภาพ",
+  //       description: row.tag || "ยังไม่ได้กรอกหมายเลขพัสดุ",
+  //       createdAt: createdAtFormatted,
+  //       status: statusText,
+  //       confirmReceipt: confirmReceiptText,
+  //     });
+
+  //     if (row.paymentImage) {
+  //       //go to url pathImages.paymentImage + row.paymentImage
+  //       // try {
+  //       //   // const imageUrl =
+  //       //   //   "https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png";
+  //       //   const imageUrl = pathImages.paymentImage + row.paymentImage;
+  //       //   const response = await fetch(imageUrl);
+  //       //   const arrayBuffer = await response.arrayBuffer();
+  //       //   const imageId = workbook.addImage({
+  //       //     buffer: arrayBuffer,
+  //       //     extension: "png",
+  //       //   });
+  //       //   worksheet.addImage(imageId, {
+  //       //     tl: { col: 1, row: addedRow.number - 1 },
+  //       //     ext: { width: 100, height: 100 },
+  //       //   });
+  //       // } catch (error) {
+  //       //   console.error("Error adding image to Excel:", error);
+  //       // }
+  //     }
+  //   }
+
+  //   workbook.xlsx.writeBuffer().then((data) => {
+  //     const blob = new Blob([data], {
+  //       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  //     });
+  //     const url = URL.createObjectURL(blob);
+  //     const a = document.createElement("a");
+  //     a.href = url;
+  //     a.download = "order_data_with_images.xlsx";
+  //     a.click();
+  //     URL.revokeObjectURL(url);
+  //   });
+  // };
 
   return (
     <div style={{ marginTop: 102 }}>

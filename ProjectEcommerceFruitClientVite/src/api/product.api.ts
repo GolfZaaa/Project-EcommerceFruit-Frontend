@@ -3,6 +3,8 @@ import { createFormData, requests } from "./agent";
 export const Product = {
   getProduct: (categoryId: number) =>
     requests.get(`Product/GetProduct?categoryId=${categoryId}`),
+  getFilterProduct: (queryParams: any) =>
+    requests.get(`Product/GetFilterProduct?${queryParams.toString()}`),
   getProductByStore: (storeId: number) =>
     requests.get(`Product/GetProductByStore?storeId=${storeId}`),
   createUpdateProduct: (values: any) =>

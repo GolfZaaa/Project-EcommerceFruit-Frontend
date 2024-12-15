@@ -10,18 +10,50 @@ export default class ProductStore {
   productGI: ProductGI[] = [];
   category: Category[] = [];
   loadingPGI: boolean = false;
+  loadingP: boolean = false;
+  loadingReset: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
   }
 
   setLoadingPGI = (state: boolean) => (this.loadingPGI = state);
+  setLoadingP = (state: boolean) => (this.loadingP = state);
+  setLoadingReset = (state: boolean) => (this.loadingReset = state);
 
   getProduct = async (categoryId: number) => {
     try {
       const result = await agent.Product.getProduct(categoryId);
       this.product = result;
     } catch (error) {
+      return error;
+    }
+  };
+
+  getFilterProduct = async (values: any) => {
+    this.setLoadingP(true);
+    try {
+      const result = await agent.Product.getFilterProduct(values);
+
+      this.product = result;
+
+      this.setLoadingP(false);
+    } catch (error) {
+      this.setLoadingP(false);
+      return error;
+    }
+  };
+
+  resetFilterProduct = async (values: any) => {
+    this.setLoadingReset(true);
+    try {
+      const result = await agent.Product.getFilterProduct(values);
+
+      this.product = result;
+
+      this.setLoadingReset(false);
+    } catch (error) {
+      this.setLoadingReset(false);
       return error;
     }
   };

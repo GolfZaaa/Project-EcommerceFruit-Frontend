@@ -15,6 +15,8 @@ import AddressForCard from "../../../components/AddressForCard";
 import { useNavigate } from "react-router-dom";
 import { resetScroll } from "../../../api/agent";
 import MyContent from "../../../component/MyContent";
+import MyLottie from "../../../helper/components/MyLottie";
+import lottiteEmpty from "../../../assets/lotties/lf20_qh5z2fdq.json";
 
 interface props {
   order: Order[];
@@ -28,32 +30,6 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
   const componentRef = useRef(null);
 
   const [select, setSelect] = useState<any[]>([]);
-
-  function generatePDF() {
-    const opt = {
-      margin: 0.2,
-      filename: "reportOrderAll.pdf",
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 3 },
-      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-    };
-
-    const downloadButton: any = document.querySelector("#downloadButton");
-
-    if (downloadButton) {
-      downloadButton.style.display = "none";
-    }
-
-    html2pdf()
-      .from(componentRef.current)
-      .set(opt)
-      .save()
-      .then(() => {
-        if (downloadButton) {
-          downloadButton.style.display = "block";
-        }
-      });
-  }
 
   const onSelect = (id: number) => {
     if (select.find((x) => x === id) !== undefined) {
@@ -75,7 +51,11 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire("ส่งเรียบร้อยแล้ว", "ส่งคำร้องขอรับหิ้วสินค้าต่อสำเร็จ", "success");
+        Swal.fire(
+          "ส่งเรียบร้อยแล้ว",
+          "ส่งคำร้องขอรับหิ้วสินค้าต่อสำเร็จ",
+          "success"
+        );
 
         iWantToTakeOrdertoSend({ ...select.map((item) => item) });
 
@@ -89,67 +69,74 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
       <div className="flex justify-between">
         {order.length < 0 ? (
           <div className="flex items-center">
-          <Typography variant="h5" className="flex items-center">
-            <p className="FontPublic">
-            <MyContent name="จำนวน" fontSize="normal" />
-            </p>
-            <span className="mx-1"></span> 
-            
-            <p className="FontPublic"> 
-            <MyContent name={order.length} fontSize="normal" />
-            </p>
-          </Typography>
-        </div>
-        ):(
+            <Typography variant="h5" className="flex items-center">
+              <p className="FontPublic">
+                <MyContent name="จำนวน" fontSize="normal" />
+              </p>
+              <span className="mx-1"></span>
+
+              <p className="FontPublic">
+                <MyContent name={order.length} fontSize="normal" />
+              </p>
+            </Typography>
+          </div>
+        ) : (
           <div></div>
         )}
 
         {/* {order.length < 0 ? (
- <div>
-
-</div>
-        ):(
           <div>
-             <button
-   id="downloadButton"
-   onClick={generatePDF}
-   className=" p-2 bg-blue-500 text-white rounded-md"
- >
-   <BsFillPrinterFill />
- </button>
+
           </div>
-        )}
+                  ):(
+                    <div>
+                      <button
+            id="downloadButton"
+            onClick={generatePDF}
+            className=" p-2 bg-blue-500 text-white rounded-md"
+          >
+            <BsFillPrinterFill />
+          </button>
+                    </div>
+                  )}
         */}
       </div>
 
       {select.length ? (
         <Grid
-  container
-  spacing={2}
-  style={{
-    marginTop: 15,
-    marginBottom: 35,
-  }}
-  justifyContent="space-between"
-  alignItems="center"
->
-  <Grid item xs={4} sm={8} md={8} lg={8} xl={8}>
-    <Typography variant="h5">
-      <p className="FontPublic font-semibold">
-      <MyContent name={`จำนวนที่เลือก : ${select.length}`} fontSize="littlenormal" />
-      </p>
-      </Typography>
-  </Grid>
-  <Grid item >
-    <Fab variant="extended" color="primary" onClick={handleConfirm}  sx={{ zIndex: 1 }} >
-      <EditIcon sx={{ mr: 1 }} />
-      <p className="FontPublic font-semibold">
-      <MyContent name={`ยืนยันการเลือก`} fontSize="smaller" />
-      </p>
-    </Fab>
-  </Grid>
-</Grid>
-
+          container
+          spacing={2}
+          style={{
+            marginTop: 15,
+            marginBottom: 35,
+          }}
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Grid item xs={4} sm={8} md={8} lg={8} xl={8}>
+            <Typography variant="h5">
+              <p className="FontPublic font-semibold">
+                <MyContent
+                  name={`จำนวนที่เลือก : ${select.length}`}
+                  fontSize="littlenormal"
+                />
+              </p>
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Fab
+              variant="extended"
+              color="primary"
+              onClick={handleConfirm}
+              sx={{ zIndex: 1 }}
+            >
+              <EditIcon sx={{ mr: 1 }} />
+              <p className="FontPublic font-semibold">
+                <MyContent name={`ยืนยันการเลือก`} fontSize="smaller" />
+              </p>
+            </Fab>
+          </Grid>
+        </Grid>
       ) : (
         <></>
       )}
@@ -228,7 +215,7 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
                       />
                       <Typography variant="h5" align="left">
                         <p className="FontPublic font-semibold">
-                        <MyContent name="เลือกสินค้า" fontSize="normal" />
+                          <MyContent name="เลือกสินค้า" fontSize="normal" />
                         </p>
                       </Typography>
                     </div>
@@ -327,16 +314,22 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
           })}
         </>
       ) : (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            fontSize: "30px",
-            color: "red",
-          }}
-        >
-          {showOrderEmpty && "ไม่พบคำสั่งซื้อที่คุณค้นหา"}
+        <div>
+          {showOrderEmpty && <MyLottie lottieFile={lottiteEmpty} />}
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: "30px",
+              color: "red",
+            }}
+          >
+            {showOrderEmpty
+              ? "ไม่พบคำสั่งซื้อที่คุณค้นหา"
+              : "กรอกรหัสคำสั่งซื้อที่ต้องการรับ"}
+          </div>
         </div>
       )}
     </div>

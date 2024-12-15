@@ -48,7 +48,7 @@ export default class AddressStore {
     store.systemSettingStore.setLoading(true);
     try {
       const result = await agent.Address.createUpdateAddress(values);
-    store.systemSettingStore.setLoading(false);
+      store.systemSettingStore.setLoading(false);
       return result;
     } catch (error) {
       return error;

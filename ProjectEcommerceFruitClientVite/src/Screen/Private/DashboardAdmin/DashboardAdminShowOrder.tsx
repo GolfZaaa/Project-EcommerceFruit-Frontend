@@ -11,8 +11,9 @@ import html2pdf from "html2pdf.js";
 import { VscFilePdf } from "react-icons/vsc";
 import { RiFileExcel2Line } from "react-icons/ri";
 import MyContent from "../../../component/MyContent";
+import { observer } from "mobx-react-lite";
 
-export default function DashboardAdminShowOrder() {
+export default observer(function DashboardAdminShowOrder() {
   const [searchUser, setSearchUser] = useState<any>("");
   const [filterUser, setfilterUser] = useState<any>([]);
 
@@ -20,20 +21,18 @@ export default function DashboardAdminShowOrder() {
 
   const testGet = async () => {
     await getOrdersAll();
-   }
+  };
 
-   const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true)
-    getOrdersAll()
-    setLoading(false)
+    setLoading(true);
+    getOrdersAll();
+    setLoading(false);
     AOS.init({ duration: 1000 });
   }, []);
 
-
-
-  console.log("order",order)
+  console.log("order", order);
 
   useEffect(() => {
     if (searchUser === "") {
@@ -50,7 +49,6 @@ export default function DashboardAdminShowOrder() {
       setfilterUser(filtered);
     }
   }, [searchUser, order]);
-
 
   const formatDateToThai = (dateString: string) => {
     const date = new Date(dateString);
@@ -148,7 +146,6 @@ export default function DashboardAdminShowOrder() {
     });
   };
 
-
   const componentRef = useRef(null);
   function generatePDF() {
     const opt = {
@@ -182,7 +179,10 @@ export default function DashboardAdminShowOrder() {
       <div className="FontPublic p-4">
         <div className="flex flex-col">
           <div className=" overflow-x-auto">
-            <div className="min-w-full inline-block align-middle" ref={componentRef}>
+            <div
+              className="min-w-full inline-block align-middle"
+              ref={componentRef}
+            >
               <div className="relative  text-gray-500 focus-within:text-gray-900 mb-4">
                 <div className="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none ">
                   <svg
@@ -234,7 +234,7 @@ export default function DashboardAdminShowOrder() {
                         aria-expanded="true"
                         aria-haspopup="true"
                       >
-                        <BiDownload/>
+                        <BiDownload />
                       </button>
                     </div>
 
@@ -245,13 +245,17 @@ export default function DashboardAdminShowOrder() {
                         aria-orientation="vertical"
                         aria-labelledby="menu-button"
                       >
-                        <div className="py-1 cursor-pointer " role="none" onClick={generatePDF}>
+                        <div
+                          className="py-1 cursor-pointer "
+                          role="none"
+                          onClick={generatePDF}
+                        >
                           <button
                             className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-red-600 hover:bg-gray-200 hover:font-bold w-full"
                             role="menuitem"
                             id="menu-item-0"
                           >
-                           <VscFilePdf className="mr-2"size={20} /> PDF
+                            <VscFilePdf className="mr-2" size={20} /> PDF
                           </button>
                           <div className="">
                             <button
@@ -260,10 +264,7 @@ export default function DashboardAdminShowOrder() {
                               role="menuitem"
                               id="menu-item-1"
                             >
-                              <RiFileExcel2Line
-                                className="mr-2"
-                                size={20}
-                              />
+                              <RiFileExcel2Line className="mr-2" size={20} />
                               EXCEL
                             </button>
                           </div>
@@ -272,7 +273,6 @@ export default function DashboardAdminShowOrder() {
                     )}
                   </div>
                 </div>
-                
               </div>
               <div className="overflow-hidden ">
                 <table className="min-w-full border border-gray-300 rounded-tl-lg rounded-tr-lg overflow-hidden">
@@ -282,28 +282,25 @@ export default function DashboardAdminShowOrder() {
                         scope="col"
                         className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tl-lg"
                       >
-                         <p>
-                            <MyContent name="ลำดับ" fontSize="small" />
-                          </p>
-                        
+                        <p>
+                          <MyContent name="ลำดับ" fontSize="small" />
+                        </p>
                       </th>
                       <th
                         scope="col"
                         className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                       >
                         <p>
-                            <MyContent name="รูปภาพชำระเงิน" fontSize="small" />
-                          </p>
-                        
+                          <MyContent name="รูปภาพชำระเงิน" fontSize="small" />
+                        </p>
                       </th>
                       <th
                         scope="col"
                         className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                       >
                         <p>
-                            <MyContent name="ชื่อผู้ชำระเงิน" fontSize="small" />
-                          </p>
-                        
+                          <MyContent name="ชื่อผู้ชำระเงิน" fontSize="small" />
+                        </p>
                       </th>
 
                       <th
@@ -311,18 +308,16 @@ export default function DashboardAdminShowOrder() {
                         className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                       >
                         <p>
-                            <MyContent name="วันที่สร้าง" fontSize="small" />
-                          </p>
-                        
+                          <MyContent name="วันที่สร้าง" fontSize="small" />
+                        </p>
                       </th>
                       <th
                         scope="col"
                         className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                       >
                         <p>
-                            <MyContent name="สถานะ" fontSize="small" />
-                          </p>
-                        
+                          <MyContent name="สถานะ" fontSize="small" />
+                        </p>
                       </th>
                       <th
                         scope="col"
@@ -341,18 +336,19 @@ export default function DashboardAdminShowOrder() {
                   </thead>
 
                   <tbody className="divide-y divide-gray-300">
-                    {filterUser && filterUser.map((userItem: any, index: any) => {
-                      return (
-                        <tr className="bg-white transition-all duration-500 hover:bg-gray-50">
-                          <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
-                            {" "}
-                            <p className="font-normal">
+                    {filterUser &&
+                      filterUser.map((userItem: any, index: any) => {
+                        return (
+                          <tr className="bg-white transition-all duration-500 hover:bg-gray-50">
+                            <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
+                              {" "}
+                              <p className="font-normal">
                                 <MyContent name={index + 1} fontSize="small" />
                               </p>
-                          </td>
-                          <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                            {" "}
-                            {userItem.paymentImage ? (
+                            </td>
+                            <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                              {" "}
+                              {userItem.paymentImage ? (
                                 <img
                                   className="w-20 h-24 object-cover"
                                   src={`${pathImagepayment}${userItem.paymentImage}`}
@@ -360,30 +356,40 @@ export default function DashboardAdminShowOrder() {
                                 />
                               ) : (
                                 <div className="pl-8">
-                                <p>
-                                <MyContent name="-" fontSize="littlenormal" />
+                                  <p>
+                                    <MyContent
+                                      name="-"
+                                      fontSize="littlenormal"
+                                    />
                                   </p>
                                 </div>
                               )}
-                          </td>
-                          <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                            {" "}
-                            <p className="font-normal">
-                                <MyContent name={userItem.address.user.fullName} fontSize="small" />
+                            </td>
+                            <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                              {" "}
+                              <p className="font-normal">
+                                <MyContent
+                                  name={userItem.address.user.fullName}
+                                  fontSize="small"
+                                />
                               </p>
-                            
-                          </td>
+                            </td>
 
-                          <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                            {" "}
-                            <p className="font-normal">
-                                <MyContent name={formatDateToThaiShort(userItem.createdAt)} fontSize="small" />
+                            <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                              {" "}
+                              <p className="font-normal">
+                                <MyContent
+                                  name={formatDateToThaiShort(
+                                    userItem.createdAt
+                                  )}
+                                  fontSize="small"
+                                />
                               </p>
-                          </td>
-                          <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                            {" "}
-                            <span
-                              className={`
+                            </td>
+                            <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                              {" "}
+                              <span
+                                className={`
                               ${
                                 userItem.status === 0
                                   ? "text-yellow-500 bg-yellow-100 border border-yellow-500"
@@ -393,17 +399,17 @@ export default function DashboardAdminShowOrder() {
                               }
                               px-3 py-1 rounded-full font-semibold
                             `}
-                            style={{fontSize:20}}
-                            >
-                              {userItem.status === 0
-                                ? "กำลังรออนุมัติ"
-                                : userItem.status === 1
-                                ? "ยืนยันคำสั่งซื้อแล้ว"
-                                : "ยกเลิกคำสั่งซื้อแล้ว"}
-                            </span>
-                          </td>
-                          <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"></td>
-                          {/* <td className=" p-5 ">
+                                style={{ fontSize: 20 }}
+                              >
+                                {userItem.status === 0
+                                  ? "กำลังรออนุมัติ"
+                                  : userItem.status === 1
+                                  ? "ยืนยันคำสั่งซื้อแล้ว"
+                                  : "ยกเลิกคำสั่งซื้อแล้ว"}
+                              </span>
+                            </td>
+                            <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"></td>
+                            {/* <td className=" p-5 ">
                             <div className="flex items-center gap-1">
                               <button className="p-2  rounded-full  group transition-all duration-500  flex item-center">
                                 <svg
@@ -423,9 +429,9 @@ export default function DashboardAdminShowOrder() {
                               </button>
                             </div>
                           </td> */}
-                        </tr>
-                      );
-                    })}
+                          </tr>
+                        );
+                      })}
                   </tbody>
                 </table>
               </div>
@@ -435,4 +441,4 @@ export default function DashboardAdminShowOrder() {
       </div>
     </div>
   );
-}
+});

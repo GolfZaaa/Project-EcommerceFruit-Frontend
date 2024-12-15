@@ -14,12 +14,15 @@ export default class ShopUserStore {
   shopAll: Store[] = [];
   shopProductUser: Product[] = [];
   shopProductDetail: Store[] | null = null;
+  loadingShopProducts: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
   }
 
   setUserShop = (state: any) => (this.usershop = state);
+  setLoadingShopProducts = (state: boolean) =>
+    (this.loadingShopProducts = state);
 
   createandupdate = async (value: CreateandUpdateInterface) => {
     try {
@@ -58,12 +61,15 @@ export default class ShopUserStore {
     }
   };
 
-  GetStoreProductUser = async (id: number | undefined) => {
+  GetStoreProductUser = async (queryParams: URLSearchParams) => {
+    this.setLoadingShopProducts(true);
     try {
-      const result = await agent.Shop.GetStoreProductUser(id);
+      const result = await agent.Shop.GetStoreProductUser(queryParams);
       this.shopProductUser = result;
       this.getStoreAll();
+      this.setLoadingShopProducts(false);
     } catch (error) {
+      this.setLoadingShopProducts(false);
       return error;
     }
   };

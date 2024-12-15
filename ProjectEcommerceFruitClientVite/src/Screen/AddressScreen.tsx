@@ -40,29 +40,38 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const formData: any = Object.fromEntries(data.entries());
+    if (
+      createAddress.district === "" ||
+      createAddress.amphoe === "" ||
+      createAddress.province === "" ||
+      createAddress.zipcode === ""
+    ) {
+      myToast("กรุณากรอกข้อมูลที่อยู่ให้ครบถ้วน");
+    } else {
+      const data = new FormData(event.currentTarget);
+      const formData: any = Object.fromEntries(data.entries());
 
-    const dataAddress = {
-      id: 0,
-      subDistrict: createAddress.district,
-      district: createAddress.amphoe,
-      province: createAddress.province,
-      postCode: createAddress.zipcode,
-      detail: formData.detail,
-      isUsed_Store: false,
-      isUsed: true,
-      gps: "",
-    };
+      const dataAddress = {
+        id: 0,
+        subDistrict: createAddress.district,
+        district: createAddress.amphoe,
+        province: createAddress.province,
+        postCode: createAddress.zipcode,
+        detail: formData.detail,
+        isUsed_Store: false,
+        isUsed: true,
+        gps: "",
+      };
 
-    await createUpdateAddress(dataAddress).then((result) => {
-      if (!!result) {
-        myToast("เพิ่มที่อยู่สำเร็จ");
-        getAddressByUserId();
-        onChangePaging(2);
-        window.scrollTo(0, 0);
-      }
-    });
+      await createUpdateAddress(dataAddress).then((result) => {
+        if (!!result) {
+          myToast("เพิ่มที่อยู่สำเร็จ");
+          getAddressByUserId();
+          onChangePaging(2);
+          window.scrollTo(0, 0);
+        }
+      });
+    }
   };
 
   const handleChange = (scope: string) => (value: string) => {
@@ -107,23 +116,23 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
               <label>แขวง/ตำบล</label>
               <InputThaiAddress.District
                 value={createAddress["district"]}
-                onChange={handleChange("district")}
+                // onChange={handleChange("district")}
                 onSelect={(e: any) => handleSelect(e)}
-                style={{ height: "55px" }}
+                style={{ height: "55px", pointerEvents: "none", opacity: 0.6 }}
               />
               <label>เขต/อำเภอ</label>
               <InputThaiAddress.Amphoe
                 value={createAddress["amphoe"]}
-                onChange={handleChange("amphoe")}
+                // onChange={handleChange("amphoe")}
                 onSelect={(e: any) => handleSelect(e)}
-                style={{ height: "55px" }}
+                style={{ height: "55px", pointerEvents: "none", opacity: 0.6 }}
               />
               <label>จังหวัด</label>
               <InputThaiAddress.Province
                 value={createAddress["province"]}
-                onChange={handleChange("province")}
+                // onChange={handleChange("province")}
                 onSelect={(e: any) => handleSelect(e)}
-                style={{ height: "55px" }}
+                style={{ height: "55px", pointerEvents: "none", opacity: 0.6 }}
               />
               <button
                 type="submit"

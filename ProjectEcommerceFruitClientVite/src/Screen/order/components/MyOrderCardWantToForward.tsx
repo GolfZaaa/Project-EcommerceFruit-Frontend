@@ -17,6 +17,8 @@ import AddressForCard from "../../../components/AddressForCard";
 import MyContent from "../../../component/MyContent";
 import { useNavigate } from "react-router-dom";
 import { resetScroll } from "../../../api/agent";
+import MyLottie from "../../../helper/components/MyLottie";
+import lottiteEmpty from "../../../assets/lotties/lf20_qh5z2fdq.json";
 
 interface props {
   order: Order[];
@@ -75,6 +77,8 @@ const MyOrderCardWantToForward = ({ order }: props) => {
           return "กรุณาใส่จำนวนเงินที่เป็นตัวเลข!";
         } else if (numberValue < 0) {
           return "จำนวนเงินต้องไม่ติดลบ!";
+        } else if (numberValue === 0) {
+          return "จำนวนเงินต้องไม่เป็น 0!";
         } else if (numberValue > shippingFee) {
           return "เงินเกินจำนวนที่กำหนด!";
         }
@@ -108,26 +112,23 @@ const MyOrderCardWantToForward = ({ order }: props) => {
         <div>
           {order?.length < 0 ? (
             <Typography variant="h5">จำนวน {order?.length}</Typography>
-          ):(
+          ) : (
             <div></div>
           )}
         </div>
         {order?.length <= 0 ? (
+          <div></div>
+        ) : (
           <div>
-         
-        </div>
-        ):(
-          <div>
-             <button
-            id="downloadButton"
-            onClick={generatePDF}
-            className=" p-2 bg-blue-500 text-white rounded-md"
-          >
-            <BsFillPrinterFill />
-          </button>
+            <button
+              id="downloadButton"
+              onClick={generatePDF}
+              className=" p-2 bg-blue-500 text-white rounded-md"
+            >
+              <BsFillPrinterFill />
+            </button>
           </div>
         )}
-        
       </div>
 
       {order?.length ? (
@@ -160,7 +161,10 @@ const MyOrderCardWantToForward = ({ order }: props) => {
                     <div className="flex justify-between items-center mb-3">
                       <p className="text-base leading-4 text-gray-800 font-semibold">
                         {/* ได้รับค่าจัดส่ง : {item?.shippings[0]?.shippingFee} บาท */}
-                        <MyContent name={`ได้รับค่าจัดส่ง : ${myDriverFee?.shippingFee}  บาท`} fontSize="small" />
+                        <MyContent
+                          name={`ได้รับค่าจัดส่ง : ${myDriverFee?.shippingFee}  บาท`}
+                          fontSize="small"
+                        />
                       </p>
                     </div>
                     <span
@@ -307,14 +311,20 @@ const MyOrderCardWantToForward = ({ order }: props) => {
                             <Grid item xs={4}>
                               <Typography variant="h5">
                                 <p className="FontPublic font-medium">
-                                <MyContent name={`ชื่อ : ${driver?.user?.fullName}`} fontSize="littlenormal" />
+                                  <MyContent
+                                    name={`ชื่อ : ${driver?.user?.fullName}`}
+                                    fontSize="littlenormal"
+                                  />
                                 </p>
                               </Typography>
                             </Grid>
                             <Grid item xs={4}>
                               <Typography variant="h5">
                                 <p className="FontPublic font-medium">
-                                <MyContent name={`เบอร์ : ${driver?.user?.phoneNumber}`} fontSize="littlenormal" />
+                                  <MyContent
+                                    name={`เบอร์ : ${driver?.user?.phoneNumber}`}
+                                    fontSize="littlenormal"
+                                  />
                                 </p>
                               </Typography>
                             </Grid>
@@ -332,7 +342,7 @@ const MyOrderCardWantToForward = ({ order }: props) => {
                               >
                                 <CheckIcon sx={{ mr: 1 }} />
                                 <p className="FontPublic font-bold">
-                                <MyContent name="ส่งต่อ" fontSize="small" />
+                                  <MyContent name="ส่งต่อ" fontSize="small" />
                                 </p>
                               </Fab>
                             </Grid>
@@ -347,16 +357,19 @@ const MyOrderCardWantToForward = ({ order }: props) => {
           })}
         </>
       ) : (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            fontSize: "30px",
-            color: "red",
-          }}
-        >
-          <MyContent name="ไม่มีคำร้องขอส่งต่อคำสั่งซื้อ" fontSize="large" />
+        <div>
+          <MyLottie lottieFile={lottiteEmpty} />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: 30,
+              color: "red",
+            }}
+          >
+            <MyContent name="ไม่มีคำร้องขอส่งต่อคำสั่งซื้อ" fontSize="large" />
+          </div>
         </div>
       )}
     </div>
