@@ -106,7 +106,7 @@ export default observer(function SettingScreen() {
   };
 
   const backgroundImage = {
-    uri: pathImagesApp.image_web + systemSetting[0].image,
+    uri: pathImagesApp.image_web + systemSetting[0]?.image,
   };
 
   return !!user ? (

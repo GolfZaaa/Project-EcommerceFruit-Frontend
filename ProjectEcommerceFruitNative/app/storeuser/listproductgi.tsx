@@ -16,6 +16,7 @@ import { pathImagesApp } from "@/src/constants/RoutePath";
 import { observer } from "mobx-react-lite";
 import { TotalText } from "../order/TabOrder.screen";
 import { Mytoast } from "@/components/MyToast";
+import { Switch } from "react-native-paper";
 
 const data = [
   {
@@ -110,8 +111,31 @@ const ListProduct = () => {
       )}
 
       <View style={styles.infoContainer}>
-        <Text style={styles.name}>ชื่อ: {item.name}</Text>
+        {/* <View style={styles.namecateswitch}>
+          <View> */}
+        <Text style={styles.name}>ชื่อ : {item.name}</Text>
         <Text style={styles.category}>ประเภท: {item.category.name}</Text>
+        {/* </View>
+          <View
+            style={{
+              top: -10,
+              flexDirection: "row",
+            }}
+          > */}
+        {/* <Text
+              style={{
+                top: 10,
+                fontSize: 17,
+              }}
+            >
+              สถานะ
+            </Text> */}
+        {/* <Switch
+              value={item.}
+              onValueChange={() => onToggleSwitch(item.id)}
+            />
+          </View>
+        </View> */}
         <View style={styles.iconContainer}>
           <TouchableOpacity
             style={styles.editButton}
@@ -246,6 +270,10 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
+  },
+  namecateswitch: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   editButton: {
     backgroundColor: "#4CAF50",

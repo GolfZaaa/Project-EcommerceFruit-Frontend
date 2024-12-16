@@ -22,17 +22,23 @@ export default class CommonStore {
     this.token = result ? JSON.parse(result) : null;
     console.log("res result", result);
     if (result !== null) {
-      const res = await store.userStore.getUserDetailbyId().catch(() => {
-        // this.logout();
-      });
+      try {
+        const res: any = await store.userStore.getUserDetailbyId().catch(() => {
+          this.logout();
+        });
 
-      console.log("res getUserDetailbyId", res);
+        console.log("res getUserDetailbyId", res);
 
-      // if (res?.response?.request?.status !== undefined) {
-      //   if (res.response.request.status === 401) {
-      //     logout();
-      //   }
-      // }
+        if (res?.response?.request?.status !== undefined) {
+          if (res.response.request.status === 401) {
+            this.logout();
+          }
+        }
+      } catch (error) {
+        this.logout();
+        store.systemSettingStore.setLoading(false);
+        return error;
+      }
     }
   };
 

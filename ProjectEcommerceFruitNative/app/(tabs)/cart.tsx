@@ -109,6 +109,8 @@ export default observer(function CartScreen() {
             params: {
               title: "เพิ่มที่อยู่",
               data: JSON.stringify({ id: 0 }),
+              setting: JSON.stringify(false),
+              isStore: JSON.stringify(false),
             },
           });
         }

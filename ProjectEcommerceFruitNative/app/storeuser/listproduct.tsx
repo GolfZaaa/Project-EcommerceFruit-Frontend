@@ -16,6 +16,7 @@ import { Product } from "@/src/models/Product";
 import { observer } from "mobx-react-lite";
 import { TotalText } from "../order/TabOrder.screen";
 import { Mytoast } from "@/components/MyToast";
+import { Switch } from "react-native-paper";
 
 const data = [
   {
@@ -59,6 +60,7 @@ const ListProduct = () => {
     isUsedProduct,
     removeProduct,
     getProductGI,
+    getFilterProduct,
   } = useStore().productStore;
   const { user } = useStore().userStore;
 
@@ -78,6 +80,14 @@ const ListProduct = () => {
     });
   };
 
+  const onToggleSwitch = async (id: number) => {
+    await isUsedProduct(id).then(async () => {
+      getProductByStore(user?.stores[0].id || 0);
+
+      await getFilterProduct(new URLSearchParams());
+    });
+  };
+
   const renderItem = ({ item }: { item: Product }) => (
     <View style={styles.card}>
       <Image
@@ -85,10 +95,33 @@ const ListProduct = () => {
         style={styles.image}
       />
       <View style={styles.infoContainer}>
-        <Text style={styles.name}>ชื่อ: {item.productGI.name}</Text>
-        <Text style={styles.category}>
-          ประเภท: {item.productGI.category.name}
-        </Text>
+        <View style={styles.namecateswitch}>
+          <View>
+            <Text style={styles.name}>ชื่อ : {item.productGI.name}</Text>
+            <Text style={styles.category}>
+              ประเภท: {item.productGI.category.name}
+            </Text>
+          </View>
+          <View
+            style={{
+              top: -10,
+              flexDirection: "row",
+            }}
+          >
+            {/* <Text
+              style={{
+                top: 10,
+                fontSize: 17,
+              }}
+            >
+              สถานะ
+            </Text> */}
+            <Switch
+              value={item.status}
+              onValueChange={() => onToggleSwitch(item.id)}
+            />
+          </View>
+        </View>
         <View style={styles.iconContainer}>
           <TouchableOpacity
             style={styles.editButton}
@@ -249,6 +282,10 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
+  },
+  namecateswitch: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   editButton: {
     backgroundColor: "#4CAF50",

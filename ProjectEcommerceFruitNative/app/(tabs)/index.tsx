@@ -83,23 +83,23 @@ export default observer(function homeScreen() {
     }
   };
 
-  const onSearchProduct = (text: string) => {
+  const onSearchProduct = async (text: string) => {
     const queryParams = new URLSearchParams({
       productName: text || "",
       categoryId: selectedCategory.toString(),
       sortPrice: sortPrice.toString(),
     });
-    getFilterProduct(queryParams);
+    await getFilterProduct(queryParams);
   };
 
   // categoryId: selectedCategory.toString(),
-  const onFilterProduct = () => {
+  const onFilterProduct = async () => {
     const queryParams = new URLSearchParams({
       productName: searchQuery || "",
       categoryId: selectedCategory.toString(),
       sortPrice: sortPrice.toString(),
     });
-    getFilterProduct(queryParams);
+    await getFilterProduct(queryParams);
   };
 
   useEffect(() => {
