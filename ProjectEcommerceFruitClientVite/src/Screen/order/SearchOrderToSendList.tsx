@@ -1,4 +1,4 @@
-import { Typography, TextField, Button, Grid } from "@mui/material";
+import { Typography, TextField, Button, Grid, Fab } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { useStore } from "../../store/store";
@@ -115,11 +115,15 @@ const SearchOrderToSendList = () => {
                   margin="normal"
                   name="district"
                   onChange={handleOrderIdChange}
+                  sx={{
+                    width: "101%",
+                  }}
                   InputProps={{
                     sx: {
                       fontSize: "1.5rem",
                       color: "#333",
                       fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                      borderRadius: "50px 0 0 50px",
                     },
                   }}
                   InputLabelProps={{
@@ -134,10 +138,36 @@ const SearchOrderToSendList = () => {
               <Grid item xs={2}>
                 <div
                   style={{
-                    marginTop: 15,
+                    marginTop: 16,
                   }}
                 >
-                  <Button
+                  <Fab
+                    variant="extended"
+                    color="primary"
+                    onClick={onSearchOrder}
+                    sx={{
+                      width: "100%",
+                      borderRadius: "0 50px 50px 0",
+                      height: 67,
+                      boxShadow: 3,
+                      "&:hover": {
+                        backgroundColor: "primary.dark",
+                      },
+                      transition: "all 0.3s ease-in-out",
+                      zIndex: 1,
+                    }}
+                  >
+                    {loadingOrder ? (
+                      <div>
+                        <CircularProgress size={17} color="inherit" />
+                      </div>
+                    ) : (
+                      <p className="FontPublic">
+                        <MyContent name="ค้นหา" fontSize="small" />
+                      </p>
+                    )}
+                  </Fab>
+                  {/* <Button
                     style={{
                       padding: 15,
                     }}
@@ -157,7 +187,7 @@ const SearchOrderToSendList = () => {
                         <MyContent name="ค้นหา" fontSize="small" />
                       </p>
                     )}
-                  </Button>
+                  </Button> */}
                 </div>
               </Grid>
             </Grid>

@@ -1064,7 +1064,7 @@ export default observer(function ProductDetailScreen() {
               <div
                 key={item.id}
                 onClick={() => NavigateDetail(item)}
-                className="overflow-hidden rounded-lg bg-white border border-gray-200 shadow-sm transition-transform transform hover:scale-105 cursor-pointer"
+                className="mb-5 overflow-hidden rounded-lg bg-white border border-gray-200 shadow-sm transition-transform transform hover:scale-105 cursor-pointer"
               >
                 <div className="relative">
                   <img

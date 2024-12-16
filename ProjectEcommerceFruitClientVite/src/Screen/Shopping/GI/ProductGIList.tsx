@@ -133,8 +133,6 @@ const ProductGIList = () => {
 
   const [dataEdit, setDataEdit] = useState<ProductGI | null>();
 
-  const [open, setOpen] = React.useState(false);
-
   useEffect(() => {
     getProductGI(1);
     getCategory();
@@ -166,15 +164,107 @@ const ProductGIList = () => {
 
   const onChangeCU = () => setOnCreate(!onCreate);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   console.log("loadingPGI", loadingPGI);
+
+  const RenderTest = ({ row }: any) => {
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+    return (
+      <TableRow key={row.name}>
+        <TableCell component="th" scope="row">
+          <p className="FontPublic">
+            <MyContent name={row.name} fontSize="small" />
+          </p>
+        </TableCell>
+        <TableCell>
+          <p className="FontPublic">
+            <MyContent name={row?.category?.name} fontSize="small" />
+          </p>
+        </TableCell>
+        <TableCell>
+          <Fab
+            variant="extended"
+            color="primary"
+            onClick={() => {
+              setDataEdit(row);
+              onChangeCU();
+            }}
+          >
+            <EditIcon sx={{ mr: 1 }} />
+            <p className="FontPublic">
+              <MyContent name="แก้ไข" fontSize="small" />
+            </p>
+          </Fab>
+        </TableCell>
+        <TableCell align="center">
+          <Fab variant="extended" color="error" onClick={handleClickOpen}>
+            <RemoveIcon sx={{ mr: 1 }} />
+            <p className="FontPublic">
+              <MyContent name="ลบ" fontSize="small" />
+            </p>
+          </Fab>
+        </TableCell>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title" sx={{ textAlign: "center" }}>
+            <p className="FontPublic font-semibold">
+              <MyContent
+                name="ลบข้อมูลออกจากระบบฐานข้อมูล"
+                fontSize="littlenormal"
+              />
+            </p>
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText
+              id="alert-dialog-description"
+              sx={{ textAlign: "center" }}
+            >
+              <p className="FontPublic">
+                <MyContent
+                  name="การดำเนินการนี้ต้องได้รับการยืนยันก่อนดำเนินการ"
+                  fontSize="small"
+                />
+              </p>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>
+              <p className="FontPublic">
+                <MyContent name="ยกเลิก" fontSize="small" />
+              </p>
+            </Button>
+            <Button
+              onClick={() => {
+                removeProductGI(row.id).then((res) => {
+                  if (res !== true) {
+                    myToast("ข้อมูล GI นี้มีการใช้งานอยู่");
+                  }
+                  handleClose();
+                });
+              }}
+              autoFocus
+            >
+              <p className="FontPublic">
+                <MyContent name="ยืนยัน" fontSize="small" />
+              </p>
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </TableRow>
+    );
+  };
 
   return (
     <Box className="mt-9" sx={{ p: { xs: 2, md: 4 }, minHeight: "100vh" }}>
@@ -258,101 +348,7 @@ const ProductGIList = () => {
                         )
                       : productGI
                     ).map((row) => (
-                      <TableRow key={row.name}>
-                        <TableCell component="th" scope="row">
-                          <p className="FontPublic">
-                            <MyContent name={row.name} fontSize="small" />
-                          </p>
-                        </TableCell>
-                        <TableCell>
-                          <p className="FontPublic">
-                            <MyContent
-                              name={row?.category?.name}
-                              fontSize="small"
-                            />
-                          </p>
-                        </TableCell>
-                        <TableCell>
-                          <Fab
-                            variant="extended"
-                            color="primary"
-                            onClick={() => {
-                              setDataEdit(row);
-                              onChangeCU();
-                            }}
-                          >
-                            <EditIcon sx={{ mr: 1 }} />
-                            <p className="FontPublic">
-                              <MyContent name="แก้ไข" fontSize="small" />
-                            </p>
-                          </Fab>
-                        </TableCell>
-                        <TableCell align="center">
-                          <Fab
-                            variant="extended"
-                            color="error"
-                            onClick={handleClickOpen}
-                          >
-                            <RemoveIcon sx={{ mr: 1 }} />
-                            <p className="FontPublic">
-                              <MyContent name="ลบ" fontSize="small" />
-                            </p>
-                          </Fab>
-                        </TableCell>
-                        <Dialog
-                          open={open}
-                          onClose={handleClose}
-                          aria-labelledby="alert-dialog-title"
-                          aria-describedby="alert-dialog-description"
-                        >
-                          <DialogTitle
-                            id="alert-dialog-title"
-                            sx={{ textAlign: "center" }}
-                          >
-                            <p className="FontPublic font-semibold">
-                              <MyContent
-                                name="ลบข้อมูลออกจากระบบฐานข้อมูล"
-                                fontSize="littlenormal"
-                              />
-                            </p>
-                          </DialogTitle>
-                          <DialogContent>
-                            <DialogContentText
-                              id="alert-dialog-description"
-                              sx={{ textAlign: "center" }}
-                            >
-                              <p className="FontPublic">
-                                <MyContent
-                                  name="การดำเนินการนี้ต้องได้รับการยืนยันก่อนดำเนินการ"
-                                  fontSize="small"
-                                />
-                              </p>
-                            </DialogContentText>
-                          </DialogContent>
-                          <DialogActions>
-                            <Button onClick={handleClose}>
-                              <p className="FontPublic">
-                                <MyContent name="ยกเลิก" fontSize="small" />
-                              </p>
-                            </Button>
-                            <Button
-                              onClick={() => {
-                                removeProductGI(row.id).then((res) => {
-                                  if (res !== true) {
-                                    myToast("ข้อมูล GI นี้มีการใช้งานอยู่");
-                                  }
-                                  handleClose();
-                                });
-                              }}
-                              autoFocus
-                            >
-                              <p className="FontPublic">
-                                <MyContent name="ยืนยัน" fontSize="small" />
-                              </p>
-                            </Button>
-                          </DialogActions>
-                        </Dialog>
-                      </TableRow>
+                      <RenderTest row={row} />
                     ))}
                     {emptyRows > 0 && (
                       <TableRow style={{ height: 53 * emptyRows }}>

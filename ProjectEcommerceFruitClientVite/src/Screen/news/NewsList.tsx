@@ -121,14 +121,26 @@ export default observer(function NewsList() {
             ข่าวสารทั้งหมด
           </h2>
 
-          <div className="flex justify-between items-center mb-6 px-4">
+          <div className="flex justify-between items-center mb-6">
             <input
+              type="text"
+              id="default-search"
+              className="block h-14 pr-16 pl-5 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none bg-white"
+              placeholder="ค้นหาข่าว..."
+              style={{
+                width: "101%",
+                // borderRadius: "50px 0 0 50px",
+              }}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {/* <input
               type="text"
               placeholder="ค้นหาข่าว..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="border rounded px-3 py-2 w-full md:w-1/3 border-gray-400"
-            />
+            /> */}
             <select
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}

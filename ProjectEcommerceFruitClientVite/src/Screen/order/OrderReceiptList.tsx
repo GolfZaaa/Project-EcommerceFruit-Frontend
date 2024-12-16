@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useStore } from "../../store/store";
 import NotFoundScreen from "../NotFoundScreen";
 import MyCardOrderReceipt from "./MyCardOrderReceipt";
-import { Typography, TextField, Button, Grid } from "@mui/material";
+import { Typography, TextField, Button, Grid, Fab } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Lottie from "react-lottie";
 import lottiteEmpty from "../../assets/lotties/lf20_qh5z2fdq.json";
@@ -100,7 +100,7 @@ const OrderReceiptList = () => {
             marginBottom={-1}
           >
             <p className="FontPublic font-medium">
-            <MyContent name="ค้นหาพื้นที่ที่คุณกำลังจะไป" fontSize="normal" />
+              <MyContent name="ค้นหาพื้นที่ที่คุณกำลังจะไป" fontSize="normal" />
             </p>
           </Typography>
           <div
@@ -121,19 +121,23 @@ const OrderReceiptList = () => {
                   margin="normal"
                   name="subDistrict"
                   onChange={(e) => setSubDistrict(e.target.value)}
+                  sx={{
+                    width: "101.5%",
+                  }}
                   InputProps={{
                     sx: {
-                      fontSize: '1rem', 
-                      color: '#333',   
-                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
-        
+                      fontSize: "1rem",
+                      color: "#333",
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                      borderRadius: "50px 0 0 50px",
                     },
                   }}
                   InputLabelProps={{
                     sx: {
-                      fontSize: '1.2rem',
-                      color: '#888',
-                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                      fontSize: "1.2rem",
+                      top: -3,
+                      color: "#888",
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif',
                     },
                   }}
                 />
@@ -146,19 +150,23 @@ const OrderReceiptList = () => {
                   margin="normal"
                   name="district"
                   onChange={(e) => setDistrict(e.target.value)}
+                  sx={{
+                    width: "101.5%",
+                  }}
                   InputProps={{
                     sx: {
-                      fontSize: '1rem', 
-                      color: '#333',   
-                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
-        
+                      fontSize: "1rem",
+                      color: "#333",
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                      borderRadius: 0,
                     },
                   }}
                   InputLabelProps={{
                     sx: {
-                      fontSize: '1.2rem',
-                      color: '#888',
-                      fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                      fontSize: "1.2rem",
+                      top: -3,
+                      color: "#888",
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif',
                     },
                   }}
                 />
@@ -166,10 +174,30 @@ const OrderReceiptList = () => {
               <Grid item xs={2}>
                 <div
                   style={{
-                    marginTop: 15,
+                    marginTop: 16,
                   }}
                 >
-                  <Button
+                  <Fab
+                    variant="extended"
+                    color="primary"
+                    onClick={() => onSearchOrder()}
+                    sx={{
+                      width: "100%",
+                      borderRadius: "0 50px 50px 0",
+                      height: 56,
+                      boxShadow: 3,
+                      "&:hover": {
+                        backgroundColor: "primary.dark",
+                      },
+                      transition: "all 0.3s ease-in-out",
+                      zIndex: 1,
+                    }}
+                  >
+                    <p className="FontPublic">
+                      <MyContent name="ค้นหา" fontSize="littlenormal" />
+                    </p>
+                  </Fab>
+                  {/* <Button
                     style={{
                       padding: 10,
                     }}
@@ -181,9 +209,9 @@ const OrderReceiptList = () => {
                     onClick={() => onSearchOrder()}
                   >
                     <p className="FontPublic">
-                    <MyContent name="ค้นหา" fontSize="littlenormal" />
+                      <MyContent name="ค้นหา" fontSize="littlenormal" />
                     </p>
-                  </Button>
+                  </Button> */}
                 </div>
               </Grid>
             </Grid>

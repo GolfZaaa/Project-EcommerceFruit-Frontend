@@ -177,15 +177,19 @@ const ProductList = () => {
   };
 
   return (
-<div className="responsive-container" style={{marginTop:102}}>
+    <div className="responsive-container" style={{ marginTop: 102 }}>
       {onCreate ? (
-        <CreateProductScreen onChangeCU={onChangeCU} dataEdit={dataEdit} id={1} />
+        <CreateProductScreen
+          onChangeCU={onChangeCU}
+          dataEdit={dataEdit}
+          id={1}
+        />
       ) : (
         <Container maxWidth="lg">
           <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
             <Typography variant="h4" component="h1" gutterBottom align="center">
               <p className="FontPublic font-bold">
-              <MyContent name="เพิ่มสินค้า" fontSize="large" />
+                <MyContent name="เพิ่มสินค้า" fontSize="large" />
               </p>
             </Typography>
             <Grid container justifyContent="flex-end" mb={2} spacing={2}>
@@ -200,20 +204,23 @@ const ProductList = () => {
                 >
                   <AddIcon sx={{ mr: 1 }} />
                   <p className="FontPublic">
-                  <MyContent name="เพิ่ม" fontSize="small" />
+                    <MyContent name="เพิ่ม" fontSize="small" />
                   </p>
                 </Fab>
               </Grid>
             </Grid>
 
             <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+              <Table
+                sx={{ minWidth: 500 }}
+                aria-label="custom pagination table"
+              >
                 <TableHead>
                   <TableRow>
                     {columns.map((column) => (
                       <TableCell key={column.id} align="center">
                         <p className="FontPublic">
-                        <MyContent name={column.label} fontSize="small" />
+                          <MyContent name={column.label} fontSize="small" />
                         </p>
                       </TableCell>
                     ))}
@@ -229,10 +236,16 @@ const ProductList = () => {
                   ).map((row) => (
                     <TableRow key={row.id}>
                       <TableCell component="th" scope="row">
-                      <p className="FontPublic overflow-hidden text-ellipsis whitespace-nowrap">
-                        <MyContent name={row.productGI.name.length > 8 ? `${row.productGI.name.slice(0, 8)}...` : row.productGI.name} fontSize="small" />
-                    </p>
-
+                        <p className="FontPublic overflow-hidden text-ellipsis whitespace-nowrap">
+                          <MyContent
+                            name={
+                              row.productGI.name.length > 8
+                                ? `${row.productGI.name.slice(0, 8)}...`
+                                : row.productGI.name
+                            }
+                            fontSize="small"
+                          />
+                        </p>
                       </TableCell>
                       <TableCell align="center">
                         {row.images ? (
@@ -252,23 +265,26 @@ const ProductList = () => {
                       </TableCell>
                       <TableCell align="center">
                         <p className="FontPublic ">
-                        <MyContent name={row?.productGI?.category.name} fontSize="small" />
+                          <MyContent
+                            name={row?.productGI?.category.name}
+                            fontSize="small"
+                          />
                         </p>
                       </TableCell>
                       <TableCell align="center">
                         <p className="FontPublic">
-                        <MyContent name={row?.price} fontSize="small" />
+                          <MyContent name={row?.price} fontSize="small" />
                         </p>
                       </TableCell>
                       <TableCell align="center">
-                      <p className="FontPublic">
-                      <MyContent name={row?.weight} fontSize="small" />
-                      </p>
+                        <p className="FontPublic">
+                          <MyContent name={row?.weight} fontSize="small" />
+                        </p>
                       </TableCell>
                       <TableCell align="center">
-                      <p className="FontPublic">
-                      <MyContent name={row?.quantity} fontSize="small" />
-                      </p>
+                        <p className="FontPublic">
+                          <MyContent name={row?.quantity} fontSize="small" />
+                        </p>
                       </TableCell>
                       <TableCell align="center">
                         <MySwitch
@@ -292,7 +308,7 @@ const ProductList = () => {
                         >
                           <EditIcon sx={{ mr: 1 }} />
                           <p className="FontPublic">
-                          <MyContent name="แก้ไข" fontSize="small" />
+                            <MyContent name="แก้ไข" fontSize="small" />
                           </p>
                         </Fab>
                       </TableCell>
@@ -305,21 +321,21 @@ const ProductList = () => {
                         >
                           <RemoveIcon sx={{ mr: 1 }} />
                           <p className="FontPublic">
-                          <MyContent name="ลบ" fontSize="small" />
+                            <MyContent name="ลบ" fontSize="small" />
                           </p>
                         </Fab>
                         <Dialog open={open} onClose={handleClose}>
                           <DialogTitle sx={{ textAlign: "center" }}>
-                          <p className="FontPublic font-semibold">
+                            <p className="FontPublic font-semibold">
                               <MyContent
                                 name="ลบข้อมูลออกจากระบบฐานข้อมูล"
                                 fontSize="littlenormal"
                               />
                             </p>
-                            </DialogTitle>
+                          </DialogTitle>
                           <DialogContent>
                             <DialogContentText>
-                            <p className="FontPublic">
+                              <p className="FontPublic">
                                 <MyContent
                                   name="การดำเนินการนี้ต้องได้รับการยืนยันก่อนดำเนินการ"
                                   fontSize="small"
@@ -332,7 +348,7 @@ const ProductList = () => {
                               <p className="FontPublic">
                                 <MyContent name="ยกเลิก" fontSize="small" />
                               </p>
-                              </Button>
+                            </Button>
                             <Button
                               onClick={async () => {
                                 await removeProduct(row.id).then(() => {
@@ -360,7 +376,12 @@ const ProductList = () => {
                 <TableFooter>
                   <TableRow>
                     <TablePagination
-                      rowsPerPageOptions={[5, 10, 25, { label: "ทั้งหมด", value: -1 }]}
+                      rowsPerPageOptions={[
+                        5,
+                        10,
+                        25,
+                        { label: "ทั้งหมด", value: -1 },
+                      ]}
                       colSpan={columns.length}
                       count={product.length}
                       rowsPerPage={rowsPerPage}

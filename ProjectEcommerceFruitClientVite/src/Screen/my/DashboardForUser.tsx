@@ -13,7 +13,12 @@ import dayjs from "dayjs";
 import "dayjs/locale/th";
 import localeData from "dayjs/plugin/localeData";
 import MyContent from "../../component/MyContent";
-import { FaCheckCircle, FaDollarSign, FaShoppingCart, FaTimesCircle } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaDollarSign,
+  FaShoppingCart,
+  FaTimesCircle,
+} from "react-icons/fa";
 
 dayjs.extend(localeData);
 dayjs.locale("th");
@@ -115,8 +120,6 @@ export default observer(function DashboardForUser() {
           dayjs().month(a.month).valueOf() - dayjs().month(b.month).valueOf()
       );
       setMonthlyOrderData(monthlyData);
-
-
     }
   }, [order, selectedYear]);
 
@@ -128,34 +131,34 @@ export default observer(function DashboardForUser() {
       setYearOptions(years.map((year: any) => ({ value: year, label: year })));
 
       const ordersByYearAndMonth = order
-      .filter((x) => x.confirmReceipt === 1)
-      .reduce((acc: any, currentOrder) => {
-        const month = dayjs(currentOrder.createdAt).format("MMMM");
-        const year = dayjs(currentOrder.createdAt).year() + 543; 
-        const key = `${month}-${year}`;
-    
-        const orderTotal = currentOrder.orderItems.reduce(
-          (itemAcc, orderItem) =>
-            itemAcc + orderItem.quantity * orderItem.product.price,
-          0
-        );
-    
-        if (!acc[key]) {
-          acc[key] = { month, year, total: 0 };
-        }
-    
-        acc[key].total += orderTotal;
-    
-        return acc;
-      }, {});
-    
-    const monthlyData:any = Object.values(ordersByYearAndMonth);
-    monthlyData.sort(
-      (a: any, b: any) =>
-        dayjs(`${a.month} ${a.year - 543}`).valueOf() -
-        dayjs(`${b.month} ${b.year - 543}`).valueOf()
-    );
-    setMonthlyAndYearOrderData(monthlyData);
+        .filter((x) => x.confirmReceipt === 1)
+        .reduce((acc: any, currentOrder) => {
+          const month = dayjs(currentOrder.createdAt).format("MMMM");
+          const year = dayjs(currentOrder.createdAt).year() + 543;
+          const key = `${month}-${year}`;
+
+          const orderTotal = currentOrder.orderItems.reduce(
+            (itemAcc, orderItem) =>
+              itemAcc + orderItem.quantity * orderItem.product.price,
+            0
+          );
+
+          if (!acc[key]) {
+            acc[key] = { month, year, total: 0 };
+          }
+
+          acc[key].total += orderTotal;
+
+          return acc;
+        }, {});
+
+      const monthlyData: any = Object.values(ordersByYearAndMonth);
+      monthlyData.sort(
+        (a: any, b: any) =>
+          dayjs(`${a.month} ${a.year - 543}`).valueOf() -
+          dayjs(`${b.month} ${b.year - 543}`).valueOf()
+      );
+      setMonthlyAndYearOrderData(monthlyData);
     }
   }, [order, selectedYear]);
 
@@ -266,8 +269,6 @@ export default observer(function DashboardForUser() {
     setOpenDropdown(!openDropdown);
   };
 
-
-  
   const componentRef = useRef(null);
   function generatePDF() {
     const opt = {
@@ -306,20 +307,27 @@ export default observer(function DashboardForUser() {
   const generateExcel = () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Dashboard Data");
-  
+
     worksheet.columns = [
       { header: "รายการ", key: "item", width: 40 },
       { header: "ข้อมูล", key: "value", width: 20 },
       { header: "หน่วย", key: "unit", width: 15 },
     ];
-  
-    worksheet.getRow(1).font = { bold: true, size: 14, color: { argb: "FFFFFF" }};
-    worksheet.getRow(1).alignment = { horizontal: "center", vertical: "middle" };
+
+    worksheet.getRow(1).font = {
+      bold: true,
+      size: 14,
+      color: { argb: "FFFFFF" },
+    };
+    worksheet.getRow(1).alignment = {
+      horizontal: "center",
+      vertical: "middle",
+    };
     worksheet.getRow(1).eachCell((cell) => {
       cell.fill = {
         type: "pattern",
         pattern: "solid",
-        fgColor: { argb: "0070C0" }, 
+        fgColor: { argb: "0070C0" },
       };
       cell.border = {
         top: { style: "thin" },
@@ -328,11 +336,14 @@ export default observer(function DashboardForUser() {
         right: { style: "thin" },
       };
     });
-  
+
     const addStyledRow = (rowData: any) => {
       const row = worksheet.addRow(rowData);
       row.eachCell((cell, colIndex) => {
-        cell.alignment = { vertical: "middle", horizontal: colIndex === 2 ? "center" : "left" };
+        cell.alignment = {
+          vertical: "middle",
+          horizontal: colIndex === 2 ? "center" : "left",
+        };
         cell.border = {
           top: { style: "thin" },
           left: { style: "thin" },
@@ -341,31 +352,31 @@ export default observer(function DashboardForUser() {
         };
       });
     };
-  
+
     addStyledRow({
       item: "ยอดเงินรวมที่ซื้อ",
       value: totalPrice,
       unit: "บาท",
     });
-  
+
     addStyledRow({
       item: "จำนวนสินค้าที่ซื้อ",
       value: totalQuantity,
       unit: "ชิ้น",
     });
-  
+
     addStyledRow({
       item: "คำสั่งซื้อที่สำเร็จ",
       value: totalOrderSuccess,
       unit: "ครั้ง",
     });
-  
+
     addStyledRow({
       item: "คำสั่งซื้อที่ยกเลิก",
       value: totalOrderCancel,
       unit: "ครั้ง",
     });
-  
+
     // worksheet.addRow({});
     // addStyledRow({ item: "ยอดคำสั่งซื้อในแต่ละเดือน", value: "", unit: "" });
     // monthlyAndYearOrderData.forEach((monthData: any) => {
@@ -377,18 +388,22 @@ export default observer(function DashboardForUser() {
     // });
 
     worksheet.addRow({ item: "ยอดคำสั่งซื้อในแต่ละเดือน", value: "" });
-    monthlyAndYearOrderData.forEach((monthData:any) => {
-      worksheet.addRow({ item: `ปี ${monthData.year}`, value: "" }); 
+    monthlyAndYearOrderData.forEach((monthData: any) => {
+      worksheet.addRow({ item: `ปี ${monthData.year}`, value: "" });
       addStyledRow({
         item: `${monthData.month}`,
         value: monthData.total,
         unit: "บาท",
       });
     });
-  
+
     worksheet.addRow({});
-    addStyledRow({ item: "สัดส่วนการใช้จ่ายในแต่ละหมวดหมู่สินค้า", value: "", unit: "" });
-  
+    addStyledRow({
+      item: "สัดส่วนการใช้จ่ายในแต่ละหมวดหมู่สินค้า",
+      value: "",
+      unit: "",
+    });
+
     pieChartData.forEach((categoryData: any) => {
       addStyledRow({
         item: categoryData.name,
@@ -396,7 +411,7 @@ export default observer(function DashboardForUser() {
         unit: "ชิ้น",
       });
     });
-  
+
     workbook.xlsx.writeBuffer().then((data) => {
       const blob = new Blob([data], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -409,7 +424,6 @@ export default observer(function DashboardForUser() {
       URL.revokeObjectURL(url);
     });
   };
-  
 
   const [modal, setmodal] = useState(false);
 
@@ -427,35 +441,38 @@ export default observer(function DashboardForUser() {
         <div className="mt-2 md:pt-5 sm:pt-5 relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center">
           <a className="flex md:w-48 lg:w-44 h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80">
             <div className="flex flex-row items-center justify-center">
-              <FaDollarSign size={20}/>
+              <FaDollarSign size={20} />
               <span className="font-bold text-gray-600">
-                <MyContent name={totalPrice.toLocaleString()} fontSize="small" />
+                <MyContent
+                  name={totalPrice.toLocaleString()}
+                  fontSize="small"
+                />
               </span>
             </div>
             <div className="mt-2 text-sm text-gray-400">
               <p className=" md:text-sm">
                 <MyContent name="ยอดเงินรวมที่ซื้อ" fontSize="small" />
-                </p>
+              </p>
             </div>
           </a>
 
           <a className="flex md:w-48 lg:w-44 h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80">
             <div className="flex flex-row items-center justify-center">
-              <FaShoppingCart size={20} className="mr-2"/>
+              <FaShoppingCart size={20} className="mr-2" />
               <span className="font-bold text-gray-600">
                 <MyContent name={totalQuantity} fontSize="small" />
-                </span>
+              </span>
             </div>
             <div className="mt-2 text-sm text-gray-400">
               <p className=" md:text-sm">
                 <MyContent name="จำนวนสินค้าที่ซื้อ" fontSize="small" />
-                </p>
+              </p>
             </div>
           </a>
 
           <a className="flex md:w-48 lg:w-44 h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80">
             <div className="flex flex-row items-center justify-center">
-              <FaCheckCircle  size={20} className="mr-2"/>
+              <FaCheckCircle size={20} className="mr-2" />
               <span className="font-bold text-gray-600">
                 <MyContent name={totalOrderSuccess} fontSize="small" />
               </span>
@@ -469,7 +486,7 @@ export default observer(function DashboardForUser() {
 
           <a className=" flex md:w-48 lg:w-44 h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80">
             <div className="flex flex-row items-center justify-center">
-              <FaTimesCircle size={20} className="mr-2"/>
+              <FaTimesCircle size={20} className="mr-2" />
               <span className="font-bold text-gray-600">
                 <MyContent name={totalOrderCancel} fontSize="small" />
               </span>
@@ -477,7 +494,7 @@ export default observer(function DashboardForUser() {
             <div className="mt-2 text-sm text-gray-400">
               <p className=" md:text-sm">
                 <MyContent name="คำสั่งซื้อที่ยกเลิก" fontSize="small" />
-                </p>
+              </p>
             </div>
           </a>
 
@@ -541,11 +558,9 @@ export default observer(function DashboardForUser() {
 
                 <div className="modal-content py-4 text-left px-6">
                   <div className="mt-9 relative flex flex-wrap justify-center items-center gap-10 ">
-                    <a
-                      className="flex h-28 w-40 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80"
-                    >
+                    <a className="flex h-28 w-40 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80">
                       <div className="flex flex-row items-center justify-center">
-                      <FaDollarSign size={20} />
+                        <FaDollarSign size={20} />
                         <span className="font-bold text-gray-600">
                           {totalPrice.toLocaleString()}
                         </span>
@@ -555,11 +570,9 @@ export default observer(function DashboardForUser() {
                         ยอดเงินรวมที่ซื้อ
                       </div>
                     </a>
-                    <a
-                      className="flex h-28 w-40 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80"
-                    >
+                    <a className="flex h-28 w-40 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80">
                       <div className="flex flex-row items-center justify-center">
-                      <FaShoppingCart size={20} className="mr-2"/>
+                        <FaShoppingCart size={20} className="mr-2" />
                         <span className="font-bold text-gray-600">
                           {totalQuantity}
                         </span>
@@ -570,11 +583,9 @@ export default observer(function DashboardForUser() {
                       </div>
                     </a>
 
-                    <a
-                      className="flex h-28 w-40 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80"
-                    >
+                    <a className="flex h-28 w-40 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80">
                       <div className="flex flex-row items-center justify-center">
-                      <FaCheckCircle  size={20} className="mr-2"/>
+                        <FaCheckCircle size={20} className="mr-2" />
                         <span className="font-bold text-gray-600">
                           {totalOrderSuccess}
                         </span>
@@ -585,11 +596,9 @@ export default observer(function DashboardForUser() {
                       </div>
                     </a>
 
-                    <a
-                      className="flex h-28 w-40 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80"
-                    >
+                    <a className="flex h-28 w-40 flex-col items-center justify-center rounded-md border border-dashed border-gray-600  transition-colors duration-100 ease-in-out hover:border-gray-400/80">
                       <div className="flex flex-row items-center justify-center">
-                      <FaTimesCircle size={20} className="mr-2"/>
+                        <FaTimesCircle size={20} className="mr-2" />
                         <span className="font-bold text-gray-600">
                           {totalOrderCancel}
                         </span>
@@ -606,10 +615,10 @@ export default observer(function DashboardForUser() {
                       <div className="col-span-2 bg-white border rounded-sm overflow-hidden shadow p-2">
                         <div className="flex justify-between items-center">
                           <p className="font-medium text-sm">
-                          <MyContent
-                            name="แสดงจำนวนคำสั่งซื้อในแต่ละเดือน"
-                            fontSize="small"
-                          />
+                            <MyContent
+                              name="จำนวนคำสั่งซื้อในแต่ละเดือน"
+                              fontSize="small"
+                            />
                           </p>
                           <div className="flex items-center -ml-3">
                             <p className="mr-1 text-sm">ปี :</p>
@@ -627,10 +636,10 @@ export default observer(function DashboardForUser() {
                       <div className="col-span-2 bg-white border rounded-sm overflow-hidden shadow p-2">
                         <div>
                           <p className="font-medium text-sm">
-                          <MyContent
-                            name="สัดส่วนการใช้จ่ายในแต่ละหมวดหมู่สินค้า"
-                            fontSize="small"
-                          />
+                            <MyContent
+                              name="สัดส่วนการใช้จ่ายในแต่ละหมวดหมู่สินค้า"
+                              fontSize="small"
+                            />
                           </p>
                         </div>
                         <div className="p-2">
@@ -665,7 +674,7 @@ export default observer(function DashboardForUser() {
             <div className="col-span-1 md:col-span-2  bg-white border rounded-sm overflow-hidden shadow">
               <div className="p-2 flex justify-between items-center font-semibold">
                 <MyContent
-                  name="แสดงจำนวนคำสั่งซื้อในแต่ละเดือน"
+                  name="จำนวนคำสั่งซื้อในแต่ละเดือน"
                   fontSize="small"
                 />
                 {order?.filter((x) => x.confirmReceipt === 1).length > 0 ? (
@@ -704,10 +713,10 @@ export default observer(function DashboardForUser() {
             <div className="col-span-1 md:col-span-2 bg-white border rounded-sm overflow-hidden shadow">
               <div className="p-2 -mb-3">
                 <p className="font-semibold">
-                <MyContent
-                  name="สัดส่วนการใช้จ่ายในแต่ละหมวดหมู่สินค้า"
-                  fontSize="small"
-                />
+                  <MyContent
+                    name="สัดส่วนการใช้จ่ายในแต่ละหมวดหมู่สินค้า"
+                    fontSize="small"
+                  />
                 </p>
               </div>
               <div className="p-2">

@@ -24,7 +24,7 @@ export default observer(function HomeScreen() {
 
   const {
     product,
-    getProduct,
+    // getProduct,
     category,
     getCategory,
     getFilterProduct,
@@ -38,12 +38,13 @@ export default observer(function HomeScreen() {
   const { GetStoreProductUser, shopProductUser } = useStore().shopuserStore;
 
   useEffect(() => {
-    getProduct(0);
+    // getProduct(0);
     getCategory();
     if (user?.id !== undefined) {
       handleSearchMyShop();
     }
-  }, [getProduct, getCategory]);
+    // }, [getProduct, getCategory]);
+  }, [getCategory]);
 
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [sortPrice, setSortPrice] = useState("");
@@ -261,10 +262,11 @@ export default observer(function HomeScreen() {
                 <input
                   type="text"
                   id="default-search"
-                  className="block h-14 pr-16 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none bg-white"
+                  className="block h-14 pr-16 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 placeholder-gray-400 focus:outline-none bg-white"
                   placeholder="ค้นหาสินค้า"
                   style={{
-                    width: "100%",
+                    width: "101%",
+                    borderRadius: "50px 0 0 50px",
                   }}
                   value={searchProduct}
                   onChange={(e) => setSearchProduct(e.target.value)}
@@ -282,7 +284,8 @@ export default observer(function HomeScreen() {
                   }}
                   sx={{
                     width: "100%",
-                    height: 50,
+                    borderRadius: "0 50px 50px 0",
+                    height: 56,
                     boxShadow: 3,
                     "&:hover": {
                       backgroundColor: "primary.dark",
