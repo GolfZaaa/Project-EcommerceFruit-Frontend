@@ -23,6 +23,7 @@ import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import { SegmentedButtons } from "react-native-paper";
 import { Mytoast } from "@/components/MyToast";
+import { CardField, confirmPayment } from "@stripe/stripe-react-native";
 
 const formatNumberWithCommas = (number: number) => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -39,6 +40,7 @@ export default observer(function CartDetailScreen() {
   const [totalPrice, setTotalPrice] = useState<string>("");
   const [formattedTotalPrice, setFormattedTotalPrice] = useState<string>("");
   const [value, setValue] = React.useState("");
+  const [cardDetails, setCardDetails] = useState<any>(null);
 
   const router = useRouter();
 
@@ -46,7 +48,6 @@ export default observer(function CartDetailScreen() {
   const [paymentImage, setPaymentImage] = useState<any | null>(null);
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: false,
@@ -54,7 +55,6 @@ export default observer(function CartDetailScreen() {
       quality: 1,
     });
 
-    console.log(result);
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
@@ -92,10 +92,6 @@ export default observer(function CartDetailScreen() {
       )
     );
   }, []);
-
-  // const handleCart = () => {
-  //   router.replace("/(tabs)/cart");
-  // };
 
   const RenderCartItem = ({ products }: any) => {
     const item = products;
@@ -141,12 +137,25 @@ export default observer(function CartDetailScreen() {
   };
 
   const Segmented: any = {
-    stripe: (
-      <View>
-        <Text>พื้นที่ทำ stripe</Text>
+    1: (
+      <View style={styles.container}>
+        <Text style={styles.label}>กรอกข้อมูลบัตรเครดิต</Text>
+
+        <CardField
+          postalCodeEnabled={false}
+          placeholders={{
+            number: "4242 4242 4242 4242", // ตัวอย่างหมายเลขบัตร
+          }}
+          cardStyle={{
+            backgroundColor: "#FFFFFF",
+            textColor: "#000000",
+          }}
+          style={styles.cardField}
+          onCardChange={(details: any) => setCardDetails(details)}
+        />
       </View>
     ),
-    image: (
+    0: (
       <View style={styles.containerImage}>
         <Button
           title="เพิ่มรูปภาพ"
@@ -155,7 +164,7 @@ export default observer(function CartDetailScreen() {
             marginBottom: 20,
           }}
         >
-          <Text>เพิ่มรูปภาพ</Text>
+          <Text style={{color:'#fff'}}>เพิ่มรูปภาพ</Text>
         </Button>
         {image && <Image source={{ uri: image }} style={styles.image} />}
       </View>
@@ -165,14 +174,12 @@ export default observer(function CartDetailScreen() {
   const onPayment = async () => {
     const findStoreId: any = selectMyCart[0];
 
-    const Data = {
+    const Data: any = {
       paymentImage: paymentImage,
       tag: "",
       storeId: findStoreId?.storeId,
+      paymentMethod: value,
     };
-
-    console.log("Data", Data);
-
     if (value === "") {
       Alert.alert("เกิดข้อผิดพลาด", "กรุณาเลือกวิธีการชำระเงิน", [
         {
@@ -181,13 +188,13 @@ export default observer(function CartDetailScreen() {
       ]);
       Mytoast("กรุณาเลือกวิธีการชำระเงิน");
     } else {
-      if (value === "image") {
+      if (value === "0") {
         if (image !== null) {
           const test = await CreateUpdateOrderById(Data);
 
-          console.log("test", test);
 
-          if (typeof test === "number") {
+          // if (typeof test === "number") {
+          if (typeof test) {
             router.push("/successscreen");
           } else {
             Alert.alert("เกิดข้อผิดพลาด", "เกิดข้อผิดพลาด", [
@@ -207,6 +214,31 @@ export default observer(function CartDetailScreen() {
           ]);
           Mytoast("กรุณาเพิ่มรูปภาพ");
         }
+      } else {
+        if (!cardDetails?.complete) {
+          Alert.alert("Error", "กรุณากรอกข้อมูลบัตรให้ครบถ้วน");
+          return;
+        }
+
+        const test = await CreateUpdateOrderById(Data);
+
+        const { paymentIntent, error } = await confirmPayment(
+          test.clientSecret,
+          {
+            paymentMethodType: "Card",
+            // paymentMethodData: {
+            //   billingDetails: {
+            //     name: 'Test',
+            //   },
+            // },
+          }
+        );
+        if (error) {
+          Alert.alert("Error", error.message);
+        } else if (paymentIntent) {
+          router.push("/successscreen");
+          // Alert.alert('Success', 'ชำระเงินสำเร็จ!');
+        }
       }
     }
   };
@@ -214,7 +246,7 @@ export default observer(function CartDetailScreen() {
   return (
     <ScrollView style={{ backgroundColor: "#fff" }}>
       <BackButton onPress={() => router.back()}>
-        <Ionicons name="arrow-back" size={28} color="#333" />
+        <Ionicons name="arrow-back" size={30} color="#007bff" />
       </BackButton>
 
       <UserInfoContainer>
@@ -288,12 +320,12 @@ export default observer(function CartDetailScreen() {
           }}
           buttons={[
             {
-              value: "stripe",
+              value: "1",
               label: "บัตรเครดิต",
               disabled: !!image,
             },
             {
-              value: "image",
+              value: "0",
               label: "แนบสลิป",
             },
           ]}
@@ -332,7 +364,8 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     marginBottom: 20,
-    color: "#333",
+    color: "#007bff",
+    marginTop:-25
   },
   content: {
     fontSize: 24,
@@ -353,6 +386,22 @@ const styles = StyleSheet.create({
   image: {
     width: 300,
     height: 550,
+  },
+  container: {
+    flex: 1,
+    padding: 20,
+    justifyContent: "center",
+    backgroundColor: "#f8f9fa",
+  },
+  label: {
+    fontSize: 18,
+    marginBottom: 10,
+    textAlign: "center",
+    fontWeight: "700",
+  },
+  cardField: {
+    height: 50,
+    marginVertical: 30,
   },
 });
 

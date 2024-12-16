@@ -28,15 +28,8 @@ export default function LoginScreen() {
         phoneNumber: phone,
         password: password,
       };
-
-      // const convertdata = JSON.stringify(loginData);
-
       try {
         await login(loginData);
-
-        // await AsyncStorage.setItem("token", convertdata);
-
-        // console.log("loginData", loginData);
       } catch (error) {
         console.error("Error storing token:", error);
       }
@@ -63,7 +56,6 @@ export default function LoginScreen() {
           placeholder="เบอร์โทรศัพท์"
           value={phone}
           onChangeText={(text: string) => {
-            // ตรวจสอบให้รับเฉพาะตัวเลข และจำกัดความยาวไม่เกิน 10 ตัวอักษร
             const numericText = text.replace(/[^0-9]/g, "");
             if (numericText.length <= 10) {
               setPhone(numericText);
@@ -84,13 +76,6 @@ export default function LoginScreen() {
         <ButtonGradient onPress={handleLogin}>
           <ButtonText>เข้าสู่ระบบ</ButtonText>
         </ButtonGradient>
-
-        {/* <TouchableOpacity
-          onPress={() => Alert.alert("ลืมรหัสผ่าน", "ไปที่หน้าลืมรหัสผ่าน")}
-        >
-          <LinkText>ลืมรหัสผ่าน?</LinkText>
-        </TouchableOpacity> */}
-
         <TouchableOpacity onPress={() => router.push("/register")}>
           <LinkText>ยังไม่มีบัญชี? ลงทะเบียน</LinkText>
         </TouchableOpacity>

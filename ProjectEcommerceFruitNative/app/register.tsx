@@ -37,7 +37,6 @@ export default function RegisterScreen() {
         Mytoast("รหัสผ่านไม่ตรงกัน");
       } else {
         const result = await onRegister();
-        console.log("result register : ", result);
 
         if (result === 400) {
           Alert.alert("เกิดข้อผิดพลาด", "มีเบอร์โทรศัพท์นี้แล้ว", [

@@ -81,13 +81,13 @@ const ListProduct = () => {
     Alert.alert("ลบข้อมูลสินค้านี้ออกจากฐานข้อมูล", "ยืนยันเพื่อลบ", [
       {
         text: "ยกเลิก",
-        onPress: () => console.log("cancel successfully"),
+        // onPress: () => console.log("cancel successfully"),
       },
       {
         text: "ยืนยัน",
         onPress: async () =>
           await removeProductGI(id).then((res) => {
-            console.log("res as : ", res);
+            // console.log("res as : ", res);
             if (res !== true) {
               Alert.alert("เกิดข้อผิดพลาด", "เกิดข้อผิดพลาด", [
                 {
@@ -156,12 +156,15 @@ const ListProduct = () => {
 
   return (
     <View style={styles.container}>
+
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={styles.backButton}
       >
         <Ionicons name="arrow-back" size={30} color="#007bff" />
       </TouchableOpacity>
+
+      <Text style={styles.title}>เพิ่มข้อมูล (GI) สินค้า</Text>
 
       <TouchableOpacity
         style={styles.addButton}
@@ -170,7 +173,6 @@ const ListProduct = () => {
         <Ionicons name="add" size={30} color="white" />
       </TouchableOpacity>
 
-      <Text style={styles.title}>เพิ่มข้อมูล (GI) สินค้า</Text>
 
       <FlatList
         data={productGI}
@@ -205,11 +207,12 @@ export default observer(ListProduct);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#F7F9FC",
+
   },
   backButton: {
     position: "absolute",
-    top: 40,
+    top: 50,
     left: 20,
     zIndex: 1,
   },
@@ -227,8 +230,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
-    marginTop: 60,
+    marginTop: 50,
     marginBottom: -80,
+    marginLeft:-10,
     color: "#007bff",
   },
   listContainer: {

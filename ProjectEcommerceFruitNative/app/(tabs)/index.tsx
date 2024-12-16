@@ -49,7 +49,7 @@ export default observer(function homeScreen() {
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(0);
-  const [sortPrice, setSortPrice] = useState(0); //sortPrice 1 === เรียงจากน้อยไปมาก, 2 === เรียงจากมากไปน้อย
+  const [sortPrice, setSortPrice] = useState(0);
   const [sortName, setSortName] = useState("ทั้งหมด");
 
   const categories = [
@@ -60,6 +60,15 @@ export default observer(function homeScreen() {
     ...category,
   ];
 
+  const filteredProducts = product
+    .filter(
+      (x) =>
+        x.status === true &&
+        x.quantity > 0 &&
+        (selectedCategory === 0 || x.productGI.category.id === selectedCategory)
+    )
+
+  
   const handleProfile = async () => {
     router.push("/(tabs)/setting");
   };
@@ -72,7 +81,7 @@ export default observer(function homeScreen() {
       Animated.timing(slideAnim, {
         toValue: -width,
         duration: 300,
-        useNativeDriver: true, // Add this line
+        useNativeDriver: true,
       }).start(() => setIsDrawerOpen(false));
     } else {
       Animated.timing(slideAnim, {
@@ -83,29 +92,30 @@ export default observer(function homeScreen() {
     }
   };
 
-  const onSearchProduct = async (text: string) => {
+  const onSearchProduct = (text: string) => {
     const queryParams = new URLSearchParams({
       productName: text || "",
       categoryId: selectedCategory.toString(),
       sortPrice: sortPrice.toString(),
     });
-    await getFilterProduct(queryParams);
+    getFilterProduct(queryParams);
   };
 
-  // categoryId: selectedCategory.toString(),
-  const onFilterProduct = async () => {
+  const onFilterProduct = () => {
     const queryParams = new URLSearchParams({
       productName: searchQuery || "",
       categoryId: selectedCategory.toString(),
       sortPrice: sortPrice.toString(),
     });
-    await getFilterProduct(queryParams);
+    getFilterProduct(queryParams);
   };
 
   useEffect(() => {
     getCategory();
     onFilterProduct();
   }, []);
+
+
 
   useEffect(() => {
     onFilterProduct();
@@ -115,11 +125,8 @@ export default observer(function homeScreen() {
     setNumColumns((prev) => (prev === 1 ? 2 : 1));
   };
 
-  // console.log("userId", user?.id);
 
   const renderProduct = (item: Product) => {
-    // console.log("item", item?.productGI);
-
     return (
       <ProductCard
         numColumns={numColumns}
@@ -131,11 +138,10 @@ export default observer(function homeScreen() {
             });
           });
         }}
-        // onPress={() => router.push("/productdetail")}
       >
         <ProductImage source={{ uri: pathImagesApp.product + item.images }} />
         <ProductName>{item.productGI.name}</ProductName>
-        <ProductPrice>{item.price}</ProductPrice>
+        <ProductPrice>{item.price} บาท</ProductPrice>
         {user?.id !== undefined &&
           user?.id === item?.productGI?.store?.user?.id && (
             <Badge>
@@ -185,30 +191,21 @@ export default observer(function homeScreen() {
     <ScrollView
       style={{
         marginTop: -20,
+        backgroundColor:'#f9f9f9'
       }}
     >
       <Container>
         <View style={styles.navbar}>
-          {/* {user?.stores?.length !== undefined && !user?.stores?.length ? (
-            <TouchableOpacity onPress={toggleDrawer}>
-              <Ionicons name="menu-outline" size={30} color="#333" />
-            </TouchableOpacity>
-          ) : (
-            <View></View>
-          )} */}
-
           <View></View>
-
           <Text style={styles.textNavbar}>ข้อมูลสินค้า</Text>
 
           {!!user ? (
             <TouchableOpacity onPress={handleProfile}>
-              <Image
-                source={{
-                  uri: "https://s359.kapook.com/r/600/auto/pagebuilder/9efc1817-eca5-4a83-9fee-8222ba8fcc55.jpg",
-                }}
-                style={styles.circleImage}
-              />
+            <Image
+                  source={require("../../assets/images/IconUser2.png")}
+                  style={styles.circleImage}
+                />
+
             </TouchableOpacity>
           ) : (
             <View></View>
@@ -268,7 +265,6 @@ export default observer(function homeScreen() {
               value={searchQuery}
               onChangeText={(text: string) => {
                 setSearchQuery(text);
-
                 onSearchProduct(text);
               }}
             />
@@ -297,7 +293,6 @@ export default observer(function homeScreen() {
               );
             })}
           </ScrollView>
-
           <Header>
             <IconButton onPress={() => setFilterModalVisible(true)}>
               <Ionicons name="filter-outline" size={24} color="#333" />
@@ -313,14 +308,11 @@ export default observer(function homeScreen() {
           </Header>
 
           <FlatList
-            data={product}
+            data={filteredProducts}
             keyExtractor={(item) => item.productGI.name + item.id}
             renderItem={({ item }) => renderProduct(item)}
             numColumns={numColumns}
             key={numColumns}
-            // style={{
-            //   minHeight: 460,
-            // }}
           />
 
           <Modal
@@ -376,24 +368,8 @@ export default observer(function homeScreen() {
                       }}
                     >
                       <FontAwesome name="times" size={25} color="#F44336" />
-                      {/* <Button
-                      title="ปิด"
-                      onPress={() => setFilterModalVisible(false)}
-                      color="#F44336" // Red
-                    /> */}
                     </View>
                   </TouchableWithoutFeedback>
-
-                  {/* <Text
-                  style={{
-                    fontSize: 16,
-                    marginBottom: 20,
-                    color: "#666",
-                  }}
-                >
-                  กรุณาเลือกตัวเลือกการฟิลเตอร์
-                </Text> */}
-
                   <View
                     style={{
                       marginBottom: 15,
@@ -407,15 +383,6 @@ export default observer(function homeScreen() {
                       color="#4CAF50"
                       style={{ marginRight: 10 }}
                     />
-                    {/* <Button
-                        title="เรียงจากน้อยไปมาก"
-                        onPress={() => {
-                          setSortPrice(1);
-                          setFilterModalVisible(false);
-                          setSortName("เรียงจากน้อยไปมาก");
-                        }}
-                        color="#4CAF50" // Green
-                      /> */}
                     <Text
                       style={{
                         color: "white",
@@ -446,15 +413,6 @@ export default observer(function homeScreen() {
                       color="#2196F3"
                       style={{ marginRight: 10 }}
                     />
-                    {/* <Button
-                      title="เรียงจากมากไปน้อย"
-                      onPress={() => {
-                        setSortPrice(2);
-                        setFilterModalVisible(false);
-                        setSortName("เรียงจากมากไปน้อย");
-                      }}
-                      color="#2196F3" // Blue
-                    /> */}
                     <Text
                       style={{
                         color: "white",
@@ -471,14 +429,6 @@ export default observer(function homeScreen() {
                       เรียงจากมากไปน้อย
                     </Text>
                   </View>
-
-                  {/* <View style={{ marginBottom: 15, width: "100%" }}>
-                    <Button
-                      title="กรองตามหมวดหมู่"
-                      onPress={() => alert("กรองตามหมวดหมู่")}
-                      color="#FF9800" // Orange
-                    />
-                  </View> */}
                 </View>
               </View>
             </TouchableWithoutFeedback>
@@ -508,6 +458,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     color: "#333",
+    marginRight:-30
   },
   closeButtonText: {
     color: "#fff",
@@ -665,4 +616,5 @@ const CategoryButton: any = styled(TouchableOpacity)`
 const CategoryButtonText: any = styled.Text`
   color: ${(props: any) => (props.selected ? "#fff" : "#333")};
   font-size: 14px;
+  font-weight: 500;
 `;

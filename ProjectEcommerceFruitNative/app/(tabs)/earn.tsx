@@ -43,29 +43,6 @@ export default observer(function TabTwoScreen() {
 
   const [select, setSelect] = useState<number[]>([]);
 
-  // const data = [
-  //   {
-  //     id: "1",
-  //     title: "KRU-1-1",
-  //     description: "ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี",
-  //   },
-  //   {
-  //     id: "2",
-  //     title: "KRU-1-2",
-  //     description: "ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี",
-  //   },
-  //   {
-  //     id: "3",
-  //     title: "KRU-1-3",
-  //     description: "ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี",
-  //   },
-  //   {
-  //     id: "4",
-  //     title: "KRU-1-4",
-  //     description: "ที่อยู่ผู้รับ : 11/3 หมู่ 2 ต.ท่าล้อ อ.ท่าม่วง จ.กาญจนบุรี",
-  //   },
-  // ];
-
   const data = orderWantToReceipt?.map((item: any, i) => ({
     order: item?.order,
     address: item?.address,
@@ -108,8 +85,6 @@ export default observer(function TabTwoScreen() {
         setMore((prev) => !prev);
       }
     };
-
-    console.log("item", item.order.address);
 
     return (
       <Card>
@@ -303,7 +278,7 @@ export default observer(function TabTwoScreen() {
     Alert.alert("ยืนยันการเลือก", "คุณยืนยันที่จะรับคำสั่งซื้อนี้ใช่ไหม", [
       {
         text: "ยกเลิก",
-        onPress: () => console.log("Cancelled passed"),
+        // onPress: () => console.log("Cancelled passed"),
       },
       {
         text: "ยืนยัน",
@@ -312,13 +287,8 @@ export default observer(function TabTwoScreen() {
     ]);
   };
 
-  console.log("select AA ", typeof select[0]);
-
   return (
     <Container>
-      {/* <BackButton onPress={() => navigation.goBack()}>
-        <Ionicons name="arrow-back-outline" size={24} color="#333" />
-      </BackButton> */}
 
       <Title>คำสั่งซื้อที่สามารถรับหิ้วได้</Title>
 
@@ -433,7 +403,7 @@ const styles = StyleSheet.create({
 });
 
 const Container: any = styled(LinearGradient).attrs({
-  colors: ["#e0f7fa", "#ffffff"],
+  colors: ["#F7F9FC", "#F7F9FC"],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
 })`

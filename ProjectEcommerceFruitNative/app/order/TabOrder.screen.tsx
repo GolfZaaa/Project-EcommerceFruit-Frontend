@@ -34,13 +34,13 @@ const TabOrderScreen = ({
       [
         {
           text: "ยกเลิก",
-          onPress: () => console.log("cancel successfully"),
+          // onPress: () => console.log("cancel successfully"),
         },
         {
           text: "ยืนยัน",
           onPress: async () =>
             await changeConfirmReceiptOrder(values).then((res) => {
-              console.log("res as : ", res);
+              // console.log("res as : ", res);
             }),
         },
       ]
@@ -72,10 +72,10 @@ const TabOrderScreen = ({
           }
         };
 
-        console.log(
-          "image " + index,
-          pathImagesApp.sendedOrder + item?.shippings[0]?.sendedOrderImage
-        );
+        // console.log(
+        //   "image " + index,
+        //   pathImagesApp.sendedOrder + item?.shippings[0]?.sendedOrderImage
+        // );
 
         return (
           <OrderCard key={item.id}>

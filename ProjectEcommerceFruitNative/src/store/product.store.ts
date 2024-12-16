@@ -39,7 +39,7 @@ export default class ProductStore {
     }
   };
 
-  getProductById = async (productId: number) => {
+  getProductById = async (productId: any) => {
     try {
       const result = await agent.Product.getProductById(productId);
       this.productDetail = result;

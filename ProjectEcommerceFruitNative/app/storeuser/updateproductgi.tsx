@@ -26,9 +26,6 @@ export default function UpdateProductGI() {
   const [selectCategory, setSelectCategory] = useState(0);
   const [description, setDescription] = useState("");
   const [images, setImages] = useState();
-
-  console.log("category", category);
-
   return (
     <View style={styles.container}>
       <TouchableOpacity

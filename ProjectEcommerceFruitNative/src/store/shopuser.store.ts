@@ -7,6 +7,7 @@ interface CreateandUpdateInterface {
   id: number;
   name: string | undefined;
   description: string | undefined;
+  
 }
 
 export default class ShopUserStore {
@@ -14,11 +15,15 @@ export default class ShopUserStore {
   shopAll: Store[] = [];
   shopProductUser: Product[] = [];
   shopProductDetail: Store[] | null = null;
+  loadings: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
   }
 
+  setLoading = (state: boolean) => (this.loadings = state);
+
+  
   setUserShop = (state: any) => (this.usershop = state);
 
   createandupdate = async (value: CreateandUpdateInterface) => {
@@ -34,6 +39,7 @@ export default class ShopUserStore {
     try {
       const func = await agent.Shop.GetShopByUserId();
       this.usershop = func;
+
     } catch (error) {
       return error;
     }
@@ -68,7 +74,7 @@ export default class ShopUserStore {
     }
   };
 
-  GetStoreDetailByUserId = async (id: number | undefined) => {
+  GetStoreDetailByUserId = async (id: any | undefined) => {
     try {
       const result = await agent.Shop.GetStoreDetailByUserId(id);
       this.shopProductDetail = result;

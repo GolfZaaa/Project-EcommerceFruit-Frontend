@@ -19,10 +19,7 @@ export default class UserStore {
     runInAction(() => this.setLoadingUser(true));
     try {
       await agent.User.getUserDetailbyId().then((res) => {
-        // console.log("user : ", res);
-
         store.cartStore.GetCartItemByUserOrderStore();
-
         runInAction(() => {
           this.user = res;
 
@@ -33,8 +30,6 @@ export default class UserStore {
       });
     } catch (error) {
       runInAction(() => this.setLoadingUser(false));
-      // console.log("error", error);
-
       throw error;
     }
   };
