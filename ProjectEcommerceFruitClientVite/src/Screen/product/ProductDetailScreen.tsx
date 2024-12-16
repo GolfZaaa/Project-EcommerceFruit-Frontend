@@ -599,6 +599,30 @@ export default observer(function ProductDetailScreen() {
 
             <div className="flex items-center space-x-2">
               <p className=" text-gray-600 FontPublic font-semibold">
+                <MyContent name="น้ำหนัก :" fontSize="small" />
+              </p>
+              <p className="text-gray-600 flex items-center FontPublic font-semibold">
+                <MyContent name={productDetail?.weight} fontSize="small" />
+              </p>
+              <p className="text-gray-600 FontPublic font-semibold">
+                <MyContent name="กิโลกรัม (ต่อ 1 ชิ้น)" fontSize="small" />
+              </p>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <p className=" text-gray-600 FontPublic font-semibold">
+                <MyContent name="ราคา :" fontSize="small" />
+              </p>
+              <p className="text-gray-600 flex items-center FontPublic font-semibold">
+                <MyContent name={productDetail?.price} fontSize="small" />
+              </p>
+              <p className="text-gray-600 FontPublic font-semibold">
+                <MyContent name="บาท (ต่อ 1 ชิ้น)" fontSize="small" />
+              </p>
+            </div>
+
+            {/* <div className="flex items-center space-x-2">
+              <p className=" text-gray-600 FontPublic font-semibold">
                 <MyContent name="ราคาต่อกิโลกรัม :" fontSize="small" />
               </p>
               <p className="text-gray-600 flex items-center FontPublic font-semibold">
@@ -607,7 +631,7 @@ export default observer(function ProductDetailScreen() {
               <p className="text-gray-600 FontPublic font-semibold">
                 <MyContent name="บาท" fontSize="small" />
               </p>
-            </div>
+            </div> */}
 
             <div className="flex items-center space-x-2">
               <p className=" text-gray-600 FontPublic font-semibold">
