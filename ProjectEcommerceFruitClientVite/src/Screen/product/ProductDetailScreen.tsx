@@ -95,8 +95,6 @@ export default observer(function ProductDetailScreen() {
     if (quantity > 1) setQuantity(quantity - 1);
   };
 
-  console.log("setAddQuantity", addquantity);
-
   const handleAddToCart = async () => {
     try {
       const ProductId = productDetail?.id;
@@ -239,6 +237,11 @@ export default observer(function ProductDetailScreen() {
     setVisibleCount((x) => x + 4);
   };
 
+  const handleShopDetail = (item: any) => {
+    navigate(RoutePath.shopDetail(item[0].userId));
+    resetScroll();
+  };
+
   const filteredProducts = product.filter(
     (x) =>
       x.quantity > 0 &&
@@ -246,14 +249,9 @@ export default observer(function ProductDetailScreen() {
       x.productGI.store.hidden != true &&
       x.id != productDetail?.id &&
       x.productGI.category.name === productDetail?.productGI.category.name &&
-      x.productGI.store.userId != user?.id
+      x.productGI.store.userId != user?.id &&
+      x.productGI.store.id != productDetail.productGI.store.id
   );
-
-  const handleShopDetail = (item: any) => {
-    console.log("item", item);
-    navigate(RoutePath.shopDetail(item[0].userId));
-    resetScroll();
-  };
 
   const RecommendProducts = shopProductUser.filter(
     (x) =>
@@ -601,25 +599,13 @@ export default observer(function ProductDetailScreen() {
 
             <div className="flex items-center space-x-2">
               <p className=" text-gray-600 FontPublic font-semibold">
-                <MyContent name="น้ำหนัก :" fontSize="small" />
-              </p>
-              <p className="text-gray-600 flex items-center FontPublic font-semibold">
-                <MyContent name={productDetail?.weight} fontSize="small" />
-              </p>
-              <p className="text-gray-600 FontPublic font-semibold">
-                <MyContent name="กิโลกรัม (ต่อ 1 ชิ้น)" fontSize="small" />
-              </p>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <p className=" text-gray-600 FontPublic font-semibold">
-                <MyContent name="ราคา :" fontSize="small" />
+                <MyContent name="ราคาต่อกิโลกรัม :" fontSize="small" />
               </p>
               <p className="text-gray-600 flex items-center FontPublic font-semibold">
                 <MyContent name={productDetail?.price} fontSize="small" />
               </p>
               <p className="text-gray-600 FontPublic font-semibold">
-                <MyContent name="บาท (ต่อ 1 ชิ้น)" fontSize="small" />
+                <MyContent name="บาท" fontSize="small" />
               </p>
             </div>
 
