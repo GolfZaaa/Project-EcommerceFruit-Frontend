@@ -20,14 +20,20 @@ import { pathImagesApp } from "@/src/constants/RoutePath";
 import RenderHTML from "react-native-render-html";
 import { htmlToText } from "html-to-text";
 import { useNavigation } from "@react-navigation/native";
-import { Entypo, FontAwesome, FontAwesome6, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import {
+  Entypo,
+  FontAwesome,
+  FontAwesome6,
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Mytoast } from "@/components/MyToast";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/th";
 import { Product } from "@/src/models/Product";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import AntDesign from "@expo/vector-icons/AntDesign";
 dayjs.locale("th");
 
 export default function ProductDetailsScreen() {
@@ -107,7 +113,10 @@ export default function ProductDetailsScreen() {
     user?.id === productDetail?.productGI?.store?.user?.id;
 
   const increaseQuantity = () => {
-    setQuantity((prevQuantity) => prevQuantity + 1);
+    if(productDetail?.quantity !== undefined && quantity < productDetail?.quantity)
+    {
+      setQuantity((prevQuantity) => prevQuantity + 1);
+    }
   };
 
   const decreaseQuantity = () => {
@@ -229,9 +238,9 @@ export default function ProductDetailsScreen() {
       x.productGI.store.hidden != true &&
       x.id != productDetail?.id &&
       x.productGI.category.name === productDetail?.productGI.category.name &&
-      x.productGI.store.userId != user?.id
+      x.productGI.store.userId != user?.id &&
+      x.productGI.store.id != productDetail.productGI.store.id
   );
-
 
   return (
     <SafeAreaView>
@@ -288,30 +297,30 @@ export default function ProductDetailsScreen() {
             alignItems: "center",
             height: myProduct ? 300 : 300,
             borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-              borderWidth: myProduct ? 0 : 0,
+            borderTopRightRadius: 20,
+            borderWidth: myProduct ? 0 : 0,
           }}
           activeOpacity={myProduct ? 1 : 0}
           onPress={() => !myProduct && onAddtoCart()}
         >
-           {myProduct && (
-    // <Entypo name="warning" size={70} color="red" style={{marginBottom:10}} />
-    <FontAwesome6 name="shop" size={60} color="#06fc6c" style={{marginBottom:10}} />
-  )}
-  {myProduct ? (
-    <ButtonTextWarning>
-      นี่คือสินค้าในร้านของคุณ
-  </ButtonTextWarning>
-  ):(
-    <ButtonText>เพิ่มในตะกร้า {quantity}
-          </ButtonText>
-  )}
+          {myProduct && (
+            <FontAwesome6
+              name="shop"
+              size={60}
+              color="#06fc6c"
+              style={{ marginBottom: 10 }}
+            />
+          )}
+          {myProduct ? (
+            <ButtonTextWarning>นี่คือสินค้าในร้านของคุณ</ButtonTextWarning>
+          ) : (
+            <ButtonText>เพิ่มในตะกร้า {quantity}</ButtonText>
+          )}
         </TouchableOpacity>
-
       </View>
 
       <ScrollView>
-        <View >
+        <View>
           <Container>
             {user && user?.id == productDetail?.productGI?.store?.userId && (
               <View
@@ -319,7 +328,7 @@ export default function ProductDetailsScreen() {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   marginTop: 20,
-                  marginBottom:-40
+                  marginBottom: -40,
                 }}
               >
                 <View></View>
@@ -651,38 +660,47 @@ export default function ProductDetailsScreen() {
           </View>
 
           {RecommendProducts.length > 0 && (
-            <View style={{ backgroundColor: "#fff", marginTop: -10,marginBottom:RecommendProducts.length > 0 ? 0 : 0 }}>
+            <View
+              style={{
+                backgroundColor: "#fff",
+                marginTop: -10,
+                marginBottom: RecommendProducts.length > 0 ? 0 : 0,
+              }}
+            >
               <View style={styles.container}>
                 <View style={{ marginBottom: 10, marginTop: 20 }}>
-                  <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                  <Text style={styles.titleRecomment}>
-                    สินค้าจากร้านเดียวกัน
-                  </Text>
-
-                  <TouchableOpacity 
-                  onPress={() => {
-                    const result = productDetail?.productGI.store.userId;
-                    if (result) {
-                      (navigation as any).navigate("storedetail", {
-                        id: String(shopProductDetail),
-                      });
-                    } else {
-                      Alert.alert("เกิดข้อผิดพลาด", "ไม่พบข้อมูล userId");
-                    }
-                  }}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
                   >
-                  <View style={{ flexDirection: "row" }}>
-                    <Text style={styles.titleRecommentTwo}>ดูทั้งหมด</Text>
-                    <MaterialIcons 
-                      name="navigate-next" 
-                      size={24} 
-                      color="#e08e00" 
-                      style={{ position: "relative", top: 18 }}
-                    />
-                  </View>
-                  </TouchableOpacity>
+                    <Text style={styles.titleRecomment}>
+                      สินค้าจากร้านเดียวกัน
+                    </Text>
 
-
+                    <TouchableOpacity
+                      onPress={() => {
+                        const result = productDetail?.productGI.store.userId;
+                        if (result) {
+                          (navigation as any).navigate("storedetail", {
+                            id: String(shopProductDetail),
+                          });
+                        } else {
+                          Alert.alert("เกิดข้อผิดพลาด", "ไม่พบข้อมูล userId");
+                        }
+                      }}
+                    >
+                      <View style={{ flexDirection: "row" }}>
+                        <Text style={styles.titleRecommentTwo}>ดูทั้งหมด</Text>
+                        <MaterialIcons
+                          name="navigate-next"
+                          size={24}
+                          color="#e08e00"
+                          style={{ position: "relative", top: 18 }}
+                        />
+                      </View>
+                    </TouchableOpacity>
                   </View>
                   <View style={styles.underline} />
                 </View>
@@ -704,13 +722,13 @@ export default function ProductDetailsScreen() {
                       }}
                     >
                       <View key={product.id} style={styles.card}>
-                      <ProductImageTwo
-                        source={{
-                          uri: !!preViewImage
-                            ? preViewImage
-                            : pathImagesApp.product + product?.images,
-                        }}
-                      />
+                        <ProductImageTwo
+                          source={{
+                            uri: !!preViewImage
+                              ? preViewImage
+                              : pathImagesApp.product + product?.images,
+                          }}
+                        />
                         <Text style={styles.productName}>
                           {product.productGI.name}
                         </Text>
@@ -729,7 +747,13 @@ export default function ProductDetailsScreen() {
           )}
 
           {filteredProducts.length > 0 && (
-            <View style={{ backgroundColor: "#fff", marginTop: -10,marginBottom:150}}>
+            <View
+              style={{
+                backgroundColor: "#fff",
+                marginTop: -10,
+                marginBottom: 150,
+              }}
+            >
               <View style={styles.container}>
                 <View style={{ marginBottom: 10, marginTop: 20 }}>
                   <Text style={styles.titleRecomment}>สินค้าที่คล้ายกัน</Text>
@@ -753,13 +777,13 @@ export default function ProductDetailsScreen() {
                       }}
                     >
                       <View key={product.id} style={styles.card}>
-                      <ProductImageThere
-                        source={{
-                          uri: !!preViewImage
-                            ? preViewImage
-                            : pathImagesApp.product + product?.images,
-                        }}
-                      />
+                        <ProductImageThere
+                          source={{
+                            uri: !!preViewImage
+                              ? preViewImage
+                              : pathImagesApp.product + product?.images,
+                          }}
+                        />
 
                         <Text style={styles.productName}>
                           {product.productGI.name}
@@ -942,7 +966,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
     marginTop: 20,
-    color:'#e08e00'
+    color: "#e08e00",
   },
   underline: {
     height: 2,
@@ -1079,13 +1103,11 @@ const QuantityButton: any = styled.TouchableOpacity`
   margin-top: 20px;
 `;
 
-
 const QuantityText: any = styled.Text`
   font-size: 24px;
   font-weight: bold;
   margin: 0 20px -20px;
 `;
-
 
 const ButtonText: any = styled.Text`
   color: #fff;
