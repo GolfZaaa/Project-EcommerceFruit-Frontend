@@ -73,7 +73,7 @@ const MyEarn = () => {
         onPress={() => navigation.goBack()}
         style={{
           position: "absolute",
-          top: 40,
+          top: 50,
           left: 20,
           zIndex: 1,
         }}
@@ -97,7 +97,7 @@ const MyEarn = () => {
 export default observer(MyEarn);
 
 const Container: any = styled(LinearGradient).attrs({
-  colors: ["#E8F0FF", "#F7F9FC"],
+  colors: ["#F7F9FC", "#F7F9FC"],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
 })`
@@ -107,9 +107,10 @@ const Container: any = styled(LinearGradient).attrs({
 `;
 
 const Title: any = styled.Text`
-  font-size: 30px;
+  font-size: 24px;
   font-weight: bold;
-  color: #333;
+  color: #007bff;
   text-align: center;
   margin-bottom: 20px;
+  margin-top: -10px;
 `;

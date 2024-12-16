@@ -25,9 +25,6 @@ export default class CommonStore {
       const res = await store.userStore.getUserDetailbyId().catch(() => {
         // this.logout();
       });
-
-      console.log("res getUserDetailbyId", res);
-
       // if (res?.response?.request?.status !== undefined) {
       //   if (res.response.request.status === 401) {
       //     logout();
@@ -87,26 +84,18 @@ export default class CommonStore {
 
     try {
       const user = await agent.Common.register(values);
-
-      console.log("user : ", user);
-
       runInAction(() => this.setLoadingCommon(false));
-
       return user;
     } catch (error) {
       runInAction(() => this.setLoadingCommon(false));
 
       if (axios.isAxiosError(error)) {
-        // ตรวจสอบว่าสถานะเป็น 400 หรือไม่
         if (error.response && error.response.status === 400) {
-          // console.log("Error: Bad Request (400)", error.response.data);
-
           return 400;
         } else {
           console.log("Error:", error.message);
         }
       } else {
-        // จัดการ error ที่ไม่ใช่ AxiosError
         console.log("Unexpected Error:", error);
       }
     }

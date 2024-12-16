@@ -40,7 +40,7 @@ const SearchOrderToSend = () => {
     <TabBar
       {...props}
       indicatorStyle={{ backgroundColor: "black" }} // สีของเส้นแสดงตำแหน่งปัจจุบัน
-      style={{ backgroundColor: "white", marginBottom: 5 }} // สีพื้นหลังของ TabBar
+      style={{ backgroundColor: "#F7F9FC", marginBottom: 5 }} // สีพื้นหลังของ TabBar
       labelStyle={{ fontWeight: "bold", color: "black" }} // สไตล์ของตัวอักษรใน Tab
       scrollEnabled
       tabStyle={{
@@ -84,7 +84,7 @@ const SearchOrderToSend = () => {
 export default observer(SearchOrderToSend);
 
 const Container: any = styled(LinearGradient).attrs({
-  colors: ["#E8F0FF", "#F7F9FC"],
+  colors: ["#F7F9FC", "#F7F9FC"],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
 })`
@@ -94,9 +94,11 @@ const Container: any = styled(LinearGradient).attrs({
 `;
 
 const Title: any = styled.Text`
-  font-size: 30px;
+  font-size: 24px;
   font-weight: bold;
-  color: #333;
+  color: #007bff;
   text-align: center;
   margin-bottom: 20px;
+  margin-top: -20px;
+
 `;

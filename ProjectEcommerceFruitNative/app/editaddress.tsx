@@ -20,7 +20,7 @@ import { observer } from "mobx-react-lite";
 import { Label } from "./storeuser/createproductgi";
 
 export const Container: any = styled(LinearGradient).attrs({
-  colors: ["#E8F0FF", "#F7F9FC"],
+  colors: ["#F7F9FC", "#F7F9FC"],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
 })`
@@ -30,11 +30,12 @@ export const Container: any = styled(LinearGradient).attrs({
 `;
 
 export const Title: any = styled.Text`
-  font-size: 30px;
+  font-size: 24px;
   font-weight: bold;
-  color: #333;
+  color: #007bff;
   text-align: center;
   margin-bottom: 20px;
+  margin-top: -20px;
 `;
 
 export default observer(function EditAddressScreen() {
@@ -70,8 +71,6 @@ export default observer(function EditAddressScreen() {
         ]);
         Mytoast("รหัสไปรษณีย์ไม่ถูกต้อง");
       } else {
-        console.log("บันทึกได้ !!");
-
         const dataAddress = {
           id: datA.id,
           subDistrict: dataSelect.subDistrict,
@@ -85,21 +84,14 @@ export default observer(function EditAddressScreen() {
         };
 
         await createUpdateAddress(dataAddress).then(async (result) => {
-          console.log("dataAddress", dataAddress);
-          console.log("result", result);
-
           if (!!result) {
             Mytoast("เพิ่มที่อยู่สำเร็จ");
             await getAddressByUserId();
-
-            console.log("isStorer", JSON.parse(isStore));
 
             if (JSON.parse(isStore)) {
               await GetShopByUserId();
               await GetAddressByStore();
             }
-
-            console.log("setting", setting);
 
             if (JSON.parse(setting) === true) {
               router.back();
@@ -118,14 +110,6 @@ export default observer(function EditAddressScreen() {
         },
       ]);
       Mytoast("กรอกข้อมูลไม่ถูกต้อง หรือ ไม่ครบทุกช่อง");
-
-      console.log("Address saved:", {
-        address,
-        postCode,
-        subDistrict: dataSelect?.subDistrict,
-        district: dataSelect?.district,
-        province: dataSelect?.province,
-      });
     }
   };
 
@@ -158,7 +142,7 @@ export default observer(function EditAddressScreen() {
         onPress={() => navigation.goBack()}
         style={{
           position: "absolute",
-          top: 40,
+          top: 50,
           left: 20,
           zIndex: 1,
         }}

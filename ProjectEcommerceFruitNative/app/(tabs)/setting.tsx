@@ -8,7 +8,7 @@ import {
   StyleSheet,
   ImageBackground,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import styled from "styled-components/native";
@@ -69,10 +69,6 @@ export default observer(function SettingScreen() {
     getAddressgotoOrderByUserId();
   }, []);
 
-  const handlePress = (screenName: string) => {
-    console.log("Navigating to:", screenName);
-  };
-
   const handleOrderhistory = async () => {
     getOrdersByUser();
     router.push("/orderhistory");
@@ -91,7 +87,6 @@ export default observer(function SettingScreen() {
   };
 
   const handleMyEarn = async () => {
-    // searchOrdersWantToReceipt(new URLSearchParams());
     await getMyOrderToSend();
     router.push("/myearn");
   };
@@ -105,6 +100,16 @@ export default observer(function SettingScreen() {
     router.push("/searchordertosend");
   };
 
+  const handleDashboardUser = async () => {
+    router.navigate("/dashboarduser");
+  };
+
+  
+  const handleDashboardToSend = async () => {
+    await getMyOrderToSend();
+    router.navigate("/dashboardtosend");
+  };
+
   const backgroundImage = {
     uri: pathImagesApp.image_web + systemSetting[0].image,
   };
@@ -116,12 +121,12 @@ export default observer(function SettingScreen() {
         style={styles.headerContainer}
       >
         <View style={styles.userInfo}>
-          <Image
-            source={{
-              uri: "https://png.pngtree.com/png-vector/20210708/ourmid/pngtree-packed-meal-kawaii-illustration-png-image_3568607.jpg",
-            }}
-            style={styles.avatar}
-          />
+        
+
+                <Image
+                  source={require("../../assets/images/IconUser3.png")}
+                  style={styles.avatar}
+                />
           <Text style={styles.userName}>{user.fullName}</Text>
           <Text style={styles.userDetails}>
             {myAddressgotoOrder
@@ -142,10 +147,10 @@ export default observer(function SettingScreen() {
 
           <TouchableOpacity style={styles.menuItem} onPress={handleMyEarn}>
             <View style={styles.iconWrapper}>
-              <Ionicons name="cash-outline" size={30} color="#5A67F2" />
+              <Ionicons name="bicycle" size={30} color="#5A67F2" />
             </View>
-            <Text style={styles.menuItemText}>สร้างรายได้</Text>
-            <Text style={styles.menuItemText}>ของฉัน</Text>
+            <Text style={styles.menuItemTextTwo}>สร้างรายได้</Text>
+            <Text style={styles.menuItemTextTwo}>ของฉัน</Text>
           </TouchableOpacity>
         </View>
 
@@ -169,24 +174,23 @@ export default observer(function SettingScreen() {
         </View>
 
         <View style={styles.menuRow}>
+
           <TouchableOpacity
             style={styles.menuItem}
-            onPress={() => handlePress("Stats")}
+            onPress={handleDashboardUser}
           >
             <View style={styles.iconWrapper}>
               <Ionicons name="stats-chart-outline" size={30} color="#5A67F2" />
             </View>
             <Text style={styles.menuItemText}>สรุปข้อมูลการซื้อ</Text>
           </TouchableOpacity>
+          
 
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => handleSearchOrderToSend()}
-          >
+          <TouchableOpacity style={styles.menuItem} onPress={handleMyShop}>
             <View style={styles.iconWrapper}>
-              <Ionicons name="mail-outline" size={30} color="#5A67F2" />
+              <Ionicons name="basket-outline" size={30} color="#5A67F2" />
             </View>
-            <Text style={styles.menuItemText}>รับ-ส่งต่อ คำสั่งซื้อ</Text>
+            <Text style={styles.menuItemText}>ร้านค้าของคุณ</Text>
           </TouchableOpacity>
 
           {/* <TouchableOpacity
@@ -210,11 +214,24 @@ export default observer(function SettingScreen() {
         </View>
 
         <View style={styles.menuRow}>
-          <TouchableOpacity style={styles.menuItem} onPress={handleMyShop}>
+         
+
+        <TouchableOpacity style={styles.menuItem} onPress={handleDashboardToSend}>
             <View style={styles.iconWrapper}>
-              <Ionicons name="basket-outline" size={30} color="#5A67F2" />
+              <MaterialIcons name="auto-graph" size={30} color="#5A67F2" />
             </View>
-            <Text style={styles.menuItemText}>ร้านค้าของคุณ</Text>
+            <Text style={styles.menuItemTextTwo}>สรุปข้อมูลรายได้</Text>
+            <Text style={styles.menuItemTextTwo}>ของฉัน</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => handleSearchOrderToSend()}
+          >
+            <View style={styles.iconWrapper}>
+              <Ionicons name="mail-outline" size={30} color="#5A67F2" />
+            </View>
+            <Text style={styles.menuItemText}>รับ-ส่งต่อ คำสั่งซื้อ</Text>
           </TouchableOpacity>
 
           {/* <TouchableOpacity style={styles.menuItem} onPress={handleAddress}>
@@ -362,7 +379,7 @@ const styles = StyleSheet.create({
   },
   userDetails: {
     color: "#FFF",
-    fontSize: 14,
+    fontSize: 16,
   },
   menuContainer: {
     padding: 20,
@@ -390,6 +407,11 @@ const styles = StyleSheet.create({
   },
   menuItemText: {
     marginTop: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  menuItemTextTwo: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#333",

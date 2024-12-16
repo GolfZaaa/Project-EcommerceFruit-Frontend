@@ -25,19 +25,12 @@ export const Product = {
   getProductGI: (id?: any | null) =>
     requests.get(`ProductGI/GetProductGI?id=${id}`),
   createUpdateProductGI: (values: any, files: any) => {
-    console.log("values :: ", values);
-    console.log("files :: ", files);
-
     const data = createFormData(values);
-
     if (files !== null) {
       for (var formfile of files) {
         data.append("formFiles", formfile);
       }
     }
-
-    console.log("data", ...Object.values(data));
-
     return requests.postForm(`ProductGI/CreateUpdateProductGI`, data);
   },
   removeProductGI: (id: number) =>

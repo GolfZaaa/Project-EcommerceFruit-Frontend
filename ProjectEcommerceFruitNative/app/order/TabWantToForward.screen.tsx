@@ -59,11 +59,6 @@ const TabWantToForwardScreen = () => {
       setErrorMessage("เงินเกินจำนวนที่กำหนด!");
     } else {
       setErrorMessage("");
-
-      console.log("driverId", driverId);
-      console.log("shippingId", shippingId);
-      console.log("numberValue", numberValue);
-
       await confirmOrderToForward({
         driverId: driverId,
         shippingId: shippingId,
@@ -186,7 +181,7 @@ const styles = StyleSheet.create({
 });
 
 const Container: any = styled(LinearGradient).attrs({
-  colors: ["#E8F0FF", "#F7F9FC"],
+  colors: ["#F7F9FC", "#F7F9FC"],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
 })`

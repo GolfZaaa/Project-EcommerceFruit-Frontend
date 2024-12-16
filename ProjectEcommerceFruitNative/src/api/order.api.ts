@@ -6,8 +6,6 @@ export const Order = {
   searchOrdersWantToReceipt: (params: URLSearchParams) =>
     requests.getFormAny(`Order/SearchOrdersWantToReceipt?${params.toString()}`),
   searchOrderToSendByOrderId: (orderId: string | null) => {
-    console.log("before send data to server", orderId);
-
     return requests.onlyGet(
       "Order/SearchOrderToSendByOrderId?orderId=",
       orderId

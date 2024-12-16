@@ -26,7 +26,7 @@ const AddressList = () => {
     Alert.alert("ลบที่อยู่", "ยืนยันจะลบที่อยู่นี้ไหม", [
       {
         text: "ยกเลิก",
-        onPress: () => console.log("Cancel Pressed"),
+        // onPress: () => console.log("Cancel Pressed"),
         style: "cancel",
       },
       {
@@ -34,7 +34,7 @@ const AddressList = () => {
         onPress: async () => {
           const res = await removeAddressById(addressId);
 
-          console.log("res", typeof res);
+          // console.log("res", typeof res);
 
           if (res !== true) {
             Alert.alert(
@@ -43,7 +43,7 @@ const AddressList = () => {
               [
                 {
                   text: "ตกลง",
-                  onPress: () => console.log("ok Pressed"),
+                  // onPress: () => console.log("ok Pressed"),
                 },
               ]
             );

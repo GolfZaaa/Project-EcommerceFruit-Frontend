@@ -20,14 +20,11 @@ const TabSearchOrderScreen = () => {
   const [showOrderEmpty, setShowOrderEmpty] = useState<boolean>(false);
 
   const handleSearch = () => {
-    console.log("value : ", value);
 
     if (value === "KRU-") {
       setShowOrderEmpty(false);
     } else {
       searchOrderToSendByOrderId(value).then((res) => {
-        console.log("res length", res.length);
-
         if (res.length === 0) {
           setShowOrderEmpty(true);
         }
@@ -42,8 +39,6 @@ const TabSearchOrderScreen = () => {
       setValue(value);
     }
   };
-
-  console.log("orderSearch", orderSearch);
 
   return (
     <ContainerOne>
@@ -124,7 +119,7 @@ const styles = StyleSheet.create({
 });
 
 const ContainerOne: any = styled(LinearGradient).attrs({
-  colors: ["#E8F0FF", "#F7F9FC"],
+  colors: ["#F7F9FC", "#F7F9FC"],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
 })`

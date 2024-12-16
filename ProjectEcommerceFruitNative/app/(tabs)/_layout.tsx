@@ -66,8 +66,8 @@ export default observer(function TabLayout() {
             display: loadingUser ? "none" : "flex",
           },
           tabBarLabelStyle: {
-            fontSize: 12, // ขนาดฟอนต์ของชื่อแท็บ
-            fontWeight: "600", // ทำให้ตัวหนาขึ้น
+            fontSize: 12, 
+            fontWeight: "600", 
           },
           headerShown: false,
         }}
@@ -79,9 +79,9 @@ export default observer(function TabLayout() {
             tabBarIcon: ({ color, focused }) => (
               <Ionicons
                 name={focused ? "home" : "home-outline"}
-                size={focused ? 28 : 24} // ขนาดใหญ่ขึ้นเมื่อถูกเลือก
+                size={focused ? 28 : 24}  
                 color={color}
-                style={{ transform: [{ scale: focused ? 1.2 : 1 }] }} // แอนิเมชันการขยาย
+                style={{ transform: [{ scale: focused ? 1.2 : 1 }] }} 
               />
             ),
           }}
@@ -153,6 +153,7 @@ export default observer(function TabLayout() {
         <Tabs.Screen
           name="cart"
           options={{
+            title: "ตะกร้า",
             tabBarIcon: ({ color, focused }) => (
               <View style={{ position: "relative" }}>
                 <Ionicons

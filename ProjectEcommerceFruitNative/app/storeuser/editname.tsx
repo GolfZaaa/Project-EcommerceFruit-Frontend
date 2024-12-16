@@ -17,7 +17,7 @@ import { router } from "expo-router";
 
 const BackButton: any = styled.TouchableOpacity`
   position: absolute;
-  top: 20px;
+  top: 30px;
   left: 20px;
   z-index: 1;
   padding: 10px;
@@ -102,12 +102,9 @@ export default observer(function EditName() {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
-        {/* {!!user?.stores?.length && ( */}
         <BackButton onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back-outline" size={24} color="#333" />
+          <Ionicons name="arrow-back-outline" size={30}  color="#007bff" />
         </BackButton>
-        {/* )} */}
-
         <Text style={styles.drawerTitle}>แก้ไขข้อมูลร้านค้า</Text>
 
         <View style={styles.inputGroup}>
@@ -237,8 +234,9 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: "bold",
     marginBottom: 30,
-    color: "#333",
+    color: "#007bff",
     textAlign: "center",
+    marginTop:10,
   },
   sectionTitle: {
     fontSize: 20,

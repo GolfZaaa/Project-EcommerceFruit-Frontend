@@ -40,7 +40,7 @@ const MyImages = ({ item, func }: { item: Images; func: any }) => {
           Alert.alert("ลบรูปภาพนี้ออกจากฐานข้อมูล", "ยืนยันเพื่อลบ", [
             {
               text: "ยกเลิก",
-              onPress: () => console.log("cancel successfully"),
+              // onPress: () => console.log("cancel successfully"),
             },
             {
               text: "ยืนยัน",
@@ -81,7 +81,7 @@ const MyImagesShow = ({
           Alert.alert("ลบรูปภาพ", "ยืนยันเพื่อลบ", [
             {
               text: "ยกเลิก",
-              onPress: () => console.log("cancel successfully"),
+              // onPress: () => console.log("cancel successfully"),
             },
             {
               text: "ยืนยัน",
@@ -208,8 +208,6 @@ export default observer(function CreateProductGI() {
         quality: 1,
       });
 
-      console.log(result);
-
       if (!result.canceled) {
         setImagesShow((prev) => [...(prev || []), result.assets[0].uri]);
 
@@ -263,12 +261,8 @@ export default observer(function CreateProductGI() {
         categoryId: selectCategory,
       };
 
-      console.log("dataForm", dataForm);
-
       await createUpdateProductGI(dataForm, imagesSend).then(async (result) => {
         if (!!result === true) {
-          console.log("result : L: ::", result);
-
           router.back();
           await getProductGI(1);
         } else {
@@ -284,8 +278,6 @@ export default observer(function CreateProductGI() {
       Mytoast("กรอกข้อมูลไม่ครบถ้วน");
     }
   };
-
-  console.log("des : ", description);
 
   return (
     <ScrollView style={styles.container}>

@@ -31,30 +31,6 @@ import {
 import { Mytoast } from "@/components/MyToast";
 import { Dropdown } from "react-native-element-dropdown";
 
-// const data = [
-//   {
-//     id: "1",
-//     title: "คำสั่งซื้อ #001",
-//     date: "10 ตุลาคม 2023",
-//     amount: "฿500",
-//     status: "completed",
-//   },
-//   {
-//     id: "2",
-//     title: "คำสั่งซื้อ #002",
-//     date: "15 ตุลาคม 2023",
-//     amount: "฿1,200",
-//     status: "cancelled",
-//   },
-//   {
-//     id: "3",
-//     title: "คำสั่งซื้อ #003",
-//     date: "20 ตุลาคม 2023",
-//     amount: "฿700",
-//     status: "completed",
-//   },
-// ];
-
 const categorySend = [
   {
     value: 1,
@@ -99,18 +75,15 @@ const OrderHistoryStoreScreen = () => {
   const navigation = useNavigation();
 
   const handleCancel = async (values: any) => {
-    console.log("values", values);
-
     Alert.alert("ยกเลิกคำสั่งซื้อนี้", "ยืนยันเพื่อยกเลิกคำสั่งซื้อนี้", [
       {
         text: "ยกเลิก",
-        onPress: () => console.log("cancel successfully"),
+        // onPress: () => console.log("cancel successfully"),
       },
       {
         text: "ยืนยัน",
         onPress: async () =>
           await cancelOrder(values).then((res) => {
-            console.log("res", res);
             if (!!res) {
               Mytoast("ยกเลิกคำสั่งซื้อสำเร็จ");
               getOrderByStore(user?.stores[0].id || 0);
@@ -146,8 +119,6 @@ const OrderHistoryStoreScreen = () => {
 
       if (!more) {
         setTotalPrice((total + item.shippings[0].shippingFee).toString());
-        // setTotalPriceMyOrder(total);
-        // myTotalPrice.current = total;
         setMore((prev) => !prev);
       } else {
         setTotalPrice("");
@@ -167,13 +138,12 @@ const OrderHistoryStoreScreen = () => {
           Alert.alert("ยืนยันคำสั่งซื้อนี้", "ยืนยันเพื่อยืนยันคำสั่งซื้อนี้", [
             {
               text: "ยกเลิก",
-              onPress: () => console.log("cancel successfully"),
+              // onPress: () => console.log("cancel successfully"),
             },
             {
               text: "ยืนยัน",
               onPress: async () =>
                 await confirmOrder(dataForm).then((res) => {
-                  console.log("res", res);
                   if (!!res) {
                     Mytoast("ยืนยันคำสั่งซื้อสำเร็จ");
                     getOrderByStore(user?.stores[0].id || 0);
@@ -196,13 +166,12 @@ const OrderHistoryStoreScreen = () => {
               [
                 {
                   text: "ยกเลิก",
-                  onPress: () => console.log("cancel successfully"),
+                  // onPress: () => console.log("cancel successfully"),
                 },
                 {
                   text: "ยืนยัน",
                   onPress: async () =>
                     await confirmOrder(dataForm).then((res) => {
-                      console.log("res", res);
                       if (!!res) {
                         Mytoast("ยืนยันคำสั่งซื้อสำเร็จ");
                         getOrderByStore(user?.stores[0].id || 0);
@@ -217,13 +186,12 @@ const OrderHistoryStoreScreen = () => {
         Alert.alert("ยืนยันคำสั่งซื้อนี้", "ยืนยันเพื่อยืนยันคำสั่งซื้อนี้", [
           {
             text: "ยกเลิก",
-            onPress: () => console.log("cancel successfully"),
+            // onPress: () => console.log("cancel successfully"),
           },
           {
             text: "ยืนยัน",
             onPress: async () =>
               await confirmOrder(dataForm).then((res) => {
-                console.log("res", res);
                 if (!!res) {
                   Mytoast("ยืนยันคำสั่งซื้อสำเร็จ");
                   getOrderByStore(user?.stores[0].id || 0);
@@ -254,7 +222,6 @@ const OrderHistoryStoreScreen = () => {
               </OrderDate>
             </View>
             <View>
-              {/* <OrderAmount>ไม่ใช่ ไอดี {item.id}</OrderAmount> */}
               <View
                 style={{
                   backgroundColor: `${
@@ -565,7 +532,7 @@ const OrderHistoryStoreScreen = () => {
         onPress={() => navigation.goBack()}
         style={{
           position: "absolute",
-          top: 40,
+          top: 50,
           left: 20,
           zIndex: 1,
         }}
@@ -574,6 +541,7 @@ const OrderHistoryStoreScreen = () => {
       </TouchableOpacity>
 
       <Title>ประวัติรายการคำสั่งซื้อ</Title>
+      
 
       <TabView
         navigationState={{ index, routes }}
@@ -644,7 +612,7 @@ const styles = StyleSheet.create({
 });
 
 const Container: any = styled(LinearGradient).attrs({
-  colors: ["#E8F0FF", "#F7F9FC"],
+  colors: ["#F7F9FC", "#F7F9FC"],
   start: { x: 0, y: 0 },
   end: { x: 1, y: 1 },
 })`
@@ -654,11 +622,12 @@ const Container: any = styled(LinearGradient).attrs({
 `;
 
 const Title: any = styled.Text`
-  font-size: 30px;
+  font-size: 24px;
   font-weight: bold;
-  color: #333;
+  color: #007bff;
   text-align: center;
   margin-bottom: 20px;
+  margin-top: -10px;
 `;
 
 const OrderCard: any = styled(View)`

@@ -10,15 +10,19 @@ import {
   ImageBackground,
   ScrollView,
   Modal,
-  Image
+  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useStore } from "@/src/store/store";
 import { observer } from "mobx-react-lite";
 import { ActivityIndicator, Divider } from "react-native-paper";
-import { DesLogin, LoginButton, SaveButtonText, TitleLogin } from "./setting";
-import { Title } from "../editaddress";
+import {
+  DesLogin,
+  LoginButton,
+  SaveButtonText,
+  TitleLogin,
+} from "../app/(tabs)/setting";
 import { pathImagesApp } from "@/src/constants/RoutePath";
 import { SafeAreaView } from "react-native-safe-area-context";
 import IconFontAwesome from "react-native-vector-icons/FontAwesome";
@@ -30,144 +34,158 @@ import "moment/locale/th";
 import dayjs from "dayjs";
 import "dayjs/locale/th";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { BarChart, PieChart } from "react-native-chart-kit";
 
 const { width } = Dimensions.get("window");
 
-export default observer(function ShopScreen() {
+export default observer(function dashboarduser() {
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalOrderSuccess, setTotalOrderSuccess] = useState(0);
-  const [totalOrderFailed, setTotalOrderFailed] = useState(0);
   const [yearOptions, setYearOptions] = useState([]);
   const [monthlyOrderData, setMonthlyOrderData] = useState([]);
   const [selectedYear, setSelectedYear] = useState(moment().year());
-  const [loading, setLoading] = useState(true);
+  const [totalOrderCancel, setTotalOrderCancel] = useState(0);
+  const [monthlyAndYearOrderData, setMonthlyAndYearOrderData] = useState([]);
 
-  const { GetShopByUserId, usershop } = useStore().shopUserStore;
-  const { GetAddressByStore } = useStore().addressStore;
-  const { getProductGI, getProductByStore } = useStore().productStore;
-  const { user } = useStore().userStore;
-  const { getOrderByStore, order } = useStore().orderStore;
-  const { systemSetting } = useStore().systemSettingStore;
+  const { getOrdersByUser, order } = useStore().orderStore;
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const slideAnim = useRef(new Animated.Value(-width)).current;
 
-  const ShopUserId: any = usershop?.id;
-
   const [loadingGraph, setloadingGraph] = useState(false);
-  const [loadingGetShopByUserId, setloadingetShopByUserId] = useState(false);
-  const [loadingGetAddressByStore, setloadingGetAddressByStore] =
-    useState(false);
+  useState(false);
 
-  const CheckGetShopByUserId = () => {
-    GetShopByUserId();
-    setloadingetShopByUserId(true);
+  const CheckGetOrdersByUser = () => {
+    getOrdersByUser();
+    setloadingGraph(true);
   };
-
-  const CheckGetAddressByStore = () => {
-    GetAddressByStore();
-    setloadingGetAddressByStore(true);
-  };
-
   useEffect(() => {
-    CheckGetShopByUserId();
-    CheckGetAddressByStore();
+    CheckGetOrdersByUser();
   }, []);
-
-  useEffect(() => {
-    if (!loadingGetAddressByStore && !loadingGetShopByUserId) {
-      setloadingGraph(true);
-    }
-  }, [loadingGetAddressByStore, loadingGetShopByUserId]);
-
-  useEffect(() => {
-    getOrderByStore(ShopUserId);
-  }, [usershop]);
 
   useEffect(() => {
     if (order) {
       const total = order
-        .filter((x) => x.status === 1 && x.confirmReceipt === 1)
+        .filter((x) => x.confirmReceipt === 1)
         .reduce((acc, currentOrder) => {
           const orderTotal = currentOrder.orderItems.reduce(
             (itemAcc, orderItem) =>
               itemAcc + orderItem.quantity * orderItem.product.price,
             0
           );
-          return acc + orderTotal;
+
+          const totalFee = currentOrder.shippings
+            ? currentOrder.shippings.reduce(
+                (feeAcc, shipping) => feeAcc + shipping.shippingFee,
+                0
+              )
+            : 0;
+
+          return acc + orderTotal + totalFee;
         }, 0);
       setTotalPrice(total);
+
+      const totalProduct = order
+        .filter((x) => x.confirmReceipt === 1)
+        .reduce((acc, currentOrder) => {
+          const orderQuantity = currentOrder.orderItems.reduce(
+            (itemAcc, orderItem) => itemAcc + orderItem.quantity,
+            0
+          );
+          return acc + orderQuantity;
+        }, 0);
+      setTotalQuantity(totalProduct);
+
+      const totalOrderSuccess = order.reduce((acc, currentOrder) => {
+        return currentOrder.confirmReceipt === 1 ? acc + 1 : acc;
+      }, 0);
+      setTotalOrderSuccess(totalOrderSuccess);
+
+      const totalOrderFailed = order.reduce((acc, currentOrder) => {
+        return currentOrder.confirmReceipt === 2 ? acc + 1 : acc;
+      }, 0);
+      setTotalOrderCancel(totalOrderFailed);
+
+      const years: any = [
+        ...new Set(order.map((o) => dayjs(o.createdAt).year() + 543)),
+      ].sort((a, b) => a - b);
+      setYearOptions(years.map((year: any) => ({ value: year, label: year })));
+
+      const ordersByMonth = order
+        .filter((x) => x.confirmReceipt === 1)
+        .reduce((acc: any, currentOrder) => {
+          const month = dayjs(currentOrder.createdAt).format("MMMM");
+          const orderYear = moment(currentOrder.createdAt).year();
+          if (orderYear !== selectedYear) return acc;
+
+          const orderTotal = currentOrder.orderItems.reduce(
+            (itemAcc, orderItem) =>
+              itemAcc + orderItem.quantity * orderItem.product.price,
+            0
+          );
+
+          if (!acc[month]) {
+            acc[month] = 0;
+          }
+
+          acc[month] += orderTotal;
+
+          return acc;
+        }, {});
+      const monthlyData: any = Object.entries(ordersByMonth).map(
+        ([month, total]) => ({
+          month,
+          year: selectedYear + 543,
+          total,
+        })
+      );
+      monthlyData.sort(
+        (a: any, b: any) =>
+          dayjs().month(a.month).valueOf() - dayjs().month(b.month).valueOf()
+      );
+      setMonthlyOrderData(monthlyData);
     }
+  }, [order, selectedYear]);
 
-    const totalProduct = order
-      .filter((x) => x.status === 1 && x.confirmReceipt === 1)
-      .reduce((acc, currentOrder) => {
-        const orderQuantity = currentOrder.orderItems.reduce(
-          (itemAcc, orderItem) => itemAcc + orderItem.quantity,
-          0
-        );
-        return acc + orderQuantity;
-      }, 0);
-    setTotalQuantity(totalProduct);
+  useEffect(() => {
+    if (order) {
+      const years: any = [
+        ...new Set(order.map((o) => dayjs(o.createdAt).year() + 543)),
+      ].sort((a, b) => a - b);
+      setYearOptions(years.map((year: any) => ({ value: year, label: year })));
 
-    const totalOrderSuccess = order
-      .filter((x) => x.confirmReceipt === 1)
-      .reduce((acc, currentOrder) => {
-        return currentOrder.status === 1 ? acc + 1 : acc;
-      }, 0);
-    setTotalOrderSuccess(totalOrderSuccess);
+      const ordersByYearAndMonth = order
+        .filter((x) => x.confirmReceipt === 1)
+        .reduce((acc: any, currentOrder) => {
+          const month = dayjs(currentOrder.createdAt).format("MMMM");
+          const year = dayjs(currentOrder.createdAt).year() + 543;
+          const key = `${month}-${year}`;
 
-    const totalOrderFailed = order
-      .filter((x) => x.confirmReceipt === 1)
-      .reduce((acc, currentOrder) => {
-        return currentOrder.status === 2 ? acc + 1 : acc;
-      }, 0);
-    setTotalOrderFailed(totalOrderFailed);
+          const orderTotal = currentOrder.orderItems.reduce(
+            (itemAcc, orderItem) =>
+              itemAcc + orderItem.quantity * orderItem.product.price,
+            0
+          );
 
-    const years: any = [
-      ...new Set(order.map((o) => moment(o.createdAt).year() + 543)),
-    ].sort((a, b) => a - b);
-    setYearOptions(years.map((year: any) => ({ value: year, label: year })));
+          if (!acc[key]) {
+            acc[key] = { month, year, total: 0 };
+          }
 
-    const ordersByMonth = order
-      .filter((x) => x.status === 1 && x.confirmReceipt === 1)
-      .reduce((acc: any, currentOrder) => {
-        const orderYear = moment(currentOrder.createdAt).year();
-        if (orderYear !== selectedYear) return acc;
+          acc[key].total += orderTotal;
 
-        const month = moment(currentOrder.createdAt).format("MMMM");
-        const year = dayjs(currentOrder.createdAt).year() + 543;
-        const orderTotal = currentOrder.orderItems.reduce(
-          (itemAcc, orderItem) =>
-            itemAcc + orderItem.quantity * orderItem.product.price,
-          0
-        );
+          return acc;
+        }, {});
 
-        if (!acc[month]) {
-          acc[month] = 0;
-        }
-
-        acc[month] += orderTotal;
-
-        return acc;
-      }, {});
-
-    const monthlyData: any = Object.entries(ordersByMonth).map(
-      ([month, total]) => ({
-        month,
-        total,
-      })
-    );
-
-    monthlyData.sort(
-      (a: any, b: any) =>
-        moment().month(a.month).valueOf() - moment().month(b.month).valueOf()
-    );
-
-    setMonthlyOrderData(monthlyData);
+      const monthlyData: any = Object.values(ordersByYearAndMonth);
+      monthlyData.sort(
+        (a: any, b: any) =>
+          dayjs(`${a.month} ${a.year - 543}`).valueOf() -
+          dayjs(`${b.month} ${b.year - 543}`).valueOf()
+      );
+      setMonthlyAndYearOrderData(monthlyData);
+    }
   }, [order, selectedYear]);
 
   const toggleDrawer = () => {
@@ -186,31 +204,6 @@ export default observer(function ShopScreen() {
     }
   };
 
-  const handleEditStoreName = async () => {
-    await GetShopByUserId();
-    await GetAddressByStore();
-    router.push("../storeuser/editname");
-  };
-
-  const handleListproductgi = async () => {
-    await getProductGI(1);
-    router.push("../storeuser/listproductgi");
-  };
-
-  const handleListproduct = () => {
-    getProductByStore(user?.stores[0].id || 0);
-    router.push("../storeuser/listproduct");
-  };
-
-  const handleOrderHistoryStore = () => {
-    getOrderByStore(user?.stores[0].id || 0);
-    router.push("../storeuser/orderhistorystore");
-  };
-
-  const backgroundImage = {
-    uri: pathImagesApp.image_web + systemSetting[0].image,
-  };
-
   const thaiMonthShort = [
     "ม.ค.",
     "ก.พ.",
@@ -226,9 +219,24 @@ export default observer(function ShopScreen() {
     "ธ.ค.",
   ];
 
+  const englishToThaiMonthIndex: any = {
+    January: 11,
+    February: 10,
+    March: 9,
+    April: 8,
+    May: 7,
+    June: 6,
+    July: 5,
+    August: 4,
+    September: 3,
+    October: 2,
+    November: 1,
+    December: 0,
+  };
+
   const chartData = {
     labels: monthlyOrderData.map((data: any) => {
-      const monthIndex = moment(data.month, "MMMM").month();
+      const monthIndex = englishToThaiMonthIndex[data.month];
       return thaiMonthShort[monthIndex];
     }),
     datasets: [
@@ -289,29 +297,10 @@ export default observer(function ShopScreen() {
     setPieChartData(formattedData);
   }, [order]);
 
-  const handleShop = async () => {
-    router.push("/(tabs)/shop");
-  };
-
   const screenWidth = Dimensions.get("window").width;
 
-  return !user?.stores?.length ? (
-    <ImageBackground
-      source={backgroundImage}
-      style={styles.backgroundUnlogin}
-      resizeMode="cover"
-    >
-      <View style={styles.containerUnlogin}>
-        <TitleLogin>คุณไม่ได้ลงทะเบียนร้านค้า</TitleLogin>
-        <LoginButton onPress={() => router.push("/storeuser/editname")}>
-          <SaveButtonText>ลงทะเบียนร้านค้าเลย!</SaveButtonText>
-        </LoginButton>
-        {/* </TouchableOpacity> */}
-      </View>
-    </ImageBackground>
-  ) : (
+  return (
     <View style={styles.container}>
-
       <View
         style={{
           flexDirection: "row",
@@ -320,15 +309,19 @@ export default observer(function ShopScreen() {
           paddingHorizontal: 10,
           paddingVertical: 5,
           paddingBottom: 10,
+          paddingTop: 20,
         }}
       >
-        <TouchableOpacity onPress={toggleDrawer}>
-          <Ionicons name="menu-outline" size={30} color="#333" />
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={30} color="black" />
+          </TouchableOpacity>
+        </View>
 
         <Text style={{ fontSize: 25, fontWeight: "bold" }}>
-          สรุปข้อมูลร้านค้า
+          สรุปข้อมูลการซื้อ
         </Text>
+
         <View></View>
       </View>
 
@@ -356,32 +349,29 @@ export default observer(function ShopScreen() {
           </Text>
         </View>
 
-        <TouchableOpacity onPress={handleShop} style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem}>
           <MaterialIcons name="data-saver-off" size={30} color="#333" />
           <Text style={styles.menuText}>สรุปข้อมูลร้านค้า</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleEditStoreName} style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem}>
           <Ionicons name="build-outline" size={30} color="#333" />
           <Text style={styles.menuText}>แก้ไขร้านค้า</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleListproductgi} style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem}>
           <Ionicons name="add-circle-outline" size={30} color="#333" />
 
           <Text style={styles.menuText}>เพิ่มข้อมูลสินค้า (GI)</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleListproduct} style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem}>
           <Ionicons name="pricetag-outline" size={30} color="#333" />
 
           <Text style={styles.menuText}>เพิ่มสินค้า</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={handleOrderHistoryStore}
-          style={styles.menuItem}
-        >
+        <TouchableOpacity style={styles.menuItem}>
           <Ionicons name="clipboard-outline" size={30} color="#333" />
           <Text style={styles.menuText}>รายการคำสั่งซื้อ</Text>
         </TouchableOpacity>
@@ -403,12 +393,12 @@ export default observer(function ShopScreen() {
             >
               <View style={styles.card}>
                 <View style={styles.row}>
-                  <IconFontAwesome name="money" size={30} style={styles.icon} />
+                  <Ionicons name="cash-outline" size={30} style={styles.icon} />
                   <Text style={styles.cardText}>
                     {totalPrice.toLocaleString()}
                   </Text>
                 </View>
-                <Text style={styles.cardText}>กำไรจากการขาย</Text>
+                <Text style={styles.cardText}>ยอดเงินรวมที่ซื้อ</Text>
               </View>
 
               <View style={styles.card}>
@@ -420,19 +410,19 @@ export default observer(function ShopScreen() {
                   />
                   <Text style={styles.cardText}>{totalQuantity}</Text>
                 </View>
-                <Text style={styles.cardText}>จำนวนยอดขาย</Text>
+                <Text style={styles.cardText}>จำนวนสินค้าที่ซื้อ</Text>
               </View>
 
               <View style={styles.card}>
                 <View style={styles.row}>
-                  <IconMaterialIcons
-                    name="check-circle"
+                  <Ionicons
+                    name="checkmark-circle-outline"
                     size={30}
                     style={styles.icon}
                   />
                   <Text style={styles.cardText}>{totalOrderSuccess}</Text>
                 </View>
-                <Text style={styles.cardText}>ออเดอร์ที่สำเร็จ</Text>
+                <Text style={styles.cardText}>คำสั่งซื้อที่สำเร็จ</Text>
               </View>
 
               <View style={styles.card}>
@@ -442,10 +432,10 @@ export default observer(function ShopScreen() {
                     size={30}
                     style={styles.icon}
                   />
-                  <Text style={styles.cardText}>{totalOrderFailed}</Text>
+                  <Text style={styles.cardText}>{totalOrderCancel}</Text>
                 </View>
 
-                <Text style={styles.cardText}>ออเดอร์ที่ยกเลิก</Text>
+                <Text style={styles.cardText}>คำสั่งซื้อที่ยกเลิก</Text>
               </View>
             </ScrollView>
           </View>
@@ -471,7 +461,7 @@ export default observer(function ShopScreen() {
                           marginTop: 8,
                         }}
                       >
-                        ยอดขายประจำเดือน
+                        จำนวนคำสั่งซื้อแต่ละเดือน
                       </Text>
                     </View>
                     <View
@@ -602,17 +592,9 @@ export default observer(function ShopScreen() {
                 </ScrollView>
               </View>
             ) : (
-              // <View style={{ alignItems: "center" }}>
-              //   <ActivityIndicator size="small" color="#0000ff" />
-              //   <Text
-              //     style={{ fontSize: 14, color: "#e5e5e5", fontWeight: "700" }}
-              //   >
-              //     กำลังโหลดข้อมูล
-              //   </Text>
-              // </View>
               <View style={{ alignItems: "center" }}>
                 <Image
-                  source={require("../../assets/images/noinfomation.jpg")}
+                  source={require("../assets/images/noinfomation.jpg")}
                   style={{ width: 150, height: 150 }}
                 />
                 <Text
@@ -638,7 +620,7 @@ export default observer(function ShopScreen() {
                       marginTop: 8,
                     }}
                   >
-                    สัดส่วนยอดขายประเภทสินค้า
+                    สัดส่วนการใช้จ่ายในแต่ละหมวดหมู่สินค้า
                   </Text>
                 </View>
                 {pieChartData.length > 0 && (
@@ -658,17 +640,9 @@ export default observer(function ShopScreen() {
                 )}
               </View>
             ) : (
-              // <View style={{ alignItems: "center" }}>
-              //   <ActivityIndicator size="small" color="#0000ff" />
-              //   <Text
-              //     style={{ fontSize: 14, color: "#e5e5e5", fontWeight: "700" }}
-              //   >
-              //     กำลังโหลดข้อมูล
-              //   </Text>
-              // </View>
               <View style={{ alignItems: "center" }}>
                 <Image
-                  source={require("../../assets/images/noinfomation.jpg")}
+                  source={require("../assets/images/noinfomation1.jpg")}
                   style={{ width: 150, height: 150 }}
                 />
                 <Text
@@ -703,7 +677,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    // elevation: 5,
   },
   noDataText: {
     textAlign: "center",

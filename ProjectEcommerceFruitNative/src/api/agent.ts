@@ -11,7 +11,7 @@ import { Shop } from "./shop.api";
 
 // axios.defaults.baseURL = "https://localhost:7168/api/";
 
-export const port = "https://3c0c-202-28-123-199.ngrok-free.app/";
+export const port = "https://b085-49-229-133-115.ngrok-free.app/";
 
 axios.defaults.baseURL = port + "api/";
 
@@ -20,6 +20,12 @@ const multipartForm = {
 };
 
 const responseBody = <T>(res: AxiosResponse<T>) => res.data;
+
+
+export type RootStackParamList = {
+  ProductDetailsScreen: { id: number };
+  storedetail: { id: number };
+};
 
 axios.interceptors.request.use((config) => {
   const token = store.commonStore.token;

@@ -116,11 +116,7 @@ export default class OrderStore {
     this.setLoadingOrderConfirmForward(true);
     try {
       const result = await agent.Order.confirmOrderToForward(values);
-
-      console.log("result :: ", result);
-
       this.setLoadingOrderConfirmForward(false);
-
       this.getMyOrderUserWantToTaketoSend();
     } catch (error) {
       this.setLoadingOrderConfirmForward(false);
@@ -167,11 +163,7 @@ export default class OrderStore {
   CreateUpdateOrderById = async (values: any) => {
     try {
       const result = await agent.Order.CreateUpdateOrderById(values);
-
-      console.log("result", result);
-
       this.orderid = result;
-
       return result;
     } catch (error) {
       return error;
@@ -197,14 +189,9 @@ export default class OrderStore {
   };
 
   createOrderToReceipt = async (valus: number[]) => {
-    console.log("valus", valus);
-
     try {
       const result = await agent.Order.createOrderToReceipt(valus);
-      console.log("result", result);
-
       this.searchOrdersWantToReceipt(new URLSearchParams());
-
       return result;
     } catch (error) {
       return error;

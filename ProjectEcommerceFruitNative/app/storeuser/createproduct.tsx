@@ -120,8 +120,6 @@ export default observer(function CreateProduct() {
       };
 
       await createUpdateProduct(dataForm).then((result) => {
-        console.log("result", result);
-
         if (!!result === true) {
           getProductByStore(user?.stores[0].id || 0);
           router.back();

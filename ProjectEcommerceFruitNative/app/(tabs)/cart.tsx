@@ -99,7 +99,6 @@ export default observer(function CartScreen() {
       Mytoast("กรุณาเลือกร้านค้าที่ท่านจะซื้อก่อน");
     } else {
       await getAddressgotoOrderByUserId().then((res) => {
-        console.log("res", res);
 
         if (!!res) {
           router.push("/cartdetail");
@@ -109,6 +108,8 @@ export default observer(function CartScreen() {
             params: {
               title: "เพิ่มที่อยู่",
               data: JSON.stringify({ id: 0 }),
+              setting: JSON.stringify(false),
+              isStore: JSON.stringify(false),
             },
           });
         }
@@ -302,7 +303,7 @@ export default observer(function CartScreen() {
                 ? "checkbox-marked"
                 : "checkbox-blank-outline"
             }
-            size={50} // Set custom size
+            size={50} 
             onPress={() => handleCheckboxChange(products, storeName)}
           />
         </View>
@@ -315,16 +316,6 @@ export default observer(function CartScreen() {
       </CardStore>
     );
   };
-
-  // const totalAmount = selectMyCart.reduce((total, store: any) => {
-  //   const storeTotal = store.products.reduce(
-  //     (storeSum: any, product: any) =>
-  //       storeSum + parseInt(product.price) * product.quantityInCartItem,
-  //     0
-  //   );
-
-  //   return total + storeTotal;
-  // }, 0);
 
   const groupedCartItems: Record<string, any> = cartItemsStore.reduce(
     (acc: Record<string, any>, item: any) => {

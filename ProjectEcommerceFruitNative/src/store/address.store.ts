@@ -61,13 +61,8 @@ export default class AddressStore {
   removeAddressById = async (id: number) => {
     try {
       const result = await agent.Address.removeAddressById(id);
-
-      console.log("resul t : ", result);
-
       await this.getAddressByUserId();
-
       this.getAddressgotoOrderByUserId();
-
       return result;
     } catch (error) {
       return error;

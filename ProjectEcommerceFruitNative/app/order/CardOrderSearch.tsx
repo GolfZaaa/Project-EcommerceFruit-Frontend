@@ -47,14 +47,13 @@ const CardOrderSearch = ({ item }: { item: Order }) => {
     Alert.alert("", "ท่านแน่ใจหรือไม่ว่าส่งสินค้าถึงมือลูกค้าแล้ว?", [
       {
         text: "ยกเลิก",
-        onPress: () => console.log("cancel passed"),
+        // onPress: () => console.log("cancel passed"),
       },
       {
         text: "ยืนยัน",
         onPress: async () => {
-          console.log("Sending haha!", id);
           await iWantToTakeOrdertoSend([id]).then((res) => {
-            console.log("res : ", res);
+            // console.log("res : ", res);
           });
         },
       },
@@ -64,8 +63,6 @@ const CardOrderSearch = ({ item }: { item: Order }) => {
   const testHaha = item.shippings[0].driverHistories.find(
     (c) => c.userId !== user?.id
   );
-
-  console.log("testHaha : ", testHaha);
 
   return (
     <OrderCard key={item.id}>

@@ -16,6 +16,7 @@ const SuccessScreen = () => {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: "#F7F9FC",
       }}
     >
       {/* <Text>1</Text> */}

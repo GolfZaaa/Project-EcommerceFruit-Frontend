@@ -7,209 +7,156 @@ import {
   Animated,
   Dimensions,
   TouchableWithoutFeedback,
-  ImageBackground,
   ScrollView,
   Modal,
-  Image
+  Image,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useStore } from "@/src/store/store";
 import { observer } from "mobx-react-lite";
 import { ActivityIndicator, Divider } from "react-native-paper";
-import { DesLogin, LoginButton, SaveButtonText, TitleLogin } from "./setting";
-import { Title } from "../editaddress";
-import { pathImagesApp } from "@/src/constants/RoutePath";
-import { SafeAreaView } from "react-native-safe-area-context";
-import IconFontAwesome from "react-native-vector-icons/FontAwesome";
-import IconMaterialIcons from "react-native-vector-icons/MaterialIcons";
-import IconMaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import IconAntDesign from "react-native-vector-icons/AntDesign";
 import moment from "moment";
 import "moment/locale/th";
 import dayjs from "dayjs";
 import "dayjs/locale/th";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { BarChart, PieChart } from "react-native-chart-kit";
+import { Order } from "@/src/models/Order";
 
 const { width } = Dimensions.get("window");
 
-export default observer(function ShopScreen() {
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [totalQuantity, setTotalQuantity] = useState(0);
-  const [totalOrderSuccess, setTotalOrderSuccess] = useState(0);
-  const [totalOrderFailed, setTotalOrderFailed] = useState(0);
-  const [yearOptions, setYearOptions] = useState([]);
-  const [monthlyOrderData, setMonthlyOrderData] = useState([]);
-  const [selectedYear, setSelectedYear] = useState(moment().year());
-  const [loading, setLoading] = useState(true);
-
-  const { GetShopByUserId, usershop } = useStore().shopUserStore;
-  const { GetAddressByStore } = useStore().addressStore;
-  const { getProductGI, getProductByStore } = useStore().productStore;
+export default observer(function dashboardtosend() {
+  const [totalPrice, settotalPrice] = useState(0);
   const { user } = useStore().userStore;
-  const { getOrderByStore, order } = useStore().orderStore;
-  const { systemSetting } = useStore().systemSettingStore;
+  const [totalSuccessForMonth, settotalSuccessForMonth] = useState(0);
 
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const slideAnim = useRef(new Animated.Value(-width)).current;
-
-  const ShopUserId: any = usershop?.id;
+  const { order } = useStore().orderStore;
 
   const [loadingGraph, setloadingGraph] = useState(false);
-  const [loadingGetShopByUserId, setloadingetShopByUserId] = useState(false);
-  const [loadingGetAddressByStore, setloadingGetAddressByStore] =
-    useState(false);
+  useState(false);
 
-  const CheckGetShopByUserId = () => {
-    GetShopByUserId();
-    setloadingetShopByUserId(true);
+  const CheckGetOrdersByUser = () => {
+    setloadingGraph(true);
   };
-
-  const CheckGetAddressByStore = () => {
-    GetAddressByStore();
-    setloadingGetAddressByStore(true);
-  };
-
   useEffect(() => {
-    CheckGetShopByUserId();
-    CheckGetAddressByStore();
+    CheckGetOrdersByUser();
   }, []);
 
-  useEffect(() => {
-    if (!loadingGetAddressByStore && !loadingGetShopByUserId) {
-      setloadingGraph(true);
-    }
-  }, [loadingGetAddressByStore, loadingGetShopByUserId]);
+  const [totalSuccess, settotalSuccess] = useState(0);
 
-  useEffect(() => {
-    getOrderByStore(ShopUserId);
-  }, [usershop]);
+  const [totalPriceForMonth, settotalPriceForMonth] = useState(0);
 
   useEffect(() => {
     if (order) {
       const total = order
-        .filter((x) => x.status === 1 && x.confirmReceipt === 1)
+        .filter(
+          (x) =>
+            x.shippings?.[0]?.shippingStatus === 1 && x.confirmReceipt === 1
+        )
+
         .reduce((acc, currentOrder) => {
-          const orderTotal = currentOrder.orderItems.reduce(
-            (itemAcc, orderItem) =>
-              itemAcc + orderItem.quantity * orderItem.product.price,
+          const driverHistoryFees = (
+            currentOrder.shippings?.[0]?.driverHistories.filter(
+              (x) => x.userId === user?.id
+            ) || []
+          ).reduce(
+            (sum, driverHistory) => sum + (driverHistory.shippingFee || 0),
             0
           );
-          return acc + orderTotal;
+          return acc + driverHistoryFees;
         }, 0);
-      setTotalPrice(total);
+
+      settotalPrice(total);
+
+      const shippingSuccess = order.filter(
+        (x) => x.shippings?.[0]?.shippingStatus === 1 && x.confirmReceipt === 1
+      );
+      settotalSuccess(shippingSuccess.length);
+
+      const currentMonth = new Date().getMonth();
+      const currentYear = new Date().getFullYear();
+
+      const shippingSuccessForMonth = order.filter((x) => {
+        const orderDate: any = new Date(x.shippings?.[0].createdAt);
+        return (
+          orderDate.getMonth() === currentMonth &&
+          orderDate.getFullYear() === currentYear &&
+          x.shippings?.[0]?.shippingStatus === 1 &&
+          x.confirmReceipt === 1
+        );
+      });
+      settotalSuccessForMonth(shippingSuccessForMonth.length);
+
+      const totalformonth = order
+        .filter((x) => {
+          const orderDate: any = new Date(x.shippings?.[0].createdAt);
+          return (
+            orderDate.getMonth() === currentMonth &&
+            orderDate.getFullYear() === currentYear &&
+            x.shippings?.[0]?.shippingStatus === 1 &&
+            x.confirmReceipt === 1
+          );
+        })
+        .reduce((acc, currentOrder) => {
+          const driverHistoryFees = (
+            currentOrder.shippings?.[0]?.driverHistories.filter(
+              (x) => x.userId === user?.id
+            ) || []
+          ).reduce(
+            (sum, driverHistory) => sum + (driverHistory.shippingFee || 0),
+            0
+          );
+          return acc + driverHistoryFees;
+        }, 0);
+
+      settotalPriceForMonth(totalformonth);
     }
+  }, [order]);
 
-    const totalProduct = order
-      .filter((x) => x.status === 1 && x.confirmReceipt === 1)
-      .reduce((acc, currentOrder) => {
-        const orderQuantity = currentOrder.orderItems.reduce(
-          (itemAcc, orderItem) => itemAcc + orderItem.quantity,
-          0
-        );
-        return acc + orderQuantity;
-      }, 0);
-    setTotalQuantity(totalProduct);
+  const [selectedYear, setSelectedYear] = useState<number>(
+    new Date().getFullYear()
+  );
 
-    const totalOrderSuccess = order
+  const [availableYears, setAvailableYears] = useState<number[]>([]);
+
+  const calculateMonthlyTotal = (orders: Order[], year: number) => {
+    const monthlyTotals = Array(12).fill(0);
+
+    orders
       .filter((x) => x.confirmReceipt === 1)
-      .reduce((acc, currentOrder) => {
-        return currentOrder.status === 1 ? acc + 1 : acc;
-      }, 0);
-    setTotalOrderSuccess(totalOrderSuccess);
-
-    const totalOrderFailed = order
-      .filter((x) => x.confirmReceipt === 1)
-      .reduce((acc, currentOrder) => {
-        return currentOrder.status === 2 ? acc + 1 : acc;
-      }, 0);
-    setTotalOrderFailed(totalOrderFailed);
-
-    const years: any = [
-      ...new Set(order.map((o) => moment(o.createdAt).year() + 543)),
-    ].sort((a, b) => a - b);
-    setYearOptions(years.map((year: any) => ({ value: year, label: year })));
-
-    const ordersByMonth = order
-      .filter((x) => x.status === 1 && x.confirmReceipt === 1)
-      .reduce((acc: any, currentOrder) => {
-        const orderYear = moment(currentOrder.createdAt).year();
-        if (orderYear !== selectedYear) return acc;
-
-        const month = moment(currentOrder.createdAt).format("MMMM");
-        const year = dayjs(currentOrder.createdAt).year() + 543;
-        const orderTotal = currentOrder.orderItems.reduce(
-          (itemAcc, orderItem) =>
-            itemAcc + orderItem.quantity * orderItem.product.price,
-          0
-        );
-
-        if (!acc[month]) {
-          acc[month] = 0;
+      .forEach((order) => {
+        const shipping = order.shippings?.[0];
+        if (shipping?.shippingStatus === 1) {
+          const orderDate: any = new Date(shipping.createdAt);
+          const orderYear = orderDate.getFullYear();
+          const month = orderDate.getMonth();
+          if (orderYear === year) {
+            const totalForOrder = shipping.shippingFee;
+            monthlyTotals[month] += totalForOrder;
+          }
         }
+      });
 
-        acc[month] += orderTotal;
-
-        return acc;
-      }, {});
-
-    const monthlyData: any = Object.entries(ordersByMonth).map(
-      ([month, total]) => ({
-        month,
-        total,
-      })
-    );
-
-    monthlyData.sort(
-      (a: any, b: any) =>
-        moment().month(a.month).valueOf() - moment().month(b.month).valueOf()
-    );
-
-    setMonthlyOrderData(monthlyData);
-  }, [order, selectedYear]);
-
-  const toggleDrawer = () => {
-    if (isDrawerOpen) {
-      Animated.timing(slideAnim, {
-        toValue: -width,
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => setIsDrawerOpen(false));
-    } else {
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => setIsDrawerOpen(true));
-    }
+    return monthlyTotals;
   };
 
-  const handleEditStoreName = async () => {
-    await GetShopByUserId();
-    await GetAddressByStore();
-    router.push("../storeuser/editname");
+  const extractAvailableYears = (orders: Order[]) => {
+    const yearsSet = new Set<number>();
+    orders.forEach((order) => {
+      const shipping = order.shippings?.[0];
+      if (shipping?.shippingStatus === 1) {
+        const orderDate: any = new Date(shipping.createdAt);
+        const orderYear = orderDate.getFullYear();
+        yearsSet.add(orderYear);
+      }
+    });
+
+    return Array.from(yearsSet).sort((a, b) => b - a);
   };
 
-  const handleListproductgi = async () => {
-    await getProductGI(1);
-    router.push("../storeuser/listproductgi");
-  };
-
-  const handleListproduct = () => {
-    getProductByStore(user?.stores[0].id || 0);
-    router.push("../storeuser/listproduct");
-  };
-
-  const handleOrderHistoryStore = () => {
-    getOrderByStore(user?.stores[0].id || 0);
-    router.push("../storeuser/orderhistorystore");
-  };
-
-  const backgroundImage = {
-    uri: pathImagesApp.image_web + systemSetting[0].image,
-  };
+  const [monthlyTotal, setMonthlyTotal] = useState<number[]>([]);
 
   const thaiMonthShort = [
     "ม.ค.",
@@ -227,13 +174,10 @@ export default observer(function ShopScreen() {
   ];
 
   const chartData = {
-    labels: monthlyOrderData.map((data: any) => {
-      const monthIndex = moment(data.month, "MMMM").month();
-      return thaiMonthShort[monthIndex];
-    }),
+    labels: thaiMonthShort,
     datasets: [
       {
-        data: monthlyOrderData.map((data: any) => data.total),
+        data: monthlyTotal,
       },
     ],
   };
@@ -241,9 +185,10 @@ export default observer(function ShopScreen() {
   const [years, setYears] = useState([]);
 
   useEffect(() => {
-    if (order && order.length > 0) {
+    const OrderFilter = order.filter((x) => x.confirmReceipt === 1);
+    if (OrderFilter) {
       const years: any = [
-        ...new Set(order.map((o) => new Date(o.createdAt).getFullYear())),
+        ...new Set(OrderFilter.map((o) => new Date(o.createdAt).getFullYear())),
       ].sort((a, b) => a - b);
       setYears(years);
       setSelectedYear(years[0]);
@@ -289,29 +234,22 @@ export default observer(function ShopScreen() {
     setPieChartData(formattedData);
   }, [order]);
 
-  const handleShop = async () => {
-    router.push("/(tabs)/shop");
-  };
-
   const screenWidth = Dimensions.get("window").width;
 
-  return !user?.stores?.length ? (
-    <ImageBackground
-      source={backgroundImage}
-      style={styles.backgroundUnlogin}
-      resizeMode="cover"
-    >
-      <View style={styles.containerUnlogin}>
-        <TitleLogin>คุณไม่ได้ลงทะเบียนร้านค้า</TitleLogin>
-        <LoginButton onPress={() => router.push("/storeuser/editname")}>
-          <SaveButtonText>ลงทะเบียนร้านค้าเลย!</SaveButtonText>
-        </LoginButton>
-        {/* </TouchableOpacity> */}
-      </View>
-    </ImageBackground>
-  ) : (
-    <View style={styles.container}>
+  useEffect(() => {
+    if (order) {
+      const years = extractAvailableYears(order);
+      setAvailableYears(years);
+      if (years.length > 0 && !years.includes(selectedYear)) {
+        setSelectedYear(years[0]);
+      }
+      const totals = calculateMonthlyTotal(order, selectedYear);
+      setMonthlyTotal(totals);
+    }
+  }, [order, selectedYear]);
 
+  return (
+    <View style={styles.container}>
       <View
         style={{
           flexDirection: "row",
@@ -320,76 +258,21 @@ export default observer(function ShopScreen() {
           paddingHorizontal: 10,
           paddingVertical: 5,
           paddingBottom: 10,
+          paddingTop: 20,
         }}
       >
-        <TouchableOpacity onPress={toggleDrawer}>
-          <Ionicons name="menu-outline" size={30} color="#333" />
-        </TouchableOpacity>
-
-        <Text style={{ fontSize: 25, fontWeight: "bold" }}>
-          สรุปข้อมูลร้านค้า
-        </Text>
-        <View></View>
-      </View>
-
-      {isDrawerOpen && (
-        <TouchableWithoutFeedback onPress={toggleDrawer}>
-          <View style={styles.overlay} />
-        </TouchableWithoutFeedback>
-      )}
-
-      <Animated.View
-        style={[styles.drawer, { transform: [{ translateX: slideAnim }] }]}
-      >
-        <View style={{ alignItems: "center" }}>
-          <Text
-            style={[
-              styles.drawerTitle,
-              {
-                textDecorationLine: "underline",
-                textDecorationStyle: "solid",
-                textDecorationColor: "#333",
-              },
-            ]}
-          >
-            แดชบอร์ดร้านค้า
-          </Text>
+        <View>
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={30} color="black" />
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={handleShop} style={styles.menuItem}>
-          <MaterialIcons name="data-saver-off" size={30} color="#333" />
-          <Text style={styles.menuText}>สรุปข้อมูลร้านค้า</Text>
-        </TouchableOpacity>
+        <Text style={{ fontSize: 25, fontWeight: "bold" }}>
+          สรุปข้อมูลรายได้ของฉัน
+        </Text>
 
-        <TouchableOpacity onPress={handleEditStoreName} style={styles.menuItem}>
-          <Ionicons name="build-outline" size={30} color="#333" />
-          <Text style={styles.menuText}>แก้ไขร้านค้า</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={handleListproductgi} style={styles.menuItem}>
-          <Ionicons name="add-circle-outline" size={30} color="#333" />
-
-          <Text style={styles.menuText}>เพิ่มข้อมูลสินค้า (GI)</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={handleListproduct} style={styles.menuItem}>
-          <Ionicons name="pricetag-outline" size={30} color="#333" />
-
-          <Text style={styles.menuText}>เพิ่มสินค้า</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={handleOrderHistoryStore}
-          style={styles.menuItem}
-        >
-          <Ionicons name="clipboard-outline" size={30} color="#333" />
-          <Text style={styles.menuText}>รายการคำสั่งซื้อ</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
-          <Text style={styles.closeButtonText}>ปิด</Text>
-        </TouchableOpacity>
-      </Animated.View>
+        <View></View>
+      </View>
 
       <ScrollView>
         <View style={styles.cardContainer}>
@@ -403,49 +286,53 @@ export default observer(function ShopScreen() {
             >
               <View style={styles.card}>
                 <View style={styles.row}>
-                  <IconFontAwesome name="money" size={30} style={styles.icon} />
+                  <Ionicons name="cash-outline" size={30} style={styles.icon} />
                   <Text style={styles.cardText}>
                     {totalPrice.toLocaleString()}
                   </Text>
                 </View>
-                <Text style={styles.cardText}>กำไรจากการขาย</Text>
+                <Text style={styles.cardText}>รายได้สุทธิ</Text>
               </View>
 
               <View style={styles.card}>
                 <View style={styles.row}>
-                  <IconAntDesign
-                    name="shoppingcart"
-                    size={30}
-                    style={styles.icon}
-                  />
-                  <Text style={styles.cardText}>{totalQuantity}</Text>
-                </View>
-                <Text style={styles.cardText}>จำนวนยอดขาย</Text>
-              </View>
-
-              <View style={styles.card}>
-                <View style={styles.row}>
-                  <IconMaterialIcons
+                  <FontAwesome5
                     name="check-circle"
                     size={30}
                     style={styles.icon}
+                    color="black"
                   />
-                  <Text style={styles.cardText}>{totalOrderSuccess}</Text>
+                  <Text style={styles.cardText}>{totalSuccess}</Text>
                 </View>
-                <Text style={styles.cardText}>ออเดอร์ที่สำเร็จ</Text>
+                <Text style={styles.cardText}>รับหิ้วสำเร็จ</Text>
               </View>
 
               <View style={styles.card}>
                 <View style={styles.row}>
-                  <IconMaterialCommunityIcons
-                    name="cancel"
+                  <FontAwesome
+                    name="calendar-check-o"
                     size={30}
                     style={styles.icon}
+                    color="black"
                   />
-                  <Text style={styles.cardText}>{totalOrderFailed}</Text>
+                  <Text style={styles.cardText}>{totalSuccessForMonth}</Text>
                 </View>
+                <Text style={styles.cardText}>รับหิ้วสำเร็จเดือนนี้</Text>
+              </View>
 
-                <Text style={styles.cardText}>ออเดอร์ที่ยกเลิก</Text>
+              <View style={styles.card}>
+                <View style={styles.row}>
+                  <FontAwesome5
+                    name="money-bill-alt"
+                    size={30}
+                    style={styles.icon}
+                    color="black"
+                  />
+                  <Text style={styles.cardText}>
+                    {totalPriceForMonth.toLocaleString()}
+                  </Text>
+                </View>
+                <Text style={styles.cardText}>รายได้รับหิ้วเดือนนี้</Text>
               </View>
             </ScrollView>
           </View>
@@ -453,7 +340,7 @@ export default observer(function ShopScreen() {
 
         <View>
           <View style={styles.chartSection}>
-            {monthlyOrderData.length > 0 ? (
+            {order.filter((x) => x.confirmReceipt === 1).length > 0 ? (
               <View>
                 <ScrollView>
                   <View
@@ -471,7 +358,7 @@ export default observer(function ShopScreen() {
                           marginTop: 8,
                         }}
                       >
-                        ยอดขายประจำเดือน
+                        จำนวนคำสั่งซื้อแต่ละเดือน
                       </Text>
                     </View>
                     <View
@@ -527,30 +414,36 @@ export default observer(function ShopScreen() {
                           <View style={styles.modalContainer}>
                             <Text style={styles.modalTitle}>กรุณาเลือกปี</Text>
                             <ScrollView>
-                              {years.map((year) => (
-                                <TouchableOpacity
-                                  key={year}
-                                  onPress={() => {
-                                    setSelectedYear(year);
-                                    setModalVisible(false);
-                                  }}
-                                  style={[
-                                    styles.optionButton,
-                                    selectedYear === year &&
-                                      styles.selectedOption,
-                                  ]}
-                                >
-                                  <Text
+                              {availableYears && availableYears.length > 0 ? (
+                                availableYears.map((year) => (
+                                  <TouchableOpacity
+                                    key={year}
+                                    onPress={() => {
+                                      setSelectedYear(year); // ตั้งค่าปีที่เลือก
+                                      setModalVisible(false); // ปิด Modal
+                                    }}
                                     style={[
-                                      styles.optionText,
+                                      styles.optionButton,
                                       selectedYear === year &&
-                                        styles.selectedOptionText,
+                                        styles.selectedOption,
                                     ]}
                                   >
-                                    {year + 543}
-                                  </Text>
-                                </TouchableOpacity>
-                              ))}
+                                    <Text
+                                      style={[
+                                        styles.optionText,
+                                        selectedYear === year &&
+                                          styles.selectedOptionText,
+                                      ]}
+                                    >
+                                      {year + 543}
+                                    </Text>
+                                  </TouchableOpacity>
+                                ))
+                              ) : (
+                                <Text style={styles.noDataText}>
+                                  ไม่มีข้อมูลปีให้เลือก
+                                </Text>
+                              )}
                             </ScrollView>
                           </View>
                         </View>
@@ -563,13 +456,13 @@ export default observer(function ShopScreen() {
                           data={chartData}
                           width={width + 70}
                           height={220}
-                          yAxisLabel="$"
-                          yAxisSuffix=""
+                          yAxisLabel=""
+                          yAxisSuffix="฿"
                           chartConfig={{
                             backgroundColor: "#ffffff",
                             backgroundGradientFrom: "#f7f7f7",
                             backgroundGradientTo: "#ffffff",
-                            decimalPlaces: 2,
+                            decimalPlaces: 0,
                             color: (opacity = 1) =>
                               `rgba(0, 123, 255, ${opacity})`,
                             labelColor: (opacity = 1) =>
@@ -594,7 +487,7 @@ export default observer(function ShopScreen() {
                             shadowRadius: 6,
                             elevation: 5,
                           }}
-                          fromZero={true}
+                          fromZero={true} // กราฟเริ่มจาก 0
                         />
                       </ScrollView>
                     </View>
@@ -602,17 +495,9 @@ export default observer(function ShopScreen() {
                 </ScrollView>
               </View>
             ) : (
-              // <View style={{ alignItems: "center" }}>
-              //   <ActivityIndicator size="small" color="#0000ff" />
-              //   <Text
-              //     style={{ fontSize: 14, color: "#e5e5e5", fontWeight: "700" }}
-              //   >
-              //     กำลังโหลดข้อมูล
-              //   </Text>
-              // </View>
               <View style={{ alignItems: "center" }}>
                 <Image
-                  source={require("../../assets/images/noinfomation.jpg")}
+                  source={require("../assets/images/noinfomation.jpg")}
                   style={{ width: 150, height: 150 }}
                 />
                 <Text
@@ -627,7 +512,7 @@ export default observer(function ShopScreen() {
 
         <View>
           <View style={styles.chartSection}>
-            {monthlyOrderData.length > 0 ? (
+            {order.filter((x) => x.confirmReceipt === 1).length > 0 ? (
               <View>
                 <View>
                   <Text
@@ -638,7 +523,7 @@ export default observer(function ShopScreen() {
                       marginTop: 8,
                     }}
                   >
-                    สัดส่วนยอดขายประเภทสินค้า
+                    สัดส่วนจำนวนหิ้วตามหมวดหมู่สินค้า
                   </Text>
                 </View>
                 {pieChartData.length > 0 && (
@@ -658,17 +543,9 @@ export default observer(function ShopScreen() {
                 )}
               </View>
             ) : (
-              // <View style={{ alignItems: "center" }}>
-              //   <ActivityIndicator size="small" color="#0000ff" />
-              //   <Text
-              //     style={{ fontSize: 14, color: "#e5e5e5", fontWeight: "700" }}
-              //   >
-              //     กำลังโหลดข้อมูล
-              //   </Text>
-              // </View>
               <View style={{ alignItems: "center" }}>
                 <Image
-                  source={require("../../assets/images/noinfomation.jpg")}
+                  source={require("../assets/images/noinfomation1.jpg")}
                   style={{ width: 150, height: 150 }}
                 />
                 <Text
@@ -703,7 +580,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    // elevation: 5,
   },
   noDataText: {
     textAlign: "center",
