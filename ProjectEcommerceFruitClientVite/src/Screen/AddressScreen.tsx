@@ -93,7 +93,7 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
             {" "}
             {/* เปลี่ยน justify-start เป็น justify-center */}
             <div>
-              <p className="text-3xl lg:text-4xl font-semibold leading-7 lg:leading-9 text-gray-800">
+              <p className="FontPublic text-3xl lg:text-4xl font-semibold leading-7 lg:leading-9 text-gray-800">
                 เพิ่มที่อยู่ผู้รับ
               </p>
             </div>
@@ -105,48 +105,69 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
                 margin="normal"
                 name="detail"
                 required
+                InputProps={{
+                  sx: {
+                    fontSize: "1.2rem",
+                    color: "#333",
+                    fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                  },
+                }}
+                InputLabelProps={{
+                  sx: {
+                    fontSize: "1.2rem",
+                    color: "#888",
+                    fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                  },
+                }}
               />
-              <label>รหัสไปรษณีย์</label>
+              <label className="FontPublic text-xl">รหัสไปรษณีย์</label>
               <InputThaiAddress.Zipcode
                 value={createAddress["zipcode"]}
                 onChange={handleChange("zipcode")}
                 onSelect={(e: any) => handleSelect(e)}
                 style={{ height: "55px" }}
+          className="custom-district-input FontPublic"
+
               />
-              <label>แขวง/ตำบล</label>
+              <label className="FontPublic text-xl">แขวง/ตำบล</label>
               <InputThaiAddress.District
                 value={createAddress["district"]}
                 // onChange={handleChange("district")}
                 onSelect={(e: any) => handleSelect(e)}
                 style={{ height: "55px", pointerEvents: "none", opacity: 0.6 }}
+          className="custom-district-input FontPublic"
+
               />
-              <label>เขต/อำเภอ</label>
+              <label className="FontPublic text-xl">เขต/อำเภอ</label>
+
               <InputThaiAddress.Amphoe
                 value={createAddress["amphoe"]}
                 // onChange={handleChange("amphoe")}
                 onSelect={(e: any) => handleSelect(e)}
                 style={{ height: "55px", pointerEvents: "none", opacity: 0.6 }}
+          className="custom-district-input FontPublic"
+
               />
-              <label>จังหวัด</label>
+              <label className="FontPublic text-xl">จังหวัด</label>
               <InputThaiAddress.Province
                 value={createAddress["province"]}
                 // onChange={handleChange("province")}
                 onSelect={(e: any) => handleSelect(e)}
                 style={{ height: "55px", pointerEvents: "none", opacity: 0.6 }}
+          className="custom-district-input FontPublic"
+
               />
               <button
                 type="submit"
-                className="focus:outline-none  focus:ring-offset-2 mt-8 text-base font-medium focus:ring-2 focus:ring-gray-800 leading-4 hover:bg-black py-4 w-full md:w-4/12 lg:w-full text-white bg-gray-800"
+                className="FontPublic text-2xl focus:outline-none  focus:ring-offset-2 mt-8  font-medium focus:ring-2 focus:ring-gray-800 leading-4 hover:bg-black py-4 w-full md:w-4/12 lg:w-full text-white bg-gray-800"
               >
                 ดำเนินการชำระเงิน
               </button>
             </Box>
             <div className="mt-4 flex justify-center items-center w-full">
-              {" "}
-              {/* เปลี่ยน justify-start เป็น justify-center */}
               <NavLink
                 to={RoutePath.cartScreen}
-                className="text-base leading-4 underline focus:outline-none focus:text-gray-500 hover:text-gray-800 text-gray-600"
+                className="FontPublic text-xl leading-4 underline focus:outline-none focus:text-gray-500 hover:text-gray-800 text-gray-600"
               >
                 กลับไปยังหน้าตะกร้า
               </NavLink>
