@@ -10,11 +10,12 @@ import { formatDateThai, myToast } from "../helper/components";
 import { resetScroll } from "../api/agent";
 import CircularProgress from "@mui/material/CircularProgress";
 import MyContent from "../component/MyContent";
-
+import ImageStock from "../assets/images/ProductOutToStock.png"
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import { CardCvcElement } from "@stripe/react-stripe-js";
 import { CardExpiryElement } from "@stripe/react-stripe-js";
 import { CardNumberElement } from "@stripe/react-stripe-js";
+import { motion } from "framer-motion";
 
 interface CartItem {
   id: string;
@@ -129,19 +130,19 @@ export default observer(function SummaryScreen({ onChangePaging }: any) {
     setCheckCardCvcElement(event.complete);
   };
 
+  const [CheckPorduct, setCheckPorduct] = useState(false);
+
   const handleSubmit = async (value: any) => {
     if (selectedPaymentMethod === 0 && !dropZoneImage) {
       setIsImageValid(false);
       myToast("กรุณาเพิ่มรูปภาพสลิป");
       return;
     }
-
     setLoadingUser(true);
     setIsProcessingPayment(true);
     setTimeout(() => {
       setLoadingUser(false);
     }, 700);
-
     const Data = {
       id: 0,
       PaymentImage: dropZoneImage,
@@ -153,6 +154,12 @@ export default observer(function SummaryScreen({ onChangePaging }: any) {
     const test = await CreateUpdateOrderById(Data);
 
     console.log("test", test);
+
+    if (test === "Product Out of Stock") {
+      setCheckPorduct(true);
+      console.log("ddddddddddddddddddddddddddddddddddddddddd");
+      return;
+    }
 
     if (selectedPaymentMethod == 1) {
       if (!stripe || !elements) {
@@ -190,7 +197,6 @@ export default observer(function SummaryScreen({ onChangePaging }: any) {
         console.error("Error making API request:", error);
       }
     } else if (test) {
-      // navigate(RoutePath.successScreen);
       onChangePaging(3);
       resetScroll();
     } else {
@@ -220,6 +226,12 @@ export default observer(function SummaryScreen({ onChangePaging }: any) {
       },
     },
   };
+
+  const handleCloseCheckStock = () => {
+    setCheckPorduct(false);
+    navigate(RoutePath.cartScreen);
+    resetScroll();
+  }
 
   return (
     <div className="FontPublic bg-gray-50 -mt-8">
@@ -654,6 +666,30 @@ export default observer(function SummaryScreen({ onChangePaging }: any) {
             </div>
           </div>
         </div>
+
+        {CheckPorduct && (
+          <div>
+            <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full text-center"
+              >
+                <img src={ImageStock} alt="Notification Image" className="w-32 h-32 mx-auto mb-4" />
+                  <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                    <p className="text-2xl font-semibold mb-3">แจ้งเตือน</p>
+                    <p className="text-2xl font-semibold mb-3 ml-3">สินค้าหมดสต็อก</p>
+                  </div>
+
+                <p className="text-gray-600 text-base mb-6">ขณะนี้สินค้าบางรายการดังกล่าวหมดสต็อก กรุณาตรวจสอบรายการในตะกร้าสินค้าอีกครั้ง</p>
+                <button onClick={handleCloseCheckStock} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition">
+                  ตกลง
+                </button>
+              </motion.div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

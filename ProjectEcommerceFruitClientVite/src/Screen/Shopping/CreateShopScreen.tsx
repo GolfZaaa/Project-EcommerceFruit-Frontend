@@ -17,6 +17,8 @@ import { myToast } from "../../helper/components";
 import { Address } from "../../models/Address";
 import { CreateInput } from "thai-address-autocomplete-react";
 import MyContent from "../../component/MyContent";
+import DashboardAdminShowStore from "../Private/DashboardAdmin/DashboardAdminShowStore";
+import { IoArrowBack } from "react-icons/io5";
 
 const InputThaiAddress = CreateInput();
 type Props = Parameters<typeof CreateInput>[0];
@@ -130,9 +132,28 @@ export default observer(function CreateShopScreen({
     }
   };
 
+    const [showDashboard, setShowDashboard] = useState(false);
+  
+    const handleGoBack = () => {
+      setShowDashboard(true);
+    };
+
   return (
     <div className="">
-      <Container maxWidth="md">
+
+      {showDashboard ? (
+         <DashboardAdminShowStore />
+      ):(
+        <div>
+<div className=" z-20 cursor-pointer h-16 absolute top-32">
+        <button
+          onClick={handleGoBack}
+          className="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-700 focus:outline-none focus:shadow-outline"
+        >
+          <IoArrowBack />
+        </button>
+      </div>
+          <Container maxWidth="md">
         <Box
           display="flex"
           flexDirection="column"
@@ -324,7 +345,11 @@ export default observer(function CreateShopScreen({
             </Link>
           </CardActions> */}
         </Box>
-      </Container>
+          </Container>
+        </div>
+      )}
+
+      
     </div>
   );
 });

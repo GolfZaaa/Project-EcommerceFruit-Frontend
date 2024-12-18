@@ -73,6 +73,24 @@ export default observer(function DashboardAdminShowStore() {
       { header: "วันที่สร้าง", key: "createdAt", width: 20 },
       { header: "สถานะ", key: "status", width: 20 },
     ];
+
+    
+    worksheet.getRow(1).font = { bold: true, size: 14, color: { argb: "FFFFFF" }};
+    worksheet.getRow(1).alignment = { horizontal: "center", vertical: "middle" };
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "0070C0" }, 
+      };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+    });
+    
     filterUser.forEach((store: any, index: number) => {
       const row = worksheet.addRow({
         index: index + 1,
@@ -211,13 +229,13 @@ export default observer(function DashboardAdminShowStore() {
                         aria-expanded="true"
                         aria-haspopup="true"
                       >
-                        <BiDownload/>
+                        <BiDownload size={20}/>
                       </button>
                     </div>
 
                     {dropdown && (
                       <div
-                        className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                         role="menu"
                         aria-orientation="vertical"
                         aria-labelledby="menu-button"
@@ -398,8 +416,8 @@ export default observer(function DashboardAdminShowStore() {
                                   >
                                     <svg
                                       className="cursor-pointer"
-                                      width="20"
-                                      height="20"
+                                      width="30"
+                                      height="25"
                                       viewBox="0 0 20 20"
                                       fill="none"
                                       xmlns="http://www.w3.org/2000/svg"

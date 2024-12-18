@@ -87,6 +87,24 @@ export default observer(function DashboardAdminShowOrder() {
       { header: "วันที่สร้าง", key: "createdAt", width: 20 },
       { header: "สถานะ", key: "status", width: 20 },
     ];
+
+    worksheet.getRow(1).font = { bold: true, size: 14, color: { argb: "FFFFFF" }};
+    worksheet.getRow(1).alignment = { horizontal: "center", vertical: "middle" };
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "0070C0" }, 
+      };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+    });
+
+
     filterUser.forEach((orders: any, index: number) => {
       const row = worksheet.addRow({
         index: index + 1,
@@ -224,55 +242,54 @@ export default observer(function DashboardAdminShowOrder() {
                 />
 
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                  <div className="relative inline-block text-left">
-                    <div id="downloadButton">
-                      <button
-                        onClick={handleDropdown}
-                        type="button"
-                        className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                        id="menu-button"
-                        aria-expanded="true"
-                        aria-haspopup="true"
-                      >
-                        <BiDownload />
-                      </button>
-                    </div>
-
-                    {dropdown && (
-                      <div
-                        className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                        role="menu"
-                        aria-orientation="vertical"
-                        aria-labelledby="menu-button"
-                      >
-                        <div
-                          className="py-1 cursor-pointer "
-                          role="none"
-                          onClick={generatePDF}
-                        >
-                          <button
-                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-red-600 hover:bg-gray-200 hover:font-bold w-full"
-                            role="menuitem"
-                            id="menu-item-0"
-                          >
-                            <VscFilePdf className="mr-2" size={20} /> PDF
-                          </button>
-                          <div className="">
-                            <button
-                              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:bg-gray-200 hover:font-bold w-full"
-                              onClick={generateExcel}
-                              role="menuitem"
-                              id="menu-item-1"
-                            >
-                              <RiFileExcel2Line className="mr-2" size={20} />
-                              EXCEL
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                                    <div className="relative inline-block text-left">
+                                      <div id="downloadButton">
+                                        <button
+                                          onClick={handleDropdown}
+                                          type="button"
+                                          className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                                          id="menu-button"
+                                          aria-expanded="true"
+                                          aria-haspopup="true"
+                                        >
+                                          <BiDownload size={20}/>
+                                        </button>
+                                      </div>
+                
+                                      {dropdown && (
+                                        <div
+                                          className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                          role="menu"
+                                          aria-orientation="vertical"
+                                          aria-labelledby="menu-button"
+                                        >
+                                          <div className="py-1 cursor-pointer " role="none">
+                                            <div>
+                                              <button
+                                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-red-600 hover:bg-gray-200 hover:font-bold w-full"
+                                                role="menuitem"
+                                                id="menu-item-0"
+                                                onClick={generatePDF}
+                                              >
+                                                <VscFilePdf className="mr-2" size={20} /> PDF
+                                              </button>
+                                            </div>
+                                            <div className="">
+                                              <button
+                                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:bg-gray-200 hover:font-bold w-full"
+                                                onClick={generateExcel}
+                                                role="menuitem"
+                                                id="menu-item-1"
+                                              >
+                                                <RiFileExcel2Line className="mr-2" size={20} />
+                                                EXCEL
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
               </div>
               <div className="overflow-hidden ">
                 <table className="min-w-full border border-gray-300 rounded-tl-lg rounded-tr-lg overflow-hidden">

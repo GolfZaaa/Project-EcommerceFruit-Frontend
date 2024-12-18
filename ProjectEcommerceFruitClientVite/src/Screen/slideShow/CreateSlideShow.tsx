@@ -118,6 +118,13 @@ export default observer(function CreateSlideShow({
               กรุณาใส่รูปภาพ
             </div>
           )}
+
+          <div style={{flexDirection:'row',display:'flex',justifyContent:'center'}}>
+                      <p className="font-semibold FontPublic mt-2" style={{ color: "#ff0000" }}>
+                                    <MyContent name="ใช้ได้เฉพาะไฟล์ jpeg และ png ขนาดไม่เกิน 5MB เท่านั้น" fontSize="small" />
+                      </p>
+                      </div>
+                      
         </CardContent>
         <CardActions sx={{ justifyContent: "center", mt: 2 }}>
           <Button

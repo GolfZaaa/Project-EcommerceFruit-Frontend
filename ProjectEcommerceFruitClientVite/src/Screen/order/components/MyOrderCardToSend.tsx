@@ -254,66 +254,127 @@ const MyOrderCardToSend = ({ order, index }: props) => {
   const generateExcel = () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Order Data");
-
     worksheet.columns = [
-      { header: "รหัสคำสั่งซื้อ", key: "orderId", width: 30 },
+      { header: "รหัสคำสั่งซื้อ", key: "orderId", width: 20 },
       { header: "รายการ", key: "item", width: 30 },
       { header: "ข้อมูล", key: "value", width: 30 },
-      { header: "หน่วย", key: "unit", width: 30 },
+      { header: "หน่วย", key: "unit", width: 15 },
     ];
-
+    worksheet.getRow(1).font = {
+      bold: true,
+      size: 14,
+      color: { argb: "FFFFFF" },
+    };
+    worksheet.getRow(1).alignment = {
+      horizontal: "center",
+      vertical: "middle",
+    };
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "0070C0" },
+      };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+    });
+    
+    const addStyledRow = (rowData: any, alternate: boolean = false, isLargeText: boolean = false) => {
+      const row = worksheet.addRow(rowData);
+      row.eachCell((cell, colIndex) => {
+        cell.alignment = {
+          vertical: "middle",
+          horizontal: colIndex === 2 ? "center" : "left",
+        };
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
+        if (alternate) {
+          cell.fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: "D9EAF7" }
+          };
+        }
+        if (isLargeText) {
+          cell.font = {
+            size: 14,
+            bold: true,
+          };
+        }
+      });
+    };
     let totalPrice = 0;
     let totalQuantity = 0;
     let totalOrderSuccess = 0;
     let totalOrderCancel = 0;
     let totalShippingFee = 0;
-
-    worksheet.addRow({
+    addStyledRow({
       item: "จำนวนรายการ",
       value: order.length,
       unit: "รายการ",
-    });
-
+    }, false, true);
+    let isAlternate = false;
+    let previousOrderId:any = null; 
+    let rowSpanStart = 2; 
     order.forEach((item) => {
       const orderTotalPrice = item.orderItems.reduce((sum, item: OrderItem) => {
         return sum + item.product.price * item.quantity;
       }, 0);
-
       const orderTotalQuantity = item.orderItems.reduce(
         (sum, item: OrderItem) => {
           return sum + item.quantity;
         },
         0
       );
-
       totalPrice += orderTotalPrice;
       totalQuantity += orderTotalQuantity;
-
       const myDriverFee =
         item.shippings[0]?.driverHistories.find((x) => x.userId === user?.id)
           ?.shippingFee || 0;
       totalShippingFee += myDriverFee;
-
       if (item.shippings[0]?.shippingStatus === 1) {
         totalOrderSuccess += 1;
       } else if (item.shippings[0]?.shippingStatus === 2) {
         totalOrderCancel += 1;
       }
-
-      worksheet.addRow({
-        orderId: item.orderId,
-        item: "ค่าจัดส่งจากผู้จัดส่ง",
-        value: myDriverFee,
-        unit: "บาท",
-      });
-
-      worksheet.addRow({
-        item: "จำนวนสินค้าที่หิ้วทั้งหมด",
-        value: totalQuantity,
-        unit: "ชิ้น",
-      });
+      if (previousOrderId === item.orderId) {
+        addStyledRow({
+          orderId: "", 
+          item: "ค่าจัดส่งจากผู้จัดส่ง",
+          value: myDriverFee,
+          unit: "บาท",
+        }, isAlternate);
+      } else {
+        addStyledRow({
+          orderId: item.orderId,
+          item: "ค่าจัดส่งจากผู้จัดส่ง",
+          value: myDriverFee,
+          unit: "บาท",
+        }, isAlternate);
+        previousOrderId = item.orderId;
+        rowSpanStart = worksheet.rowCount;
+      }
+      addStyledRow(
+        {
+          item: "จำนวนสินค้าที่หิ้วทั้งหมด",
+          value: totalQuantity,
+          unit: "ชิ้น",
+        },
+        isAlternate
+      );
+      if (previousOrderId === item.orderId) {
+        worksheet.mergeCells(rowSpanStart, 1, worksheet.rowCount, 1);
+      }
+      isAlternate = !isAlternate;
     });
-
     workbook.xlsx.writeBuffer().then((data) => {
       const blob = new Blob([data], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -326,6 +387,9 @@ const MyOrderCardToSend = ({ order, index }: props) => {
       URL.revokeObjectURL(url);
     });
   };
+  
+  
+  
 
   const [openDropdown, setOpenDropdown] = useState(false);
   const toggleDropdown = () => {

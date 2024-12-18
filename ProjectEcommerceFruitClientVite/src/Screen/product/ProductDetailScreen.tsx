@@ -35,13 +35,8 @@ dayjs.locale("th");
 
 export default observer(function ProductDetailScreen() {
   const navigate = useNavigate();
-  const {
-    getProductById,
-    productDetail,
-    DeleteProduct,
-    addStockProduct,
-    isUsedProduct,
-  } = useStore().productStore;
+  const { getProductById, productDetail, addStockProduct, isUsedProduct } =
+    useStore().productStore;
   const { user } = useStore().userStore;
   const {
     GetStoreProductUser,
@@ -100,6 +95,10 @@ export default observer(function ProductDetailScreen() {
       const ProductId = productDetail?.id;
       const Quantity = quantity;
       const result = await AddToCart({ ProductId, Quantity });
+      console.log("Add to cart", result);
+      if (result === "Product is Out of stock") {
+        window.location.reload();
+      }
       if (result) {
         await GetCartItemByUser();
         setShowToast(true);
@@ -648,26 +647,32 @@ export default observer(function ProductDetailScreen() {
             {user && user?.id == productDetail?.productGI?.store?.userId ? (
               <div></div>
             ) : (
-              <Box display="flex" alignItems="center" gap={2}>
-                <Button
-                  variant="outlined"
-                  onClick={decreaseQuantity}
-                  size="medium"
-                >
-                  <MyContent name={"-"} fontSize="small" />
-                </Button>
-                <Typography variant="body1">
-                  {" "}
-                  <MyContent name={quantity} fontSize="small" />
-                </Typography>
-                <Button
-                  variant="outlined"
-                  onClick={() => increaseQuantity(productDetail?.quantity)}
-                  size="medium"
-                >
-                  <MyContent name={"+"} fontSize="small" />
-                </Button>
-              </Box>
+              <div>
+                {productDetail?.quantity == 0 ? (
+                  <div></div>
+                ) : (
+                  <Box display="flex" alignItems="center" gap={2}>
+                    <Button
+                      variant="outlined"
+                      onClick={decreaseQuantity}
+                      size="medium"
+                    >
+                      <MyContent name={"-"} fontSize="small" />
+                    </Button>
+                    <Typography variant="body1">
+                      {" "}
+                      <MyContent name={quantity} fontSize="small" />
+                    </Typography>
+                    <Button
+                      variant="outlined"
+                      onClick={() => increaseQuantity(productDetail?.quantity)}
+                      size="medium"
+                    >
+                      <MyContent name={"+"} fontSize="small" />
+                    </Button>
+                  </Box>
+                )}
+              </div>
             )}
           </div>
           <div>
@@ -757,22 +762,16 @@ export default observer(function ProductDetailScreen() {
             </button>
           ) : user ? (
             <button
-              className="
-						focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800
-						text-base
-						flex
-						items-center
-						justify-center
-						leading-none
-						text-white
-						bg-gray-800
-						w-full
-						py-4
-						hover:bg-gray-700
-                        mt-4 
-					"
+              className={`focus:outline-none focus:ring-2 focus:ring-offset-2 
+              text-base flex items-center justify-center leading-none 
+              text-white w-full py-4 mt-4 
+              ${
+                productDetail?.quantity == 0
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-gray-800 hover:bg-gray-700 focus:ring-gray-800"
+              }`}
               onClick={handleAddToCart}
-              disabled={loadingCart}
+              disabled={loadingCart || productDetail?.quantity == 0}
             >
               {loadingCart ? (
                 <div>
@@ -780,25 +779,47 @@ export default observer(function ProductDetailScreen() {
                 </div>
               ) : user ? (
                 <div className="flex items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="mr-2 h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
+                  {productDetail?.quantity == 0 ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="mr-2 h-6 w-6 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 8v4m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="mr-2 h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                      />
+                    </svg>
+                  )}
+
                   <p className="font-semibold FontPublic">
-                    <MyContent
-                      name={"เพิ่มสินค้าลงในตะกร้า"}
-                      fontSize="small"
-                    />
+                    {productDetail?.quantity == 0 ? (
+                      <MyContent name={"สินค้าหมดชั่วคราว"} fontSize="small" />
+                    ) : (
+                      <MyContent
+                        name={"เพิ่มสินค้าลงในตะกร้า"}
+                        fontSize="small"
+                      />
+                    )}
                   </p>
                 </div>
               ) : (

@@ -2,7 +2,6 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useRef, useState } from "react";
 import { useStore } from "../../../store/store";
 import ExcelJS from "exceljs";
-import { AiFillFileExcel } from "react-icons/ai";
 import { MySwitch } from "../../../helper/components/MySwitch";
 import { User } from "../../../models/User";
 import EditAccount from "../../my/EditAccount";
@@ -13,7 +12,8 @@ import { RiFileExcel2Line } from "react-icons/ri";
 import MyContent from "../../../component/MyContent";
 
 export default observer(function DashboardAdminShowUser() {
-  const { getUserAll, userAll, DeleteUser } = useStore().userStore;
+  const { getUserAll, userAll, DeleteUser, user} = useStore().userStore;
+
   const [searchUser, setSearchUser] = useState<any>("");
   const [filterUser, setfilterUser] = useState<any>([]);
 
@@ -44,6 +44,8 @@ export default observer(function DashboardAdminShowUser() {
     setDropdown(!dropdown);
   };
 
+
+
   const generateExcel = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Users");
@@ -54,6 +56,26 @@ export default observer(function DashboardAdminShowUser() {
       { header: "เบอร์โทรศัพท์", key: "phoneNumber", width: 20 },
       { header: "สถานะการใช้งาน", key: "hidden", width: 20 },
     ];
+
+    worksheet.getRow(1).font = { bold: true, size: 14, color: { argb: "FFFFFF" }};
+    worksheet.getRow(1).alignment = { horizontal: "center", vertical: "middle" };
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "0070C0" }, 
+      };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
+    });
+
+   
+
+
     filterUser.forEach((user: any, index: number) => {
       const hidden = user.hidden ? "ถูกระงับการใช้งาน" : "ใช้งานได้ปกติ";
       const row = worksheet.addRow({
@@ -122,6 +144,8 @@ export default observer(function DashboardAdminShowUser() {
     setEditMode(!editMode);
   };
 
+  console.log("user",user)
+
   return (
     <>
       {editMode ? (
@@ -178,13 +202,13 @@ export default observer(function DashboardAdminShowUser() {
                           aria-expanded="true"
                           aria-haspopup="true"
                         >
-                          <BiDownload />
+                          <BiDownload size={20}/>
                         </button>
                       </div>
 
                       {dropdown && (
                         <div
-                          className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                          className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                           role="menu"
                           aria-orientation="vertical"
                           aria-labelledby="menu-button"
@@ -271,6 +295,7 @@ export default observer(function DashboardAdminShowUser() {
 
                     <tbody className="divide-y divide-gray-300">
                       {filterUser.map((userItem: any, index: any) => {
+                        console.log("userItem",userItem)
                         return (
                           <tr
                             key={index}
@@ -301,13 +326,20 @@ export default observer(function DashboardAdminShowUser() {
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               <div>
-                                <MySwitch
+                                {user?.id == userItem.id ? (
+                                  <MyContent
+                                  name={"ไม่สามารถปิดการใช้งานได้"}
+                                  fontSize="small"
+                                />
+                                ):(
+                                  <MySwitch
                                   handleChange={() =>
                                     handleDeleteUser(userItem.id)
                                   }
                                   checked={!userItem.hidden}
                                 />
-                                {/* {userItem.hidden ? 'ถูกระงับการใช้งาน' : 'ใช้งานได้ปกติ'} */}
+                                )}
+                               
                               </div>
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
@@ -325,8 +357,8 @@ export default observer(function DashboardAdminShowUser() {
                                 >
                                   <svg
                                     className="cursor-pointer"
-                                    width="20"
-                                    height="20"
+                                    width="30"
+                                    height="25"
                                     viewBox="0 0 20 20"
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"

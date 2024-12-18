@@ -30,7 +30,6 @@ export const formats = [
 
 export function formatDateThai(date: Date, addYear = +543, format: number) {
   const createdAt = new Date(date);
-
   const months = [
     "มกราคม",
     "กุมภาพันธ์",
@@ -45,14 +44,11 @@ export function formatDateThai(date: Date, addYear = +543, format: number) {
     "พฤศจิกายน",
     "ธันวาคม",
   ];
-
   const day = createdAt.getDate();
   const month = months[createdAt.getMonth()];
-  const year = createdAt.getFullYear() + addYear; // นับปี 543 ในปฏิทินไทย
-
+  const year = createdAt.getFullYear() + addYear; 
   const hours = createdAt.getHours();
   const minutes = createdAt.getMinutes();
-
   return format === 1
     ? `${day} ${month} ${year}`
     : format === 2

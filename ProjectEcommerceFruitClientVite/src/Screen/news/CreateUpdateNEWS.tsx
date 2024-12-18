@@ -92,7 +92,7 @@ const CreateUpdateNEWS = ({ onChangeCU, dataEdit }: props) => {
             <Fab variant="extended" color="primary" onClick={onChangeCU}>
               <ArrowBackIosIcon sx={{ mr: 1 }} />
               <p className="FontPublic">
-                            <MyContent name="กลับ" fontSize="small" />
+                <MyContent name="กลับ" fontSize="small" />
               </p>
             </Fab>
           </Grid>
@@ -101,9 +101,9 @@ const CreateUpdateNEWS = ({ onChangeCU, dataEdit }: props) => {
 
         <CardContent>
           <Typography variant="h4" component="h1" gutterBottom align="center">
-          <p className="font-semibold">
-                            <MyContent name="ข่าวประชาสัมพันธ์" fontSize="larger" />
-                          </p>
+            <p className="font-semibold ">
+              <MyContent name="ข่าวประชาสัมพันธ์" fontSize="larger" />
+            </p>
           </Typography>
 
           <div
@@ -133,6 +133,13 @@ const CreateUpdateNEWS = ({ onChangeCU, dataEdit }: props) => {
               กรุณาใส่รูปภาพ
             </div>
           )}
+
+            <div style={{flexDirection:'row',display:'flex',justifyContent:'center'}}>
+            <p className="font-semibold FontPublic mt-2" style={{ color: "#ff0000" }}>
+                          <MyContent name="ใช้ได้เฉพาะไฟล์ jpeg และ png ขนาดไม่เกิน 5MB เท่านั้น" fontSize="small" />
+            </p>
+            </div>
+
           <TextField
             defaultValue={dataEdit?.title}
             fullWidth
