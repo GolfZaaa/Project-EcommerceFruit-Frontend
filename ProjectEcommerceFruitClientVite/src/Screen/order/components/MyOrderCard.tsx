@@ -271,7 +271,7 @@ const MyOrderCard = ({ order, index }: props) => {
             const totalPrice: any = calculateTotalPrice();
             const formattedTotalPrice = formatNumberWithCommas(totalPrice);
 
-            console.log("image : ", item?.shippings[0]?.sendedOrderImage);
+            // console.log("image : ", item?.shippings[0]?.sendedOrderImage);
 
             return (
               <div className="FontPublic mt-5 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-white md:p-6">
@@ -418,14 +418,15 @@ const MyOrderCard = ({ order, index }: props) => {
                           onClick={() =>
                             handleConfirm({ orderId: item.id, status: 1 })
                           }
+                          disabled={!item?.shippings[0]?.sendedOrderImage}
                         >
                           ได้รับสินค้าแล้ว
                         </Button>
                       </CardActions>
                     </Grid>
 
-                    {!!item?.shippings[0]?.sendedOrderImage && (
-                      <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={3}>
+                      {!!item?.shippings[0]?.sendedOrderImage ? (
                         <CardActions
                           style={{
                             justifyContent: "center",
@@ -438,8 +439,22 @@ const MyOrderCard = ({ order, index }: props) => {
                             }
                           />
                         </CardActions>
-                      </Grid>
-                    )}
+                      ) : (
+                        <div
+                          style={{
+                            textAlign: "center",
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontSize: 25,
+                            }}
+                          >
+                            กำลังจัดส่ง
+                          </div>
+                        </div>
+                      )}
+                    </Grid>
 
                     <Grid item xs={12} sm={6} md={4}>
                       <CardActions>
@@ -451,6 +466,7 @@ const MyOrderCard = ({ order, index }: props) => {
                           color="error"
                           size="large"
                           fullWidth
+                          disabled={!item?.shippings[0]?.sendedOrderImage}
                         >
                           ไม่ได้รับสินค้า
                         </Button>

@@ -73,24 +73,6 @@ export default observer(function DashboardAdminShowStore() {
       { header: "วันที่สร้าง", key: "createdAt", width: 20 },
       { header: "สถานะ", key: "status", width: 20 },
     ];
-
-    
-    worksheet.getRow(1).font = { bold: true, size: 14, color: { argb: "FFFFFF" }};
-    worksheet.getRow(1).alignment = { horizontal: "center", vertical: "middle" };
-    worksheet.getRow(1).eachCell((cell) => {
-      cell.fill = {
-        type: "pattern",
-        pattern: "solid",
-        fgColor: { argb: "0070C0" }, 
-      };
-      cell.border = {
-        top: { style: "thin" },
-        left: { style: "thin" },
-        bottom: { style: "thin" },
-        right: { style: "thin" },
-      };
-    });
-    
     filterUser.forEach((store: any, index: number) => {
       const row = worksheet.addRow({
         index: index + 1,
@@ -121,7 +103,6 @@ export default observer(function DashboardAdminShowStore() {
     document.body.removeChild(a);
   };
 
-
   const componentRef = useRef(null);
 
   function generatePDF() {
@@ -151,8 +132,6 @@ export default observer(function DashboardAdminShowStore() {
       });
   }
 
-  
-
   const [dropdown, setDropdown] = useState(false);
 
   const handleDropdown = () => {
@@ -171,13 +150,20 @@ export default observer(function DashboardAdminShowStore() {
   return (
     <>
       {editMode ? (
-        <CreateShopScreen onChangeCU={onChangeCU} dataEdit={dataEdit} />
+        <CreateShopScreen
+          onChangeCU={onChangeCU}
+          dataEdit={dataEdit}
+          shopTo={true}
+        />
       ) : (
         <div>
           <div className="p-4">
             <div className="flex flex-col">
               <div className=" overflow-x-auto">
-                <div className="min-w-full inline-block align-middle" ref={componentRef}>
+                <div
+                  className="min-w-full inline-block align-middle"
+                  ref={componentRef}
+                >
                   <div className="relative  text-gray-500 focus-within:text-gray-900 mb-4">
                     <div className="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none ">
                       <svg
@@ -218,59 +204,60 @@ export default observer(function DashboardAdminShowStore() {
                       onChange={(e) => setSearchUser(e.target.value)}
                     />
 
-<div className="absolute inset-y-0 right-0 flex items-center pr-3" id="downloadButton">
-                  <div className="relative inline-block text-left" >
-                    <div>
-                      <button
-                        onClick={handleDropdown}
-                        type="button"
-                        className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                        id="menu-button"
-                        aria-expanded="true"
-                        aria-haspopup="true"
-                      >
-                        <BiDownload size={20}/>
-                      </button>
-                    </div>
-
-                    {dropdown && (
-                      <div
-                        className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                        role="menu"
-                        aria-orientation="vertical"
-                        aria-labelledby="menu-button"
-                      >
-                        <div className="py-1 cursor-pointer " role="none" >
-                          <div onClick={generatePDF}  >
+                    <div
+                      className="absolute inset-y-0 right-0 flex items-center pr-3"
+                      id="downloadButton"
+                    >
+                      <div className="relative inline-block text-left">
+                        <div>
                           <button
-                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-red-600 hover:bg-gray-200 hover:font-bold w-full"
-                            role="menuitem"
-                            id="menu-item-0"
+                            onClick={handleDropdown}
+                            type="button"
+                            className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                            id="menu-button"
+                            aria-expanded="true"
+                            aria-haspopup="true"
                           >
-                           <VscFilePdf className="mr-2"size={20} /> PDF
+                            <BiDownload />
                           </button>
-                          </div>
-                          <div className="">
-                            <button
-                              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:bg-gray-200 hover:font-bold w-full"
-                              onClick={generateExcel}
-                              role="menuitem"
-                              id="menu-item-1"
-                            >
-                              <RiFileExcel2Line
-                                className="mr-2"
-                                size={20}
-                              />
-                              EXCEL
-                            </button>
-                          </div>
                         </div>
+
+                        {dropdown && (
+                          <div
+                            className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                            role="menu"
+                            aria-orientation="vertical"
+                            aria-labelledby="menu-button"
+                          >
+                            <div className="py-1 cursor-pointer " role="none">
+                              <div onClick={generatePDF}>
+                                <button
+                                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-red-600 hover:bg-gray-200 hover:font-bold w-full"
+                                  role="menuitem"
+                                  id="menu-item-0"
+                                >
+                                  <VscFilePdf className="mr-2" size={20} /> PDF
+                                </button>
+                              </div>
+                              <div className="">
+                                <button
+                                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:bg-gray-200 hover:font-bold w-full"
+                                  onClick={generateExcel}
+                                  role="menuitem"
+                                  id="menu-item-1"
+                                >
+                                  <RiFileExcel2Line
+                                    className="mr-2"
+                                    size={20}
+                                  />
+                                  EXCEL
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </div>
-
-
+                    </div>
                   </div>
                   <div className="FontPublic overflow-hidden ">
                     <table className="min-w-full border border-gray-300 rounded-tl-lg rounded-tr-lg overflow-hidden">
@@ -281,40 +268,43 @@ export default observer(function DashboardAdminShowStore() {
                             className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tl-lg"
                           >
                             <p>
-                            <MyContent name="ลำดับ" fontSize="small" />
-                          </p>
+                              <MyContent name="ลำดับ" fontSize="small" />
+                            </p>
                           </th>
                           <th
                             scope="col"
                             className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                           >
                             <p>
-                            <MyContent name="ชื่อร้าน" fontSize="small" />
-                          </p>
+                              <MyContent name="ชื่อร้าน" fontSize="small" />
+                            </p>
                           </th>
                           <th
                             scope="col"
                             className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                           >
-                             <p>
-                            <MyContent name="ชื่อผู้สร้าง" fontSize="small" />
-                          </p>
+                            <p>
+                              <MyContent name="ชื่อผู้สร้าง" fontSize="small" />
+                            </p>
                           </th>
                           <th
                             scope="col"
                             className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                           >
-                             <p>
-                            <MyContent name="วันที่สร้าง" fontSize="small" />
-                          </p>
+                            <p>
+                              <MyContent name="วันที่สร้าง" fontSize="small" />
+                            </p>
                           </th>
                           <th
                             scope="col"
                             className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                           >
-                             <p>
-                            <MyContent name="สถานะการใช้งาน" fontSize="small" />
-                          </p>
+                            <p>
+                              <MyContent
+                                name="สถานะการใช้งาน"
+                                fontSize="small"
+                              />
+                            </p>
                           </th>
                           <th
                             scope="col"
@@ -324,9 +314,9 @@ export default observer(function DashboardAdminShowStore() {
                             scope="col"
                             className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tr-lg"
                           >
-                             <p>
-                            <MyContent name="ตั้งค่า" fontSize="small" />
-                          </p>
+                            <p>
+                              <MyContent name="ตั้งค่า" fontSize="small" />
+                            </p>
                           </th>
                         </tr>
                       </thead>
@@ -340,27 +330,40 @@ export default observer(function DashboardAdminShowStore() {
                             >
                               <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
                                 <p className="font-normal">
-                                <MyContent name={index + 1} fontSize="small" />
-                              </p>
+                                  <MyContent
+                                    name={index + 1}
+                                    fontSize="small"
+                                  />
+                                </p>
                               </td>
                               <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                                 <p className="font-normal">
-                                <MyContent name={userItem.name} fontSize="small" />
-                              </p>
+                                  <MyContent
+                                    name={userItem.name}
+                                    fontSize="small"
+                                  />
+                                </p>
                               </td>
                               <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                              <p className="font-normal">
-                                <MyContent name={userItem.user.fullName} fontSize="small" />
-                              </p>
+                                <p className="font-normal">
+                                  <MyContent
+                                    name={userItem.user.fullName}
+                                    fontSize="small"
+                                  />
+                                </p>
                               </td>
                               <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                              <p className="font-normal">
-                                <MyContent name={formatDateToThaiShort(userItem.createdAt)} fontSize="small" />
-                              </p>
+                                <p className="font-normal">
+                                  <MyContent
+                                    name={formatDateToThaiShort(
+                                      userItem.createdAt
+                                    )}
+                                    fontSize="small"
+                                  />
+                                </p>
                               </td>
                               <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                                <div
-                                >
+                                <div>
                                   <MySwitch
                                     handleChange={() =>
                                       handleDeleteStore(userItem.id)
@@ -416,8 +419,8 @@ export default observer(function DashboardAdminShowStore() {
                                   >
                                     <svg
                                       className="cursor-pointer"
-                                      width="30"
-                                      height="25"
+                                      width="20"
+                                      height="20"
                                       viewBox="0 0 20 20"
                                       fill="none"
                                       xmlns="http://www.w3.org/2000/svg"

@@ -50,8 +50,14 @@ export default observer(function FirstScreenNew() {
 
   const { getUserAll, userAll, user } = useStore().userStore;
 
-  const { slideShow, getSlideShow, getSystemSetting, getNEWSs, news } =
-    useStore().systemSettingStore;
+  const {
+    slideShow,
+    getSlideShow,
+    getSystemSetting,
+    systemSetting,
+    getNEWSs,
+    news,
+  } = useStore().systemSettingStore;
 
   const [randomProduct, setRandomProduct] = useState<Product>();
   const [topProducts, setTopProducts] = useState<Product[]>([]);
@@ -180,7 +186,7 @@ export default observer(function FirstScreenNew() {
   const handleProduct = () => {
     navigate(RoutePath.homeScreen);
     resetScroll();
-  }
+  };
 
   return (
     <div>
@@ -242,7 +248,8 @@ export default observer(function FirstScreenNew() {
             >
               <div className="w-full lg:w-auto lg:-mr-32">
                 <img
-                  src="https://www.tot.co.th/images/default-source/default-album/digital-tips/63/farmer-online/mobile.jpg?sfvrsn=28ade211_4"
+                  // src="https://www.tot.co.th/images/default-source/default-album/digital-tips/63/farmer-online/mobile.jpg?sfvrsn=28ade211_4"
+                  src={pathImages.image_web + systemSetting[0]?.image}
                   alt="image with decent chairs"
                   className="w-full relative z-30 lg:pl-20 px-6 py-14"
                 />
@@ -277,7 +284,8 @@ export default observer(function FirstScreenNew() {
                 transition={{ duration: 0.7, ease: "easeInOut" }}
                 whileHover={{ scale: 1.05, color: "#2f855a", rotate: -2 }}
               >
-                <MyContent name={"เกษตรกรออนไลน์"} fontSize="large" />
+                {/* <MyContent name={"เกษตรกรออนไลน์"} fontSize="large" /> */}
+                <MyContent name={systemSetting[0]?.webName} fontSize="large" />
               </motion.p>
               <motion.p
                 data-aos="fade-up"
@@ -288,15 +296,16 @@ export default observer(function FirstScreenNew() {
                 whileHover={{ opacity: 0.8, color: "#2f855a" }}
                 style={{ fontSize: fontSizenormal }}
               >
-                การเป็นเกษตรกรออนไลน์ในยุคปัจจุบันเริ่มต้นได้อย่างง่ายดาย
+                {/* การเป็นเกษตรกรออนไลน์ในยุคปัจจุบันเริ่มต้นได้อย่างง่ายดาย
                 ด้วยการใช้อินเทอร์เน็ตและอุปกรณ์ที่เราคุ้นเคยในชีวิตประจำวัน
                 ขั้นตอนแรกคือการค้นคว้าข้อมูลที่เกี่ยวข้อง
                 และสำรวจช่องทางการซื้อขายผลผลิตที่ต้องการเข้าถึง
                 การซื้อขายสินค้าและผลผลิตทางการเกษตรนั้นมีหลากหลายรูปแบบ
-                ซึ่งไม่แตกต่างจากการซื้อขายสินค้าอื่น ๆ ทั่วไปมากนัก
+                ซึ่งไม่แตกต่างจากการซื้อขายสินค้าอื่น ๆ ทั่วไปมากนัก */}
+                {systemSetting[0]?.description}
               </motion.p>
               <motion.button
-              onClick={handleProduct}
+                onClick={handleProduct}
                 data-aos="zoom-in"
                 className="mt-8 text-base flex items-center justify-between py-4 px-8 bg-gray-800 text-white font-medium leading-none rounded-md FontPublic"
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -310,7 +319,7 @@ export default observer(function FirstScreenNew() {
               >
                 เยี่ยมชมสินค้าเกษตร
                 <div className="ml-2 mt-1">
-                <GrFormNextLink size={20}/>
+                  <GrFormNextLink size={20} />
                 </div>
               </motion.button>
             </div>
@@ -694,7 +703,8 @@ export default observer(function FirstScreenNew() {
               data-aos="fade-zoom-in"
               className="FontPublic font-normal text-base leading-6 text-gray-600 my-4"
             >
-              จัดส่งง่ายและสะดวกสบาย! เราให้บริการจัดส่งที่รวดเร็วและปลอดภัย พร้อมรับสินค้าถึงบ้านในระยะเวลา 3-5 วันทำการ
+              จัดส่งง่ายและสะดวกสบาย! เราให้บริการจัดส่งที่รวดเร็วและปลอดภัย
+              พร้อมรับสินค้าถึงบ้านในระยะเวลา 3-5 วันทำการ
             </p>
             <a
               data-aos="fade-zoom-in"

@@ -12,6 +12,8 @@ export interface Order {
   shippingType: string;
   tag: string;
   confirmReceipt: number;
+  paymentIntentId: string;
+  clientSecret: string;
 
   addressId: number;
   address: Address;
@@ -26,7 +28,7 @@ export interface Shipping {
   shippingStatus: number;
   createdAt: Date;
   sendedOrderImage: string | null;
-  
+
   orderId: number;
   order: Order;
 

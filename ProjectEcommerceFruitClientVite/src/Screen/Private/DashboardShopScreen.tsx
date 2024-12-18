@@ -152,7 +152,7 @@ export default observer(function DashboardShopScreen() {
         if (orderYear !== selectedYear) return acc;
 
         const month = moment(currentOrder.createdAt).format("MMMM");
-        const year = dayjs(currentOrder.createdAt).year() + 543; 
+        const year = dayjs(currentOrder.createdAt).year() + 543;
         const orderTotal = currentOrder.orderItems.reduce(
           (itemAcc, orderItem) =>
             itemAcc + orderItem.quantity * orderItem.product.price,
@@ -183,7 +183,6 @@ export default observer(function DashboardShopScreen() {
     setMonthlyOrderData(monthlyData);
   }, [order, selectedYear]);
 
-
   useEffect(() => {
     if (order) {
       const years: any = [
@@ -192,37 +191,36 @@ export default observer(function DashboardShopScreen() {
       setYearOptions(years.map((year: any) => ({ value: year, label: year })));
 
       const ordersByYearAndMonth = order
-      .filter((x) => x.confirmReceipt === 1)
-      .reduce((acc: any, currentOrder) => {
-        const month = dayjs(currentOrder.createdAt).format("MMMM");
-        const year = dayjs(currentOrder.createdAt).year() + 543; 
-        const key = `${month}-${year}`;
-    
-        const orderTotal = currentOrder.orderItems.reduce(
-          (itemAcc, orderItem) =>
-            itemAcc + orderItem.quantity * orderItem.product.price,
-          0
-        );
-    
-        if (!acc[key]) {
-          acc[key] = { month, year, total: 0 };
-        }
-    
-        acc[key].total += orderTotal;
-    
-        return acc;
-      }, {});
-    
-    const monthlyData:any = Object.values(ordersByYearAndMonth);
-    monthlyData.sort(
-      (a: any, b: any) =>
-        dayjs(`${a.month} ${a.year - 543}`).valueOf() -
-        dayjs(`${b.month} ${b.year - 543}`).valueOf()
-    );
-    setMonthlyAndYearOrderData(monthlyData);
+        .filter((x) => x.confirmReceipt === 1)
+        .reduce((acc: any, currentOrder) => {
+          const month = dayjs(currentOrder.createdAt).format("MMMM");
+          const year = dayjs(currentOrder.createdAt).year() + 543;
+          const key = `${month}-${year}`;
+
+          const orderTotal = currentOrder.orderItems.reduce(
+            (itemAcc, orderItem) =>
+              itemAcc + orderItem.quantity * orderItem.product.price,
+            0
+          );
+
+          if (!acc[key]) {
+            acc[key] = { month, year, total: 0 };
+          }
+
+          acc[key].total += orderTotal;
+
+          return acc;
+        }, {});
+
+      const monthlyData: any = Object.values(ordersByYearAndMonth);
+      monthlyData.sort(
+        (a: any, b: any) =>
+          dayjs(`${a.month} ${a.year - 543}`).valueOf() -
+          dayjs(`${b.month} ${b.year - 543}`).valueOf()
+      );
+      setMonthlyAndYearOrderData(monthlyData);
     }
   }, [order, selectedYear]);
-
 
   const handleYearChange = (selectedOption: any) => {
     setSelectedYear(selectedOption.value - 543);
@@ -372,13 +370,20 @@ export default observer(function DashboardShopScreen() {
       { header: "หน่วย", key: "unit", width: 30 },
     ];
 
-    worksheet.getRow(1).font = { bold: true, size: 14, color: { argb: "FFFFFF" }};
-    worksheet.getRow(1).alignment = { horizontal: "center", vertical: "middle" };
+    worksheet.getRow(1).font = {
+      bold: true,
+      size: 14,
+      color: { argb: "FFFFFF" },
+    };
+    worksheet.getRow(1).alignment = {
+      horizontal: "center",
+      vertical: "middle",
+    };
     worksheet.getRow(1).eachCell((cell) => {
       cell.fill = {
         type: "pattern",
         pattern: "solid",
-        fgColor: { argb: "0070C0" }, 
+        fgColor: { argb: "0070C0" },
       };
       cell.border = {
         top: { style: "thin" },
@@ -391,7 +396,10 @@ export default observer(function DashboardShopScreen() {
     const addStyledRow = (rowData: any) => {
       const row = worksheet.addRow(rowData);
       row.eachCell((cell, colIndex) => {
-        cell.alignment = { vertical: "middle", horizontal: colIndex === 2 ? "center" : "left" };
+        cell.alignment = {
+          vertical: "middle",
+          horizontal: colIndex === 2 ? "center" : "left",
+        };
         cell.border = {
           top: { style: "thin" },
           left: { style: "thin" },
@@ -438,8 +446,8 @@ export default observer(function DashboardShopScreen() {
     // });
 
     worksheet.addRow({ item: "กำไรสุทธิต่อเดือน", value: "" });
-    monthlyAndYearOrderData.forEach((monthData:any) => {
-      worksheet.addRow({ item: `ปี ${monthData.year}`, value: "" }); 
+    monthlyAndYearOrderData.forEach((monthData: any) => {
+      worksheet.addRow({ item: `ปี ${monthData.year}`, value: "" });
       addStyledRow({
         item: `${monthData.month}`,
         value: monthData.total.toLocaleString(),
@@ -472,7 +480,7 @@ export default observer(function DashboardShopScreen() {
   const renderScreens = () => {
     switch (screenComponent) {
       case "CreateShop":
-        return <CreateShopScreen />;
+        return <CreateShopScreen shopTo={true} />;
       case "ProductGIList":
         return <ProductGIList />;
       case "ProductList":
@@ -794,7 +802,7 @@ export default observer(function DashboardShopScreen() {
         position="fixed"
         sx={{
           backgroundColor: "#3f51b5",
-          zIndex: (theme) => theme.zIndex.drawer, 
+          zIndex: (theme) => theme.zIndex.drawer,
           height: 81,
           justifyContent: "center",
         }}
@@ -825,7 +833,7 @@ export default observer(function DashboardShopScreen() {
               style={{ textDecoration: "none", color: "#fff" }}
             >
               <p className="FontPublic font-semibold">
-              <MyContent name="กลับหน้าหลัก" fontSize="normal" />
+                <MyContent name="กลับหน้าหลัก" fontSize="normal" />
               </p>
             </NavLink>
           </div>
@@ -835,10 +843,10 @@ export default observer(function DashboardShopScreen() {
             }}
           >
             <p className="FontPublic font-semibold">
-            <MyContent
-              name={usershop && usershop.user.fullName}
-              fontSize="normal"
-            />
+              <MyContent
+                name={usershop && usershop.user.fullName}
+                fontSize="normal"
+              />
             </p>
           </div>
         </Toolbar>
@@ -865,8 +873,8 @@ export default observer(function DashboardShopScreen() {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
-              zIndex: (theme) => theme.zIndex.modal + 1, 
-              position: "absolute", 
+              zIndex: (theme) => theme.zIndex.modal + 1,
+              position: "absolute",
             },
           }}
         >
@@ -895,7 +903,7 @@ export default observer(function DashboardShopScreen() {
           flexGrow: 1,
           p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
-          marginTop:-20
+          marginTop: -20,
         }}
       >
         <Toolbar />

@@ -25,7 +25,11 @@ import MyContent from "../../component/MyContent";
 
 const InputThaiAddress = CreateInput();
 
-const AddressList = ({ confirmChangeAddress }: any) => {
+const AddressList = ({
+  confirmChangeAddress,
+  onSelectAddress,
+  createShop,
+}: any) => {
   const {
     myAddress,
     isUsedAddress,
@@ -122,9 +126,23 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           marginBottom: 15,
         }}
       >
-        <Grid item xs={8}></Grid>
+        <Grid
+          item
+          xs={createShop ? 10 : 8}
+          sm={createShop ? 10 : 8}
+          md={createShop ? 10 : 8}
+        ></Grid>
 
-        <Grid item xs={2}>
+        <Grid
+          item
+          xs={2}
+          sm={2}
+          md={2}
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
           {confirmChangeAddress !== undefined && (
             <Fab
               variant="extended"
@@ -139,45 +157,47 @@ const AddressList = ({ confirmChangeAddress }: any) => {
           )}
         </Grid>
 
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          md={2}
-          style={{ display: "flex", justifyContent: "flex-start" }}
-        >
-          <Fab
-            variant="extended"
-            color="primary"
-            onClick={() => {
-              setDataEdit(null);
-              onChangeCU();
-              setAddress({
-                district: "",
-                amphoe: "",
-                province: "",
-                zipcode: "",
-                detail: "",
-              });
-            }}
-            sx={{
-              minWidth: "95%",
-              maxWidth: "250px",
-              boxShadow: 3,
-              "&:hover": {
-                backgroundColor: "primary.dark",
-              },
-              transition: "all 0.3s ease-in-out",
-              ml: 1,
-              zIndex: 1,
-            }}
+        {!createShop && (
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={2}
+            style={{ display: "flex", justifyContent: "flex" }}
           >
-            <AddIcon sx={{ mr: 1 }} />
-            <p className="FontPublic">
-              <MyContent name="เพิ่ม" fontSize="littlenormal" />
-            </p>
-          </Fab>
-        </Grid>
+            <Fab
+              variant="extended"
+              color="primary"
+              onClick={() => {
+                setDataEdit(null);
+                onChangeCU();
+                setAddress({
+                  district: "",
+                  amphoe: "",
+                  province: "",
+                  zipcode: "",
+                  detail: "",
+                });
+              }}
+              sx={{
+                minWidth: "95%",
+                maxWidth: "250px",
+                boxShadow: 3,
+                "&:hover": {
+                  backgroundColor: "primary.dark",
+                },
+                transition: "all 0.3s ease-in-out",
+                ml: 1,
+                zIndex: 1,
+              }}
+            >
+              <AddIcon sx={{ mr: 1 }} />
+              <p className="FontPublic">
+                <MyContent name="เพิ่ม" fontSize="littlenormal" />
+              </p>
+            </Fab>
+          </Grid>
+        )}
       </Grid>
 
       {myAddress?.length ? (
@@ -214,7 +234,7 @@ const AddressList = ({ confirmChangeAddress }: any) => {
 
                 {/* สวิตช์ที่อยู่ร้านค้า */}
                 <Grid item xs={12} sm={6} md={2} className="flex-center">
-                  {!!user?.stores.length === true && (
+                  {(!!user?.stores.length === true || createShop) && (
                     <div className="text-center">
                       <MyContent
                         name="ตั้งเป็นที่อยู่ร้านค้า"
@@ -239,12 +259,14 @@ const AddressList = ({ confirmChangeAddress }: any) => {
                     <Switch
                       checked={item.isUsed}
                       onClick={() => {
-                        handleAddressUpdate(item.id, false);
-                        getAddressgotoOrderByUserId();
-                        if (confirmChangeAddress !== undefined)
+                        handleAddressUpdate(item.id, true);
+                        if (confirmChangeAddress !== undefined) {
+                          onSelectAddress(item);
                           confirmChangeAddress();
+                        }
                       }}
                       color="primary"
+                      disabled={createShop}
                     />
                   </div>
                 </Grid>
@@ -259,39 +281,41 @@ const AddressList = ({ confirmChangeAddress }: any) => {
                   justifyContent="center"
                   alignItems="center"
                 >
-                  <Fab
-                    variant="extended"
-                    color="primary"
-                    onClick={() => {
-                      setAddress({
-                        district: item?.subDistrict,
-                        amphoe: item?.district,
-                        province: item?.province,
-                        zipcode: item?.postCode,
-                        detail: item?.detail,
-                      });
-                      setDataEdit(item);
-                      onChangeCU();
-                    }}
-                    sx={{
-                      minWidth: { xs: "80%", sm: "60%", md: "80%" },
-                      maxWidth: "200px",
-                      boxShadow: 3,
-                      "&:hover": {
-                        backgroundColor: "primary.dark",
-                      },
-                      transition: "all 0.3s ease-in-out",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      zIndex: 1,
-                    }}
-                  >
-                    <EditIcon sx={{ mr: 1 }} />
-                    <p className="FontPublic">
-                      <MyContent name="แก้ไข" fontSize="littlenormal" />
-                    </p>
-                  </Fab>
+                  {!createShop && (
+                    <Fab
+                      variant="extended"
+                      color="primary"
+                      onClick={() => {
+                        setAddress({
+                          district: item?.subDistrict,
+                          amphoe: item?.district,
+                          province: item?.province,
+                          zipcode: item?.postCode,
+                          detail: item?.detail,
+                        });
+                        setDataEdit(item);
+                        onChangeCU();
+                      }}
+                      sx={{
+                        minWidth: { xs: "80%", sm: "60%", md: "80%" },
+                        maxWidth: "200px",
+                        boxShadow: 3,
+                        "&:hover": {
+                          backgroundColor: "primary.dark",
+                        },
+                        transition: "all 0.3s ease-in-out",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        zIndex: 1,
+                      }}
+                    >
+                      <EditIcon sx={{ mr: 1 }} />
+                      <p className="FontPublic">
+                        <MyContent name="แก้ไข" fontSize="littlenormal" />
+                      </p>
+                    </Fab>
+                  )}
                 </Grid>
               </Grid>
             </Card>

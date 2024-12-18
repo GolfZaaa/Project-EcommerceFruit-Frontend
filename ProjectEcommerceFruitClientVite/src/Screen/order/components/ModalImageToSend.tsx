@@ -26,7 +26,14 @@ export default function ModalImageToSend({ image }: { image: string | null }) {
   return (
     <div>
       <div>
-        <Fab variant="extended" color="primary" onClick={handleOpen}>
+        <Fab
+          variant="extended"
+          color="primary"
+          onClick={handleOpen}
+          style={{
+            zIndex: 1,
+          }}
+        >
           <PhotoSizeSelectActualIcon sx={{ mr: 1 }} />
           <MyContent name="ดูหลักฐานการจัดส่งสินค้า" fontSize="smaller" />
         </Fab>

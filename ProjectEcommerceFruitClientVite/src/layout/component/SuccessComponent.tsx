@@ -59,11 +59,12 @@ export default observer(function SuccessComponent() {
 
         <div className="mx-auto max-w-2xl px-4">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-black mb-4 text-center">
-            <MyContent name="ขอบคุณสำหรับการสั่งซื้อครับ!" fontSize="large" />
+            <MyContent name="สั่งซื้อสำเร็จแล้ว!" fontSize="large" />
           </h2>
           <p className="text-gray-500 dark:text-gray-400 text-center mb-8">
             <MyContent
-              name="คำสั่งซื้อของคุณจะถูกดำเนินการภายใน 24 ชั่วโมงในวันทำการ"
+              // name="คำสั่งซื้อของคุณจะถูกดำเนินการภายใน 24 ชั่วโมงในวันทำการ"
+              name="คำสั่งซื้อกำลังดำเนินการ และผู้ขายกำลังเตรียมการจัดส่งสินค้า"
               fontSize="normal"
             />
           </p>

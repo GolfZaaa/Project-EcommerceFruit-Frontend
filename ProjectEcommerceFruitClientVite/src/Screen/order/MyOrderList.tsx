@@ -164,15 +164,17 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
         </CustomTabPanel>
         <CustomTabPanel value={value} index={3}>
           <MyOrderCard
-            order={order.filter((item) =>
-              item?.shippings[0]?.shippingStatus !== undefined
-                ? //ที่ต้องได้รับ
-                  item?.confirmReceipt === 0
-                : item?.tag !== "จัดส่งผ่านผู้รับหิ้ว" &&
-                  item?.tag !== null &&
-                  item?.confirmReceipt !== 1 &&
-                  item?.confirmReceipt !== 2 &&
-                  item?.status !== 2
+            order={order.filter(
+              (item) =>
+                // item?.shippings[0]?.shippingStatus !== undefined //ที่ต้องได้รับ
+                //   ? item?.confirmReceipt === 0
+                // :
+                // item?.tag !== "จัดส่งผ่านผู้รับหิ้ว" &&
+                item?.shippings[0].driverHistories.length > 0 &&
+                item?.tag !== null &&
+                item?.confirmReceipt !== 1 &&
+                item?.confirmReceipt !== 2 &&
+                item?.status !== 2
             )}
             index={3}
           />

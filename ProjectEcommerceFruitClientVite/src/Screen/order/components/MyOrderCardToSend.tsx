@@ -416,7 +416,12 @@ const MyOrderCardToSend = ({ order, index }: props) => {
       </div>
 
       {openDropdown && (
-        <div className="absolute right-4 mt-2 bg-white border rounded shadow-md w-28">
+        <div
+          className="absolute right-4 mt-2 bg-white border rounded shadow-md w-28"
+          style={{
+            zIndex: 2,
+          }}
+        >
           <ul>
             <li
               className="p-2 hover:bg-gray-200 cursor-pointer flex items-center"
