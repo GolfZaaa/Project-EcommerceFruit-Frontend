@@ -20,6 +20,8 @@ import { Address } from "../../models/Address";
 import { CreateInput } from "thai-address-autocomplete-react";
 import MyContent from "../../component/MyContent";
 import AddressList from "../address/AddressList";
+import { IoArrowBack } from "react-icons/io5";
+import DashboardAdminShowStore from "../Private/DashboardAdmin/DashboardAdminShowStore";
 
 const InputThaiAddress = CreateInput();
 type Props = Parameters<typeof CreateInput>[0];
@@ -190,7 +192,7 @@ export default observer(function CreateShopScreen({
       });
     }
   };
-
+  
   return (
     <div>
       <Modal
@@ -208,220 +210,234 @@ export default observer(function CreateShopScreen({
         </Box>
       </Modal>
 
-      <Container maxWidth="md">
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          mt={10}
-          style={{
-            backgroundColor: "white",
-          }}
-        >
-          <CardContent>
-            <Typography variant="h4" component="h1" gutterBottom align="center">
-              {dataId && dataId?.id ? (
-                <p className="FontPublic font-bold">
-                  <MyContent name="ข้อมูลร้านค้า" fontSize="large" />
-                </p>
-              ) : (
-                <p className="FontPublic font-bold">
-                  <MyContent name="สร้างร้านค้า" fontSize="large" />
-                </p>
-              )}
-            </Typography>
-            <Box mt={2} component="form" onSubmit={handleSubmit}>
-              <TextField
-                defaultValue={dataId?.name}
-                fullWidth
-                label="ชื่อร้านค้า"
-                variant="outlined"
-                margin="normal"
-                name="name"
-                autoFocus
-                required
-                InputProps={{
-                  sx: {
-                    fontSize: "1.3rem",
-                    color: "#333",
-                    fontFamily: '"Noto Sans Thai Looped", sans-serif',
-                  },
-                }}
-                InputLabelProps={{
-                  sx: {
-                    fontSize: "1.1rem",
-                    color: "#888",
-                    fontFamily: '"Noto Sans Thai Looped", sans-serif',
-                  },
-                }}
-              />
-              <TextField
-                defaultValue={dataId?.description}
-                fullWidth
-                label="รายละเอียด หรือ คำอธิบายร้านค้า"
-                variant="outlined"
-                margin="normal"
-                name="description"
-                required
-                InputProps={{
-                  sx: {
-                    fontSize: "1.3rem",
-                    color: "#333",
-                    fontFamily: '"Noto Sans Thai Looped", sans-serif',
-                  },
-                }}
-                InputLabelProps={{
-                  sx: {
-                    fontSize: "1.1rem",
-                    color: "#888",
-                    fontFamily: '"Noto Sans Thai Looped", sans-serif',
-                  },
-                }}
-              />
-
-              {!dataEdit && !shopTo && (
-                <Fab
-                  variant="extended"
-                  color="primary"
-                  onClick={handleOpen}
-                  sx={{
-                    width: "100%",
-                    height: 56,
-                    marginTop: 0.7,
-                    borderRadius: 1,
-                    boxShadow: 3,
-                    "&:hover": {
-                      backgroundColor: "primary.dark",
-                    },
-                    transition: "all 0.3s ease-in-out",
-                    zIndex: 1,
-                  }}
-                >
-                  <p className="FontPublic">
-                    <MyContent
-                      name="เลือกที่อยู่ร้านจากที่อยู่ของคุณ"
-                      fontSize="littlenormal"
-                    />
-                  </p>
-                </Fab>
-              )}
-
-              <TextField
-                defaultValue={address?.detail}
-                value={address["detail"]}
-                onChange={(e) => {
-                  setAddress((oldAddr: Address) => ({
-                    ...oldAddr,
-                    ["detail"]: e.target.value,
-                  }));
-                }}
-                fullWidth
-                label="บ้านเลขที่, หมู่, ซอย, ถนน"
-                variant="outlined"
-                margin="normal"
-                name="detail"
-                // required
-                InputProps={{
-                  sx: {
-                    fontSize: "1.3rem",
-                    color: "#333",
-                    fontFamily: '"Noto Sans Thai Looped", sans-serif',
-                  },
-                }}
-                InputLabelProps={{
-                  sx: {
-                    fontSize: "1.1rem",
-                    color: "#888",
-                    fontFamily: '"Noto Sans Thai Looped", sans-serif',
-                  },
-                }}
-              />
-
-              <label>
-                <p className="FontPublic">
-                  <MyContent name={`รหัสไปรษณีย์`} fontSize="small" />
-                </p>
-              </label>
-              <InputThaiAddress.Zipcode
-                value={address["zipcode"]}
-                onChange={handleChange("zipcode")}
-                onSelect={(e: any) => handleSelect(e)}
-                style={{
-                  height: "55px",
-                }}
-                className="custom-district-input FontPublic"
-              />
-
-              <label>
-                <p className="FontPublic">
-                  <MyContent name={`แขวง/ตำบล`} fontSize="small" />
-                </p>
-              </label>
-              <InputThaiAddress.District
-                value={address["district"]}
-                // onChange={handleChange("district")}
-                onSelect={(e: any) => handleSelect(e)}
-                style={{
-                  height: "55px",
-                  pointerEvents: "none",
-                  opacity: 0.6,
-                }}
-                className="custom-district-input FontPublic"
-              />
-
-              <label>
-                <p className="FontPublic">
-                  <MyContent name={`เขต/อำเภอ`} fontSize="small" />
-                </p>
-              </label>
-              <InputThaiAddress.Amphoe
-                value={address["amphoe"]}
-                // onChange={handleChange("amphoe")}
-                onSelect={(e: any) => handleSelect(e)}
-                style={{
-                  height: "55px",
-                  pointerEvents: "none",
-                  opacity: 0.6,
-                }}
-                className="custom-district-input FontPublic"
-              />
-
-              <label>
-                <p className="FontPublic">
-                  <MyContent name={`จังหวัด`} fontSize="small" />
-                </p>
-              </label>
-              <InputThaiAddress.Province
-                value={address["province"]}
-                // onChange={handleChange("province")}
-                onSelect={(e: any) => handleSelect(e)}
-                style={{
-                  height: "55px",
-                  pointerEvents: "none",
-                  opacity: 0.6,
-                }}
-                className="custom-district-input FontPublic"
-              />
-
-              <Button
-                style={{
-                  marginTop: 20,
-                }}
-                type="submit"
-                variant="contained"
-                color="primary"
-                size="large"
-                fullWidth
+      <div>
+        <div className=" z-20 cursor-pointer h-16 absolute top-32">
+          <button
+            onClick={onChangeCU}
+            className="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-700 focus:outline-none focus:shadow-outline"
+          >
+            <IoArrowBack />
+          </button>
+        </div>
+        <Container maxWidth="md">
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            mt={10}
+            style={{
+              backgroundColor: "white",
+            }}
+          >
+            <CardContent>
+              <Typography
+                variant="h4"
+                component="h1"
+                gutterBottom
+                align="center"
               >
-                <p className="FontPublic font-semibold">
-                  <MyContent name="บันทึก" fontSize="small" />
-                </p>
-              </Button>
-            </Box>
-          </CardContent>
+                {dataId && dataId?.id ? (
+                  <p className="FontPublic font-bold">
+                    <MyContent name="ข้อมูลร้านค้า" fontSize="large" />
+                  </p>
+                ) : (
+                  <p className="FontPublic font-bold">
+                    <MyContent name="สร้างร้านค้า" fontSize="large" />
+                  </p>
+                )}
+              </Typography>
+              <Box mt={2} component="form" onSubmit={handleSubmit}>
+                <TextField
+                  defaultValue={dataId?.name}
+                  fullWidth
+                  label="ชื่อร้านค้า"
+                  variant="outlined"
+                  margin="normal"
+                  name="name"
+                  autoFocus
+                  required
+                  InputProps={{
+                    sx: {
+                      fontSize: "1.3rem",
+                      color: "#333",
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                    },
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      fontSize: "1.1rem",
+                      color: "#888",
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                    },
+                  }}
+                />
+                <TextField
+                  defaultValue={dataId?.description}
+                  fullWidth
+                  label="รายละเอียด หรือ คำอธิบายร้านค้า"
+                  variant="outlined"
+                  margin="normal"
+                  name="description"
+                  required
+                  InputProps={{
+                    sx: {
+                      fontSize: "1.3rem",
+                      color: "#333",
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                    },
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      fontSize: "1.1rem",
+                      color: "#888",
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                    },
+                  }}
+                />
 
-          {/* <CardActions sx={{ justifyContent: 'center', mt: 2 }}>
+                {!dataEdit && !shopTo && (
+                  <Fab
+                    variant="extended"
+                    color="primary"
+                    onClick={handleOpen}
+                    sx={{
+                      width: "100%",
+                      height: 56,
+                      marginTop: 0.7,
+                      borderRadius: 1,
+                      boxShadow: 3,
+                      "&:hover": {
+                        backgroundColor: "primary.dark",
+                      },
+                      transition: "all 0.3s ease-in-out",
+                      zIndex: 1,
+                    }}
+                  >
+                    <p className="FontPublic">
+                      <MyContent
+                        name="เลือกที่อยู่ร้านจากที่อยู่ของคุณ"
+                        fontSize="littlenormal"
+                      />
+                    </p>
+                  </Fab>
+                )}
+
+                <TextField
+                  defaultValue={address?.detail}
+                  value={address["detail"]}
+                  onChange={(e) => {
+                    setAddress((oldAddr: Address) => ({
+                      ...oldAddr,
+                      ["detail"]: e.target.value,
+                    }));
+                  }}
+                  fullWidth
+                  label="บ้านเลขที่, หมู่, ซอย, ถนน"
+                  variant="outlined"
+                  margin="normal"
+                  name="detail"
+                  // required
+                  InputProps={{
+                    sx: {
+                      fontSize: "1.3rem",
+                      color: "#333",
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                    },
+                  }}
+                  InputLabelProps={{
+                    sx: {
+                      fontSize: "1.1rem",
+                      color: "#888",
+                      fontFamily: '"Noto Sans Thai Looped", sans-serif',
+                    },
+                  }}
+                />
+
+                <label>
+                  <p className="FontPublic">
+                    <MyContent name={`รหัสไปรษณีย์`} fontSize="small" />
+                  </p>
+                </label>
+                <InputThaiAddress.Zipcode
+                  value={address["zipcode"]}
+                  onChange={handleChange("zipcode")}
+                  onSelect={(e: any) => handleSelect(e)}
+                  style={{
+                    height: "55px",
+                  }}
+                  className="custom-district-input FontPublic"
+                />
+
+                <label>
+                  <p className="FontPublic">
+                    <MyContent name={`แขวง/ตำบล`} fontSize="small" />
+                  </p>
+                </label>
+                <InputThaiAddress.District
+                  value={address["district"]}
+                  // onChange={handleChange("district")}
+                  onSelect={(e: any) => handleSelect(e)}
+                  style={{
+                    height: "55px",
+                    pointerEvents: "none",
+                    opacity: 0.6,
+                  }}
+                  className="custom-district-input FontPublic"
+                />
+
+                <label>
+                  <p className="FontPublic">
+                    <MyContent name={`เขต/อำเภอ`} fontSize="small" />
+                  </p>
+                </label>
+                <InputThaiAddress.Amphoe
+                  value={address["amphoe"]}
+                  // onChange={handleChange("amphoe")}
+                  onSelect={(e: any) => handleSelect(e)}
+                  style={{
+                    height: "55px",
+                    pointerEvents: "none",
+                    opacity: 0.6,
+                  }}
+                  className="custom-district-input FontPublic"
+                />
+
+                <label>
+                  <p className="FontPublic">
+                    <MyContent name={`จังหวัด`} fontSize="small" />
+                  </p>
+                </label>
+                <InputThaiAddress.Province
+                  value={address["province"]}
+                  // onChange={handleChange("province")}
+                  onSelect={(e: any) => handleSelect(e)}
+                  style={{
+                    height: "55px",
+                    pointerEvents: "none",
+                    opacity: 0.6,
+                  }}
+                  className="custom-district-input FontPublic"
+                />
+
+                <Button
+                  style={{
+                    marginTop: 20,
+                  }}
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  fullWidth
+                >
+                  <p className="FontPublic font-semibold">
+                    <MyContent name="บันทึก" fontSize="small" />
+                  </p>
+                </Button>
+              </Box>
+            </CardContent>
+
+            {/* <CardActions sx={{ justifyContent: 'center', mt: 2 }}>
             <Link to={"/SuccessShopScreen"}>
             <Button 
               variant="contained" 
@@ -433,8 +449,9 @@ export default observer(function CreateShopScreen({
             </Button>
             </Link>
           </CardActions> */}
-        </Box>
-      </Container>
+          </Box>
+        </Container>
+      </div>
     </div>
   );
 });

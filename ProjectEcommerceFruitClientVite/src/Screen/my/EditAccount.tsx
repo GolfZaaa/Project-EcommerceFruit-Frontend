@@ -42,23 +42,12 @@ const EditAccount = ({ onChangeCU, userEdit }: props) => {
 
   const data = userEdit ? userEdit : user;
 
-  const [showDashboard, setShowDashboard] = useState(false);
-
-  const handleGoBack = () => {
-    setShowDashboard(true);
-  };
-
   return (
     <div>
-     
-
-      {showDashboard ? (
-        <DashboardAdminShowUser />
-      ) : (
         <div>
           <div className=" z-20 cursor-pointer h-16 absolute top-32">
         <button
-          onClick={handleGoBack}
+          onClick={onChangeCU}
           className="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-700 focus:outline-none focus:shadow-outline"
         >
           <IoArrowBack />
@@ -129,7 +118,6 @@ const EditAccount = ({ onChangeCU, userEdit }: props) => {
           </Box>
         </div>
         </div>
-      )}
     </div>
   );
 };
