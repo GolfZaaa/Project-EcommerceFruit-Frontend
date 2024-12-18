@@ -64,14 +64,24 @@ const AddressList = ({
 
   const onChangeCU = () => setForm(!form);
 
-  const handleAddressUpdate = async (
+
+
+const handleAddressUpdate = async (
     addressId: number,
-    storeormine: boolean
+    storeormine: boolean,
+    item: any
   ) => {
     await isUsedAddress({ addressId, storeormine });
     getAddressByUserId();
     getAddressgotoOrderByUserId();
+
+    if (confirmChangeAddress !== undefined) {
+      onSelectAddress(item);
+      confirmChangeAddress();
+    }
   };
+
+
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -242,7 +252,7 @@ const AddressList = ({
                       />
                       <Switch
                         checked={item.isUsed_Store}
-                        onClick={() => handleAddressUpdate(item.id, true)}
+                        onClick={() => handleAddressUpdate(item.id, true,item)}
                         color="primary"
                       />
                     </div>
@@ -259,11 +269,8 @@ const AddressList = ({
                     <Switch
                       checked={item.isUsed}
                       onClick={() => {
-                        handleAddressUpdate(item.id, true);
-                        if (confirmChangeAddress !== undefined) {
-                          onSelectAddress(item);
-                          confirmChangeAddress();
-                        }
+                        handleAddressUpdate(item.id, true,item);
+                       
                       }}
                       color="primary"
                       disabled={createShop}
