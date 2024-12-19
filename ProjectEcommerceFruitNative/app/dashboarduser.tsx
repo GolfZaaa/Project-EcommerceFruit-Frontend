@@ -299,6 +299,10 @@ export default observer(function dashboarduser() {
 
   const screenWidth = Dimensions.get("window").width;
 
+  const CloseModel = () =>{
+    setIsDrawerOpen(false);
+  }
+
   return (
     <View style={styles.container}>
       <View
@@ -379,6 +383,7 @@ export default observer(function dashboarduser() {
         <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
           <Text style={styles.closeButtonText}>ปิด</Text>
         </TouchableOpacity>
+        
       </Animated.View>
 
       <ScrollView>

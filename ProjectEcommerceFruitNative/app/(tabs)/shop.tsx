@@ -189,21 +189,25 @@ export default observer(function ShopScreen() {
   const handleEditStoreName = async () => {
     await GetShopByUserId();
     await GetAddressByStore();
+    toggleDrawer()
     router.push("../storeuser/editname");
   };
 
   const handleListproductgi = async () => {
     await getProductGI(1);
+    toggleDrawer()
     router.push("../storeuser/listproductgi");
   };
 
   const handleListproduct = () => {
     getProductByStore(user?.stores[0].id || 0);
+    toggleDrawer()
     router.push("../storeuser/listproduct");
   };
 
   const handleOrderHistoryStore = () => {
     getOrderByStore(user?.stores[0].id || 0);
+    toggleDrawer()
     router.push("../storeuser/orderhistorystore");
   };
 
@@ -290,6 +294,7 @@ export default observer(function ShopScreen() {
   }, [order]);
 
   const handleShop = async () => {
+    toggleDrawer()
     router.push("/(tabs)/shop");
   };
 
@@ -306,7 +311,6 @@ export default observer(function ShopScreen() {
         <LoginButton onPress={() => router.push("/storeuser/editname")}>
           <SaveButtonText>ลงทะเบียนร้านค้าเลย!</SaveButtonText>
         </LoginButton>
-        {/* </TouchableOpacity> */}
       </View>
     </ImageBackground>
   ) : (
@@ -356,7 +360,7 @@ export default observer(function ShopScreen() {
           </Text>
         </View>
 
-        <TouchableOpacity onPress={handleShop} style={styles.menuItem}>
+        <TouchableOpacity onPress={handleShop} style={styles.menuItem} >
           <MaterialIcons name="data-saver-off" size={30} color="#333" />
           <Text style={styles.menuText}>สรุปข้อมูลร้านค้า</Text>
         </TouchableOpacity>
@@ -386,9 +390,10 @@ export default observer(function ShopScreen() {
           <Text style={styles.menuText}>รายการคำสั่งซื้อ</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
+        {/* <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
           <Text style={styles.closeButtonText}>ปิด</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+
       </Animated.View>
 
       <ScrollView>

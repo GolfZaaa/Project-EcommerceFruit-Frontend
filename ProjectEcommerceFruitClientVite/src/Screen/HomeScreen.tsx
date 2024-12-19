@@ -549,7 +549,7 @@ export default observer(function HomeScreen() {
                     const timePassed = dayjs(myProduct.createdAt)
                       .locale("th")
                       .fromNow();
-
+                      console.log("myProduct:", myProduct);
                     return (
                       <div
                         key={i}
@@ -566,7 +566,6 @@ export default observer(function HomeScreen() {
                           />
                           <div className="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
                           <div className="text-xs absolute top-0 right-0 bg-indigo-600 px-4 py-2 text-white mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                            {/* {category.name} */}
                             <p className="FontPublic">
                               <MyContent
                                 name={category.name}
@@ -586,8 +585,7 @@ export default observer(function HomeScreen() {
                             </div>
                           )}
 
-                          {myProduct.hidden === false &&
-                            myProduct.status === false &&
+                          {myProduct.status === false &&
                             myProduct.quantity > 0 && (
                               <div className="absolute inset-0 bg-gray-800 bg-opacity-75 flex flex-col justify-center items-center text-white">
                                 <FaRegWindowClose
@@ -604,8 +602,7 @@ export default observer(function HomeScreen() {
                               </div>
                             )}
 
-                          {myProduct.quantity === 0 &&
-                            myProduct.hidden == false && (
+                          {myProduct.quantity === 0 && (
                               <div className="absolute inset-0 bg-gray-500 bg-opacity-75 flex flex-col justify-center items-center text-white">
                                 <svg
                                   viewBox="0 0 512 512"
@@ -654,10 +651,6 @@ export default observer(function HomeScreen() {
                               {myProduct.price} บาท
                             </span>
                           </div>
-
-                          {/* <p className="text-gray-500 text-sm">
-                              {myProduct.detail.replace(/<\/?[^>]+(>|$)/g, "")}
-                            </p> */}
                         </div>
                         <div className="px-6 py-3 flex flex-row items-center justify-between bg-gray-100">
                           <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">

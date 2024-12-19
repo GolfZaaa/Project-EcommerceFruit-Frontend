@@ -24,7 +24,7 @@ import * as ImagePicker from "expo-image-picker";
 import { SegmentedButtons } from "react-native-paper";
 import { Mytoast } from "@/components/MyToast";
 import { CardField, confirmPayment } from "@stripe/stripe-react-native";
-
+import Icon from "../assets/images/ProductOutStock.png"
 const formatNumberWithCommas = (number: number) => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
@@ -39,7 +39,7 @@ export default observer(function CartDetailScreen() {
 
   const [totalPrice, setTotalPrice] = useState<string>("");
   const [formattedTotalPrice, setFormattedTotalPrice] = useState<string>("");
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState("0");
   const [cardDetails, setCardDetails] = useState<any>(null);
 
   const router = useRouter();
@@ -164,22 +164,24 @@ export default observer(function CartDetailScreen() {
             marginBottom: 20,
           }}
         >
-          <Text style={{color:'#fff'}}>เพิ่มรูปภาพ</Text>
+          <Text style={{color:'#fff',fontSize:17,fontWeight:'600'}}>เพิ่มรูปภาพ</Text>
         </Button>
         {image && <Image source={{ uri: image }} style={styles.image} />}
       </View>
     ),
   };
 
+  const [CheckProduct, setCheckProduct] = useState(false);
+
   const onPayment = async () => {
     const findStoreId: any = selectMyCart[0];
-
     const Data: any = {
       paymentImage: paymentImage,
       tag: "",
       storeId: findStoreId?.storeId,
       paymentMethod: value,
     };
+
     if (value === "") {
       Alert.alert("เกิดข้อผิดพลาด", "กรุณาเลือกวิธีการชำระเงิน", [
         {
@@ -191,11 +193,11 @@ export default observer(function CartDetailScreen() {
       if (value === "0") {
         if (image !== null) {
           const test = await CreateUpdateOrderById(Data);
-
-
-          // if (typeof test === "number") {
+          if(test === "Product Out of Stock"){
+            setCheckProduct(true);
+          }
           if (typeof test) {
-            router.push("/successscreen");
+            // router.push("/successscreen");
           } else {
             Alert.alert("เกิดข้อผิดพลาด", "เกิดข้อผิดพลาด", [
               {
@@ -204,8 +206,6 @@ export default observer(function CartDetailScreen() {
             ]);
             Mytoast("เกิดข้อผิดพลาด");
           }
-
-          // alert("เริ่มการชำระเงินได้");
         } else {
           Alert.alert("เกิดข้อผิดพลาด", "กรุณาเพิ่มรูปภาพ", [
             {
@@ -216,11 +216,15 @@ export default observer(function CartDetailScreen() {
         }
       } else {
         if (!cardDetails?.complete) {
-          Alert.alert("Error", "กรุณากรอกข้อมูลบัตรให้ครบถ้วน");
+          Alert.alert("ผิดพลาด", "กรุณากรอกข้อมูลบัตรให้ครบถ้วน");
           return;
         }
 
         const test = await CreateUpdateOrderById(Data);
+        if(test === "Product Out of Stock"){
+          setCheckProduct(true);
+          return;
+        }
 
         const { paymentIntent, error } = await confirmPayment(
           test.clientSecret,
@@ -243,11 +247,26 @@ export default observer(function CartDetailScreen() {
     }
   };
 
+
+    const {
+      GetCartItemByUserOrderStore,
+    } = useStore().cartStore;
+
+   const handleCart = async () => {
+      router.push("/(tabs)/cart");
+      GetCartItemByUserOrderStore()
+    };
+
   return (
     <ScrollView style={{ backgroundColor: "#fff" }}>
+
+      {!CheckProduct &&
       <BackButton onPress={() => router.back()}>
-        <Ionicons name="arrow-back" size={30} color="#007bff" />
-      </BackButton>
+      <Ionicons name="arrow-back" size={30} color="#007bff" />
+    </BackButton>
+      }
+      
+
 
       <UserInfoContainer>
         <View
@@ -333,6 +352,29 @@ export default observer(function CartDetailScreen() {
 
         {Segmented[value]}
 
+
+        {CheckProduct && (
+  <View style={styles.overlayContainer}>
+    <View style={styles.card}>
+      <View style={styles.containerIcon}>
+    <Image source={Icon} style={styles.imageIcon}/>
+      </View>
+
+      <View style={styles.infoContainer}>
+        <Text style={styles.title}>สินค้าหมดสต็อก</Text>
+        <Text style={styles.description} numberOfLines={2}>
+        สินค้าบางรายการหมด กรุณาเลือกสินค้าใหม่
+        </Text>
+      </View>
+
+      <TouchableOpacity style={styles.button} onPress={handleCart}>
+        <Text style={styles.buttonText}>กลับไปยังตะกร้า</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+)}
+
+
         <TotalContainer>
           <TotalRow>
             <TotalText>ยอดรวมสินค้า</TotalText>
@@ -387,6 +429,14 @@ const styles = StyleSheet.create({
     width: 300,
     height: 550,
   },
+  imageIcon: {
+    width: 100,
+    height: 100,
+  },
+  containerIcon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     padding: 20,
@@ -403,6 +453,70 @@ const styles = StyleSheet.create({
     height: 50,
     marginVertical: 30,
   },
+
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 5,
+    padding: 15,
+    margin: 10,
+    width: 300,
+    zIndex:20,
+    position: 'relative',
+    top:220
+  },
+  infoContainer: {
+    marginTop: 10,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign:'center',
+  },
+  description: {
+    fontSize: 14,
+    color: '#666',
+    marginVertical: 5,
+  },
+  price: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#00a680',
+  },
+  button: {
+    backgroundColor: '#00a680',
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  overlayContainer: {
+    position: 'absolute',
+    top: 20,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // สีเทาโปร่งแสง
+    justifyContent: 'center', // จัดตำแหน่งให้เป็นกึ่งกลาง
+    alignItems: 'center', // จัดตำแหน่งให้เป็นกึ่งกลาง
+    zIndex: 100, // ให้อยู่ด้านหน้าสุด
+  },
+  contentContainer: {
+    flex: 1,
+    backgroundColor: '#f2f2f2', // สีพื้นหลังของเนื้อหาอื่น
+    padding: 20,
+  },
+  
 });
 
 const CartItem = styled.View`
@@ -530,5 +644,5 @@ const BackButton = styled.TouchableOpacity`
   position: absolute;
   top: 40px;
   left: 20px;
-  z-index: 10;
+  z-index: 1;
 `;
