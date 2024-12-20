@@ -358,9 +358,23 @@ export default observer(function DashboardAdminShowUser() {
                                 ) : (
                                   <div>
                                     {isGeneratingPDF ? (
-                                     <div className="flex items-center justify-center">
-                                     <FaCheck size={24} color="green" />
-                                   </div>
+                                     <div>
+                                      {userItem.hidden ? (
+                                        <div className="flex items-center justify-center">
+                                         <MyContent
+                                          name={"ปิดการใช้งาน"}
+                                          fontSize="small"
+                                        />
+                                      </div>
+                                      ):(
+                                        <div className="flex items-center justify-center">
+                                        <MyContent
+                                          name={"กำลังใช้งาน"}
+                                          fontSize="small"
+                                        />
+                                      </div>
+                                      )}
+                                     </div>
                                     ):(
                                   <MySwitch
                                     handleChange={() =>

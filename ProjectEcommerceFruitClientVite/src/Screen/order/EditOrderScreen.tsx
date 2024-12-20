@@ -177,12 +177,18 @@ const EditOrderScreen = ({ onChangeCU, dataEdit }: props) => {
                   width={200}
                 />
               ) : (
-                <img
+               <div>
+                 <img
                   src={imagecraditcart}
                   alt="เครดิตการ์ด"
                   height={200}
                   width={200}
                 />
+                <p className="FontPublic font-semibold">
+                  <MyContent name="ชำระเงินเรียบร้อยแล้ว" fontSize="small" />
+                </p>
+               </div>
+                
               )}
             </Grid>
             <Grid item xs={6}>

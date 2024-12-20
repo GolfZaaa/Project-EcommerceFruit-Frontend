@@ -30,6 +30,15 @@ export default class ProductStore {
     }
   };
 
+  getProductAdmin = async (categoryId: number) => {
+    try {
+      const result = await agent.Product.getProductAdmin(categoryId);
+      this.product = result;
+    } catch (error) {
+      return error;
+    }
+  };
+
   getFilterProduct = async (values: any) => {
     this.setLoadingP(true);
     try {

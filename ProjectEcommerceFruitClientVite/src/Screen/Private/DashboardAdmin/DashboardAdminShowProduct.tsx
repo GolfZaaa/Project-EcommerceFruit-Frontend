@@ -17,7 +17,7 @@ import MyContent from "../../../component/MyContent";
 import { FaCheck } from "react-icons/fa";
 
 export default observer(function DashboardAdminShowProduct() {
-  const { getProduct, product, DeleteProduct } = useStore().productStore;
+  const { getProduct, product, DeleteProduct,isUsedProduct } = useStore().productStore;
   const [searchUser, setSearchUser] = useState<any>("");
   const [filterUser, setfilterUser] = useState<any>([]);
 
@@ -135,7 +135,9 @@ export default observer(function DashboardAdminShowProduct() {
   };
 
   const handleDelete = (userItem: any) => {
-    DeleteProduct(userItem.id);
+    // DeleteProduct(userItem.id);
+    isUsedProduct(userItem.id)
+    console.log("DeleteProduct",userItem.id)
   };
 
   const onChangeCU = () => {
@@ -175,6 +177,8 @@ export default observer(function DashboardAdminShowProduct() {
         }
       });
   }
+
+  console.log("product",product)
 
   return (
     <>
@@ -439,13 +443,28 @@ export default observer(function DashboardAdminShowProduct() {
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               <div>
                                 {isGeneratingPDF ? (
-                                   <div className="flex items-center justify-center">
-                                  <FaCheck size={24} color="green" />
-                                </div>
+                                    <div>
+                                  {userItem.hidden ? (
+                                    <div className="flex items-center justify-center">
+                                      <MyContent
+                                      name={"ปิดการใช้งาน"}
+                                      fontSize="small"
+                                    />
+                                  </div>
+                                  ):(
+                                    <div className="flex items-center justify-center">
+                                    <MyContent
+                                      name={"กำลังใช้งาน"}
+                                      fontSize="small"
+                                    />
+                                  </div>
+                                  )}
+                                  </div>
                                 ):(
                                   <div>
                                   <MySwitch
                                   handleChange={() => handleDelete(userItem)}
+                                  
                                   checked={userItem.status}
                                 />
                                   </div>
