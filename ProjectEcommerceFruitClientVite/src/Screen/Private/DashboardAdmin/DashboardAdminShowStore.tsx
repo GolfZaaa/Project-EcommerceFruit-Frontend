@@ -154,8 +154,8 @@ export default observer(function DashboardAdminShowStore() {
         <CreateShopScreen
           onChangeCU={onChangeCU}
           dataEdit={dataEdit}
-          shopTo={true}
-        /> 
+          admin={true}
+        />
       ) : (
         <div>
           <div className="p-4">
@@ -219,7 +219,7 @@ export default observer(function DashboardAdminShowStore() {
                             aria-expanded="true"
                             aria-haspopup="true"
                           >
-                            <BiDownload size={20}/>
+                            <BiDownload size={20} />
                           </button>
                         </div>
 

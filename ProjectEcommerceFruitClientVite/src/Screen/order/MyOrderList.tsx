@@ -170,7 +170,8 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
                 //   ? item?.confirmReceipt === 0
                 // :
                 // item?.tag !== "จัดส่งผ่านผู้รับหิ้ว" &&
-                item?.shippings[0].driverHistories.length > 0 &&
+                (item?.shippings[0].driverHistories.length > 0 ||
+                  item.shippingType !== "อื่น ๆ") &&
                 item?.tag !== null &&
                 item?.confirmReceipt !== 1 &&
                 item?.confirmReceipt !== 2 &&

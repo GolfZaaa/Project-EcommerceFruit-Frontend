@@ -480,7 +480,7 @@ export default observer(function DashboardShopScreen() {
   const renderScreens = () => {
     switch (screenComponent) {
       case "CreateShop":
-        return <CreateShopScreen shopTo={true} />;
+        return <CreateShopScreen admin={false} />;
       case "ProductGIList":
         return <ProductGIList />;
       case "ProductList":

@@ -113,8 +113,10 @@ export default function ProductDetailsScreen() {
     user?.id === productDetail?.productGI?.store?.user?.id;
 
   const increaseQuantity = () => {
-    if(productDetail?.quantity !== undefined && quantity < productDetail?.quantity)
-    {
+    if (
+      productDetail?.quantity !== undefined &&
+      quantity < productDetail?.quantity
+    ) {
       setQuantity((prevQuantity) => prevQuantity + 1);
     }
   };
@@ -243,26 +245,18 @@ export default function ProductDetailsScreen() {
   );
 
   return (
-    <SafeAreaView>
-      <TouchableOpacity
-        onPress={handleBack}
-        style={{
-          position: "absolute",
-          top: 40,
-          left: 20,
-          zIndex: 1,
-        }}
-      >
-        <Ionicons name="arrow-back" size={30} color="#007bff" />
-      </TouchableOpacity>
-
+    <SafeAreaView style={{ backgroundColor: "#ffffff" }}>
       <View
         style={{
           position: "absolute",
-          top: 680,
+          // top: 680,
           zIndex: 1,
           backgroundColor: "#ffffff",
+          height: 150,
           width: "100%",
+          bottom: 0,
+          left: 0,
+          right: 0,
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
           borderWidth: 1,
@@ -322,6 +316,19 @@ export default function ProductDetailsScreen() {
       <ScrollView>
         <View>
           <Container>
+            <TouchableOpacity
+              onPress={handleBack}
+              style={
+                {
+                  // position: "absolute",
+                  // top: 40,
+                  // left: 20,
+                  // zIndex: 1,
+                }
+              }
+            >
+              <Ionicons name="arrow-back" size={30} color="#007bff" />
+            </TouchableOpacity>
             {user && user?.id == productDetail?.productGI?.store?.userId && (
               <View
                 style={{

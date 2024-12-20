@@ -12,7 +12,7 @@ import { RiFileExcel2Line } from "react-icons/ri";
 import MyContent from "../../../component/MyContent";
 
 export default observer(function DashboardAdminShowUser() {
-  const { getUserAll, userAll, DeleteUser, user} = useStore().userStore;
+  const { getUserAll, userAll, DeleteUser, user } = useStore().userStore;
 
   const [searchUser, setSearchUser] = useState<any>("");
   const [filterUser, setfilterUser] = useState<any>([]);
@@ -44,8 +44,6 @@ export default observer(function DashboardAdminShowUser() {
     setDropdown(!dropdown);
   };
 
-
-
   const generateExcel = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Users");
@@ -57,13 +55,20 @@ export default observer(function DashboardAdminShowUser() {
       { header: "สถานะการใช้งาน", key: "hidden", width: 20 },
     ];
 
-    worksheet.getRow(1).font = { bold: true, size: 14, color: { argb: "FFFFFF" }};
-    worksheet.getRow(1).alignment = { horizontal: "center", vertical: "middle" };
+    worksheet.getRow(1).font = {
+      bold: true,
+      size: 14,
+      color: { argb: "FFFFFF" },
+    };
+    worksheet.getRow(1).alignment = {
+      horizontal: "center",
+      vertical: "middle",
+    };
     worksheet.getRow(1).eachCell((cell) => {
       cell.fill = {
         type: "pattern",
         pattern: "solid",
-        fgColor: { argb: "0070C0" }, 
+        fgColor: { argb: "0070C0" },
       };
       cell.border = {
         top: { style: "thin" },
@@ -72,9 +77,6 @@ export default observer(function DashboardAdminShowUser() {
         right: { style: "thin" },
       };
     });
-
-   
-
 
     filterUser.forEach((user: any, index: number) => {
       const hidden = user.hidden ? "ถูกระงับการใช้งาน" : "ใช้งานได้ปกติ";
@@ -144,7 +146,7 @@ export default observer(function DashboardAdminShowUser() {
     setEditMode(!editMode);
   };
 
-  console.log("user",user)
+  console.log("user", user);
 
   return (
     <>
@@ -202,7 +204,7 @@ export default observer(function DashboardAdminShowUser() {
                           aria-expanded="true"
                           aria-haspopup="true"
                         >
-                          <BiDownload size={20}/>
+                          <BiDownload size={20} />
                         </button>
                       </div>
 
@@ -295,7 +297,7 @@ export default observer(function DashboardAdminShowUser() {
 
                     <tbody className="divide-y divide-gray-300">
                       {filterUser.map((userItem: any, index: any) => {
-                        console.log("userItem",userItem)
+                        console.log("userItem", userItem);
                         return (
                           <tr
                             key={index}
@@ -328,18 +330,17 @@ export default observer(function DashboardAdminShowUser() {
                               <div>
                                 {user?.id == userItem.id ? (
                                   <MyContent
-                                  name={"ไม่สามารถปิดการใช้งานได้"}
-                                  fontSize="small"
-                                />
-                                ):(
+                                    name={"ไม่สามารถปิดการใช้งานได้"}
+                                    fontSize="small"
+                                  />
+                                ) : (
                                   <MySwitch
-                                  handleChange={() =>
-                                    handleDeleteUser(userItem.id)
-                                  }
-                                  checked={!userItem.hidden}
-                                />
+                                    handleChange={() =>
+                                      handleDeleteUser(userItem.id)
+                                    }
+                                    checked={!userItem.hidden}
+                                  />
                                 )}
-                               
                               </div>
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
