@@ -37,8 +37,11 @@ const MyOrderCardToSend = ({ order, index }: props) => {
   const { user } = useStore().userStore;
 
   // const [select, setSelect] = useState<any[]>([]);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false); 
 
   function generatePDF() {
+    setIsGeneratingPDF(true); 
+    toggleDropdown()
     const opt = {
       margin: 0.2,
       filename: "reportOrderAll.pdf",
@@ -58,6 +61,7 @@ const MyOrderCardToSend = ({ order, index }: props) => {
       .set(opt)
       .save()
       .then(() => {
+        setIsGeneratingPDF(false);
         if (downloadButton) {
           downloadButton.style.display = "block";
         }
@@ -409,6 +413,7 @@ const MyOrderCardToSend = ({ order, index }: props) => {
           <button
             onClick={toggleDropdown}
             className="p-2 bg-blue-500 text-white rounded-md mt-4 md:mt-0"
+            id="downloadButton"
           >
             <BiDownload />
           </button>
@@ -554,29 +559,6 @@ const MyOrderCardToSend = ({ order, index }: props) => {
                       fontSize="small"
                     />
                   </p>
-                  {/* {index === 1 && !myDriver && (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    className="mr-2"
-                    style={{
-                      width: 50,
-                      height: 50,
-                    }}
-                    checked={select.find((x) => x === item.id) !== undefined}
-                    onChange={() => onSelect(item.id)}
-                  />
-                  <Typography variant="h5" align="left">
-                    เลือกสินค้า
-                  </Typography>
-                </div>
-              )} */}
 
                   {index === 1 && !myDriver && (
                     <div>
@@ -628,11 +610,26 @@ const MyOrderCardToSend = ({ order, index }: props) => {
                         }}
                         className="cursor-pointer"
                       >
-                        <img
+                        {isGeneratingPDF ? (
+                          <a
+                            href={
+                              pathImages.product + orderItem.product.images
+                              }
+                                target="_blank"
+                                rel="noopener noreferrer"
+                               >
+                               <p style={{ fontSize: 16, fontWeight: 500, color: '#0400ff', textDecoration: 'underline' }}>
+                               ดูรูปภาพ
+                              </p>
+                             </a>
+                        ):(
+                      <img
                           className="h-20 w-20 object-cover"
                           src={pathImages.product + orderItem.product.images}
                           alt={orderItem.product.images || "product image"}
                         />
+                        )}
+                        
                       </a>
                       <p className="text-sm font-bold text-gray-500 mt-2 md:mt-0">
                         {orderItem.product.productGI.category.name}

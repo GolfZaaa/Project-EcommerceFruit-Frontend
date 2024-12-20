@@ -148,26 +148,37 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
   );
   const [availableYears, setAvailableYears] = useState<number[]>([]);
 
-  const calculateMonthlyTotal = (orders: Order[], year: number) => {
+  const calculateMonthlyTotal = (orders: Order[], year: number, userId: number) => {
     const monthlyTotals = Array(12).fill(0);
-
+  
     orders
-      .filter((x) => x.confirmReceipt === 1)
+      .filter(
+        (order) =>
+          order.shippings?.[0]?.shippingStatus === 1 && order.confirmReceipt === 1
+      )
       .forEach((order) => {
         const shipping = order.shippings?.[0];
-        if (shipping?.shippingStatus === 1) {
-          const orderDate: any = new Date(shipping.createdAt);
-          const orderYear = orderDate.getFullYear();
-          const month = orderDate.getMonth();
-          if (orderYear === year) {
-            const totalForOrder = shipping.shippingFee;
-            monthlyTotals[month] += totalForOrder;
-          }
+        const orderDate = new Date(shipping?.createdAt);
+        const orderYear = orderDate.getFullYear();
+        const month = orderDate.getMonth();
+  
+        if (orderYear === year) {
+          const driverHistoryFees = (
+            shipping?.driverHistories.filter(
+              (history) => history.userId === userId
+            ) || []
+          ).reduce(
+            (sum, driverHistory) => sum + (driverHistory.shippingFee || 0),
+            0
+          );
+          monthlyTotals[month] += driverHistoryFees;
         }
       });
-
+  
     return monthlyTotals;
   };
+  
+  
   const extractAvailableYears = (orders: Order[]) => {
     const yearsSet = new Set<number>();
     orders.forEach((order) => {
@@ -191,11 +202,12 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
       if (years.length > 0 && !years.includes(selectedYear)) {
         setSelectedYear(years[0]);
       }
-
-      const totals = calculateMonthlyTotal(order, selectedYear);
+  
+      const totals = calculateMonthlyTotal(order, selectedYear, user?.id || 0); // เพิ่ม user?.id
       setMonthlyTotal(totals);
     }
-  }, [order, selectedYear]);
+  }, [order, selectedYear, user?.id]);
+  
 
   const data = {
     months: [
@@ -435,7 +447,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
 
     addStyledRow({ item: "รายได้สุทธิของแต่ละเดือน", value: "" });
     availableYears.forEach((year) => {
-      const monthlyTotals = calculateMonthlyTotal(order, year);
+      const monthlyTotals = calculateMonthlyTotal(order, year, user?.id || 0);
       addStyledRow({ item: `ปี ${year + 543}`, value: "" });
 
       data.months.forEach((month, index) => {

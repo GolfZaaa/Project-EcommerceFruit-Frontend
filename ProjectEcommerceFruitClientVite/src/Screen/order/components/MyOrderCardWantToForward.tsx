@@ -116,7 +116,7 @@ const MyOrderCardWantToForward = ({ order }: props) => {
             <div></div>
           )}
         </div>
-        {order?.length <= 0 ? (
+        {/* {order?.length <= 0 ? (
           <div></div>
         ) : (
           <div>
@@ -128,7 +128,7 @@ const MyOrderCardWantToForward = ({ order }: props) => {
               <BsFillPrinterFill />
             </button>
           </div>
-        )}
+        )} */}
       </div>
 
       {order?.length ? (
@@ -160,7 +160,6 @@ const MyOrderCardWantToForward = ({ order }: props) => {
                     </span>
                     <div className="flex justify-between items-center mb-3">
                       <p className="text-base leading-4 text-gray-800 font-semibold">
-                        {/* ได้รับค่าจัดส่ง : {item?.shippings[0]?.shippingFee} บาท */}
                         <MyContent
                           name={`ได้รับค่าจัดส่ง : ${myDriverFee?.shippingFee}  บาท`}
                           fontSize="small"
@@ -178,7 +177,6 @@ const MyOrderCardWantToForward = ({ order }: props) => {
                           ? "red-500"
                           : "gray-500")
                       }
-                      // className="text-lg font-semibold text-gray-900 dark:text-red-500"
                     >
                       สถานะ :{" "}
                       {status === 0
