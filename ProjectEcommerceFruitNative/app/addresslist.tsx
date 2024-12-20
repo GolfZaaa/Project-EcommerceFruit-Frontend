@@ -10,6 +10,88 @@ import { Address } from "@/src/models/Address";
 import { observer } from "mobx-react-lite";
 import { Switch } from "react-native-paper";
 
+export const ExternalRenderItem = ({
+  item,
+  i,
+  handleChangesModal,
+}: {
+  item: Address;
+  i: number;
+  handleChangesModal: Function;
+}) => {
+  const addressTitle = getAddressTitle(item);
+
+  return (
+    <ExtCard isStore={!(i % 2)}>
+      <View
+        style={{
+          // flex: 1,
+          alignItems: "flex-end",
+        }}
+      >
+        {addressTitle && <CardTitle>{addressTitle}</CardTitle>}
+      </View>
+
+      <CardText>บ้านเลขที่ {item.detail}</CardText>
+
+      <CardDescription>
+        ตำบล {item.subDistrict} อำเภอ {item.district}
+      </CardDescription>
+      <CardDescription>
+        จังหวัด {item.province} {item.postCode}
+      </CardDescription>
+
+      <View
+        style={{
+          width: "100%",
+        }}
+      >
+        <ExtButton
+          onPress={() => handleChangesModal(item, true)}
+          isUsed_Store={item.isUsed_Store}
+          disabled={item.isUsed_Store}
+        >
+          <ExtButtonText>
+            {item.isUsed_Store ? "กำลังใช้งาน" : "ตั้งเป็นที่อยู่ร้านค้า"}
+          </ExtButtonText>
+        </ExtButton>
+      </View>
+
+      {/* <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <View
+          style={{
+            width: 150,
+          }}
+        >
+          <Button>
+            <ButtonText>แก้ไข</ButtonText>
+          </Button>
+        </View>
+        <View
+          style={{
+            width: 150,
+          }}
+        >
+          <ButtonRemove>
+            <ButtonText>ลบ</ButtonText>
+          </ButtonRemove>
+        </View>
+      </View> */}
+    </ExtCard>
+  );
+};
+
+const getAddressTitle = (item: { isUsed: boolean; isUsed_Store: boolean }) => {
+  if (item.isUsed) return "ที่อยู่สั่งซื้อ";
+  if (item.isUsed_Store) return "ที่อยู่ร้านค้า";
+  return null;
+};
+
 const AddressList = () => {
   const {
     myAddress,
@@ -60,13 +142,7 @@ const AddressList = () => {
       getAddressgotoOrderByUserId();
     };
 
-    const getAddressTitle = () => {
-      if (item.isUsed) return "ที่อยู่สั่งซื้อ";
-      if (item.isUsed_Store) return "ที่อยู่ร้านค้า";
-      return null;
-    };
-
-    const addressTitle = getAddressTitle();
+    const addressTitle = getAddressTitle(item);
 
     return (
       <Card isStore={item.isUsed_Store}>
@@ -237,6 +313,20 @@ const Card: any = styled(LinearGradient).attrs((props: any) => ({
   elevation: 2;
 `;
 
+const ExtCard: any = styled(LinearGradient).attrs((props: any) => ({
+  colors: ["#f7f9fc", props.isStore ? "#D9EAFD" : "#ffffff"], // กำหนด colors ตาม props ถ้าไม่มีใช้ค่าเริ่มต้น
+  start: { x: 0, y: 0 },
+  end: { x: 1, y: 1 },
+}))`
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 15px;
+  shadow-color: #000;
+  shadow-opacity: 0.1;
+  shadow-radius: 10px;
+  elevation: 2;
+`;
+
 const CardText: any = styled.Text`
   font-size: 22px;
   color: #333;
@@ -286,4 +376,17 @@ const ButtonText: any = styled.Text`
   color: #fff;
   font-size: 16px;
   font-weight: bold;
+`;
+
+const ExtButtonText: any = styled.Text`
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+`;
+
+const ExtButton: any = styled.TouchableOpacity`
+  background-color: ${(e: any) => (e.isUsed_Store ? "gray" : "#007bff")};
+  padding: 10px;
+  border-radius: 8px;
+  align-items: center;
 `;

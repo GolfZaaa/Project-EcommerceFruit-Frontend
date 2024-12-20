@@ -291,7 +291,21 @@ const MyOrderCard = ({ order, index }: props) => {
                   </div>
 
                   <div className="md:flex md:justify-between">
-                    <span className="text-lg font-semibold text-gray-900 dark:text-gray-900"></span>
+                    <div>
+                      {item.shippingType !== "อื่น ๆ" && (
+                        <div>
+                          <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
+                            {item.shippingType !== "อื่น ๆ" &&
+                              item.shippingType}
+                          </span>
+                          <div>
+                            <span className="text-lg text-gray-900 dark:text-gray-900">
+                              หมายเลขติดตามพัสดุ {item.tag}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
 
                     <span
                       className={
@@ -437,7 +451,11 @@ const MyOrderCard = ({ order, index }: props) => {
                           onClick={() =>
                             handleConfirm({ orderId: item.id, status: 1 })
                           }
-                          disabled={!item?.shippings[0]?.sendedOrderImage}
+                          disabled={
+                            item.shippingType !== "อื่น ๆ"
+                              ? false
+                              : !item?.shippings[0]?.sendedOrderImage
+                          }
                         >
                           ได้รับสินค้าแล้ว
                         </Button>
@@ -485,7 +503,11 @@ const MyOrderCard = ({ order, index }: props) => {
                           color="error"
                           size="large"
                           fullWidth
-                          disabled={!item?.shippings[0]?.sendedOrderImage}
+                          disabled={
+                            item.shippingType !== "อื่น ๆ"
+                              ? false
+                              : !item?.shippings[0]?.sendedOrderImage
+                          }
                         >
                           ไม่ได้รับสินค้า
                         </Button>

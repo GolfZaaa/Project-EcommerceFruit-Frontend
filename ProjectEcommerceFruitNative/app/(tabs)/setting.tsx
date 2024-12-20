@@ -104,7 +104,6 @@ export default observer(function SettingScreen() {
     router.navigate("/dashboarduser");
   };
 
-  
   const handleDashboardToSend = async () => {
     await getMyOrderToSend();
     router.navigate("/dashboardtosend");
@@ -121,16 +120,15 @@ export default observer(function SettingScreen() {
         style={styles.headerContainer}
       >
         <View style={styles.userInfo}>
-        
-
-                <Image
-                  source={require("../../assets/images/IconUser3.png")}
-                  style={styles.avatar}
-                />
+          <Image
+            source={require("../../assets/images/IconUser3.png")}
+            style={styles.avatar}
+          />
           <Text style={styles.userName}>{user.fullName}</Text>
           <Text style={styles.userDetails}>
             {myAddressgotoOrder
-              ? `${myAddressgotoOrder?.detail} ต.${myAddressgotoOrder?.subDistrict} อ.${myAddressgotoOrder?.district} จ.${myAddressgotoOrder?.province}`
+              ? `บ้านเลขที่ ${myAddressgotoOrder?.detail}
+              ต.${myAddressgotoOrder?.subDistrict} อ.${myAddressgotoOrder?.district} จ.${myAddressgotoOrder?.province}`
               : "ยังไม่ได้เพิ่มที่อยู่"}
           </Text>
         </View>
@@ -174,7 +172,6 @@ export default observer(function SettingScreen() {
         </View>
 
         <View style={styles.menuRow}>
-
           <TouchableOpacity
             style={styles.menuItem}
             onPress={handleDashboardUser}
@@ -184,7 +181,6 @@ export default observer(function SettingScreen() {
             </View>
             <Text style={styles.menuItemText}>สรุปข้อมูลการซื้อ</Text>
           </TouchableOpacity>
-          
 
           <TouchableOpacity style={styles.menuItem} onPress={handleMyShop}>
             <View style={styles.iconWrapper}>
@@ -214,9 +210,10 @@ export default observer(function SettingScreen() {
         </View>
 
         <View style={styles.menuRow}>
-         
-
-        <TouchableOpacity style={styles.menuItem} onPress={handleDashboardToSend}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={handleDashboardToSend}
+          >
             <View style={styles.iconWrapper}>
               <MaterialIcons name="auto-graph" size={30} color="#5A67F2" />
             </View>

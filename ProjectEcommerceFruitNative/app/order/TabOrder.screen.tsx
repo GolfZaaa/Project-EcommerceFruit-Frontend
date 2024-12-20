@@ -17,6 +17,8 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "@/src/store/store";
 import { Label } from "../storeuser/createproductgi";
 import { pathImagesApp } from "@/src/constants/RoutePath";
+import * as Clipboard from "expo-clipboard";
+import { Mytoast } from "@/components/MyToast";
 
 const TabOrderScreen = ({
   item,
@@ -45,6 +47,11 @@ const TabOrderScreen = ({
         },
       ]
     );
+  };
+
+  const copyToClipboard = (item: string) => {
+    Clipboard.setString(item);
+    Mytoast("คัดลอกหมายเลขติดตามพัสดุแล้ว");
   };
 
   return item.length ? (
@@ -123,6 +130,28 @@ const TabOrderScreen = ({
               </View>
             </OrderInfo>
 
+            {item.shippingType !== "อื่น ๆ" && (
+              <View>
+                <ShippTitle>
+                  {item.shippingType !== "อื่น ๆ" && item.shippingType}
+                </ShippTitle>
+                {/* <ShippTagTitle onPress={() => copyToClipboard(item.tag)}> */}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <ShippTagTitle>หมายเลขติดตามพัสดุ</ShippTagTitle>
+
+                  <Button onPress={() => copyToClipboard(item.tag)}>
+                    <ButtonText>คัดลอก</ButtonText>
+                  </Button>
+                </View>
+                <TagTitle>{item.tag}</TagTitle>
+              </View>
+            )}
+
             {more && (
               <View>
                 {item.orderItems.map((orderItem) => (
@@ -153,19 +182,30 @@ const TabOrderScreen = ({
 
             {((more === true && index === 5) ||
               (more === true && index === 3)) &&
-              !!item?.shippings[0]?.sendedOrderImage && (
-                <View>
-                  <Label name="รูปภาพหลักฐานการส่ง" valid={false} />
-                  <Image
-                    source={{
-                      uri:
-                        pathImagesApp.sendedOrder +
-                        item?.shippings[0]?.sendedOrderImage,
-                    }}
-                    style={styles.imageSended}
-                  />
-                </View>
-              )}
+            !!item?.shippings[0]?.sendedOrderImage ? (
+              <View>
+                <Label name="รูปภาพหลักฐานการส่ง" valid={false} />
+                <Image
+                  source={{
+                    uri:
+                      pathImagesApp.sendedOrder +
+                      item?.shippings[0]?.sendedOrderImage,
+                  }}
+                  style={styles.imageSended}
+                />
+              </View>
+            ) : (
+              <View
+                style={{
+                  alignItems: "center",
+                }}
+              >
+                {((more === true && index === 5) ||
+                  (more === true && index === 3)) && (
+                  <Label name="กำลังจัดส่ง" valid={false} />
+                )}
+              </View>
+            )}
 
             {more === true && index === 5 && (
               <View
@@ -184,6 +224,16 @@ const TabOrderScreen = ({
                     onPress={() =>
                       handleConfirm({ orderId: item.id, status: 1 })
                     }
+                    status={
+                      item.shippingType !== "อื่น ๆ"
+                        ? false
+                        : !item?.shippings[0]?.sendedOrderImage
+                    }
+                    disabled={
+                      item.shippingType !== "อื่น ๆ"
+                        ? false
+                        : !item?.shippings[0]?.sendedOrderImage
+                    }
                   >
                     <ButtonText>ได้รับสินค้าแล้ว</ButtonText>
                   </Button>
@@ -196,6 +246,16 @@ const TabOrderScreen = ({
                   <ButtonRemove
                     onPress={() =>
                       handleConfirm({ orderId: item.id, status: 2 })
+                    }
+                    status={
+                      item.shippingType !== "อื่น ๆ"
+                        ? false
+                        : !item?.shippings[0]?.sendedOrderImage
+                    }
+                    disabled={
+                      item.shippingType !== "อื่น ๆ"
+                        ? false
+                        : !item?.shippings[0]?.sendedOrderImage
                     }
                   >
                     <ButtonText>ไม่ได้รับสินค้า</ButtonText>
@@ -268,6 +328,23 @@ const OrderTitle: any = styled.Text`
   color: #333;
 `;
 
+const ShippTitle: any = styled.Text`
+  font-size: 15px;
+  font-weight: bold;
+  color: #333;
+`;
+
+const ShippTagTitle: any = styled.Text`
+  font-size: 19px;
+  color: #333;
+  margin-right: 10px;
+`;
+
+const TagTitle: any = styled.Text`
+  font-size: 18px;
+  color: #333;
+`;
+
 const OrderDate: any = styled.Text`
   font-size: 14px;
   color: #666;
@@ -325,14 +402,14 @@ export const TotalAmount = styled.Text`
 `;
 
 const Button: any = styled.TouchableOpacity`
-  background-color: #007bff;
+  background-color: ${(e: any) => (e.status ? "gray" : "#007bff")};
   padding: 10px;
   border-radius: 8px;
   align-items: center;
 `;
 
 const ButtonRemove: any = styled.TouchableOpacity`
-  background-color: red;
+  background-color: ${(e: any) => (e.status ? "gray" : "red")};
   padding: 10px;
   border-radius: 8px;
   align-items: center;

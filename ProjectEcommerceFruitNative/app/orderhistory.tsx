@@ -88,14 +88,21 @@ const OrderHistoryScreen = () => {
     ),
     fifth: () => (
       <TabOrderScreen
-        item={order.filter((item) =>
-          item?.shippings[0]?.shippingStatus !== undefined
-            ? item?.shippings[0]?.shippingStatus === 1 && //ที่ต้องได้รับ
-              item?.confirmReceipt === 0
-            : item?.tag !== "จัดส่งผ่านผู้รับหิ้ว" &&
-              item?.tag !== null &&
-              item?.confirmReceipt === 0 &&
-              item?.status !== 2
+        item={order.filter(
+          (item) =>
+            // item?.shippings[0]?.shippingStatus !== undefined
+            //   ? item?.shippings[0]?.shippingStatus === 1 && //ที่ต้องได้รับ
+            //     item?.confirmReceipt === 0
+            //   : item?.tag !== "จัดส่งผ่านผู้รับหิ้ว" &&
+            //     item?.tag !== null &&
+            //     item?.confirmReceipt === 0 &&
+            //     item?.status !== 2
+            (item?.shippings[0].driverHistories.length > 0 ||
+              item.shippingType !== "อื่น ๆ") &&
+            item?.tag !== null &&
+            item?.confirmReceipt !== 1 &&
+            item?.confirmReceipt !== 2 &&
+            item?.status !== 2
         )}
         index={5}
       />

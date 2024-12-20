@@ -19,6 +19,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
 
+//#D9EAFD
+
 export default observer(function TabLayout() {
   const { getToken } = useStore().commonStore;
   const { getSystemSetting } = useStore().systemSettingStore;
@@ -66,8 +68,8 @@ export default observer(function TabLayout() {
             display: loadingUser ? "none" : "flex",
           },
           tabBarLabelStyle: {
-            fontSize: 12, 
-            fontWeight: "600", 
+            fontSize: 12,
+            fontWeight: "600",
           },
           headerShown: false,
         }}
@@ -79,9 +81,9 @@ export default observer(function TabLayout() {
             tabBarIcon: ({ color, focused }) => (
               <Ionicons
                 name={focused ? "home" : "home-outline"}
-                size={focused ? 28 : 24}  
+                size={focused ? 28 : 24}
                 color={color}
-                style={{ transform: [{ scale: focused ? 1.2 : 1 }] }} 
+                style={{ transform: [{ scale: focused ? 1.2 : 1 }] }}
               />
             ),
           }}

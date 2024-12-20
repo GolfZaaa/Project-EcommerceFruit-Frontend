@@ -158,7 +158,7 @@ export default observer(function DashboardAdminShowStore() {
         <CreateShopScreen
           onChangeCU={onChangeCU}
           dataEdit={dataEdit}
-          shopTo={true}
+          admin={true}
         />
       ) : (
         <div className="FontPublic">

@@ -64,9 +64,7 @@ const AddressList = ({
 
   const onChangeCU = () => setForm(!form);
 
-
-
-const handleAddressUpdate = async (
+  const handleAddressUpdate = async (
     addressId: number,
     storeormine: boolean,
     item: any
@@ -80,8 +78,6 @@ const handleAddressUpdate = async (
       confirmChangeAddress();
     }
   };
-
-
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -252,7 +248,7 @@ const handleAddressUpdate = async (
                       />
                       <Switch
                         checked={item.isUsed_Store}
-                        onClick={() => handleAddressUpdate(item.id, true,item)}
+                        onClick={() => handleAddressUpdate(item.id, true, item)}
                         color="primary"
                       />
                     </div>
@@ -269,8 +265,7 @@ const handleAddressUpdate = async (
                     <Switch
                       checked={item.isUsed}
                       onClick={() => {
-                        handleAddressUpdate(item.id, true,item);
-                       
+                        handleAddressUpdate(item.id, false, item);
                       }}
                       color="primary"
                       disabled={createShop}

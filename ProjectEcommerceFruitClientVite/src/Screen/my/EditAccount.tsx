@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
-import { TextField, Box, CardActions, Button, Card } from "@mui/material";
+import { TextField, Box, CardActions, Button, Card, Fab } from "@mui/material";
 import { useStore } from "../../store/store";
 import { myToast } from "../../helper/components";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 import { RoutePath } from "../../constants/RoutePath";
 import DashboardAdminShowUser from "../Private/DashboardAdmin/DashboardAdminShowUser";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 interface props {
   onChangeCU?: any;
@@ -44,16 +45,22 @@ const EditAccount = ({ onChangeCU, userEdit }: props) => {
 
   return (
     <div>
-        <div>
-          <div className=" z-20 cursor-pointer h-16 absolute top-32">
-        <button
+      <div>
+        <div className=" z-20 cursor-pointer h-16 absolute top-32">
+          <Fab variant="extended" color="primary" onClick={onChangeCU}>
+            <ArrowBackIosIcon sx={{ mr: 1 }} />
+            <p className="FontPublic">
+              <MyContent name="กลับ" fontSize="littlenormal" />
+            </p>
+          </Fab>
+          {/* <button
           onClick={onChangeCU}
           className="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-700 focus:outline-none focus:shadow-outline"
         >
           <IoArrowBack />
-        </button>
-      </div>
-      
+        </button> */}
+        </div>
+
         <div className="mt-28">
           <Box
             display="flex"
@@ -117,7 +124,7 @@ const EditAccount = ({ onChangeCU, userEdit }: props) => {
             </Card>
           </Box>
         </div>
-        </div>
+      </div>
     </div>
   );
 };

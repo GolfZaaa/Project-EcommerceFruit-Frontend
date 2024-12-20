@@ -22,6 +22,7 @@ import MyContent from "../../component/MyContent";
 import AddressList from "../address/AddressList";
 import { IoArrowBack } from "react-icons/io5";
 import DashboardAdminShowStore from "../Private/DashboardAdmin/DashboardAdminShowStore";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 const InputThaiAddress = CreateInput();
 type Props = Parameters<typeof CreateInput>[0];
@@ -29,7 +30,7 @@ type Props = Parameters<typeof CreateInput>[0];
 interface props {
   onChangeCU?: any;
   dataEdit?: any;
-  shopTo: any;
+  admin: boolean;
 }
 
 const style = {
@@ -48,7 +49,7 @@ const style = {
 export default observer(function CreateShopScreen({
   onChangeCU,
   dataEdit,
-  shopTo,
+  admin,
 }: props) {
   const navigate = useNavigate();
   const { usershop, GetShopByUserId, createandupdate } =
@@ -92,6 +93,8 @@ export default observer(function CreateShopScreen({
         }
   );
 
+  console.log("address", address);
+
   const [isSelectAddress, setIsSelectAddress] = useState(false);
 
   const [open, setOpen] = React.useState(false);
@@ -127,16 +130,33 @@ export default observer(function CreateShopScreen({
       detail: values?.detail, // รหัสไปรษณีย์ postal code
     });
 
-    console.log("addresss : addresss :", addresss);
+    // console.log("addresss : addresss :", addresss);
   };
 
-  const handleSelect = (address: Address) => {
-    setAddress(address);
+  const handleSelect = (address: any) => {
+    console.log("address : address : ", address);
+
+    // setAddress(address);
+    setAddress((prevState: any) => ({
+      ...prevState,
+      district: address.district,
+      province: address.province,
+      zipcode: address.zipcode,
+      amphoe: address.amphoe,
+    }));
   };
 
   const handleSubmit = async (event: any) => {
     console.log("address", address);
     event.preventDefault();
+
+    if (address.zipcode && !/^\d+$/.test(address.zipcode)) {
+      return myToast("รหัสไปรษณีย์ต้องเป็นตัวเลขเท่านั้น!");
+    }
+
+    if (address.zipcode.length !== 5) {
+      return myToast("รหัสไปรษณีย์ต้องมี 5 ตัวเลข");
+    }
 
     if (
       address.detail === "" ||
@@ -151,7 +171,7 @@ export default observer(function CreateShopScreen({
       const formData: any = Object.fromEntries(data.entries());
 
       const dataForm = {
-        id: dataId?.id || addressId,
+        id: dataId?.id || 0,
         name: formData.name,
         description: formData.description,
       };
@@ -159,7 +179,7 @@ export default observer(function CreateShopScreen({
       await createandupdate(dataForm).then(async (result) => {
         if (result) {
           const dataAddress = {
-            id: addresss?.id || 0,
+            id: addressId || addresss?.id,
             subDistrict: address.district,
             district: address.amphoe,
             province: address.province,
@@ -192,7 +212,7 @@ export default observer(function CreateShopScreen({
       });
     }
   };
-  
+
   return (
     <div>
       <Modal
@@ -211,14 +231,23 @@ export default observer(function CreateShopScreen({
       </Modal>
 
       <div>
-        <div className=" z-20 cursor-pointer h-16 absolute top-32">
-          <button
+        {admin && (
+          <div className=" z-20 cursor-pointer h-16 absolute top-32">
+            <Fab variant="extended" color="primary" onClick={onChangeCU}>
+              <ArrowBackIosIcon sx={{ mr: 1 }} />
+              <p className="FontPublic">
+                <MyContent name="กลับ" fontSize="littlenormal" />
+              </p>
+            </Fab>
+            {/* <button
             onClick={onChangeCU}
             className="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-700 focus:outline-none focus:shadow-outline"
           >
             <IoArrowBack />
-          </button>
-        </div>
+          </button> */}
+          </div>
+        )}
+
         <Container maxWidth="md">
           <Box
             display="flex"
@@ -296,36 +325,36 @@ export default observer(function CreateShopScreen({
                   }}
                 />
 
-                {!dataEdit && !shopTo && (
-                  <Fab
-                    variant="extended"
-                    color="primary"
-                    onClick={handleOpen}
-                    sx={{
-                      width: "100%",
-                      height: 56,
-                      marginTop: 0.7,
-                      borderRadius: 1,
-                      boxShadow: 3,
-                      "&:hover": {
-                        backgroundColor: "primary.dark",
-                      },
-                      transition: "all 0.3s ease-in-out",
-                      zIndex: 1,
-                    }}
-                  >
-                    <p className="FontPublic">
-                      <MyContent
-                        name="เลือกที่อยู่ร้านจากที่อยู่ของคุณ"
-                        fontSize="littlenormal"
-                      />
-                    </p>
-                  </Fab>
-                )}
+                {/* {!dataEdit && !shopTo && ( */}
+                <Fab
+                  variant="extended"
+                  color="primary"
+                  onClick={handleOpen}
+                  sx={{
+                    width: "100%",
+                    height: 56,
+                    marginTop: 0.7,
+                    borderRadius: 1,
+                    boxShadow: 3,
+                    "&:hover": {
+                      backgroundColor: "primary.dark",
+                    },
+                    transition: "all 0.3s ease-in-out",
+                    zIndex: 1,
+                  }}
+                >
+                  <p className="FontPublic">
+                    <MyContent
+                      name="เลือกที่อยู่ร้านจากที่อยู่ของคุณ"
+                      fontSize="littlenormal"
+                    />
+                  </p>
+                </Fab>
+                {/* )} */}
 
                 <TextField
                   defaultValue={address?.detail}
-                  value={address["detail"]}
+                  value={address?.detail}
                   onChange={(e) => {
                     setAddress((oldAddr: Address) => ({
                       ...oldAddr,
@@ -361,7 +390,11 @@ export default observer(function CreateShopScreen({
                 </label>
                 <InputThaiAddress.Zipcode
                   value={address["zipcode"]}
-                  onChange={handleChange("zipcode")}
+                  onChange={(e) => {
+                    console.log("e", e);
+
+                    handleChange("zipcode")(e);
+                  }}
                   onSelect={(e: any) => handleSelect(e)}
                   style={{
                     height: "55px",
