@@ -157,16 +157,6 @@ const OrderList = () => {
     setPage(0);
   };
 
-  const columns = [
-    { id: "orderId", label: "รหัสคำสั่งซื้อ" },
-    { id: "paymentImage", label: "รูปภาพสลิป" },
-    { id: "description", label: "หมายเลขพัสดุ (tracking)" },
-    { id: "createdAt", label: "สร้างเมื่อวันที่" },
-    { id: "status", label: "สถานะ" },
-    { id: "confirmReceipt", label: "สถานะพัสดุ" },
-    { id: "edit", label: "ตัวเลือก" },
-  ];
-
   const onChangeCU = () => setOnCreate(!onCreate);
 
   const handleClickOpen = () => {
@@ -182,24 +172,32 @@ const OrderList = () => {
     setOpenDropdown(!openDropdown);
   };
 
-  // const [modal, setmodal] = useState(false);
-
-  // const handleModal = () => {
-  //   setmodal(true);
-  // };
-
   const componentRef = useRef(null);
+
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false); 
+
+  const columns = [
+    { id: "orderId", label: "รหัสคำสั่งซื้อ" },
+    { id: "paymentImage", label: "รูปภาพสลิป" },
+    { id: "description", label: "หมายเลขพัสดุ (tracking)" },
+    { id: "createdAt", label: "สร้างเมื่อวันที่" },
+    { id: "status", label: "สถานะ" },
+    { id: "confirmReceipt", label: "สถานะพัสดุ" },
+    ...(isGeneratingPDF ? [] : [{ id: "edit", label: "ตัวเลือก" }]),
+  ];
+
   function generatePDF() {
+    setIsGeneratingPDF(true); 
     const opt = {
       margin: 0.2,
       filename: "report_MyAccount.pdf",
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 3 },
+      image: { type: "png", quality: 0.98 },
+      html2canvas: { scale: 3, useCORS: true }, 
       jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
     };
 
-    const closeButton: any = document.querySelector("#closeButton");
-    const downloadButton: any = document.querySelector("#downloadButton");
+    const closeButton:any = document.querySelector("#closeButton");
+    const downloadButton:any = document.querySelector("#downloadButton");
 
     if (downloadButton) {
       downloadButton.style.display = "none";
@@ -214,6 +212,7 @@ const OrderList = () => {
       .set(opt)
       .save()
       .then(() => {
+        setIsGeneratingPDF(false);
         if (downloadButton) {
           downloadButton.style.display = "block";
         }
@@ -275,20 +274,17 @@ const OrderList = () => {
 
         console.log("rowData.paymentImage", rowData.paymentImage);
 
-        // If there is a payment image, add a hyperlink to the "paymentImage" column
         if (colIndex === 2 && rowData.paymentImage !== "ไม่มีรูปภาพ") {
-          // 2 corresponds to the 'paymentImage' column
-          const imageUrl = `https://localhost:8168/paymentImage/${rowData.paymentImage}`; // Replace with your actual image path
+          const imageUrl = `https://localhost:8168/paymentImage/${rowData.paymentImage}`; 
           cell.value = {
             text: "มีรูปภาพ",
-            hyperlink: imageUrl, // Set the hyperlink to the image URL
+            hyperlink: imageUrl,
           };
-          cell.font = { color: { argb: "0000FF" }, underline: true }; // Make the text blue and underlined (standard for links)
+          cell.font = { color: { argb: "0000FF" }, underline: true }; 
         }
       });
     };
 
-    // Iterate over the 'order' array and call addStyledRow for each row of data
     for (const row of order) {
       const statusText =
         row.status === 0
@@ -312,7 +308,6 @@ const OrderList = () => {
         .add(543, "year")
         .format("DD/MM/YYYY");
 
-      // Add the row data to the Excel sheet
       addStyledRow({
         orderId: row.orderId,
         paymentImage: row.paymentImage ? row.paymentImage : "ไม่มีรูปภาพ",
@@ -502,13 +497,7 @@ const OrderList = () => {
               </div>
             )}
 
-            <TableContainer
-              // sx={{
-              //   width: 1200,
-              // }}
-              ref={componentRef}
-              component={Paper}
-            >
+            <TableContainer ref={componentRef} component={Paper}>
               <Table
                 sx={{ width: "100%" }}
                 aria-label="custom pagination table"
@@ -535,181 +524,215 @@ const OrderList = () => {
                         page * rowsPerPage + rowsPerPage
                       )
                     : order
-                  ).map((row) => (
-                    <TableRow key={row.id}>
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        align="center"
-                        style={{
-                          width: 170,
-                        }}
-                      >
-                        <p className="FontPublic">
-                          <MyContent name={row.orderId} fontSize="smaller" />
-                        </p>
-                      </TableCell>
-                      <TableCell component="th" scope="row" align="center">
-                        {row.paymentImage ? (
-                          <img
-                            src={pathImages.paymentImage + row.paymentImage}
-                            alt={
-                              pathImages.paymentImage + dataEdit?.paymentImage
-                            }
-                            width={130}
-                          />
-                        ) : (
-                          <MyContent name="-" fontSize="normal" />
-                        )}
-                      </TableCell>
-                      <TableCell style={{ width: 250 }} align="center">
-                        <div
-                          className={
-                            row.status !== 2
-                              ? !!row.tag
-                                ? ""
-                                : "text-yellow-500 bg-yellow-100 border border-yellow-500 px-3 py-1 rounded-full"
-                              : ""
-                          }
+                  ).map((row) => {
+                    return (
+                      <TableRow key={row.id}>
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          align="center"
+                          style={{
+                            width: 170,
+                          }}
                         >
-                          {row.status === 2 ? (
-                            <p className="FontPublic">
+                          <p className="FontPublic">
+                            <MyContent name={row.orderId} fontSize="smaller" />
+                          </p>
+                        </TableCell>
+                        <TableCell component="th" scope="row" align="center">
+                          {row.paymentImage ? (
+                            isGeneratingPDF ? (
+                              <a
+                                href={
+                                  pathImages.paymentImage + row.paymentImage
+                                }
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <p style={{ fontSize: 16, fontWeight: 500, color: '#0400ff', textDecoration: 'underline' }}>
+                                ดูรูปภาพ
+                              </p>
+                              </a>
+                            ) : (
+                              <a
+                                href={
+                                  pathImages.paymentImage + row.paymentImage
+                                }
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <img
+                                  src={
+                                    pathImages.paymentImage + row.paymentImage
+                                  }
+                                  alt={
+                                    pathImages.paymentImage +
+                                    dataEdit?.paymentImage
+                                  }
+                                  width={130}
+                                />
+                              </a>
+                            )
+                          ) : (
+                            <MyContent name="-" fontSize="normal" />
+                          )}
+                        </TableCell>
+                        <TableCell style={{ width: 250 }} align="center">
+                          <div
+                            className={
+                              row.status !== 2
+                                ? !!row.tag
+                                  ? ""
+                                  : "text-yellow-500 bg-yellow-100 border border-yellow-500 px-3 py-1 rounded-full"
+                                : ""
+                            }
+                          >
+                            {row.status === 2 ? (
+                              <p className="FontPublic">
+                                <MyContent
+                                  name="ยกเลิกคำสั่งซื้อแล้ว"
+                                  fontSize="smaller"
+                                />
+                              </p>
+                            ) : !!row.tag ? (
+                              <p className="FontPublic">
+                                <MyContent name={row.tag} fontSize="smaller" />
+                              </p>
+                            ) : (
+                              <p className="FontPublic ">
+                                <MyContent
+                                  name="ยังไม่ได้กรอกหมายเลขพัสดุ"
+                                  fontSize="smaller"
+                                />
+                              </p>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          style={{
+                            width: 200,
+                          }}
+                        >
+                          <p className="FontPublic ">
+                            <MyContent
+                              name={formatDateThai(row.createdAt, +543, 1)}
+                              fontSize="smaller"
+                            />
+                          </p>
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          style={{
+                            width: 160,
+                          }}
+                        >
+                          <div
+                            className={
+                              (row.status === 0
+                                ? "text-yellow-500 bg-yellow-100 border border-yellow-500"
+                                : row.status === 1
+                                ? "text-green-500 bg-green-100 border border-green-500"
+                                : row.status === 2
+                                ? "text-red-500 bg-red-100 border border-red-500"
+                                : "") + " px-3 py-1 rounded-full font-semibold"
+                            }
+                          >
+                            {row.status === 0 ? (
+                              <p className="FontPublic font-semibold">
+                                <MyContent
+                                  name="กำลังรออนุมัติ"
+                                  fontSize="smaller"
+                                />
+                              </p>
+                            ) : row.status === 1 ? (
+                              <p className="FontPublic font-semibold">
+                                <MyContent
+                                  name="ยืนยันคำสั่งซื้อแล้ว"
+                                  fontSize="smaller"
+                                />
+                              </p>
+                            ) : row.status === 2 ? (
+                              <p className="FontPublic font-semibold">
+                                <MyContent
+                                  name="ยกเลิกคำสั่งซื้อแล้ว"
+                                  fontSize="smaller"
+                                />
+                              </p>
+                            ) : (
+                              <p>
+                                <MyContent
+                                  name="กรุณาเพิ่มสถานะ"
+                                  fontSize="smaller"
+                                />
+                              </p>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          style={{
+                            width: 160,
+                          }}
+                        >
+                          {row.confirmReceipt === 0 ? (
+                            <p className="FontPublic ">
                               <MyContent
-                                name="ยกเลิกคำสั่งซื้อแล้ว"
+                                name="กำลังดำเนินการ"
                                 fontSize="smaller"
                               />
                             </p>
-                          ) : !!row.tag ? (
-                            <p className="FontPublic">
-                              <MyContent name={row.tag} fontSize="smaller" />
+                          ) : row.confirmReceipt === 1 ? (
+                            <p className="FontPublic ">
+                              <MyContent
+                                name="ได้รับพัสดุแล้ว"
+                                fontSize="smaller"
+                              />
+                            </p>
+                          ) : row.confirmReceipt === 2 ? (
+                            <p className="FontPublic ">
+                              <MyContent
+                                name="ไม่ได้รับพัสดุ"
+                                fontSize="smaller"
+                              />
                             </p>
                           ) : (
                             <p className="FontPublic ">
-                              <MyContent
-                                name="ยังไม่ได้กรอกหมายเลขพัสดุ"
-                                fontSize="smaller"
-                              />
-                            </p>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        style={{
-                          width: 200,
-                        }}
-                      >
-                        <p className="FontPublic ">
-                          <MyContent
-                            name={formatDateThai(row.createdAt, +543, 1)}
-                            fontSize="smaller"
-                          />
-                        </p>
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        style={{
-                          width: 160,
-                        }}
-                      >
-                        <div
-                          className={
-                            (row.status === 0
-                              ? "text-yellow-500 bg-yellow-100 border border-yellow-500"
-                              : row.status === 1
-                              ? "text-green-500 bg-green-100 border border-green-500"
-                              : row.status === 2
-                              ? "text-red-500 bg-red-100 border border-red-500"
-                              : "") + " px-3 py-1 rounded-full font-semibold"
-                          }
-                        >
-                          {row.status === 0 ? (
-                            <p className="FontPublic font-semibold">
-                              <MyContent
-                                name="กำลังรออนุมัติ"
-                                fontSize="smaller"
-                              />
-                            </p>
-                          ) : row.status === 1 ? (
-                            <p className="FontPublic font-semibold">
-                              <MyContent
-                                name="ยืนยันคำสั่งซื้อแล้ว"
-                                fontSize="smaller"
-                              />
-                            </p>
-                          ) : row.status === 2 ? (
-                            <p className="FontPublic font-semibold">
-                              <MyContent
-                                name="ยกเลิกคำสั่งซื้อแล้ว"
-                                fontSize="smaller"
-                              />
-                            </p>
-                          ) : (
-                            <p>
                               <MyContent
                                 name="กรุณาเพิ่มสถานะ"
                                 fontSize="smaller"
                               />
                             </p>
                           )}
-                        </div>
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        style={{
-                          width: 160,
-                        }}
-                      >
-                        {row.confirmReceipt === 0 ? (
-                          <p className="FontPublic ">
-                            <MyContent
-                              name="กำลังดำเนินการ"
-                              fontSize="smaller"
-                            />
-                          </p>
-                        ) : row.confirmReceipt === 1 ? (
-                          <p className="FontPublic ">
-                            <MyContent
-                              name="ได้รับพัสดุแล้ว"
-                              fontSize="smaller"
-                            />
-                          </p>
-                        ) : row.confirmReceipt === 2 ? (
-                          <p className="FontPublic ">
-                            <MyContent
-                              name="ไม่ได้รับพัสดุ"
-                              fontSize="smaller"
-                            />
-                          </p>
+                        </TableCell>
+                        {isGeneratingPDF ? (
+                          <div></div>
                         ) : (
-                          <p className="FontPublic ">
-                            <MyContent
-                              name="กรุณาเพิ่มสถานะ"
-                              fontSize="smaller"
-                            />
-                          </p>
+                          <TableCell
+                            align="center"
+                            style={{
+                              width: 160,
+                            }}
+                          >
+                            <Fab
+                              variant="extended"
+                              color="primary"
+                              onClick={() => {
+                                setDataEdit(row);
+                                onChangeCU();
+                              }}
+                            >
+                              <p className="FontPublic font-semibold">
+                                <MyContent
+                                  name="เพิ่มเติม"
+                                  fontSize="smaller"
+                                />
+                              </p>
+                            </Fab>
+                          </TableCell>
                         )}
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        style={{
-                          width: 160,
-                        }}
-                      >
-                        <Fab
-                          variant="extended"
-                          color="primary"
-                          onClick={() => {
-                            setDataEdit(row);
-                            onChangeCU();
-                          }}
-                        >
-                          <p className="FontPublic font-semibold">
-                            <MyContent name="เพิ่มเติม" fontSize="smaller" />
-                          </p>
-                        </Fab>
-                      </TableCell>
-                      {/* <TableCell style={{ width: 100 }}>
+
+                        {/* <TableCell style={{ width: 100 }}>
                         <Button
                           variant="contained"
                           color="primary"
@@ -721,58 +744,59 @@ const OrderList = () => {
                         </Button>
                       </TableCell> */}
 
-                      <Dialog
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                      >
-                        <DialogTitle
-                          id="alert-dialog-title"
-                          sx={{ textAlign: "center" }}
+                        <Dialog
+                          open={open}
+                          onClose={handleClose}
+                          aria-labelledby="alert-dialog-title"
+                          aria-describedby="alert-dialog-description"
                         >
-                          <p className="FontPublic font-semibold">
-                            <MyContent
-                              name="ลบข้อมูลออกจากระบบฐานข้อมูล"
-                              fontSize="littlenormal"
-                            />
-                          </p>
-                        </DialogTitle>
-                        <DialogContent>
-                          <DialogContentText
-                            id="alert-dialog-description"
+                          <DialogTitle
+                            id="alert-dialog-title"
                             sx={{ textAlign: "center" }}
                           >
-                            <p className="FontPublic">
+                            <p className="FontPublic font-semibold">
                               <MyContent
-                                name="การดำเนินการนี้ต้องได้รับการยืนยันก่อนดำเนินการ"
-                                fontSize="small"
+                                name="ลบข้อมูลออกจากระบบฐานข้อมูล"
+                                fontSize="littlenormal"
                               />
                             </p>
-                          </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                          <Button onClick={handleClose}>
-                            <p className="FontPublic">
-                              <MyContent name="ยกเลิก" fontSize="small" />
-                            </p>
-                          </Button>
-                          <Button
-                            onClick={() => {
-                              //   removeProduct(row.id);
-                              //   getProductByStore(user?.stores[0].id || 0);
-                              handleClose();
-                            }}
-                            autoFocus
-                          >
-                            <p className="FontPublic">
-                              <MyContent name="ยืนยัน" fontSize="small" />
-                            </p>
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
-                    </TableRow>
-                  ))}
+                          </DialogTitle>
+                          <DialogContent>
+                            <DialogContentText
+                              id="alert-dialog-description"
+                              sx={{ textAlign: "center" }}
+                            >
+                              <p className="FontPublic">
+                                <MyContent
+                                  name="การดำเนินการนี้ต้องได้รับการยืนยันก่อนดำเนินการ"
+                                  fontSize="small"
+                                />
+                              </p>
+                            </DialogContentText>
+                          </DialogContent>
+                          <DialogActions>
+                            <Button onClick={handleClose}>
+                              <p className="FontPublic">
+                                <MyContent name="ยกเลิก" fontSize="small" />
+                              </p>
+                            </Button>
+                            <Button
+                              onClick={() => {
+                                //   removeProduct(row.id);
+                                //   getProductByStore(user?.stores[0].id || 0);
+                                handleClose();
+                              }}
+                              autoFocus
+                            >
+                              <p className="FontPublic">
+                                <MyContent name="ยืนยัน" fontSize="small" />
+                              </p>
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
+                      </TableRow>
+                    );
+                  })}
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
                       <TableCell colSpan={6} />

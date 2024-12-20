@@ -31,9 +31,12 @@ const MyOrderCard = ({ order, index }: props) => {
 
   const { changeConfirmReceiptOrder } = useStore().orderStore;
   const { systemSetting } = useStore().systemSettingStore;
-  const componentRef = useRef(null);
 
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false); 
+
+  const componentRef = useRef(null);
   function generatePDF() {
+    setIsGeneratingPDF(true); 
     const opt = {
       margin: 0.2,
       filename: "reportOrderAll.pdf",
@@ -54,6 +57,7 @@ const MyOrderCard = ({ order, index }: props) => {
       .set(opt)
       .save()
       .then(() => {
+        setIsGeneratingPDF(false);
         if (downloadButton) {
           downloadButton.style.display = "block";
         }
@@ -342,7 +346,20 @@ const MyOrderCard = ({ order, index }: props) => {
                             }}
                             className="shrink-0 md:order-1"
                           >
-                            <img
+                            {isGeneratingPDF ? (
+                               <a
+                               href={
+                                 pathImages.product + item.product.images
+                               }
+                               target="_blank"
+                               rel="noopener noreferrer"
+                             >
+                               <p style={{ fontSize: 16, fontWeight: 500, color: '#0400ff', textDecoration: 'underline'}}>
+                               ดูรูปภาพ
+                             </p>
+                             </a>  
+                            ):(
+<img
                               className="hidden h-20 w-20 dark:block object-cover"
                               src={pathImages.product + item.product.images}
                               alt={item.product.images || "product image"}
@@ -350,6 +367,8 @@ const MyOrderCard = ({ order, index }: props) => {
                                 cursor: "pointer",
                               }}
                             />
+                            )}
+                            
                           </a>
                           <label className="sr-only">Choose quantity:</label>
                           <div className="flex items-center justify-between md:order-3 md:justify-end">
