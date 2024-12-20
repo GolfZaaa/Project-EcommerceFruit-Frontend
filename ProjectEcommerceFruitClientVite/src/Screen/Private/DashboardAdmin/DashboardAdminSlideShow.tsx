@@ -229,15 +229,9 @@ const DashboardAdminSlideShow = () => {
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               <div
-                              //   className={`
-                              //   py-1 px-3 border font-semibold rounded-full
-                              //   ${
-                              //     userItem.status
-                              //       ? "text-green-500 bg-green-100 border-green-500"
-                              //       : "text-red-500 bg-red-100 border-red-500"
-                              //   }
-                              // `}
                               >
+
+                                
                                 <MySwitch
                                   handleChange={() => handleIsUsed(userItem)}
                                   checked={userItem.isUsed}

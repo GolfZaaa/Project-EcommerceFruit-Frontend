@@ -174,7 +174,7 @@ const OrderList = () => {
 
   const componentRef = useRef(null);
 
-  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false); 
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const columns = [
     { id: "orderId", label: "รหัสคำสั่งซื้อ" },
@@ -187,17 +187,17 @@ const OrderList = () => {
   ];
 
   function generatePDF() {
-    setIsGeneratingPDF(true); 
+    setIsGeneratingPDF(true);
     const opt = {
       margin: 0.2,
       filename: "report_MyAccount.pdf",
       image: { type: "png", quality: 0.98 },
-      html2canvas: { scale: 3, useCORS: true }, 
+      html2canvas: { scale: 3, useCORS: true },
       jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
     };
 
-    const closeButton:any = document.querySelector("#closeButton");
-    const downloadButton:any = document.querySelector("#downloadButton");
+    const closeButton: any = document.querySelector("#closeButton");
+    const downloadButton: any = document.querySelector("#downloadButton");
 
     if (downloadButton) {
       downloadButton.style.display = "none";
@@ -275,12 +275,12 @@ const OrderList = () => {
         console.log("rowData.paymentImage", rowData.paymentImage);
 
         if (colIndex === 2 && rowData.paymentImage !== "ไม่มีรูปภาพ") {
-          const imageUrl = `https://localhost:8168/paymentImage/${rowData.paymentImage}`; 
+          const imageUrl = `https://localhost:8168/paymentImage/${rowData.paymentImage}`;
           cell.value = {
             text: "มีรูปภาพ",
             hyperlink: imageUrl,
           };
-          cell.font = { color: { argb: "0000FF" }, underline: true }; 
+          cell.font = { color: { argb: "0000FF" }, underline: true };
         }
       });
     };
@@ -549,9 +549,17 @@ const OrderList = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
-                                <p style={{ fontSize: 16, fontWeight: 500, color: '#0400ff', textDecoration: 'underline' }}>
-                                ดูรูปภาพ
-                              </p>
+                                <p
+                                  style={{
+                                    fontSize: 16,
+                                    fontWeight: 500,
+                                    color: "#0400ff",
+                                    textDecoration: "underline",
+                                    padding: 10,
+                                  }}
+                                >
+                                  ดูรูปภาพ
+                                </p>
                               </a>
                             ) : (
                               <a

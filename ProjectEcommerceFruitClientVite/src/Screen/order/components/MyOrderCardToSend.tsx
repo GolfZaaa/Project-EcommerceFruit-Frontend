@@ -618,7 +618,7 @@ const MyOrderCardToSend = ({ order, index }: props) => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                >
-                               <p style={{ fontSize: 16, fontWeight: 500, color: '#0400ff', textDecoration: 'underline' }}>
+                               <p style={{ fontSize: 16, fontWeight: 500, color: '#0400ff', textDecoration: 'underline',padding:20 }}>
                                ดูรูปภาพ
                               </p>
                              </a>

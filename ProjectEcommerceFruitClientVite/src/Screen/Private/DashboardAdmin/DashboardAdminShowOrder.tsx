@@ -88,13 +88,20 @@ export default observer(function DashboardAdminShowOrder() {
       { header: "สถานะ", key: "status", width: 20 },
     ];
 
-    worksheet.getRow(1).font = { bold: true, size: 14, color: { argb: "FFFFFF" }};
-    worksheet.getRow(1).alignment = { horizontal: "center", vertical: "middle" };
+    worksheet.getRow(1).font = {
+      bold: true,
+      size: 14,
+      color: { argb: "FFFFFF" },
+    };
+    worksheet.getRow(1).alignment = {
+      horizontal: "center",
+      vertical: "middle",
+    };
     worksheet.getRow(1).eachCell((cell) => {
       cell.fill = {
         type: "pattern",
         pattern: "solid",
-        fgColor: { argb: "0070C0" }, 
+        fgColor: { argb: "0070C0" },
       };
       cell.border = {
         top: { style: "thin" },
@@ -103,7 +110,6 @@ export default observer(function DashboardAdminShowOrder() {
         right: { style: "thin" },
       };
     });
-
 
     filterUser.forEach((orders: any, index: number) => {
       const row = worksheet.addRow({
@@ -164,8 +170,13 @@ export default observer(function DashboardAdminShowOrder() {
     });
   };
 
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+
   const componentRef = useRef(null);
+
   function generatePDF() {
+    setIsGeneratingPDF(true);
+
     const opt = {
       margin: 0.2,
       filename: "report_Order_ByAdmin.pdf",
@@ -186,6 +197,8 @@ export default observer(function DashboardAdminShowOrder() {
       .set(opt)
       .save()
       .then(() => {
+        setIsGeneratingPDF(false);
+
         if (downloadButton) {
           downloadButton.style.display = "block";
         }
@@ -202,94 +215,109 @@ export default observer(function DashboardAdminShowOrder() {
               ref={componentRef}
             >
               <div className="relative  text-gray-500 focus-within:text-gray-900 mb-4">
-                <div className="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none ">
-                  <svg
-                    className="w-5 h-5"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M17.5 17.5L15.4167 15.4167M15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333C11.0005 15.8333 12.6614 15.0929 13.8667 13.8947C15.0814 12.6872 15.8333 11.0147 15.8333 9.16667Z"
-                      stroke="#9CA3AF"
-                      stroke-width="1.6"
-                      stroke-linecap="round"
-                    />
-                    <path
-                      d="M17.5 17.5L15.4167 15.4167M15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333C11.0005 15.8333 12.6614 15.0929 13.8667 13.8947C15.0814 12.6872 15.8333 11.0147 15.8333 9.16667Z"
-                      stroke="black"
-                      stroke-opacity="0.2"
-                      stroke-width="1.6"
-                      stroke-linecap="round"
-                    />
-                    <path
-                      d="M17.5 17.5L15.4167 15.4167M15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333C11.0005 15.8333 12.6614 15.0929 13.8667 13.8947C15.0814 12.6872 15.8333 11.0147 15.8333 9.16667Z"
-                      stroke="black"
-                      stroke-opacity="0.2"
-                      stroke-width="1.6"
-                      stroke-linecap="round"
-                    />
-                  </svg>
-                </div>
+                {isGeneratingPDF ? (
+                  <div>
+                    <div className="flex justify-center items-center h-full mb-5">
+                      <p style={{ fontWeight: 700 }}>
+                        <MyContent
+                          name="ข้อมูลคำสั่งซื้อสินค้า"
+                          fontSize="littlenormal"
+                        />
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="absolute inset-y-0 left-1 flex items-center pl-3 pointer-events-none ">
+                      <svg
+                        className="w-5 h-5"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M17.5 17.5L15.4167 15.4167M15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333C11.0005 15.8333 12.6614 15.0929 13.8667 13.8947C15.0814 12.6872 15.8333 11.0147 15.8333 9.16667Z"
+                          stroke="#9CA3AF"
+                          stroke-width="1.6"
+                          stroke-linecap="round"
+                        />
+                        <path
+                          d="M17.5 17.5L15.4167 15.4167M15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333C11.0005 15.8333 12.6614 15.0929 13.8667 13.8947C15.0814 12.6872 15.8333 11.0147 15.8333 9.16667Z"
+                          stroke="black"
+                          stroke-opacity="0.2"
+                          stroke-width="1.6"
+                          stroke-linecap="round"
+                        />
+                        <path
+                          d="M17.5 17.5L15.4167 15.4167M15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333C11.0005 15.8333 12.6614 15.0929 13.8667 13.8947C15.0814 12.6872 15.8333 11.0147 15.8333 9.16667Z"
+                          stroke="black"
+                          stroke-opacity="0.2"
+                          stroke-width="1.6"
+                          stroke-linecap="round"
+                        />
+                      </svg>
+                    </div>
 
-                <input
-                  type="text"
-                  id="default-search"
-                  className="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none bg-white"
-                  placeholder="ค้นหาข้อมูล"
-                  value={searchUser}
-                  onChange={(e) => setSearchUser(e.target.value)}
-                />
+                    <input
+                      type="text"
+                      id="default-search"
+                      className="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none bg-white"
+                      placeholder="ค้นหาข้อมูล"
+                      value={searchUser}
+                      onChange={(e) => setSearchUser(e.target.value)}
+                    />
+                  </div>
+                )}
 
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                                    <div className="relative inline-block text-left">
-                                      <div id="downloadButton">
-                                        <button
-                                          onClick={handleDropdown}
-                                          type="button"
-                                          className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                                          id="menu-button"
-                                          aria-expanded="true"
-                                          aria-haspopup="true"
-                                        >
-                                          <BiDownload size={20}/>
-                                        </button>
-                                      </div>
-                
-                                      {dropdown && (
-                                        <div
-                                          className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                                          role="menu"
-                                          aria-orientation="vertical"
-                                          aria-labelledby="menu-button"
-                                        >
-                                          <div className="py-1 cursor-pointer " role="none">
-                                            <div>
-                                              <button
-                                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-red-600 hover:bg-gray-200 hover:font-bold w-full"
-                                                role="menuitem"
-                                                id="menu-item-0"
-                                                onClick={generatePDF}
-                                              >
-                                                <VscFilePdf className="mr-2" size={20} /> PDF
-                                              </button>
-                                            </div>
-                                            <div className="">
-                                              <button
-                                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:bg-gray-200 hover:font-bold w-full"
-                                                onClick={generateExcel}
-                                                role="menuitem"
-                                                id="menu-item-1"
-                                              >
-                                                <RiFileExcel2Line className="mr-2" size={20} />
-                                                EXCEL
-                                              </button>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      )}
-                                    </div>
-                                  </div>
+                  <div className="relative inline-block text-left">
+                    <div id="downloadButton">
+                      <button
+                        onClick={handleDropdown}
+                        type="button"
+                        className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                        id="menu-button"
+                        aria-expanded="true"
+                        aria-haspopup="true"
+                      >
+                        <BiDownload size={20} />
+                      </button>
+                    </div>
+
+                    {dropdown && (
+                      <div
+                        className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        role="menu"
+                        aria-orientation="vertical"
+                        aria-labelledby="menu-button"
+                      >
+                        <div className="py-1 cursor-pointer " role="none">
+                          <div>
+                            <button
+                              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-red-600 hover:bg-gray-200 hover:font-bold w-full"
+                              role="menuitem"
+                              id="menu-item-0"
+                              onClick={generatePDF}
+                            >
+                              <VscFilePdf className="mr-2" size={20} /> PDF
+                            </button>
+                          </div>
+                          <div className="">
+                            <button
+                              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-green-600 hover:bg-gray-200 hover:font-bold w-full"
+                              onClick={generateExcel}
+                              role="menuitem"
+                              id="menu-item-1"
+                            >
+                              <RiFileExcel2Line className="mr-2" size={20} />
+                              EXCEL
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
               <div className="overflow-hidden ">
                 <table className="min-w-full border border-gray-300 rounded-tl-lg rounded-tr-lg overflow-hidden">
@@ -366,11 +394,31 @@ export default observer(function DashboardAdminShowOrder() {
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               {" "}
                               {userItem.paymentImage ? (
-                                <img
-                                  className="w-20 h-24 object-cover"
-                                  src={`${pathImagepayment}${userItem.paymentImage}`}
-                                  alt="Payment"
-                                />
+                                isGeneratingPDF ? (
+                                  <a
+                                    href={`${pathImagepayment}${userItem.paymentImage}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <p
+                                      style={{
+                                        fontSize: 16,
+                                        fontWeight: 500,
+                                        color: "#0400ff",
+                                        textDecoration: "underline",
+                                        padding: 10,
+                                      }}
+                                    >
+                                      ดูรูปภาพ
+                                    </p>
+                                  </a>
+                                ) : (
+                                  <img
+                                    className="w-20 h-24 object-cover"
+                                    src={`${pathImagepayment}${userItem.paymentImage}`}
+                                    alt="Payment"
+                                  />
+                                )
                               ) : (
                                 <div className="pl-8">
                                   <p>
