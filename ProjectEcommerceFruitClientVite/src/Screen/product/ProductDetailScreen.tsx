@@ -257,7 +257,8 @@ export default observer(function ProductDetailScreen() {
       x.id !== productDetail?.id &&
       x.hidden !== true &&
       x.status === true &&
-      x.productGI.store.hidden !== true
+      x.productGI.store.hidden !== true &&
+      x.quantity > 0
   );
 
   const handleGoBack = () => {
@@ -294,11 +295,19 @@ export default observer(function ProductDetailScreen() {
                 : imageLocal.noPicture
             }
           />
+
           <div className="flex mt-2 space-x-4">
             {productDetail?.productGI.images.map((item) => (
               <img
-                alt="img-tag-one"
-                className="md:w-24 md:h-24 rounded-t-lg object-cover "
+                alt="images"
+                className="md:w-24 md:h-24 rounded-b-lg object-cover"
+                style={{
+                  cursor: "pointer",
+                  border:
+                    (preViewImage === pathImages.product_GI + item.imageName &&
+                      "2px solid red") ||
+                    "",
+                }}
                 onClick={() =>
                   setPreViewImage(
                     preViewImage === pathImages.product_GI + item.imageName

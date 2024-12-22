@@ -25,6 +25,7 @@ import DropZoneImageComponent from "../../layout/component/DropZoneImageComponen
 import { pathImages } from "../../constants/RoutePath";
 import { formats, modules, myToast } from "../../helper/components";
 import MyContent from "../../component/MyContent";
+import Swal from "sweetalert2";
 
 interface props {
   onChangeCU?: any | null;
@@ -77,12 +78,68 @@ export default observer(function CreateProductScreen({
         productGIId: selectGI,
       };
 
-      await createUpdateProduct(dataForm).then((result) => {
-        if (!!result) {
-          onChangeCU();
-        }
-      });
+      if (dataEdit?.id) {
+        await createUpdateProduct(dataForm).then((result) => {
+          if (!!result) {
+            onChangeCU();
+          }
+        });
+      } else {
+        handleCreate(dataForm);
+      }
     }
+  };
+
+  const handleCreate = (dataForm: any) => {
+    Swal.fire({
+      title: "กรุณาระบุวันหมดอายุของสินค้า",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ยกเลิก",
+      input: "number",
+      // width: 550,
+      inputValidator: (value) => {
+        const numberValue = parseFloat(value);
+        if (isNaN(numberValue)) {
+          return "กรุณาใส่จำนวนวันที่เป็นตัวเลข!";
+        } else if (numberValue < 0) {
+          return "จำนวนวันต้องไม่ติดลบ!";
+        } else if (numberValue === 0) {
+          return "จำนวนวันต้องไม่เป็น 0!";
+        }
+
+        return null;
+      },
+      inputLabel: "โดยเริ่มนับจากวันที่บันทึกรายการสินค้าเข้าระบบ",
+      inputPlaceholder: "โปรดระบุจำนวนวันหมดอายุของสินค้า",
+      inputAttributes: {
+        autocapitalize: "off",
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          "ส่งต่อคำสั่งซื้อเรียบร้อยแล้ว",
+          "ท่านส่งต่อคำสั่งซื้อเรียบร้อยแล้ว",
+          "success"
+        );
+
+        const data = {
+          ...dataForm,
+          expire: parseFloat(result.value),
+        };
+
+        console.log("data", data);
+
+        await createUpdateProduct(data).then((result) => {
+          if (!!result) {
+            onChangeCU();
+          }
+        });
+      }
+    });
   };
 
   const onSelectGI = (id: number) => {
