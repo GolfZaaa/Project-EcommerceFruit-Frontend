@@ -224,7 +224,8 @@ export default function ProductDetailsScreen() {
       x.id !== productDetail?.id &&
       x.hidden !== true &&
       x.status === true &&
-      x.productGI.store.hidden !== true
+      x.productGI.store.hidden !== true &&
+      x.quantity > 0
   );
 
   const [visibleCount, setVisibleCount] = useState(5);

@@ -11,7 +11,7 @@ import { Shop } from "./shop.api";
 
 // axios.defaults.baseURL = "https://localhost:7168/api/";
 
-export const port = "https://bc8f-182-53-138-135.ngrok-free.app/";
+export const port = "https://b682-182-53-106-229.ngrok-free.app/";
 
 axios.defaults.baseURL = port + "api/";
 
