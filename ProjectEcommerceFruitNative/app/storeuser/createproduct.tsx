@@ -90,14 +90,13 @@ export default observer(function CreateProduct() {
       quality: 1,
     });
 
-
     if (!result.canceled) {
       setImagesShow(result.assets[0].uri);
 
       let fileInfo = await FileSystem.getInfoAsync(result.assets[0].uri);
       let fileUri = fileInfo.uri;
       let fileName = fileUri.split("/").pop();
-      let fileType = "image/jpeg"; 
+      let fileType = "image/jpeg";
 
       setImagesSend({
         uri: fileUri,
@@ -107,7 +106,7 @@ export default observer(function CreateProduct() {
     }
   };
 
-  const [InputModalexpire, setInputModalexpire] = useState(false)
+  const [InputModalexpire, setInputModalexpire] = useState(false);
   const [inputExpire, setInputExpire] = useState(0);
 
   const handleSubmit = async () => {
@@ -120,7 +119,7 @@ export default observer(function CreateProduct() {
         price: price,
         detail: description || "<p></p>",
         productGIId: productGIId,
-        expire : inputExpire,
+        expire: inputExpire,
       };
 
       await createUpdateProduct(dataForm).then((result) => {
@@ -139,7 +138,35 @@ export default observer(function CreateProduct() {
     }
   };
 
+  const handleSubmitCreate = async () => {
+    if (imagesSend && weight && quantity && price && productGIId) {
+      const dataForm = {
+        id: dataEdit?.id || 0,
+        images: imagesSend || null,
+        weight: weight,
+        quantity: quantity,
+        price: price,
+        detail: description || "<p></p>",
+        productGIId: productGIId,
+      };
 
+      await createUpdateProduct(dataForm).then((result) => {
+        if (!!result === true) {
+          getProductByStore(user?.stores[0].id || 0);
+          router.back();
+        }
+      });
+    } else {
+      Alert.alert("เกิดข้อผิดพลาด", "กรอกข้อมูลไม่ครบถ้วน", [
+        {
+          text: "ตกลง",
+        },
+      ]);
+      Mytoast("กรอกข้อมูลไม่ครบถ้วน");
+    }
+  };
+
+  console.log("dataEdit", dataEdit);
 
   return (
     <ScrollView style={styles.container}>
@@ -201,6 +228,7 @@ export default observer(function CreateProduct() {
         style={styles.input}
         placeholder="ราคา *"
         placeholderTextColor="#999"
+        keyboardType="numeric"
       />
 
       <Label name="น้ำหนัก" valid />
@@ -220,6 +248,7 @@ export default observer(function CreateProduct() {
         style={styles.input}
         placeholder="จำนวน *"
         placeholderTextColor="#999"
+        keyboardType="numeric"
       />
 
       {/* <Label name="รายละเอียดสินค้า" valid />
@@ -263,9 +292,25 @@ export default observer(function CreateProduct() {
 
       {/* Save Button */}
       {/* <TouchableOpacity style={styles.saveButton} onPress={handleSubmit}> */}
-      <TouchableOpacity style={styles.saveButton} onPress={() => setInputModalexpire(true)}>
-        <Text style={styles.saveButtonText}>บันทึก</Text>
-      </TouchableOpacity>
+      {dataEdit == undefined || (Array.isArray(dataEdit) && dataEdit.length === 0) ? (
+        <View>
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={() => setInputModalexpire(true)}
+          >
+            <Text style={styles.saveButtonText}>บันทึก</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View>
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={handleSubmitCreate}
+          >
+            <Text style={styles.saveButtonText}>บันทึก</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       <Modal
         animationType="slide"
@@ -276,7 +321,9 @@ export default observer(function CreateProduct() {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>กรุณาระบุวันหมดอายุของสินค้า</Text>
-            <Text style={styles.modalTitlesecon}>โดยเริ่มนับจากวันที่บันทึกรายการสินค้าเข้าระบบ</Text>
+            <Text style={styles.modalTitlesecon}>
+              โดยเริ่มนับจากวันที่บันทึกรายการสินค้าเข้าระบบ
+            </Text>
             <TextInput
               style={styles.textInput}
               placeholder="โปรดระบุจำนวนวันหมดอายุของสินค้า"
@@ -284,23 +331,26 @@ export default observer(function CreateProduct() {
               value={inputExpire == 0 ? "" : inputExpire.toString()}
               onChangeText={(text) => {
                 if (/^\d*$/.test(text)) {
-                  setInputExpire(text ? parseInt(text, 10) : 0); 
+                  setInputExpire(text ? parseInt(text, 10) : 0);
                 }
               }}
-               keyboardType="numeric"
+              keyboardType="numeric"
             />
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={styles.cancelButton}
-                onPress={() => {setInputModalexpire(false); setInputExpire(0);}}
+                onPress={() => {
+                  setInputModalexpire(false);
+                  setInputExpire(0);
+                }}
               >
                 <Text style={styles.cancelButtonText}>ยกเลิก</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                  style={[
-                    styles.confirmButton,
-                    { backgroundColor: inputExpire ? "#4CAF50" : "#cccccc" }, 
-                  ]}
+                style={[
+                  styles.confirmButton,
+                  { backgroundColor: inputExpire ? "#4CAF50" : "#cccccc" },
+                ]}
                 onPress={() => {
                   handleSubmit();
                   setInputModalexpire(false);
@@ -313,8 +363,6 @@ export default observer(function CreateProduct() {
           </View>
         </View>
       </Modal>
-
-      
     </ScrollView>
   );
 });
@@ -385,7 +433,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
   },
-
 
   backButton: {
     position: "absolute",
