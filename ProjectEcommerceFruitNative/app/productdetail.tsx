@@ -225,7 +225,8 @@ export default function ProductDetailsScreen() {
       x.hidden !== true &&
       x.status === true &&
       x.productGI.store.hidden !== true &&
-      x.quantity > 0
+      x.quantity > 0 &&
+      new Date(x.expire).getTime() > Date.now()
   );
 
   const [visibleCount, setVisibleCount] = useState(5);
@@ -242,7 +243,8 @@ export default function ProductDetailsScreen() {
       x.id != productDetail?.id &&
       x.productGI.category.name === productDetail?.productGI.category.name &&
       x.productGI.store.userId != user?.id &&
-      x.productGI.store.id != productDetail.productGI.store.id
+      x.productGI.store.id != productDetail.productGI.store.id &&
+      new Date(x.expire).getTime() > Date.now()
   );
 
   return (

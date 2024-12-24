@@ -98,51 +98,6 @@ export default observer(function HomeScreen() {
     handleSearchMyShop();
   };
 
-  // const filteredProducts = product
-  //   .filter(
-  //     (x) =>
-  //       x.status === true &&
-  //       x.quantity > 0 &&
-  //       (selectedCategory === 0 || x.productGI.category.id === selectedCategory)
-  //   )
-  //   .sort((a, b) => {
-  //     if (sortPrice) {
-  //       if (sortPrice === "lowToHigh") {
-  //         return a.price - b.price;
-  //       } else if (sortPrice === "highToLow") {
-  //         return b.price - a.price;
-  //       }
-  //     }
-  //     return 0;
-  //   });
-
-  // const filterMyProductStore = (shopProductUser || [])
-  //   .filter(
-  //     (x) =>
-  //       selectedCategory === 0 || x.productGI.category.id === selectedCategory
-  //   )
-  //   .slice()
-  //   .sort((a, b) => {
-  //     if (sortPrice) {
-  //       if (sortPrice === "lowToHigh") {
-  //         return a.price - b.price;
-  //       } else if (sortPrice === "highToLow") {
-  //         return b.price - a.price;
-  //       }
-  //     }
-  //     return 0;
-  //   });
-
-  // const handleResetSort = async () => {
-  //   setLoadingUser(true);
-  //   await setSelectedCategory(0);
-  //   getProduct(0);
-  //   await setSortPrice("");
-  //   setTimeout(() => {
-  //     setLoadingUser(false);
-  //   }, 700);
-  // };
-
   const [searchProduct, setSearchProduct] = useState("");
 
   const handleSearch = async () => {
@@ -187,9 +142,6 @@ export default observer(function HomeScreen() {
       })
     );
   };
-
-  console.log("user?.stores?.[0]?.name",user?.stores?.[0]?.name)
-  console.log("shopProductUser",shopProductUser)
   
   const FiltershopProductUser = shopProductUser.filter(x=>new Date(x.expire) > new Date());
 
@@ -442,9 +394,9 @@ export default observer(function HomeScreen() {
 
               {taps === "taps1" && (
                 <>
-                  {product.length ? (
+                  {product.filter(x => new Date(x.expire) > new Date()).length ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-                      {product.map((product, i: number) => {
+                      {product.filter(x => new Date(x.expire) > new Date()).map((product, i: number) => {
                         const userid = user?.id;
                         const timePassed = dayjs(product.createdAt)
                           .locale("th")

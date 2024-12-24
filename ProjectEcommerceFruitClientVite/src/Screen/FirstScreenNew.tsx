@@ -48,6 +48,8 @@ export default observer(function FirstScreenNew() {
 
   const { getOrdersAll, ordertotal } = useStore().orderStore;
 
+  console.log("ordertotal",ordertotal)
+
   const { getUserAll, userAll, user } = useStore().userStore;
 
   const {
@@ -72,7 +74,7 @@ export default observer(function FirstScreenNew() {
       await getNEWSs();
     };
     fetchData();
-  }, [getProduct, getCategory, getNEWSs]);
+  }, [getProduct, getCategory, getNEWSs, getOrdersAll]);
 
   useEffect(() => {
     const fetchData = async () => {

@@ -50,7 +50,7 @@ const SearchOrderToSendList = () => {
 
   return (
     <div className="FontPublic">
-      <Typography variant="h4" component="h1" gutterBottom align="center">
+    <Typography variant="h4" component="h1" gutterBottom align="center">
         <p className="FontPublic font-semibold">
           <MyContent
             name={(value === 0 ? "รับ" : "ส่งต่อ") + "คำสั่งซื้อสินค้า"}
@@ -97,12 +97,9 @@ const SearchOrderToSendList = () => {
 
       <CustomTabPanel value={value} index={0}>
         <div>
-          <Typography variant="h4" component="h1" gutterBottom>
-            <p className="FontPublic">
-              <MyContent
-                name="ค้นหาคำสั่งซื้อที่ต้องการรับ"
-                fontSize="normal"
-              />
+          <Typography variant="h4" component="h1" gutterBottom align="left">
+            <p className="FontPublic font-medium">
+              <MyContent name="ค้นหาคำสั่งซื้อที่ต้องการรับ" fontSize="normal" />
             </p>
           </Typography>
           <div

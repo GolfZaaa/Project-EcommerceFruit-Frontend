@@ -177,6 +177,7 @@ export default class OrderStore {
     try {
       const result = await agent.Order.getOrdersAll();
       this.order = result;
+      this.ordertotal = result;
       console.log("Test", result);
       return result;
     } catch (error) {

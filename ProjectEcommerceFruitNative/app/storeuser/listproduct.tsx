@@ -18,40 +18,6 @@ import { TotalText } from "../order/TabOrder.screen";
 import { Mytoast } from "@/components/MyToast";
 import { Switch } from "react-native-paper";
 
-const data = [
-  {
-    id: "34",
-    name: "TASDASD",
-    category: "TTT",
-    price: "$10.99",
-    specialTag: "Test Specialtage",
-    image: "https://example.com/image1.jpg",
-  },
-  {
-    id: "33",
-    name: "TTT",
-    category: "Dessert",
-    price: "$10.99",
-    specialTag: "Test Specialtage",
-    image: "https://example.com/image2.jpg",
-  },
-  {
-    id: "32",
-    name: "XZCZXC",
-    category: "Appetizer",
-    price: "$50",
-    specialTag: "Test Specialtage",
-    image: "https://example.com/image3.jpg",
-  },
-  {
-    id: "31",
-    name: "ASDSADSA",
-    category: "Appetizer",
-    price: "$11",
-    specialTag: "Test Specialtage",
-    image: "https://example.com/image4.jpg",
-  },
-];
 
 const ListProduct = () => {
   const {
@@ -88,12 +54,23 @@ const ListProduct = () => {
     });
   };
 
-  const renderItem = ({ item }: { item: Product }) => (
-    <View style={styles.card}>
+  const renderItem = ({ item }: { item: Product }) => {
+    console.log("item",item)
+    const productExpire = new Date(item?.expire) < new Date()
+    
+    return (
+      <View style={styles.card}>
       <Image
         source={{ uri: pathImagesApp.product + item.images }}
         style={styles.image}
       />
+
+        {productExpire && (
+        <View style={styles.banner}>
+          <Text style={styles.bannerText}>สินค้าหมดอายุ</Text>
+        </View>
+      )}
+
       <View style={styles.infoContainer}>
         <View style={styles.namecateswitch}>
           <View>
@@ -102,33 +79,35 @@ const ListProduct = () => {
               ประเภท: {item.productGI.category.name}
             </Text>
           </View>
-          <View
+
+          {productExpire ? (
+            <View></View>
+          ):(
+            <View
             style={{
               top: -10,
               flexDirection: "row",
             }}
           >
-            {/* <Text
-              style={{
-                top: 10,
-                fontSize: 17,
-              }}
-            >
-              สถานะ
-            </Text> */}
             <Switch
               value={item.status}
               onValueChange={() => onToggleSwitch(item.id)}
             />
           </View>
+          )}
         </View>
         <View style={styles.iconContainer}>
-          <TouchableOpacity
+          {productExpire ? (
+            <View></View>
+          ):(
+<TouchableOpacity
             style={styles.editButton}
             onPress={() => handleCreateProduct(item)}
           >
             <Ionicons name="pencil-outline" size={20} color="white" />
           </TouchableOpacity>
+          )}
+          
           <TouchableOpacity
             style={styles.deleteButton}
             onPress={() => handleRemoveProduct(item.id)}
@@ -138,7 +117,8 @@ const ListProduct = () => {
         </View>
       </View>
     </View>
-  );
+    )
+  }
 
   const handleRemoveProduct = (id: number) => {
     Alert.alert("ลบสินค้านี้ออกจากฐานข้อมูล", "ยืนยันเพื่อลบ", [
@@ -217,6 +197,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F7F9FC",
+  },
+  banner: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "rgba(240, 20, 0, 0.8)", 
+    width:120,
+    paddingVertical: 5,
+    alignItems: "center",
+    zIndex:10
+  },
+  bannerText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   backButton: {
     position: "absolute",
