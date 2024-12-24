@@ -23,6 +23,7 @@ import "./style.css";
 import ModalImageToSend from "./ModalImageToSend";
 import MyLottie from "../../../helper/components/MyLottie";
 import lottiteEmpty from "../../../assets/lotties/lf20_qh5z2fdq.json";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 interface props {
   order: Order[];
@@ -33,15 +34,16 @@ const MyOrderCardToSend = ({ order, index }: props) => {
   const navigate = useNavigate();
 
   const componentRef = useRef(null);
-  const { changeConfirmSendOrder } = useStore().orderStore;
+  const { changeConfirmSendOrder, cancelOrderMyReceipt } =
+    useStore().orderStore;
   const { user } = useStore().userStore;
 
   // const [select, setSelect] = useState<any[]>([]);
-  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false); 
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   function generatePDF() {
-    setIsGeneratingPDF(true); 
-    toggleDropdown()
+    setIsGeneratingPDF(true);
+    toggleDropdown();
     const opt = {
       margin: 0.2,
       filename: "reportOrderAll.pdf",
@@ -286,8 +288,12 @@ const MyOrderCardToSend = ({ order, index }: props) => {
         right: { style: "thin" },
       };
     });
-    
-    const addStyledRow = (rowData: any, alternate: boolean = false, isLargeText: boolean = false) => {
+
+    const addStyledRow = (
+      rowData: any,
+      alternate: boolean = false,
+      isLargeText: boolean = false
+    ) => {
       const row = worksheet.addRow(rowData);
       row.eachCell((cell, colIndex) => {
         cell.alignment = {
@@ -304,7 +310,7 @@ const MyOrderCardToSend = ({ order, index }: props) => {
           cell.fill = {
             type: "pattern",
             pattern: "solid",
-            fgColor: { argb: "D9EAF7" }
+            fgColor: { argb: "D9EAF7" },
           };
         }
         if (isLargeText) {
@@ -320,14 +326,18 @@ const MyOrderCardToSend = ({ order, index }: props) => {
     let totalOrderSuccess = 0;
     let totalOrderCancel = 0;
     let totalShippingFee = 0;
-    addStyledRow({
-      item: "จำนวนรายการ",
-      value: order.length,
-      unit: "รายการ",
-    }, false, true);
+    addStyledRow(
+      {
+        item: "จำนวนรายการ",
+        value: order.length,
+        unit: "รายการ",
+      },
+      false,
+      true
+    );
     let isAlternate = false;
-    let previousOrderId:any = null; 
-    let rowSpanStart = 2; 
+    let previousOrderId: any = null;
+    let rowSpanStart = 2;
     order.forEach((item) => {
       const orderTotalPrice = item.orderItems.reduce((sum, item: OrderItem) => {
         return sum + item.product.price * item.quantity;
@@ -350,19 +360,25 @@ const MyOrderCardToSend = ({ order, index }: props) => {
         totalOrderCancel += 1;
       }
       if (previousOrderId === item.orderId) {
-        addStyledRow({
-          orderId: "", 
-          item: "ค่าจัดส่งจากผู้จัดส่ง",
-          value: myDriverFee,
-          unit: "บาท",
-        }, isAlternate);
+        addStyledRow(
+          {
+            orderId: "",
+            item: "ค่าจัดส่งจากผู้จัดส่ง",
+            value: myDriverFee,
+            unit: "บาท",
+          },
+          isAlternate
+        );
       } else {
-        addStyledRow({
-          orderId: item.orderId,
-          item: "ค่าจัดส่งจากผู้จัดส่ง",
-          value: myDriverFee,
-          unit: "บาท",
-        }, isAlternate);
+        addStyledRow(
+          {
+            orderId: item.orderId,
+            item: "ค่าจัดส่งจากผู้จัดส่ง",
+            value: myDriverFee,
+            unit: "บาท",
+          },
+          isAlternate
+        );
         previousOrderId = item.orderId;
         rowSpanStart = worksheet.rowCount;
       }
@@ -391,13 +407,33 @@ const MyOrderCardToSend = ({ order, index }: props) => {
       URL.revokeObjectURL(url);
     });
   };
-  
-  
-  
 
   const [openDropdown, setOpenDropdown] = useState(false);
   const toggleDropdown = () => {
     setOpenDropdown(!openDropdown);
+  };
+
+  const handleCancelOrderMyReceipt = (driverHisId: number) => {
+    Swal.fire({
+      title: "ยกเลิกการจัดส่งคำสั่งซื้อ",
+      text: "ยืนยันจะยกเลิกการจัดส่งคำสั่งซื้อนี้ไหม!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ใช่ ยกเลิกเลย!",
+      cancelButtonText: "ย้อนกลับ",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await cancelOrderMyReceipt(driverHisId).then(() => {
+          Swal.fire({
+            title: "ยกเลิกการจัดส่งคำสั่งซื้อแล้ว!",
+            text: "คำสั่งซื้อของคุณถูกยกเลิกแล้ว",
+            icon: "success",
+          });
+        });
+      }
+    });
   };
 
   return (
@@ -562,16 +598,55 @@ const MyOrderCardToSend = ({ order, index }: props) => {
 
                   {index === 1 && !myDriver && (
                     <div>
+                      {/* <Fab
+                        variant="extended"
+                        color="primary"
+                        onClick={() => handleConfirm(item.id)}
+                        sx={{
+                          zIndex: 1, 
+                        }}
+                      >
+                        <MyContent name="ยืนยันการส่ง" fontSize="smaller" />
+                      </Fab>
+
+                      <Fab
+                        variant="extended"
+                        color="error"
+                        // onClick={() => handleConfirm(item.id)}
+                        sx={{
+                          zIndex: 1,
+                        }}
+                      >
+                        <MyContent name="ยกเลิกการส่ง" fontSize="smaller" />
+                      </Fab> */}
                       <Fab
                         variant="extended"
                         color="primary"
                         onClick={() => handleConfirm(item.id)}
                         sx={{
                           zIndex: 1,
+                          right: 15,
                         }}
                       >
-                        <EditIcon sx={{ mr: 1 }} />
                         <MyContent name="ยืนยันการส่ง" fontSize="smaller" />
+                      </Fab>
+
+                      <Fab
+                        variant="extended"
+                        color="error"
+                        onClick={() =>
+                          handleCancelOrderMyReceipt(
+                            item?.shippings[0]?.driverHistories[0]?.id
+                          )
+                        }
+                        sx={{
+                          zIndex: 1,
+                        }}
+                      >
+                        <MyContent
+                          name="ยกเลิกการส่งสินค้า"
+                          fontSize="smaller"
+                        />
                       </Fab>
                     </div>
                   )}
@@ -612,24 +687,29 @@ const MyOrderCardToSend = ({ order, index }: props) => {
                       >
                         {isGeneratingPDF ? (
                           <a
-                            href={
-                              pathImages.product + orderItem.product.images
-                              }
-                                target="_blank"
-                                rel="noopener noreferrer"
-                               >
-                               <p style={{ fontSize: 16, fontWeight: 500, color: '#0400ff', textDecoration: 'underline',padding:20 }}>
-                               ดูรูปภาพ
-                              </p>
-                             </a>
-                        ):(
-                      <img
-                          className="h-20 w-20 object-cover"
-                          src={pathImages.product + orderItem.product.images}
-                          alt={orderItem.product.images || "product image"}
-                        />
+                            href={pathImages.product + orderItem.product.images}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <p
+                              style={{
+                                fontSize: 16,
+                                fontWeight: 500,
+                                color: "#0400ff",
+                                textDecoration: "underline",
+                                padding: 20,
+                              }}
+                            >
+                              ดูรูปภาพ
+                            </p>
+                          </a>
+                        ) : (
+                          <img
+                            className="h-20 w-20 object-cover"
+                            src={pathImages.product + orderItem.product.images}
+                            alt={orderItem.product.images || "product image"}
+                          />
                         )}
-                        
                       </a>
                       <p className="text-sm font-bold text-gray-500 mt-2 md:mt-0">
                         {orderItem.product.productGI.category.name}

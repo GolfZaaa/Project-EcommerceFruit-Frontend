@@ -55,6 +55,17 @@ export default class AddressStore {
     }
   };
 
+  removeAddressById = async (id: number) => {
+    try {
+      const result = await agent.Address.removeAddressById(id);
+      await this.getAddressByUserId();
+      this.getAddressgotoOrderByUserId();
+      return result;
+    } catch (error) {
+      return error;
+    }
+  };
+
   isUsedAddress = async (values: { addressId: any; storeormine: any }) => {
     // console.log("values", values);
 

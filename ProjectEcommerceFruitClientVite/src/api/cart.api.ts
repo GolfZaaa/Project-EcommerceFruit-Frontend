@@ -1,9 +1,11 @@
 import { requests } from "./agent";
 
 export const Cart = {
-    AddtoCart:(value:any) => requests.post("Cart/AddToCart",value),
-    GetCartItemByUser:()=> requests.get("Cart/GetCartItemByUser"),
-    GetCartItemByUserOrderStore:()=> requests.get("Cart/GetCartItemByUserOrderByStore"),
-    RemoveToCart:(value:any) => requests.post("Cart/RemoveToCart",value),
-
-}
+  AddtoCart: (value: any) => requests.post("Cart/AddToCart", value),
+  GetCartItemByUser: () => requests.get("Cart/GetCartItemByUser"),
+  GetCartItemByUserOrderStore: () =>
+    requests.get("Cart/GetCartItemByUserOrderByStore"),
+  RemoveToCart: (value: any) => requests.post("Cart/RemoveToCart", value),
+  checkExpireProductInCart: (cartItemId: number) =>
+    requests.onlyPost(`Cart/CheckExpireProductInCart?cartItemId=${cartItemId}`),
+};

@@ -22,6 +22,8 @@ import MyLottie from "../../helper/components/MyLottie";
 import lottiteEmptyList from "../../assets/lotties/emptyList.json";
 import CircularProgress from "@mui/material/CircularProgress";
 import MyContent from "../../component/MyContent";
+import RemoveIcon from "@mui/icons-material/Remove";
+import Swal from "sweetalert2";
 
 const InputThaiAddress = CreateInput();
 
@@ -36,6 +38,7 @@ const AddressList = ({
     createUpdateAddress,
     getAddressByUserId,
     getAddressgotoOrderByUserId,
+    removeAddressById,
   } = useStore().addressStore;
 
   const { loadings } = useStore().systemSettingStore;
@@ -113,14 +116,47 @@ const AddressList = ({
   };
 
   const handleChange = (scope: string) => (value: string) => {
-    setAddress((oldAddr: Address) => ({
-      ...oldAddr,
-      [scope]: value,
-    }));
+    console.log("value", value);
+
+    if (value && !/^\d+$/.test(value)) {
+      myToast("รหัสไปรษณีย์ต้องเป็นตัวเลขเท่านั้น");
+      // alert("รหัสไปรษณีย์ต้องเป็นตัวเลขเท่านั้น");
+    } else if (value.length > 5) {
+      myToast("รหัสไปรษณีย์ต้องมี 5 ตัวเลขเท่านั้น");
+      // alert("รหัสไปรษณีย์ต้องมี 5 ตัวเลขเท่านั้น");
+    } else {
+      setAddress((oldAddr: Address) => ({
+        ...oldAddr,
+        [scope]: value,
+      }));
+    }
   };
 
   const handleSelect = (address: Address) => {
     setAddress(address);
+  };
+
+  const handleRemove = (addressId: number) => {
+    Swal.fire({
+      title: "ลบที่อยู่",
+      text: "ยืนยันจะลบที่อยู่นี้ไหม!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ใช่ ลบเลย!",
+      cancelButtonText: "ยกเลิก",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await removeAddressById(addressId).then(() => {
+          Swal.fire({
+            title: "ลบที่อยู่แล้ว!",
+            text: "ที่อยู่ของคุณถูกลบแล้ว",
+            icon: "success",
+          });
+        });
+      }
+    });
   };
 
   return !form ? (
@@ -212,7 +248,7 @@ const AddressList = ({
             <Card style={{ marginBottom: "20px" }} key={i}>
               <Grid container spacing={2} alignItems="center">
                 {/* ข้อมูลที่อยู่ */}
-                <Grid item xs={12} md={5}>
+                <Grid item xs={12} md={4}>
                   <CardContent>
                     {/* <MyContent name={item?.detail} fontSize="small" /> */}
                     <MyContent
@@ -256,7 +292,7 @@ const AddressList = ({
                 </Grid>
 
                 {/* สวิตช์ที่อยู่สั่งซื้อ */}
-                <Grid item xs={12} sm={6} md={3} className="flex-center">
+                <Grid item xs={12} sm={6} md={2} className="flex-center">
                   <div className="text-center">
                     <MyContent
                       name="ตั้งเป็นที่อยู่สั่งซื้อ"
@@ -287,6 +323,7 @@ const AddressList = ({
                     <Fab
                       variant="extended"
                       color="primary"
+                      size="small"
                       onClick={() => {
                         setAddress({
                           district: item?.subDistrict,
@@ -298,19 +335,19 @@ const AddressList = ({
                         setDataEdit(item);
                         onChangeCU();
                       }}
-                      sx={{
-                        minWidth: { xs: "80%", sm: "60%", md: "80%" },
-                        maxWidth: "200px",
-                        boxShadow: 3,
-                        "&:hover": {
-                          backgroundColor: "primary.dark",
-                        },
-                        transition: "all 0.3s ease-in-out",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        zIndex: 1,
-                      }}
+                      // sx={{
+                      //   minWidth: { xs: "80%", sm: "60%", md: "80%" },
+                      //   maxWidth: "200px",
+                      //   boxShadow: 3,
+                      //   "&:hover": {
+                      //     backgroundColor: "primary.dark",
+                      //   },
+                      //   transition: "all 0.3s ease-in-out",
+                      //   display: "flex",
+                      //   justifyContent: "center",
+                      //   alignItems: "center",
+                      //   zIndex: 1,
+                      // }}
                     >
                       <EditIcon sx={{ mr: 1 }} />
                       <p className="FontPublic">
@@ -318,6 +355,27 @@ const AddressList = ({
                       </p>
                     </Fab>
                   )}
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  md={2}
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Fab
+                    variant="extended"
+                    color="error"
+                    onClick={() => handleRemove(item.id)}
+                    size="small"
+                  >
+                    <RemoveIcon sx={{ mr: 1 }} />
+                    <p className="FontPublic">
+                      <MyContent name="ลบ" fontSize="small" />
+                    </p>
+                  </Fab>
                 </Grid>
               </Grid>
             </Card>
@@ -393,6 +451,15 @@ const AddressList = ({
           }}
           className="custom-district-input FontPublic"
         />
+        {/* <InputThaiAddress.Zipcode
+          value={address["zipcode"]}
+          onChange={handleChange("zipcode")}
+          onSelect={(e: any) => handleSelect(e)}
+          style={{
+            height: "55px",
+          }}
+          className="custom-district-input FontPublic"
+        /> */}
 
         <label className="FontPublic">
           <MyContent name="แขวง/ตำบล" fontSize="small" />

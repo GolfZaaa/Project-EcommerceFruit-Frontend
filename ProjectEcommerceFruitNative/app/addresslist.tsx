@@ -292,6 +292,23 @@ const AddressList = () => {
         data={myAddress}
         keyExtractor={(item) => item.user.fullName + item.id}
         renderItem={({ item }) => <RenderItem item={item} />}
+        ListEmptyComponent={
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 24,
+              }}
+            >
+              ไม่มีข้อมูลที่อยู่
+            </Text>
+          </View>
+        }
       />
     </Container>
   );

@@ -46,6 +46,7 @@ export default observer(function CartScreen() {
     AddToCart,
     selectMyCart,
     setselectMyCart,
+    checkExpireProductInCart,
   } = useStore().cartStore;
 
   const { getAddressgotoOrderByUserId } = useStore().addressStore;
@@ -266,6 +267,10 @@ export default observer(function CartScreen() {
                         </div>
 
                         {items.map((item: CartItem, i: number) => {
+                          console.log("item", item);
+
+                          checkExpireProductInCart(item.cartItemId);
+
                           return (
                             <div key={i} className="space-y-6">
                               {item.products.map((product: Product) => {

@@ -51,15 +51,37 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
       cancelButtonText: "ยกเลิก",
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire(
-          "ส่งเรียบร้อยแล้ว",
-          "ส่งคำร้องขอรับหิ้วสินค้าต่อสำเร็จ",
-          "success"
-        );
+        let timerInterval: any = 0;
+        Swal.fire({
+          title: "กำลังดำเนินการ",
+          // html: "I will close in <b></b> milliseconds.",
+          html: "กรุณารอสักครู่...",
+          timerProgressBar: true,
+          didOpen: () => {
+            Swal.showLoading();
+            iWantToTakeOrdertoSend({ ...select.map((item) => item) }).then(
+              () => {
+                setSelect([]);
 
-        iWantToTakeOrdertoSend({ ...select.map((item) => item) });
+                Swal.fire(
+                  "ส่งเรียบร้อยแล้ว",
+                  "ส่งคำร้องขอรับหิ้วสินค้าต่อสำเร็จ",
+                  "success"
+                );
 
-        setSelect([]);
+                return;
+              }
+            );
+          },
+          willClose: () => {
+            clearInterval(timerInterval);
+          },
+        }).then((result) => {
+          /* Read more about handling dismissals below */
+          if (result.dismiss === Swal.DismissReason.timer) {
+            console.log("I was closed by the timer");
+          }
+        });
       }
     });
   };

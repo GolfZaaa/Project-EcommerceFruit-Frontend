@@ -68,7 +68,7 @@ const MyAccountScreen = () => {
       case "searchorderToSendList":
         return <SearchOrderToSendList />;
       case "my-account":
-        return <EditAccount />;
+        return <EditAccount admin={false} />;
       case "my-dashboard":
         return <DashboardForUser />;
       default:

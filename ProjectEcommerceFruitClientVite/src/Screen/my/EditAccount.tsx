@@ -14,9 +14,10 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 interface props {
   onChangeCU?: any;
   userEdit?: any;
+  admin: boolean;
 }
 
-const EditAccount = ({ onChangeCU, userEdit }: props) => {
+const EditAccount = ({ onChangeCU, userEdit, admin }: props) => {
   const { user, editUser } = useStore().userStore;
   const { loadings } = useStore().systemSettingStore;
   const navigate = useNavigate();
@@ -46,22 +47,24 @@ const EditAccount = ({ onChangeCU, userEdit }: props) => {
   return (
     <div>
       <div>
-        <div className=" z-20 cursor-pointer h-16 absolute top-32">
-          <Fab variant="extended" color="primary" onClick={onChangeCU}>
-            <ArrowBackIosIcon sx={{ mr: 1 }} />
-            <p className="FontPublic">
-              <MyContent name="กลับ" fontSize="littlenormal" />
-            </p>
-          </Fab>
-          {/* <button
+        {admin && (
+          <div className=" z-20 cursor-pointer h-16 absolute top-32">
+            <Fab variant="extended" color="primary" onClick={onChangeCU}>
+              <ArrowBackIosIcon sx={{ mr: 1 }} />
+              <p className="FontPublic">
+                <MyContent name="กลับ" fontSize="littlenormal" />
+              </p>
+            </Fab>
+            {/* <button
           onClick={onChangeCU}
           className="border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-700 focus:outline-none focus:shadow-outline"
         >
           <IoArrowBack />
         </button> */}
-        </div>
+          </div>
+        )}
 
-        <div className="mt-28">
+        <div className={admin ? "mt-28" : ""}>
           <Box
             display="flex"
             justifyContent="center"

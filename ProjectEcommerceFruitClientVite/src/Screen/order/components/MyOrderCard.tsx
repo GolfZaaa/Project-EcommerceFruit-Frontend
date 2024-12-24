@@ -32,11 +32,11 @@ const MyOrderCard = ({ order, index }: props) => {
   const { changeConfirmReceiptOrder } = useStore().orderStore;
   const { systemSetting } = useStore().systemSettingStore;
 
-  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false); 
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const componentRef = useRef(null);
   function generatePDF() {
-    setIsGeneratingPDF(true); 
+    setIsGeneratingPDF(true);
     const opt = {
       margin: 0.2,
       filename: "reportOrderAll.pdf",
@@ -292,7 +292,7 @@ const MyOrderCard = ({ order, index }: props) => {
 
                   <div className="md:flex md:justify-between">
                     <div>
-                      {item.shippingType !== "อื่น ๆ" && (
+                      {item.shippingType !== "อื่น ๆ" && item.status !== 2 && (
                         <div>
                           <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
                             {item.shippingType !== "อื่น ๆ" &&
@@ -361,28 +361,33 @@ const MyOrderCard = ({ order, index }: props) => {
                             className="shrink-0 md:order-1"
                           >
                             {isGeneratingPDF ? (
-                               <a
-                               href={
-                                 pathImages.product + item.product.images
-                               }
-                               target="_blank"
-                               rel="noopener noreferrer"
-                             >
-                               <p style={{ fontSize: 16, fontWeight: 500, color: '#0400ff', textDecoration: 'underline', padding:30}}>
-                               ดูรูปภาพ
-                             </p>
-                             </a>  
-                            ):(
-<img
-                              className="hidden h-20 w-20 dark:block object-cover"
-                              src={pathImages.product + item.product.images}
-                              alt={item.product.images || "product image"}
-                              style={{
-                                cursor: "pointer",
-                              }}
-                            />
+                              <a
+                                href={pathImages.product + item.product.images}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <p
+                                  style={{
+                                    fontSize: 16,
+                                    fontWeight: 500,
+                                    color: "#0400ff",
+                                    textDecoration: "underline",
+                                    padding: 30,
+                                  }}
+                                >
+                                  ดูรูปภาพ
+                                </p>
+                              </a>
+                            ) : (
+                              <img
+                                className="hidden h-20 w-20 dark:block object-cover"
+                                src={pathImages.product + item.product.images}
+                                alt={item.product.images || "product image"}
+                                style={{
+                                  cursor: "pointer",
+                                }}
+                              />
                             )}
-                            
                           </a>
                           <label className="sr-only">Choose quantity:</label>
                           <div className="flex items-center justify-between md:order-3 md:justify-end">

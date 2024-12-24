@@ -155,7 +155,7 @@ export default observer(function DashboardAdminShowUser() {
   return (
     <>
       {editMode ? (
-        <EditAccount onChangeCU={onChangeCU} userEdit={dataEdit} />
+        <EditAccount onChangeCU={onChangeCU} userEdit={dataEdit} admin={true} />
       ) : (
         <div className="FontPublic p-4">
           <div className="flex flex-col">
@@ -358,32 +358,31 @@ export default observer(function DashboardAdminShowUser() {
                                 ) : (
                                   <div>
                                     {isGeneratingPDF ? (
-                                     <div>
-                                      {userItem.hidden ? (
-                                        <div className="flex items-center justify-center">
-                                         <MyContent
-                                          name={"ปิดการใช้งาน"}
-                                          fontSize="small"
-                                        />
+                                      <div>
+                                        {userItem.hidden ? (
+                                          <div className="flex items-center justify-center">
+                                            <MyContent
+                                              name={"ปิดการใช้งาน"}
+                                              fontSize="small"
+                                            />
+                                          </div>
+                                        ) : (
+                                          <div className="flex items-center justify-center">
+                                            <MyContent
+                                              name={"กำลังใช้งาน"}
+                                              fontSize="small"
+                                            />
+                                          </div>
+                                        )}
                                       </div>
-                                      ):(
-                                        <div className="flex items-center justify-center">
-                                        <MyContent
-                                          name={"กำลังใช้งาน"}
-                                          fontSize="small"
-                                        />
-                                      </div>
-                                      )}
-                                     </div>
-                                    ):(
-                                  <MySwitch
-                                    handleChange={() =>
-                                      handleDeleteUser(userItem.id)
-                                    }
-                                    checked={!userItem.hidden}
-                                  />
+                                    ) : (
+                                      <MySwitch
+                                        handleChange={() =>
+                                          handleDeleteUser(userItem.id)
+                                        }
+                                        checked={!userItem.hidden}
+                                      />
                                     )}
-                                  
                                   </div>
                                 )}
                               </div>

@@ -13,6 +13,7 @@ export interface Product {
   status: boolean;
   createdAt: Date;
   hidden: boolean;
+  expire: Date;
 
   productGIId: number;
   productGI: ProductGI;

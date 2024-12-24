@@ -3,6 +3,8 @@ import { createFormData, createFormDataUseMyName, requests } from "./agent";
 export const Order = {
   getOrdersByUser: () => requests.get("Order/GetOrdersByUser"),
   getOrdersWantToReceipt: () => requests.get("Order/GetOrdersWantToReceipt"),
+  cancelOrderMyReceipt: (id: number) =>
+    requests.onlyPost(`Order/CancelOrderMyReceipt?driverHisId=${id}`),
   searchOrdersWantToReceipt: (params: URLSearchParams) =>
     requests.getFormAny(`Order/SearchOrdersWantToReceipt?${params.toString()}`),
   searchOrderToSendByOrderId: (orderId: string | null) => {

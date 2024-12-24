@@ -109,8 +109,17 @@ export default observer(function CreateProduct() {
   const [InputModalexpire, setInputModalexpire] = useState(false);
   const [inputExpire, setInputExpire] = useState(0);
 
-  const handleSubmit = async () => {
-    if (imagesSend && weight && quantity && price && productGIId) {
+  console.log("dataEdit?.id", dataEdit?.id);
+  console.log("imagesSend", imagesSend);
+  console.log("weight", weight);
+  console.log("quantity", quantity);
+  console.log("price", price);
+  console.log("productGIId", productGIId);
+
+  const handleCreate = async () => {
+    // if (imagesSend && weight > 0 && quantity > 0 && price > 0 && productGIId) {
+
+    if (inputExpire > 0) {
       const dataForm = {
         id: dataEdit?.id || 0,
         images: imagesSend || null,
@@ -129,17 +138,31 @@ export default observer(function CreateProduct() {
         }
       });
     } else {
-      Alert.alert("เกิดข้อผิดพลาด", "กรอกข้อมูลไม่ครบถ้วน", [
-        {
-          text: "ตกลง",
-        },
-      ]);
-      Mytoast("กรอกข้อมูลไม่ครบถ้วน");
+      Mytoast("จำนวนต้องเป็นจำนวนเต็มบวก");
     }
+
+    // } else {
+    //   Alert.alert(
+    //     "เกิดข้อผิดพลาด",
+    //     "กรอกข้อมูลไม่ครบถ้วน หรือ ข้อมูลไม่เป็นจำนวนเต็มบวก",
+    //     [
+    //       {
+    //         text: "ตกลง",
+    //       },
+    //     ]
+    //   );
+    //   Mytoast("กรอกข้อมูลไม่ครบถ้วน หรือ ข้อมูลไม่เป็นจำนวนเต็มบวก");
+    // }
   };
 
-  const handleSubmitCreate = async () => {
-    if (imagesSend && weight && quantity && price && productGIId) {
+  const handleEdit = async () => {
+    if (
+      (dataEdit?.id === undefined ? imagesSend : true) &&
+      weight > 0 &&
+      quantity > 0 &&
+      price > 0 &&
+      productGIId
+    ) {
       const dataForm = {
         id: dataEdit?.id || 0,
         images: imagesSend || null,
@@ -150,19 +173,27 @@ export default observer(function CreateProduct() {
         productGIId: productGIId,
       };
 
-      await createUpdateProduct(dataForm).then((result) => {
-        if (!!result === true) {
-          getProductByStore(user?.stores[0].id || 0);
-          router.back();
-        }
-      });
+      if (dataEdit?.id !== undefined) {
+        await createUpdateProduct(dataForm).then((result) => {
+          if (!!result === true) {
+            getProductByStore(user?.stores[0].id || 0);
+            router.back();
+          }
+        });
+      } else {
+        setInputModalexpire(true);
+      }
     } else {
-      Alert.alert("เกิดข้อผิดพลาด", "กรอกข้อมูลไม่ครบถ้วน", [
-        {
-          text: "ตกลง",
-        },
-      ]);
-      Mytoast("กรอกข้อมูลไม่ครบถ้วน");
+      Alert.alert(
+        "เกิดข้อผิดพลาด",
+        "กรอกข้อมูลไม่ครบถ้วน หรือ ข้อมูลไม่เป็นจำนวนเต็มบวก",
+        [
+          {
+            text: "ตกลง",
+          },
+        ]
+      );
+      Mytoast("กรอกข้อมูลไม่ครบถ้วน หรือ ข้อมูลไม่เป็นจำนวนเต็มบวก");
     }
   };
 
@@ -224,7 +255,8 @@ export default observer(function CreateProduct() {
       <Label name="ราคา" valid />
       <TextInput
         value={String(price)}
-        onChangeText={(value) => setPrice(Number(value === "" ? 1 : value))}
+        // onChangeText={(value) => setPrice(Number(value === "" ? 1 : value))}
+        onChangeText={(value) => setPrice(Number(value))}
         style={styles.input}
         placeholder="ราคา *"
         placeholderTextColor="#999"
@@ -234,7 +266,8 @@ export default observer(function CreateProduct() {
       <Label name="น้ำหนัก" valid />
       <TextInput
         value={String(weight)}
-        onChangeText={(value) => setWeight(Number(value === "" ? 1 : value))}
+        // onChangeText={(value) => setWeight(Number(value === "" ? 1 : value))}
+        onChangeText={(value) => setWeight(Number(value))}
         keyboardType="numeric"
         style={styles.input}
         placeholder="น้ำหนัก *"
@@ -244,7 +277,8 @@ export default observer(function CreateProduct() {
       <Label name="จำนวน" valid />
       <TextInput
         value={String(quantity)}
-        onChangeText={(value) => setQuantity(Number(value === "" ? 1 : value))}
+        // onChangeText={(value) => setQuantity(Number(value === "" ? 1 : value))}
+        onChangeText={(value) => setQuantity(Number(value))}
         style={styles.input}
         placeholder="จำนวน *"
         placeholderTextColor="#999"
@@ -292,7 +326,8 @@ export default observer(function CreateProduct() {
 
       {/* Save Button */}
       {/* <TouchableOpacity style={styles.saveButton} onPress={handleSubmit}> */}
-      {dataEdit == undefined || (Array.isArray(dataEdit) && dataEdit.length === 0) ? (
+      {/* {dataEdit == undefined ||
+      (Array.isArray(dataEdit) && dataEdit.length === 0) ? (
         <View>
           <TouchableOpacity
             style={styles.saveButton}
@@ -301,16 +336,13 @@ export default observer(function CreateProduct() {
             <Text style={styles.saveButtonText}>บันทึก</Text>
           </TouchableOpacity>
         </View>
-      ) : (
-        <View>
-          <TouchableOpacity
-            style={styles.saveButton}
-            onPress={handleSubmitCreate}
-          >
-            <Text style={styles.saveButtonText}>บันทึก</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+      ) : ( */}
+      <View>
+        <TouchableOpacity style={styles.saveButton} onPress={handleEdit}>
+          <Text style={styles.saveButtonText}>บันทึก</Text>
+        </TouchableOpacity>
+      </View>
+      {/* )} */}
 
       <Modal
         animationType="slide"
@@ -352,7 +384,7 @@ export default observer(function CreateProduct() {
                   { backgroundColor: inputExpire ? "#4CAF50" : "#cccccc" },
                 ]}
                 onPress={() => {
-                  handleSubmit();
+                  handleCreate();
                   setInputModalexpire(false);
                 }}
                 disabled={!inputExpire}

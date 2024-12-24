@@ -18,8 +18,7 @@ const CardOrderForward = ({
   handleShowDialog: any;
 }) => {
   const { user } = useStore().userStore;
-  const { confirmOrderToForward, loadingOrderConfirmForward } =
-    useStore().orderStore;
+  const { loadingOrderConfirmForward } = useStore().orderStore;
 
   const [totalPrice, setTotalPrice] = useState<string>("");
   const [more, setMore] = useState(false);

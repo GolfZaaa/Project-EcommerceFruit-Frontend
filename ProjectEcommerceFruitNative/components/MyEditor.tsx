@@ -72,7 +72,7 @@ const MyEditor = ({ value, setValue }: { value: string; setValue: any }) => {
             actions.setStrikethrough,
             actions.setUnderline,
             actions.removeFormat,
-            actions.insertVideo,
+            // actions.insertVideo,
             actions.checkboxList,
             actions.undo,
             actions.redo,
@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     borderRadius: 5,
+    height: 500,
   },
   toolbarContainer: {
     borderTopColor: "#ddd",

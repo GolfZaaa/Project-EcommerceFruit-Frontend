@@ -1,30 +1,30 @@
 .custom-file-input {
-    /* border: 2px solid #4caf50; */
-    border: 2px solid red;
-    padding: 10px;
-    width: 100%;
-    font-size: 16px;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    color: #333;
-    cursor: pointer;
-  }
-  
-  .custom-file-input:hover {
-    background-color: #e8f5e9;
-  }
-  
-  .custom-confirm-button {
-    background-color: #4caf50 !important;
-    color: white !important;
-  }
-  
-  .custom-cancel-button {
-    background-color: #f44336 !important;
-    color: white !important;
-  }
-  
-  /* .custom-file-input {
+  /* border: 2px solid #4caf50; */
+  /* border: 2px solid red; */
+  padding: 10px;
+  width: 100%;
+  font-size: 16px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  color: #333;
+  cursor: pointer;
+}
+
+.custom-file-input:hover {
+  background-color: #e8f5e9;
+}
+
+.custom-confirm-button {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.custom-cancel-button {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+/* .custom-file-input {
     width: 100%;  
     padding: 10px; 
     border: 2px dashed #007bff; 

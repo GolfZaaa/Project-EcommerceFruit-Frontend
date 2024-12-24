@@ -166,7 +166,7 @@ const ProductGIList = () => {
 
   console.log("loadingPGI", loadingPGI);
 
-  const RenderTest = ({ row }: any) => {
+  const RenderProductGi = ({ row }: any) => {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -348,7 +348,7 @@ const ProductGIList = () => {
                         )
                       : productGI
                     ).map((row) => (
-                      <RenderTest row={row} />
+                      <RenderProductGi row={row} />
                     ))}
                     {emptyRows > 0 && (
                       <TableRow style={{ height: 53 * emptyRows }}>

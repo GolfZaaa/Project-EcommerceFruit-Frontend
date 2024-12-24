@@ -20,16 +20,18 @@ import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import { Label } from "../storeuser/createproductgi";
 import { pathImagesApp } from "@/src/constants/RoutePath";
+import { Mytoast } from "@/components/MyToast";
 
 const TabEarnScreen = ({
   data,
   index,
 }: {
-  data: Order[];
+  data: any;
   index: number | null;
 }) => {
   const { user } = useStore().userStore;
-  const { changeConfirmSendOrder } = useStore().orderStore;
+  const { changeConfirmSendOrder, cancelOrderMyReceipt } =
+    useStore().orderStore;
 
   const RenderItemEarn = ({ item }: { item: Order }) => {
     const [totalPrice, setTotalPrice] = useState<string>("");
@@ -106,6 +108,26 @@ const TabEarnScreen = ({
           type: fileType,
         });
       }
+    };
+
+    const handleCancel = (id: number) => {
+      Alert.alert(
+        "ยกเลิกการจัดส่งคำสั่งซื้อ",
+        "ยืนยันจะยกเลิกการจัดส่งคำสั่งซื้อนี้ไหม?",
+        [
+          {
+            text: "ย้อนกลับ",
+          },
+          {
+            text: "ยืนยัน",
+            onPress: () => {
+              cancelOrderMyReceipt(id).then(() => {
+                Mytoast("ยกเลิกการจัดส่งคำสั่งซื้อแล้ว");
+              });
+            },
+          },
+        ]
+      );
     };
 
     return (
@@ -265,6 +287,13 @@ const TabEarnScreen = ({
             >
               <ButtonText>ยืนยันการส่งสินค้า</ButtonText>
             </Button>
+            <ButtonCancel
+              onPress={() =>
+                handleCancel(item?.shippings[0]?.driverHistories[0]?.id)
+              }
+            >
+              <ButtonText>ยกเลิกการส่งสินค้า</ButtonText>
+            </ButtonCancel>
           </View>
         )}
 
@@ -430,6 +459,14 @@ export const TotalAmount = styled.Text`
 
 const Button: any = styled.TouchableOpacity`
   background-color: ${(props: any) => (props.disabled ? "gray" : "#007bff")};
+  padding: 10px;
+  border-radius: 8px;
+  align-items: center;
+`;
+
+const ButtonCancel: any = styled.TouchableOpacity`
+  margin-top: 10px;
+  background-color: red;
   padding: 10px;
   border-radius: 8px;
   align-items: center;

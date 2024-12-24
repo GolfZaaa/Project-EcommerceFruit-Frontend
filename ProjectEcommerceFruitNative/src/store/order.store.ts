@@ -40,6 +40,20 @@ export default class OrderStore {
     }
   };
 
+  cancelOrderMyReceipt = async (id: number) => {
+    this.setLoadingOrder(true);
+    try {
+      await agent.Order.cancelOrderMyReceipt(id).then(() => {
+        this.getMyOrderToSend();
+      });
+
+      this.setLoadingOrder(false);
+    } catch (error) {
+      this.setLoadingOrder(false);
+      return error;
+    }
+  };
+
   getOrdersWantToReceipt = async () => {
     this.setLoadingOrder(true);
     try {

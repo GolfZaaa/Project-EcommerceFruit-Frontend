@@ -132,8 +132,6 @@ const ProductList = () => {
 
   const [dataEdit, setDataEdit] = useState<Product | null>();
 
-  const [open, setOpen] = React.useState(false);
-
   useEffect(() => {
     getProductByStore(user?.stores[0].id || 0);
   }, [open, onCreate]);
@@ -168,12 +166,149 @@ const ProductList = () => {
 
   const onChangeCU = () => setOnCreate(!onCreate);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const RenderProduct = ({ row }: { row: Product }) => {
+    const [open, setOpen] = React.useState(false);
 
-  const handleClose = () => {
-    setOpen(false);
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+    return (
+      <TableRow key={row.id}>
+        <TableCell component="th" scope="row">
+          <p className="FontPublic overflow-hidden text-ellipsis whitespace-nowrap">
+            <MyContent
+              name={
+                row.productGI.name.length > 8
+                  ? `${row.productGI.name.slice(0, 8)}...`
+                  : row.productGI.name
+              }
+              fontSize="small"
+            />
+          </p>
+        </TableCell>
+        <TableCell align="center">
+          {row.images ? (
+            <img
+              src={pathImages.product + row.images}
+              alt="product"
+              style={{
+                width: "100%",
+                height: "auto",
+                maxWidth: "250px",
+                objectFit: "contain",
+              }}
+            />
+          ) : (
+            "ไม่มีรูปภาพ"
+          )}
+        </TableCell>
+        <TableCell align="center">
+          <p className="FontPublic ">
+            <MyContent name={row?.productGI?.category.name} fontSize="small" />
+          </p>
+        </TableCell>
+        <TableCell align="center">
+          <p className="FontPublic">
+            <MyContent name={row?.price} fontSize="small" />
+          </p>
+        </TableCell>
+        <TableCell align="center">
+          <p className="FontPublic">
+            <MyContent name={row?.weight} fontSize="small" />
+          </p>
+        </TableCell>
+        <TableCell align="center">
+          <p className="FontPublic">
+            <MyContent name={row?.quantity} fontSize="small" />
+          </p>
+        </TableCell>
+        <TableCell>
+          <MySwitch
+            handleChange={async () => {
+              await isUsedProduct(row.id).then(() => {
+                getProductByStore(user?.stores[0].id || 0);
+              });
+            }}
+            checked={row.status}
+          />
+        </TableCell>
+        <TableCell align="center">
+          <Fab
+            variant="extended"
+            color="primary"
+            onClick={() => {
+              setDataEdit(row);
+              onChangeCU();
+            }}
+            size="small"
+          >
+            <EditIcon sx={{ mr: 1 }} />
+            <p className="FontPublic">
+              <MyContent name="แก้ไข" fontSize="small" />
+            </p>
+          </Fab>
+        </TableCell>
+        <TableCell align="center">
+          <Fab
+            variant="extended"
+            color="error"
+            onClick={handleClickOpen}
+            size="small"
+          >
+            <RemoveIcon sx={{ mr: 1 }} />
+            <p className="FontPublic">
+              <MyContent name="ลบ" fontSize="small" />
+            </p>
+          </Fab>
+
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle sx={{ textAlign: "center" }}>
+              <p className="FontPublic font-semibold">
+                <MyContent
+                  name="ลบข้อมูลออกจากระบบฐานข้อมูล"
+                  fontSize="littlenormal"
+                />
+              </p>
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                <p className="FontPublic">
+                  <MyContent
+                    name="การดำเนินการนี้ต้องได้รับการยืนยันก่อนดำเนินการ"
+                    fontSize="small"
+                  />
+                </p>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>
+                <p className="FontPublic">
+                  <MyContent name="ยกเลิก" fontSize="small" />
+                </p>
+              </Button>
+              <Button
+                onClick={async () => {
+                  await removeProduct(row.id).then(() => {
+                    getProductByStore(user?.stores[0].id || 0);
+                    handleClose();
+                  });
+                }}
+                autoFocus
+              >
+                <p className="FontPublic">
+                  <MyContent name="ยืนยัน" fontSize="small" />
+                </p>
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </TableCell>
+      </TableRow>
+    );
   };
 
   return (
@@ -234,138 +369,7 @@ const ProductList = () => {
                       )
                     : product
                   ).map((row) => (
-                    <TableRow key={row.id}>
-                      <TableCell component="th" scope="row">
-                        <p className="FontPublic overflow-hidden text-ellipsis whitespace-nowrap">
-                          <MyContent
-                            name={
-                              row.productGI.name.length > 8
-                                ? `${row.productGI.name.slice(0, 8)}...`
-                                : row.productGI.name
-                            }
-                            fontSize="small"
-                          />
-                        </p>
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.images ? (
-                          <img
-                            src={pathImages.product + row.images}
-                            alt="product"
-                            style={{
-                              width: "100%",
-                              height: "auto",
-                              maxWidth: "250px",
-                              objectFit: "contain",
-                            }}
-                          />
-                        ) : (
-                          "ไม่มีรูปภาพ"
-                        )}
-                      </TableCell>
-                      <TableCell align="center">
-                        <p className="FontPublic ">
-                          <MyContent
-                            name={row?.productGI?.category.name}
-                            fontSize="small"
-                          />
-                        </p>
-                      </TableCell>
-                      <TableCell align="center">
-                        <p className="FontPublic">
-                          <MyContent name={row?.price} fontSize="small" />
-                        </p>
-                      </TableCell>
-                      <TableCell align="center">
-                        <p className="FontPublic">
-                          <MyContent name={row?.weight} fontSize="small" />
-                        </p>
-                      </TableCell>
-                      <TableCell align="center">
-                        <p className="FontPublic">
-                          <MyContent name={row?.quantity} fontSize="small" />
-                        </p>
-                      </TableCell>
-                      <TableCell align="center">
-                        <MySwitch
-                          handleChange={async () => {
-                            await isUsedProduct(row.id).then(() => {
-                              getProductByStore(user?.stores[0].id || 0);
-                            });
-                          }}
-                          checked={row.status}
-                        />
-                      </TableCell>
-                      <TableCell align="center">
-                        <Fab
-                          variant="extended"
-                          color="primary"
-                          onClick={() => {
-                            setDataEdit(row);
-                            onChangeCU();
-                          }}
-                          size="small"
-                        >
-                          <EditIcon sx={{ mr: 1 }} />
-                          <p className="FontPublic">
-                            <MyContent name="แก้ไข" fontSize="small" />
-                          </p>
-                        </Fab>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Fab
-                          variant="extended"
-                          color="error"
-                          onClick={handleClickOpen}
-                          size="small"
-                        >
-                          <RemoveIcon sx={{ mr: 1 }} />
-                          <p className="FontPublic">
-                            <MyContent name="ลบ" fontSize="small" />
-                          </p>
-                        </Fab>
-                        <Dialog open={open} onClose={handleClose}>
-                          <DialogTitle sx={{ textAlign: "center" }}>
-                            <p className="FontPublic font-semibold">
-                              <MyContent
-                                name="ลบข้อมูลออกจากระบบฐานข้อมูล"
-                                fontSize="littlenormal"
-                              />
-                            </p>
-                          </DialogTitle>
-                          <DialogContent>
-                            <DialogContentText>
-                              <p className="FontPublic">
-                                <MyContent
-                                  name="การดำเนินการนี้ต้องได้รับการยืนยันก่อนดำเนินการ"
-                                  fontSize="small"
-                                />
-                              </p>
-                            </DialogContentText>
-                          </DialogContent>
-                          <DialogActions>
-                            <Button onClick={handleClose}>
-                              <p className="FontPublic">
-                                <MyContent name="ยกเลิก" fontSize="small" />
-                              </p>
-                            </Button>
-                            <Button
-                              onClick={async () => {
-                                await removeProduct(row.id).then(() => {
-                                  getProductByStore(user?.stores[0].id || 0);
-                                  handleClose();
-                                });
-                              }}
-                              autoFocus
-                            >
-                              <p className="FontPublic">
-                                <MyContent name="ยืนยัน" fontSize="small" />
-                              </p>
-                            </Button>
-                          </DialogActions>
-                        </Dialog>
-                      </TableCell>
-                    </TableRow>
+                    <RenderProduct row={row} />
                   ))}
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>

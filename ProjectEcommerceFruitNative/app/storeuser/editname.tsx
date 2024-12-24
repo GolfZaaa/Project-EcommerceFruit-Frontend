@@ -276,14 +276,36 @@ export default observer(function EditName() {
               borderTopRightRadius: 20,
             }}
           >
-            {myAddress?.map((item, index) => (
-              <ExternalRenderItem
-                handleChangesModal={handleChangesModal}
-                key={index}
-                item={item}
-                i={index}
-              />
-            ))}
+            <View>
+              {myAddress?.length ? (
+                <View>
+                  {myAddress?.map((item, index) => (
+                    <ExternalRenderItem
+                      handleChangesModal={handleChangesModal}
+                      key={index}
+                      item={item}
+                      i={index}
+                    />
+                  ))}
+                </View>
+              ) : (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 24,
+                    }}
+                  >
+                    ไม่มีข้อมูลที่อยู่
+                  </Text>
+                </View>
+              )}
+            </View>
           </View>
         </ScrollView>
       </Modal>
