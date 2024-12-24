@@ -676,7 +676,7 @@ export default observer(function DashboardShopScreen() {
 
   const drawer = (
     <div>
-      <Toolbar sx={{ minHeight: 0 }} /> {/* ลดขนาด Toolbar เพื่อเขยิบขึ้น */}
+      <Toolbar sx={{ minHeight: 0 }} /> 
       <Divider />
       <ListItem sx={{ marginTop: 3 }}>
         <ListItemText
@@ -888,7 +888,9 @@ export default observer(function DashboardShopScreen() {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
-              zIndex: (theme) => theme.zIndex.appBar - 1,
+              // zIndex: (theme) => theme.zIndex.appBar - 1,
+              zIndex: 1,
+
             },
           }}
           open

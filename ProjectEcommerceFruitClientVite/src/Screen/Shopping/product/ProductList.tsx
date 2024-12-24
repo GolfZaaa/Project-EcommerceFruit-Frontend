@@ -234,8 +234,47 @@ const ProductList = () => {
                       )
                     : product
                   ).map((row) => (
-                    <TableRow key={row.id}>
+                    <TableRow
+                      key={row.id}
+                      style={{
+                        backgroundColor:
+                          row?.expire && new Date(row?.expire) < new Date()
+                            ? "#ededed"
+                            : "transparent",
+                      }}
+                    >
                       <TableCell component="th" scope="row">
+                        {row?.expire && new Date(row?.expire) < new Date() && (
+                          <div
+                            style={{
+                              position: "absolute",
+                              marginTop: -40,
+                              marginLeft: -25,
+                              backgroundColor: "red",
+                              color: "white",
+                              fontSize: 16,
+                              padding: "10px 20px",
+                              transformOrigin: "top left",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            สินค้านี้หมดอายุแล้ว
+                            <div
+                              style={{
+                                position: "absolute",
+                                bottom: -5,
+                                left: -4.7,
+                                width: 0,
+                                height: 0,
+                                borderStyle: "solid",
+                                transform: "rotate(-90deg)",
+                                borderWidth: "0 10px 10px 10px",
+                                borderColor:
+                                  "transparent transparent red transparent",
+                              }}
+                            />
+                          </div>
+                        )}
                         <p className="FontPublic overflow-hidden text-ellipsis whitespace-nowrap">
                           <MyContent
                             name={
@@ -264,7 +303,7 @@ const ProductList = () => {
                         )}
                       </TableCell>
                       <TableCell align="center">
-                        <p className="FontPublic ">
+                        <p className="FontPublic">
                           <MyContent
                             name={row?.productGI?.category.name}
                             fontSize="small"
@@ -286,8 +325,15 @@ const ProductList = () => {
                           <MyContent name={row?.quantity} fontSize="small" />
                         </p>
                       </TableCell>
-                      <TableCell align="center">
-                        <MySwitch
+                      <TableCell >
+                        {row?.expire && new Date(row?.expire) < new Date() ? (
+                          <MySwitch
+                                handleChange={() => {}}
+                                checked={row.status}
+                                disabled={true}  
+                              />
+                        ):(
+                            <MySwitch
                           handleChange={async () => {
                             await isUsedProduct(row.id).then(() => {
                               getProductByStore(user?.stores[0].id || 0);
@@ -295,9 +341,31 @@ const ProductList = () => {
                           }}
                           checked={row.status}
                         />
+                        )}
+                        
                       </TableCell>
                       <TableCell align="center">
-                        <Fab
+                        {row?.expire && new Date(row?.expire) < new Date() ? (
+                          <div>
+                            <Fab
+                          variant="extended"
+                          color="primary"
+                          onClick={() => {
+                            setDataEdit(row);
+                            onChangeCU();
+                          }}
+                          size="small"
+                          disabled={row?.expire && new Date(row?.expire) < new Date()}
+                        >
+                          <EditIcon sx={{ mr: 1 }} />
+                          <p className="FontPublic">
+                            <MyContent name="แก้ไข" fontSize="small" />
+                          </p>
+                        </Fab>
+                          </div>
+                        ):(
+                          <div>
+                            <Fab
                           variant="extended"
                           color="primary"
                           onClick={() => {
@@ -311,6 +379,9 @@ const ProductList = () => {
                             <MyContent name="แก้ไข" fontSize="small" />
                           </p>
                         </Fab>
+                          </div>
+                        )}
+                        
                       </TableCell>
                       <TableCell align="center">
                         <Fab

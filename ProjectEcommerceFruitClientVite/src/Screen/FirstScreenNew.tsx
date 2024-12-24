@@ -81,8 +81,17 @@ export default observer(function FirstScreenNew() {
     fetchData();
   }, []);
 
+
   useEffect(() => {
-    const filterProduct = product.filter((x) => x.status === true);
+    const filterProduct = product.filter(
+      (x) =>
+        x.quantity > 0 &&
+        x.status === true &&
+        new Date(x.expire) > new Date() &&
+        x.productGI.store.hidden != true &&
+        x.productGI.store.userId != user?.id 
+    );
+
     if (filterProduct.length > 0) {
       const funcrandom = Math.floor(Math.random() * filterProduct.length);
       const result: any = filterProduct[funcrandom];
@@ -187,6 +196,10 @@ export default observer(function FirstScreenNew() {
     navigate(RoutePath.homeScreen);
     resetScroll();
   };
+
+  console.log("ordertotal",ordertotal)
+
+  const productShowing = product.filter(x=>new Date(x.expire) > new Date());
 
   return (
     <div>
@@ -758,7 +771,7 @@ export default observer(function FirstScreenNew() {
                 className="flex justify-center flex-col items-center w-36 h-36 md:w-44 md:h-48 lg:w-56 lg:h-56 bg-white shadow rounded-2xl"
               >
                 <h2 className="FontPublic lg:text-5xl md:text-4xl text-2xl font-extrabold leading-10 text-center text-gray-800">
-                  {product.length}
+                  {productShowing.length}
                 </h2>
                 <p className="FontPublic mt-4 text-sm md:text-base lg:text-lg leading-none text-center text-gray-600">
                   รายการผลไม้ทั้งหมด

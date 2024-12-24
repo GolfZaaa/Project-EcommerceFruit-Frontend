@@ -100,7 +100,6 @@ export default observer(function CreateProductScreen({
       confirmButtonText: "ยืนยัน",
       cancelButtonText: "ยกเลิก",
       input: "number",
-      // width: 550,
       inputValidator: (value) => {
         const numberValue = parseFloat(value);
         if (isNaN(numberValue)) {

@@ -69,7 +69,7 @@ export default observer(function Navbar() {
 
       <div>
         <nav className="fixed w-full p-4 flex justify-between items-center bg-white shadow-md z-50">
-          <NavLink to={RoutePath.firstscreen}>
+          {/* <NavLink to={RoutePath.firstscreen}> */}
             {loadings ? (
               <CircularProgress />
             ) : (
@@ -88,6 +88,8 @@ export default observer(function Navbar() {
                     >
                       &#9776;
                     </button>
+
+                    <NavLink to={RoutePath.firstscreen}>
 
                     <div className="hidden md:flex items-center justify-start ">
                       <img
@@ -113,6 +115,8 @@ export default observer(function Navbar() {
                         />
                       </p>
                     </div>
+                    </NavLink>
+
                   </div>
                 ) : (
                   <p>
@@ -126,7 +130,7 @@ export default observer(function Navbar() {
                 )}
               </>
             )}
-          </NavLink>
+          {/* </NavLink> */}
 
           <ul className="hidden absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 lg:flex lg:mx-auto lg:items-center lg:w-auto lg:space-x-6">
             <li>
@@ -384,6 +388,22 @@ export default observer(function Navbar() {
           >
             <MyContent name={"สินค้า"} fontSize="normal" />
           </NavLink>
+          {!token && 
+            <NavLink
+            to={RoutePath.loginScreen}
+            className={({ isActive }) =>
+              `text-sm ${
+                isActive
+                  ? "text-blue-600 font-bold"
+                  : "text-gray-400 hover:text-gray-500"
+              }`
+            }
+          >
+            <MyContent name={"เข้าสู่ระบบ"} fontSize="normal" />
+          </NavLink>
+          }
+        
+
           {user && user && (
             <NavLink
               to={RoutePath.orderReceiptList}
@@ -415,6 +435,7 @@ export default observer(function Navbar() {
           )}
         </div>
       </div>
+      
       <div className="border border-gray-200 mb-20"></div>
     </div>
   );
