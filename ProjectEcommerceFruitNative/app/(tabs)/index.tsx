@@ -60,10 +60,12 @@ export default observer(function homeScreen() {
     ...category,
   ];
 
-  const filteredProducts = product.filter(
+  const filteredProducts = product
+  .filter(
     (x) =>
       x.status === true &&
       x.quantity > 0 &&
+       new Date(x.expire).getTime() > Date.now() &&
       (selectedCategory === 0 || x.productGI.category.id === selectedCategory)
   );
 
@@ -122,6 +124,8 @@ export default observer(function homeScreen() {
   const toggleColumns = () => {
     setNumColumns((prev) => (prev === 1 ? 2 : 1));
   };
+
+  const IconNoProduct = require("../../assets/images/NoProduct.png");
 
   const renderProduct = (item: Product) => {
     return (
@@ -194,7 +198,7 @@ export default observer(function homeScreen() {
       <Container>
         <View style={styles.navbar}>
           <View></View>
-          <Text style={styles.textNavbar}>ข้อมูลสินค้า</Text>
+          <Text style={styles.textNavbar}>สินค้า</Text>
 
           {!!user ? (
             <TouchableOpacity onPress={handleProfile}>
@@ -303,13 +307,20 @@ export default observer(function homeScreen() {
             </IconButton>
           </Header>
 
-          <FlatList
+          {filteredProducts.length > 0 ? (
+              <FlatList
             data={filteredProducts}
             keyExtractor={(item) => item.productGI.name + item.id}
             renderItem={({ item }) => renderProduct(item)}
             numColumns={numColumns}
             key={numColumns}
-          />
+           />
+            ):(
+              <View style={styles.containerNoProduct}>
+              <Image source={IconNoProduct} style={styles.image} />
+              <Text style={styles.textNoProduct}>ไม่มีข้อมูลสินค้า</Text>
+            </View>
+            )}
 
           <Modal
             animationType="fade"
@@ -470,6 +481,22 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     marginTop: -15,
     marginBottom: 20,
+  },
+  containerNoProduct: {
+    flex: 1, 
+    justifyContent: 'center',
+    alignItems: 'center', 
+    marginTop:50
+  },
+  image: {
+    width: 150, 
+    height: 150, 
+    marginBottom: 20,
+  },
+  textNoProduct: {
+    fontSize: 25,
+    fontWeight: 'bold', 
+    color: '#333',
   },
   circleImage: {
     width: 50,
