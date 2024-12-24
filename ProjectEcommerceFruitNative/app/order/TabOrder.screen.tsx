@@ -130,27 +130,31 @@ const TabOrderScreen = ({
               </View>
             </OrderInfo>
 
-            {item.shippingType !== "อื่น ๆ" && (
-              <View>
-                <ShippTitle>
-                  {item.shippingType !== "อื่น ๆ" && item.shippingType}
-                </ShippTitle>
-                {/* <ShippTagTitle onPress={() => copyToClipboard(item.tag)}> */}
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  <ShippTagTitle>หมายเลขติดตามพัสดุ</ShippTagTitle>
+            {item.shippingType !== "อื่น ๆ" &&
+              item.shippingType !== null &&
+              item.confirmReceipt !== 1 &&
+              item.confirmReceipt !== 2 &&
+              item.status !== 2 && (
+                <View>
+                  <ShippTitle>
+                    {item.shippingType !== "อื่น ๆ" && item.shippingType}
+                  </ShippTitle>
+                  {/* <ShippTagTitle onPress={() => copyToClipboard(item.tag)}> */}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <ShippTagTitle>หมายเลขติดตามพัสดุ</ShippTagTitle>
 
-                  <Button onPress={() => copyToClipboard(item.tag)}>
-                    <ButtonText>คัดลอก</ButtonText>
-                  </Button>
+                    <Button onPress={() => copyToClipboard(item.tag)}>
+                      <ButtonText>คัดลอก</ButtonText>
+                    </Button>
+                  </View>
+                  <TagTitle>{item.tag}</TagTitle>
                 </View>
-                <TagTitle>{item.tag}</TagTitle>
-              </View>
-            )}
+              )}
 
             {more && (
               <View>
@@ -201,9 +205,11 @@ const TabOrderScreen = ({
                 }}
               >
                 {((more === true && index === 5) ||
-                  (more === true && index === 3)) && (
-                  <Label name="กำลังจัดส่ง" valid={false} />
-                )}
+                  (more === true && index === 3)) &&
+                  item.confirmReceipt !== 1 &&
+                  item.confirmReceipt !== 2 && (
+                    <Label name="กำลังจัดส่ง" valid={false} />
+                  )}
               </View>
             )}
 

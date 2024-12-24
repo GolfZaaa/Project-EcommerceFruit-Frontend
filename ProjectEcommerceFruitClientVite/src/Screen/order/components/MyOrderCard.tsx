@@ -292,19 +292,21 @@ const MyOrderCard = ({ order, index }: props) => {
 
                   <div className="md:flex md:justify-between">
                     <div>
-                      {item.shippingType !== "อื่น ๆ" && item.status !== 2 && (
-                        <div>
-                          <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
-                            {item.shippingType !== "อื่น ๆ" &&
-                              item.shippingType}
-                          </span>
+                      {item.shippingType !== "อื่น ๆ" &&
+                        item.shippingType !== null &&
+                        item.status !== 2 && (
                           <div>
-                            <span className="text-lg text-gray-900 dark:text-gray-900">
-                              หมายเลขติดตามพัสดุ {item.tag}
+                            <span className="text-lg font-semibold text-gray-900 dark:text-gray-900">
+                              {item.shippingType !== "อื่น ๆ" &&
+                                item.shippingType}
                             </span>
+                            <div>
+                              <span className="text-lg text-gray-900 dark:text-gray-900">
+                                หมายเลขติดตามพัสดุ {item.tag}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
                     </div>
 
                     <span

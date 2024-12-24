@@ -125,12 +125,23 @@ export default observer(function SettingScreen() {
             style={styles.avatar}
           />
           <Text style={styles.userName}>{user.fullName}</Text>
-          <Text style={styles.userDetails}>
-            {myAddressgotoOrder
-              ? `บ้านเลขที่ ${myAddressgotoOrder?.detail}
-              ต.${myAddressgotoOrder?.subDistrict} อ.${myAddressgotoOrder?.district} จ.${myAddressgotoOrder?.province}`
-              : "ยังไม่ได้เพิ่มที่อยู่"}
-          </Text>
+          {myAddressgotoOrder ? (
+            <View
+              style={{
+                alignItems: "center",
+              }}
+            >
+              <Text style={styles.userDetails}>
+                บ้านเลขที่ {myAddressgotoOrder?.detail}
+              </Text>
+              <Text style={styles.userDetails}>
+                ต. {myAddressgotoOrder?.subDistrict} อ.
+                {myAddressgotoOrder?.district} จ. {myAddressgotoOrder?.province}
+              </Text>
+            </View>
+          ) : (
+            <Text style={styles.userDetails}>ยังไม่ได้เพิ่มที่อยู่</Text>
+          )}
         </View>
       </LinearGradient>
 

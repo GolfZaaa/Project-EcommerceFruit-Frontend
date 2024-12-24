@@ -60,15 +60,13 @@ export default observer(function homeScreen() {
     ...category,
   ];
 
-  const filteredProducts = product
-    .filter(
-      (x) =>
-        x.status === true &&
-        x.quantity > 0 &&
-        (selectedCategory === 0 || x.productGI.category.id === selectedCategory)
-    )
+  const filteredProducts = product.filter(
+    (x) =>
+      x.status === true &&
+      x.quantity > 0 &&
+      (selectedCategory === 0 || x.productGI.category.id === selectedCategory)
+  );
 
-  
   const handleProfile = async () => {
     router.push("/(tabs)/setting");
   };
@@ -113,9 +111,9 @@ export default observer(function homeScreen() {
   useEffect(() => {
     getCategory();
     onFilterProduct();
+    setSortPrice(0);
+    setSortName("ทั้งหมด");
   }, []);
-
-
 
   useEffect(() => {
     onFilterProduct();
@@ -124,7 +122,6 @@ export default observer(function homeScreen() {
   const toggleColumns = () => {
     setNumColumns((prev) => (prev === 1 ? 2 : 1));
   };
-
 
   const renderProduct = (item: Product) => {
     return (
@@ -191,7 +188,7 @@ export default observer(function homeScreen() {
     <ScrollView
       style={{
         marginTop: -20,
-        backgroundColor:'#f9f9f9'
+        backgroundColor: "#f9f9f9",
       }}
     >
       <Container>
@@ -201,11 +198,10 @@ export default observer(function homeScreen() {
 
           {!!user ? (
             <TouchableOpacity onPress={handleProfile}>
-            <Image
-                  source={require("../../assets/images/IconUser2.png")}
-                  style={styles.circleImage}
-                />
-
+              <Image
+                source={require("../../assets/images/IconUser2.png")}
+                style={styles.circleImage}
+              />
             </TouchableOpacity>
           ) : (
             <View></View>
@@ -370,6 +366,7 @@ export default observer(function homeScreen() {
                       <FontAwesome name="times" size={25} color="#F44336" />
                     </View>
                   </TouchableWithoutFeedback>
+
                   <View
                     style={{
                       marginBottom: 15,
@@ -429,6 +426,31 @@ export default observer(function homeScreen() {
                       เรียงจากมากไปน้อย
                     </Text>
                   </View>
+
+                  <View
+                    style={{
+                      marginBottom: 15,
+                      marginLeft: 10,
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: "white",
+                        backgroundColor: "red",
+                        padding: 8,
+                        fontSize: 20,
+                      }}
+                      onPress={() => {
+                        setSortPrice(0);
+                        setFilterModalVisible(false);
+                        setSortName("ทั้งหมด");
+                      }}
+                    >
+                      ล้างตัวกรองสินค้า
+                    </Text>
+                  </View>
                 </View>
               </View>
             </TouchableWithoutFeedback>
@@ -458,7 +480,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     color: "#333",
-    marginRight:-30
+    marginRight: -30,
   },
   closeButtonText: {
     color: "#fff",

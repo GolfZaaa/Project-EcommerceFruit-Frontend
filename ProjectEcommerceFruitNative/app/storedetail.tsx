@@ -73,8 +73,7 @@ export default function StoreDetailsScreen() {
 
   const [selectedCategory, setSelectedCategory] = useState(0);
 
-  const { category, getCategory, getProductById } =
-    useStore().productStore;
+  const { category, getCategory, getProductById } = useStore().productStore;
 
   const categories = [
     {
@@ -297,18 +296,18 @@ export default function StoreDetailsScreen() {
         </View>
 
         <Header>
-            <IconButton onPress={() => setFilterModalVisible(true)}>
-              <Ionicons name="filter-outline" size={24} color="#333" />
-            </IconButton>
-            <Text>{sortName}</Text>
-            <IconButton onPress={toggleColumns}>
-              <Ionicons
-                name={numColumns === 1 ? "grid-outline" : "list-outline"}
-                size={24}
-                color="#333"
-              />
-            </IconButton>
-          </Header>
+          <IconButton onPress={() => setFilterModalVisible(true)}>
+            <Ionicons name="filter-outline" size={24} color="#333" />
+          </IconButton>
+          <Text>{sortName}</Text>
+          <IconButton onPress={toggleColumns}>
+            <Ionicons
+              name={numColumns === 1 ? "grid-outline" : "list-outline"}
+              size={24}
+              color="#333"
+            />
+          </IconButton>
+        </Header>
 
         <FlatList
           data={filterProduct}
@@ -319,114 +318,159 @@ export default function StoreDetailsScreen() {
         />
 
         <Modal
-            animationType="fade"
-            transparent={true}
-            visible={filterModalVisible}
-            onRequestClose={() => setFilterModalVisible(false)}
+          animationType="fade"
+          transparent={true}
+          visible={filterModalVisible}
+          onRequestClose={() => setFilterModalVisible(false)}
+        >
+          <TouchableWithoutFeedback
+            onPress={() => setFilterModalVisible(false)}
           >
-            <TouchableWithoutFeedback
-              onPress={() => setFilterModalVisible(false)}
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+              }}
             >
               <View
                 style={{
-                  flex: 1,
-                  justifyContent: "center",
+                  width: "70%",
+                  backgroundColor: "white",
+                  borderRadius: 15,
+                  padding: 20,
                   alignItems: "center",
-                  backgroundColor: "rgba(0, 0, 0, 0.5)",
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+                  elevation: 5,
                 }}
               >
+                <Text
+                  style={{
+                    fontSize: 22,
+                    fontWeight: "bold",
+                    marginBottom: 20,
+                    color: "#333",
+                  }}
+                >
+                  ตัวกรองสินค้า
+                </Text>
+
+                <TouchableWithoutFeedback
+                  onPress={() => setFilterModalVisible(false)}
+                >
+                  <View
+                    style={{
+                      position: "absolute",
+                      right: 10,
+                      top: 5,
+                    }}
+                  >
+                    <FontAwesome name="times" size={25} color="#F44336" />
+                  </View>
+                </TouchableWithoutFeedback>
+
                 <View
                   style={{
-                    width: "70%",
-                    backgroundColor: "white",
-                    borderRadius: 15,
-                    padding: 20,
+                    marginBottom: 15,
+                    flexDirection: "row",
                     alignItems: "center",
-                    shadowColor: "#000",
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 3.84,
-                    elevation: 5,
+                  }}
+                >
+                  <FontAwesome
+                    name="sort-amount-asc"
+                    size={20}
+                    color="#4CAF50"
+                    style={{ marginRight: 10 }}
+                  />
+                  <Text
+                    style={[
+                      sortPrice === "asc"
+                        ? styles.selectedSortButton
+                        : styles.sortButton,
+                      {
+                        color: "white",
+                        backgroundColor: "#4CAF50",
+                        padding: 8,
+                        fontSize: 20,
+                      },
+                    ]}
+                    onPress={() => {
+                      onSortChange("lowToHigh");
+                      setSortName("เรียงจากน้อยไปมาก");
+                      setFilterModalVisible(false);
+                    }}
+                  >
+                    เรียงจากน้อยไปมาก
+                  </Text>
+                </View>
+
+                <View
+                  style={{
+                    marginBottom: 15,
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <FontAwesome
+                    name="sort-amount-desc"
+                    size={20}
+                    color="#2196F3"
+                    style={{ marginRight: 10 }}
+                  />
+                  <Text
+                    style={[
+                      sortPrice === "desc"
+                        ? styles.selectedSortButton
+                        : styles.sortButton,
+                      {
+                        color: "white",
+                        backgroundColor: "#2196F3",
+                        padding: 8,
+                        fontSize: 20,
+                      },
+                    ]}
+                    onPress={() => {
+                      onSortChange("highToLow");
+                      setSortName("เรียงจากมากไปน้อย");
+                      setFilterModalVisible(false);
+                    }}
+                  >
+                    เรียงจากมากไปน้อย
+                  </Text>
+                </View>
+
+                <View
+                  style={{
+                    marginBottom: 15,
+                    marginLeft: 10,
+                    flexDirection: "row",
+                    alignItems: "center",
                   }}
                 >
                   <Text
                     style={{
-                      fontSize: 22,
-                      fontWeight: "bold",
-                      marginBottom: 20,
-                      color: "#333",
+                      color: "white",
+                      backgroundColor: "red",
+                      padding: 8,
+                      fontSize: 20,
+                    }}
+                    onPress={() => {
+                      onSortChange("none");
+                      setSortName("ทั้งหมด");
+                      setFilterModalVisible(false);
                     }}
                   >
-                    ตัวกรองสินค้า
+                    ล้างตัวกรองสินค้า
                   </Text>
-
-                  <TouchableWithoutFeedback
-                    onPress={() => setFilterModalVisible(false)}
-                  >
-                    <View
-                      style={{
-                        position: "absolute",
-                        right: 10,
-                        top: 5,
-                      }}
-                    >
-                      <FontAwesome name="times" size={25} color="#F44336" />
-                    </View>
-                  </TouchableWithoutFeedback>
-                  <View
-                    style={{
-                      marginBottom: 15,
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <FontAwesome
-                      name="sort-amount-asc"
-                      size={20}
-                      color="#4CAF50"
-                      style={{ marginRight: 10 }}
-                    />
-                    <Text
-                      style={
-                        sortPrice === "asc"
-                          ? styles.selectedSortButton
-                          : styles.sortButton
-                      }
-                      onPress={() => {onSortChange("lowToHigh");setSortName("เรียงจากน้อยไปมาก");setFilterModalVisible(false)}}
-                    >
-                      เรียงจากน้อยไปมาก
-                    </Text>
-                  </View>
-
-                  <View
-                    style={{
-                      marginBottom: 15,
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <FontAwesome
-                      name="sort-amount-desc"
-                      size={20}
-                      color="#2196F3"
-                      style={{ marginRight: 10 }}
-                    />
-                    <Text
-                      style={
-                        sortPrice === "desc"
-                          ? styles.selectedSortButton
-                          : styles.sortButton
-                      }
-                      onPress={() => {onSortChange("highToLow");setSortName("เรียงจากมากไปน้อย");setFilterModalVisible(false)}}
-                    >
-                      เรียงจากมากไปน้อย
-                    </Text>
-                  </View>
                 </View>
               </View>
-            </TouchableWithoutFeedback>
-          </Modal>
-
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
       </ScrollView>
     </SafeAreaView>
   );
@@ -512,11 +556,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   sortButton: {
-    color:'#fff',
+    color: "#fff",
     padding: 10,
     backgroundColor: "#f70000",
     margin: 5,
-    fontSize:20,
+    fontSize: 20,
   },
   selectedCategoryText: {
     color: "#fff",
@@ -533,11 +577,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   selectedSortButton: {
-    color:'#fff',
+    color: "#fff",
     padding: 10,
     backgroundColor: "#4CAF50",
     margin: 5,
-    fontSize:20,
+    fontSize: 20,
   },
   sortButtonText: {
     color: "#000",
@@ -548,7 +592,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
-
 
 const ProductCard: any = styled(TouchableOpacity)<{ numColumns: number }>`
   background-color: #ffffff;
