@@ -28,7 +28,7 @@ interface props {
 const MyOrderCardWantToForward = ({ order }: props) => {
   const navigate = useNavigate();
   const { user } = useStore().userStore;
-  const { confirmOrderToForward } = useStore().orderStore;
+  const { confirmOrderToForward, loadingOrder } = useStore().orderStore;
   const componentRef = useRef(null);
 
   function generatePDF() {
@@ -356,18 +356,37 @@ const MyOrderCardWantToForward = ({ order }: props) => {
         </>
       ) : (
         <div>
-          <MyLottie lottieFile={lottiteEmpty} />
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontSize: 30,
-              color: "red",
-            }}
-          >
-            <MyContent name="ไม่มีคำร้องขอส่งต่อคำสั่งซื้อ" fontSize="large" />
-          </div>
+          {loadingOrder ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                fontSize: 30,
+                color: "red",
+              }}
+            >
+              <MyContent name="กำลังโหลด..." fontSize="large" />
+            </div>
+          ) : (
+            <div>
+              <MyLottie lottieFile={lottiteEmpty} />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  fontSize: 30,
+                  color: "red",
+                }}
+              >
+                <MyContent
+                  name="ไม่มีคำร้องขอส่งต่อคำสั่งซื้อ"
+                  fontSize="large"
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
