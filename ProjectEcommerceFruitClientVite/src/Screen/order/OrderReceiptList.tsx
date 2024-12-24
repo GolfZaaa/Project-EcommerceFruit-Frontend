@@ -10,6 +10,7 @@ import lottiteEmpty from "../../assets/lotties/lf20_qh5z2fdq.json";
 import MyLottie from "../../helper/components/MyLottie";
 import { myToast } from "../../helper/components";
 import MyContent from "../../component/MyContent";
+import BannerSendComponent from "../../layout/component/BannerSendComponent";
 
 const OrderReceiptList = () => {
   const { token } = useStore().commonStore;
@@ -60,6 +61,7 @@ const OrderReceiptList = () => {
     <NotFoundScreen name={"เข้าสู่ระบบก่อน"} />
   ) : (
     <div className="pt-10">
+      <BannerSendComponent/>
       <div
         style={{
           marginTop: 20,

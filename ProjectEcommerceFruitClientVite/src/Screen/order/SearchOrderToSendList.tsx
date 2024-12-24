@@ -35,7 +35,6 @@ const SearchOrderToSendList = () => {
 
   const handleOrderIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-
     if (value.startsWith("KRU-")) {
       setOrderId(value);
     }
@@ -43,8 +42,6 @@ const SearchOrderToSendList = () => {
 
   const onSearchOrder = () => {
     searchOrderToSendByOrderId(orderId).then((res) => {
-      console.log("res length", res.length);
-
       if (res.length === 0) {
         setShowOrderEmpty(true);
       }
@@ -167,27 +164,6 @@ const SearchOrderToSendList = () => {
                       </p>
                     )}
                   </Fab>
-                  {/* <Button
-                    style={{
-                      padding: 15,
-                    }}
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    fullWidth
-                    onClick={onSearchOrder}
-                  >
-                    {loadingOrder ? (
-                      <div>
-                        <CircularProgress size={17} color="inherit" />
-                      </div>
-                    ) : (
-                      <p className="FontPublic">
-                        <MyContent name="ค้นหา" fontSize="small" />
-                      </p>
-                    )}
-                  </Button> */}
                 </div>
               </Grid>
             </Grid>

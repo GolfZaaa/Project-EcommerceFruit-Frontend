@@ -86,6 +86,8 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
     });
   };
 
+  console.log("ordereee",order)
+
   return (
     <div ref={componentRef}>
       <div className="flex justify-between">
@@ -105,23 +107,6 @@ const MyOrderCardSearch = ({ order, showOrderEmpty }: props) => {
         ) : (
           <div></div>
         )}
-
-        {/* {order.length < 0 ? (
-          <div>
-
-          </div>
-                  ):(
-                    <div>
-                      <button
-            id="downloadButton"
-            onClick={generatePDF}
-            className=" p-2 bg-blue-500 text-white rounded-md"
-          >
-            <BsFillPrinterFill />
-          </button>
-                    </div>
-                  )}
-        */}
       </div>
 
       {select.length ? (

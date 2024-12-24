@@ -11,9 +11,6 @@ export default observer(function BannerComponent() {
     GetCartItemByUserOrderStore();
   }, []);
 
-
-  console.log("cartItemscartItemscartItems",cartItems)
-
   return (
     <div>
       {cartItems.length > 0 && (
