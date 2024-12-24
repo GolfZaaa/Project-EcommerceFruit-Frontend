@@ -2,11 +2,12 @@ import React from "react";
 import Switch from "@mui/joy/Switch";
 import Typography from "@mui/joy/Typography";
 
-export const MySwitch = ({ handleChange, checked }: any) => {
+export const MySwitch = ({ handleChange, checked, disabled  }: any) => {
   return (
     <Switch
       onClick={handleChange}
       defaultChecked={checked}
+      disabled={disabled}
       slotProps={{
         track: {
           children: (

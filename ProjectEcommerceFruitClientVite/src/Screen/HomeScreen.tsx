@@ -188,6 +188,11 @@ export default observer(function HomeScreen() {
     );
   };
 
+  console.log("user?.stores?.[0]?.name",user?.stores?.[0]?.name)
+  console.log("shopProductUser",shopProductUser)
+  
+  const FiltershopProductUser = shopProductUser.filter(x=>new Date(x.expire) > new Date());
+
   return (
     <>
       <div className="bg-white">
@@ -413,7 +418,7 @@ export default observer(function HomeScreen() {
                   </div>
                 </div>
 
-                {user?.stores?.[0]?.name && (
+                {user?.stores?.[0]?.name && FiltershopProductUser.length > 0 && (
                   <div
                     onClick={handletaps2}
                     className={`flex items-center pb-2 pr-2 border-b-2 uppercase cursor-pointer ${
@@ -444,9 +449,6 @@ export default observer(function HomeScreen() {
                         const timePassed = dayjs(product.createdAt)
                           .locale("th")
                           .fromNow();
-
-                        console.log("product.images", product.images);
-
                         return (
                           <div
                             key={i}
@@ -543,7 +545,7 @@ export default observer(function HomeScreen() {
 
               {taps === "taps2" && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-                  {shopProductUser.map((myProduct, i: number) => {
+                  {FiltershopProductUser.map((myProduct, i: number) => {
                     const category = myProduct.productGI.category;
                     const userid = user?.id;
                     const timePassed = dayjs(myProduct.createdAt)
@@ -640,6 +642,8 @@ export default observer(function HomeScreen() {
                                 </span>
                               </div>
                             )}
+
+                            
                         </div>
                         <div className="px-6 py-4 mb-auto">
                           <div className="font-medium text-lg hover:text-indigo-600 transition duration-500 ease-in-out flex justify-between mb-2">
