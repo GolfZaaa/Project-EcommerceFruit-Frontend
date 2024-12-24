@@ -92,7 +92,10 @@ export default observer(function EditName() {
       district !== "" &&
       province !== "" &&
       postalCode !== "" &&
-      address !== ""
+      address !== "" &&
+      (dataSelect?.zipCode !== undefined
+        ? postalCode === String(dataSelect?.zipCode)
+        : true)
     ) {
       const dataForm = {
         id: usershop?.id || 0,
