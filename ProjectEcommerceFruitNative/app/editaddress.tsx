@@ -134,8 +134,6 @@ export default observer(function EditAddressScreen() {
     searchByZipCode(Number(postCode));
   }, [postCode]);
 
-  console.log("data.length", data.length);
-
   return (
     <Container>
       <TouchableOpacity

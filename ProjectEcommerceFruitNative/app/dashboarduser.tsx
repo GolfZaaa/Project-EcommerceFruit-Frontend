@@ -57,7 +57,6 @@ export default observer(function dashboarduser() {
   const [loadingGraph, setloadingGraph] = useState(false);
   useState(false);
 
-  console.log("monthlyOrderData",monthlyOrderData)
   const CheckGetOrdersByUser = () => {
     getOrdersByUser();
     setloadingGraph(true);
