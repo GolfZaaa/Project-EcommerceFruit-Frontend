@@ -12,7 +12,7 @@ import { Shop } from "./shop.api";
 // axios.defaults.baseURL = "https://localhost:7168/api/";
 
 export const port =
-  "https://3af2-182-53-138-254.ngrok-free.app/";
+  "https://871b-182-53-139-116.ngrok-free.app/";
 
 axios.defaults.baseURL = port + "api/";
 

@@ -16,32 +16,8 @@ import TabOrderScreen from "./order/TabOrder.screen";
 import { useStore } from "@/src/store/store";
 import { observer } from "mobx-react-lite";
 
-const data = [
-  {
-    id: "1",
-    title: "คำสั่งซื้อ #001",
-    date: "10 ตุลาคม 2023",
-    amount: "฿500",
-    status: "completed",
-  },
-  {
-    id: "2",
-    title: "คำสั่งซื้อ #002",
-    date: "15 ตุลาคม 2023",
-    amount: "฿1,200",
-    status: "cancelled",
-  },
-  {
-    id: "3",
-    title: "คำสั่งซื้อ #003",
-    date: "20 ตุลาคม 2023",
-    amount: "฿700",
-    status: "completed",
-  },
-];
-
 const OrderHistoryScreen = () => {
-  const { order } = useStore().orderStore;
+  const { order,RefundOrder } = useStore().orderStore;
 
   // const [orders] = useState(data);
   const navigation = useNavigation();
@@ -57,7 +33,12 @@ const OrderHistoryScreen = () => {
     { key: "fifth", title: "ที่ต้องได้รับ" },
     { key: "sixth", title: "สำเร็จแล้ว" },
     { key: "seventh", title: "ยกเลิกแล้ว" },
+    { key: "eig", title: "คืนเงินแล้ว" },
   ]);
+
+  
+
+
 
   const renderScene = SceneMap({
     first: () => <TabOrderScreen item={order} index={null} />, //ทั้งหมด
@@ -119,6 +100,14 @@ const OrderHistoryScreen = () => {
       <TabOrderScreen
         item={order.filter(
           (item) => item?.status === 2 || item?.confirmReceipt === 2 //ยกเลิกแล้ว
+        )}
+        index={null}
+      />
+    ),
+    eig: () => (
+      <TabOrderScreen
+        item={order.filter(
+          (item) => item?.status === 5 && item?.confirmReceipt === 1 //คืนเงินแล้ว
         )}
         index={null}
       />

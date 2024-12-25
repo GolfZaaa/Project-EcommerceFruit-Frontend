@@ -127,7 +127,7 @@ export default observer(function DashboardShopScreen() {
     setTotalQuantity(totalProduct);
 
     const totalOrderSuccess = order
-      .filter((x) => x.confirmReceipt === 1)
+      .filter((x) => x.confirmReceipt === 1 )
       .reduce((acc, currentOrder) => {
         return currentOrder.status === 1 ? acc + 1 : acc;
       }, 0);
@@ -136,14 +136,9 @@ export default observer(function DashboardShopScreen() {
     const totalOrderFailed = order
       .filter((x) => x.confirmReceipt === 1)
       .reduce((acc, currentOrder) => {
-        return currentOrder.status === 2 ? acc + 1 : acc;
+        return currentOrder.status === 2 || currentOrder.status === 5 ? acc + 1 : acc;
       }, 0);
     setTotalOrderFailed(totalOrderFailed);
-
-    const years: any = [
-      ...new Set(order.map((o) => moment(o.createdAt).year() + 543)),
-    ].sort((a, b) => a - b);
-    setYearOptions(years.map((year: any) => ({ value: year, label: year })));
 
     const ordersByMonth = order
       .filter((x) => x.status === 1 && x.confirmReceipt === 1)
@@ -186,12 +181,12 @@ export default observer(function DashboardShopScreen() {
   useEffect(() => {
     if (order) {
       const years: any = [
-        ...new Set(order.map((o) => dayjs(o.createdAt).year() + 543)),
+        ...new Set(order.filter(x=>x.status === 1 && x.confirmReceipt === 1).map((o) => dayjs(o.createdAt).year() + 543)),
       ].sort((a, b) => a - b);
       setYearOptions(years.map((year: any) => ({ value: year, label: year })));
 
       const ordersByYearAndMonth = order
-        .filter((x) => x.confirmReceipt === 1)
+        .filter((x) => x.confirmReceipt === 1 && x.status === 1)
         .reduce((acc: any, currentOrder) => {
           const month = dayjs(currentOrder.createdAt).format("MMMM");
           const year = dayjs(currentOrder.createdAt).year() + 543;
@@ -614,7 +609,7 @@ export default observer(function DashboardShopScreen() {
                         fontSize="small"
                       />
                     </p>
-                    {order.filter((x) => x.confirmReceipt === 1).length > 0 && (
+                    {order.filter((x) => x.confirmReceipt === 1 && x.status === 1).length > 0 && (
                       <div className="flex items-center">
                         <p className="mr-2">ปี :</p>
                         <Select

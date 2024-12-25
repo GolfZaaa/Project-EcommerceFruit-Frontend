@@ -202,7 +202,7 @@ export default observer(function dashboardtosend() {
   useEffect(() => {
     const categoryQuantities: any = {};
     order
-      .filter((x) => x.status === 1 && x.confirmReceipt === 1)
+      .filter((x) => x.confirmReceipt === 1)
       .forEach((orderItem) => {
         orderItem.orderItems.forEach((item) => {
           const categoryName = item.product?.productGI?.category?.name;

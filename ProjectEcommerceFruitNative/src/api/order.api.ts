@@ -30,6 +30,8 @@ export const Order = {
     requests.postForm(`Order/ConfirmOrder`, createFormData(values)),
   cancelOrder: (values: any | undefined) =>
     requests.postForm(`Order/CancelOrder`, createFormData(values)),
+  RefundOrder: (orderId: number) =>
+    requests.onlyPost(`Order/RefundOrder?orderId=${orderId}`),
   CreateUpdateOrderById: (values: any | undefined) =>
     requests.postForm(`Order/CreateUpdateOrderById`, createFormData(values)),
   getOrdersAll: () => requests.get("Order/GetOrders"),

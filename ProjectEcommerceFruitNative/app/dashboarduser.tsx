@@ -57,6 +57,7 @@ export default observer(function dashboarduser() {
   const [loadingGraph, setloadingGraph] = useState(false);
   useState(false);
 
+  console.log("monthlyOrderData",monthlyOrderData)
   const CheckGetOrdersByUser = () => {
     getOrdersByUser();
     setloadingGraph(true);
@@ -68,7 +69,7 @@ export default observer(function dashboarduser() {
   useEffect(() => {
     if (order) {
       const total = order
-        .filter((x) => x.confirmReceipt === 1)
+        .filter((x) => x.confirmReceipt === 1 && x.status === 1)
         .reduce((acc, currentOrder) => {
           const orderTotal = currentOrder.orderItems.reduce(
             (itemAcc, orderItem) =>
@@ -88,7 +89,7 @@ export default observer(function dashboarduser() {
       setTotalPrice(total);
 
       const totalProduct = order
-        .filter((x) => x.confirmReceipt === 1)
+        .filter((x) => x.confirmReceipt === 1 && x.status === 1)
         .reduce((acc, currentOrder) => {
           const orderQuantity = currentOrder.orderItems.reduce(
             (itemAcc, orderItem) => itemAcc + orderItem.quantity,
@@ -99,22 +100,26 @@ export default observer(function dashboarduser() {
       setTotalQuantity(totalProduct);
 
       const totalOrderSuccess = order.reduce((acc, currentOrder) => {
-        return currentOrder.confirmReceipt === 1 ? acc + 1 : acc;
+        return currentOrder.confirmReceipt === 1 && currentOrder.status === 1
+          ? acc + 1
+          : acc;
       }, 0);
       setTotalOrderSuccess(totalOrderSuccess);
 
       const totalOrderFailed = order.reduce((acc, currentOrder) => {
-        return currentOrder.confirmReceipt === 2 ? acc + 1 : acc;
+        return currentOrder.confirmReceipt === 2 || currentOrder.status === 5
+          ? acc + 1
+          : acc;
       }, 0);
       setTotalOrderCancel(totalOrderFailed);
 
       const years: any = [
-        ...new Set(order.map((o) => dayjs(o.createdAt).year() + 543)),
+        ...new Set(order.filter(x=>x.status === 1 && x.confirmReceipt === 1).map((o) => dayjs(o.createdAt).year() + 543)),
       ].sort((a, b) => a - b);
       setYearOptions(years.map((year: any) => ({ value: year, label: year })));
 
       const ordersByMonth = order
-        .filter((x) => x.confirmReceipt === 1)
+        .filter((x) => x.confirmReceipt === 1 && x.status === 1)
         .reduce((acc: any, currentOrder) => {
           const month = dayjs(currentOrder.createdAt).format("MMMM");
           const orderYear = moment(currentOrder.createdAt).year();
@@ -130,7 +135,14 @@ export default observer(function dashboarduser() {
             acc[month] = 0;
           }
 
-          acc[month] += orderTotal;
+          const totalFee = currentOrder.shippings
+          ? currentOrder.shippings.reduce(
+              (feeAcc, shipping) => feeAcc + shipping.shippingFee,
+              0
+            )
+          : 0;
+
+          acc[month] += orderTotal + totalFee;
 
           return acc;
         }, {});
@@ -151,13 +163,8 @@ export default observer(function dashboarduser() {
 
   useEffect(() => {
     if (order) {
-      const years: any = [
-        ...new Set(order.map((o) => dayjs(o.createdAt).year() + 543)),
-      ].sort((a, b) => a - b);
-      setYearOptions(years.map((year: any) => ({ value: year, label: year })));
-
       const ordersByYearAndMonth = order
-        .filter((x) => x.confirmReceipt === 1)
+        .filter((x) => x.confirmReceipt === 1 && x.status === 1)
         .reduce((acc: any, currentOrder) => {
           const month = dayjs(currentOrder.createdAt).format("MMMM");
           const year = dayjs(currentOrder.createdAt).year() + 543;
@@ -173,7 +180,14 @@ export default observer(function dashboarduser() {
             acc[key] = { month, year, total: 0 };
           }
 
-          acc[key].total += orderTotal;
+          const totalFee = currentOrder.shippings
+          ? currentOrder.shippings.reduce(
+              (feeAcc, shipping) => feeAcc + shipping.shippingFee,
+              0
+            )
+          : 0;
+
+          acc[key].total += orderTotal + totalFee;
 
           return acc;
         }, {});
@@ -219,39 +233,41 @@ export default observer(function dashboarduser() {
     "ธ.ค.",
   ];
 
-  const englishToThaiMonthIndex: any = {
-    January: 11,
-    February: 10,
-    March: 9,
-    April: 8,
-    May: 7,
-    June: 6,
-    July: 5,
-    August: 4,
-    September: 3,
-    October: 2,
-    November: 1,
-    December: 0,
+  const thaiToIndex: any = {
+    "มกราคม": 0,
+    "กุมภาพันธ์": 1,
+    "มีนาคม": 2,
+    "เมษายน": 3,
+    "พฤษภาคม": 4,
+    "มิถุนายน": 5,
+    "กรกฎาคม": 6,
+    "สิงหาคม": 7,
+    "กันยายน": 8,
+    "ตุลาคม": 9,
+    "พฤศจิกายน": 10,
+    "ธันวาคม": 11,
   };
 
-  const chartData = {
-    labels: monthlyOrderData.map((data: any) => {
-      const monthIndex = englishToThaiMonthIndex[data.month];
-      return thaiMonthShort[monthIndex];
-    }),
-    datasets: [
-      {
-        data: monthlyOrderData.map((data: any) => data.total),
-      },
-    ],
-  };
+const chartData = {
+  labels: monthlyOrderData.map((data: any) => {
+    const monthIndex = thaiToIndex[data.month]; 
+    return thaiMonthShort[monthIndex] || "ไม่ทราบเดือน"; 
+  }),
+  datasets: [
+    {
+      data: monthlyOrderData.map((data: any) => data.total),
+    },
+  ],
+};
+
+
 
   const [years, setYears] = useState([]);
 
   useEffect(() => {
     if (order && order.length > 0) {
       const years: any = [
-        ...new Set(order.map((o) => new Date(o.createdAt).getFullYear())),
+        ...new Set(order.filter(x=>x.status === 1 && x.confirmReceipt === 1).map((o) => new Date(o.createdAt).getFullYear())),
       ].sort((a, b) => a - b);
       setYears(years);
       setSelectedYear(years[0]);
@@ -299,9 +315,6 @@ export default observer(function dashboarduser() {
 
   const screenWidth = Dimensions.get("window").width;
 
-  const CloseModel = () =>{
-    setIsDrawerOpen(false);
-  }
 
   return (
     <View style={styles.container}>

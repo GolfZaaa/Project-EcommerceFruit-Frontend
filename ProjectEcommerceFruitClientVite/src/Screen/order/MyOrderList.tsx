@@ -138,6 +138,16 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
               width: "20%",
             }}
           />
+          <Tab
+            label={
+              <p className="FontPublic">
+                <MyContent name="คืนเงินสำเร็จ" fontSize="small" />
+              </p>
+            }
+            style={{
+              width: "20%",
+            }}
+          />
         </Tabs>
 
         <CustomTabPanel value={value} index={0}>
@@ -192,6 +202,14 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
           <MyOrderCard
             order={order.filter(
               (item) => item?.status === 2 || item?.confirmReceipt === 2 //ยกเลิกแล้ว
+            )}
+            index={5}
+          />
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={6}>
+          <MyOrderCard
+            order={order.filter(
+              (item) => item?.status === 5 && item?.confirmReceipt === 1 //คืนเงินสำเร็จ
             )}
             index={5}
           />
