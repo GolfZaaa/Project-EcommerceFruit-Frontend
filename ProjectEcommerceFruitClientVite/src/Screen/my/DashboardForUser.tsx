@@ -42,7 +42,7 @@ export default observer(function DashboardForUser() {
   useEffect(() => {
     if (order) {
       const total = order
-        .filter((x) => x.confirmReceipt === 1)
+        .filter((x) => x.confirmReceipt === 1 && x.status === 1)
         .reduce((acc, currentOrder) => {
           const orderTotal = currentOrder.orderItems.reduce(
             (itemAcc, orderItem) =>
@@ -62,7 +62,7 @@ export default observer(function DashboardForUser() {
       setTotalPrice(total);
 
       const totalProduct = order
-        .filter((x) => x.confirmReceipt === 1)
+        .filter((x) => x.confirmReceipt === 1 && x.status === 1)
         .reduce((acc, currentOrder) => {
           const orderQuantity = currentOrder.orderItems.reduce(
             (itemAcc, orderItem) => itemAcc + orderItem.quantity,
@@ -73,22 +73,26 @@ export default observer(function DashboardForUser() {
       setTotalQuantity(totalProduct);
 
       const totalOrderSuccess = order.reduce((acc, currentOrder) => {
-        return currentOrder.confirmReceipt === 1 ? acc + 1 : acc;
+        return currentOrder.confirmReceipt === 1 && currentOrder.status === 1
+          ? acc + 1
+          : acc;
       }, 0);
       setTotalOrderSuccess(totalOrderSuccess);
 
       const totalOrderFailed = order.reduce((acc, currentOrder) => {
-        return currentOrder.confirmReceipt === 2 ? acc + 1 : acc;
+        return currentOrder.confirmReceipt === 2 || currentOrder.status === 5
+          ? acc + 1
+          : acc;
       }, 0);
       setTotalOrderCancel(totalOrderFailed);
 
       const years: any = [
-        ...new Set(order.map((o) => dayjs(o.createdAt).year() + 543)),
+        ...new Set(order.filter(x=>x.status === 1 && x.confirmReceipt === 1).map((o) => dayjs(o.createdAt).year() + 543)),
       ].sort((a, b) => a - b);
       setYearOptions(years.map((year: any) => ({ value: year, label: year })));
 
       const ordersByMonth = order
-        .filter((x) => x.confirmReceipt === 1)
+        .filter((x) => x.confirmReceipt === 1 && x.status === 1)
         .reduce((acc: any, currentOrder) => {
           const month = dayjs(currentOrder.createdAt).format("MMMM");
           const orderYear = moment(currentOrder.createdAt).year();
@@ -104,7 +108,14 @@ export default observer(function DashboardForUser() {
             acc[month] = 0;
           }
 
-          acc[month] += orderTotal;
+          const totalFee = currentOrder.shippings
+          ? currentOrder.shippings.reduce(
+              (feeAcc, shipping) => feeAcc + shipping.shippingFee,
+              0
+            )
+          : 0;
+
+          acc[month] += orderTotal + totalFee;
 
           return acc;
         }, {});
@@ -123,15 +134,13 @@ export default observer(function DashboardForUser() {
     }
   }, [order, selectedYear]);
 
+  console.log("monthlyOrderData",monthlyOrderData)
+
   useEffect(() => {
     if (order) {
-      const years: any = [
-        ...new Set(order.map((o) => dayjs(o.createdAt).year() + 543)),
-      ].sort((a, b) => a - b);
-      setYearOptions(years.map((year: any) => ({ value: year, label: year })));
 
       const ordersByYearAndMonth = order
-        .filter((x) => x.confirmReceipt === 1)
+        .filter((x) => x.confirmReceipt === 1 && x.status === 1)
         .reduce((acc: any, currentOrder) => {
           const month = dayjs(currentOrder.createdAt).format("MMMM");
           const year = dayjs(currentOrder.createdAt).year() + 543;
@@ -147,7 +156,14 @@ export default observer(function DashboardForUser() {
             acc[key] = { month, year, total: 0 };
           }
 
-          acc[key].total += orderTotal;
+          const totalFee = currentOrder.shippings
+          ? currentOrder.shippings.reduce(
+              (feeAcc, shipping) => feeAcc + shipping.shippingFee,
+              0
+            )
+          : 0;
+
+          acc[key].total += orderTotal + totalFee;
 
           return acc;
         }, {});
@@ -218,7 +234,7 @@ export default observer(function DashboardForUser() {
   useEffect(() => {
     const categoryQuantities: any = {};
     order
-      .filter((x) => x.confirmReceipt === 1)
+      .filter((x) => x.confirmReceipt === 1 && x.status === 1)
       .forEach((orderItem) => {
         orderItem.orderItems.forEach((item) => {
           const categoryName = item.product.productGI.category.name;
@@ -498,7 +514,7 @@ export default observer(function DashboardForUser() {
             </div>
           </a>
 
-          {order?.filter((x) => x.confirmReceipt === 1).length ? (
+          {order?.filter((x) => x.confirmReceipt === 1 && x.status === 1).length ? (
             <button
               onClick={toggleDropdown}
               className="absolute -top-5 -right-2 p-2 bg-blue-500 text-white rounded-md sm:-top-7 lg:-top-5"
@@ -677,7 +693,7 @@ export default observer(function DashboardForUser() {
                   name="จำนวนคำสั่งซื้อในแต่ละเดือน"
                   fontSize="small"
                 />
-                {order?.filter((x) => x.confirmReceipt === 1).length > 0 ? (
+                {order?.filter((x) => x.confirmReceipt === 1 && x.status === 1).length > 0 ? (
                   <div className="flex items-center">
                     <p className="mr-2">ปี :</p>
                     <Select
@@ -695,7 +711,7 @@ export default observer(function DashboardForUser() {
                 )}
               </div>
               <div className="p-2 -mt-10">
-                {order?.filter((x) => x.confirmReceipt === 1).length > 0 ? (
+                {order?.filter((x) => x.confirmReceipt === 1 && x.status === 1).length > 0 ? (
                   <div>
                     <ReactECharts
                       option={option}
@@ -720,7 +736,7 @@ export default observer(function DashboardForUser() {
                 </p>
               </div>
               <div className="p-2">
-                {order?.filter((x) => x.confirmReceipt === 1).length > 0 ? (
+                {order?.filter((x) => x.confirmReceipt === 1 && x.status === 1).length > 0 ? (
                   <ReactECharts
                     option={pieOption}
                     style={{ height: "300px", width: "100%" }}

@@ -458,7 +458,7 @@ export default observer(function SummaryScreen({ onChangePaging }: any) {
                             : "text-gray-800"
                         }`}
                       >
-                        <MyContent name="สลีปการโอน" fontSize="littlenormal" />
+                        <MyContent name="แนบสลิป" fontSize="littlenormal" />
                       </span>
                     </label>
                   </div>

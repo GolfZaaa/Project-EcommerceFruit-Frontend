@@ -163,6 +163,25 @@ export default class OrderStore {
     }
   };
 
+  // RefundOrder = async (values: any | undefined) => {
+  //   try {
+  //     const result = await agent.Order.RefundOrder(values);
+  //     return result;
+  //   } catch (error) {
+  //     return error;
+  //   }
+  // };
+
+  RefundOrder = async (orderId: number) => {
+    try {
+      const result = await agent.Order.RefundOrder(orderId);
+      this.getOrdersByUser();
+      return result;
+    } catch (error) {
+      return error;
+    }
+  };
+
   CreateUpdateOrderById = async (values: any) => {
     try {
       const result = await agent.Order.CreateUpdateOrderById(values);

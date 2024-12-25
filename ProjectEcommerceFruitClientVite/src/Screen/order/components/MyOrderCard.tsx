@@ -29,7 +29,7 @@ interface props {
 const MyOrderCard = ({ order, index }: props) => {
   const navigate = useNavigate();
 
-  const { changeConfirmReceiptOrder } = useStore().orderStore;
+  const { changeConfirmReceiptOrder, RefundOrder} = useStore().orderStore;
   const { systemSetting } = useStore().systemSettingStore;
 
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
@@ -110,11 +110,13 @@ const MyOrderCard = ({ order, index }: props) => {
         statusText = "ยืนยันคำสั่งซื้อแล้ว";
       } else if (orderItem.status === 2) {
         statusText = "ยกเลิกคำสั่งซื้อแล้ว";
-      } else {
+      } else if (orderItem.status === 5) {
+        statusText = "คืนเงินสำเร็จ";
+      }else {
         statusText = "สถานะไม่ระบุ";
       }
 
-      if (orderItem.confirmReceipt === 1) {
+      if (orderItem.confirmReceipt === 1 && orderItem.status === 1) {
         statusText += " | ได้รับสินค้าแล้ว";
       }
       if (orderItem.status === 2) {
@@ -214,6 +216,30 @@ const MyOrderCard = ({ order, index }: props) => {
       }
     });
   };
+
+    const handleRefund = (orderId:any) => {
+      console.log("orderId",orderId)
+      Swal.fire({
+        title: "ท่านแน่ใจหรือไม่ว่าต้องคืนเงิน?",
+        text: "หากยืนยันแล้ว ท่านจะสามารถดูรายการได้ใน ข้อมูลส่วนตัว",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#cb091c",
+        confirmButtonText: "ยืนยัน",
+        cancelButtonText: "ยกเลิก",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire(
+            "คืนเงินสำเร็จ",
+            "ท่านได้ทำการคืนเงินสำเร็จ",
+            "success"
+          );
+          RefundOrder(orderId)
+          
+        }
+      });
+    };
 
   const [openDropdown, setOpenDropdown] = useState(false);
   const toggleDropdown = () => {
@@ -320,6 +346,8 @@ const MyOrderCard = ({ order, index }: props) => {
                           ? "green-500"
                           : item.status === 2
                           ? "red-500"
+                          : item.status === 5
+                          ? "violet-500"
                           : "gray-500")
                       }
                     >
@@ -332,14 +360,17 @@ const MyOrderCard = ({ order, index }: props) => {
                         ? "ยืนยันคำสั่งซื้อแล้ว"
                         : item.status === 2
                         ? "ยกเลิกคำสั่งซื้อแล้ว"
+                        : item.status === 5
+                        ? "คืนเงินสำเร็จ"
                         : "เพิ่มสถานะด้วย"}
                       <div>
-                        {item.confirmReceipt === 1 && "ได้รับสินค้าแล้ว"}
+                        {item.confirmReceipt === 1 && item.status === 1 && "ได้รับสินค้าแล้ว"}
                         {(item.status === 2 && "ยกเลิกแล้ว โดยร้านค้า") ||
                           (item.confirmReceipt === 2 && "ยกเลิกแล้ว โดยคุณ")}
                       </div>
                     </span>
                   </div>
+                  
 
                   {item.orderItems.map((item: OrderItem) => {
                     const TotalPriceForProduct =
@@ -439,6 +470,17 @@ const MyOrderCard = ({ order, index }: props) => {
                       : systemSetting[0]?.shippingCost
                   }
                 />
+                
+                {item.status === 1 && item.confirmReceipt === 1 && 
+                 <div className="flex justify-center items-center mt-4">
+                 <button
+                  onClick={() => handleRefund(item.id)}
+                   className="bg-violet-500 hover:bg-violet-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-200 ease-in-out"
+                 >
+                   ขอคืนเงิน
+                 </button>
+               </div>
+                  }
 
                 {index === 3 && (
                   <Grid

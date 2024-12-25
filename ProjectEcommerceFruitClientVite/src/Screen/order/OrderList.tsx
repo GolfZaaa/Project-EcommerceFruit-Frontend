@@ -293,6 +293,8 @@ const OrderList = () => {
           ? "ยืนยันคำสั่งซื้อแล้ว"
           : row.status === 2
           ? "ยกเลิกคำสั่งซื้อแล้ว"
+          : row.status === 5
+          ? "คืนเงินแล้ว"
           : "เพิ่มสถานะด้วย";
 
       const confirmReceiptText =
@@ -302,6 +304,8 @@ const OrderList = () => {
           ? "ได้รับพัสดุแล้ว"
           : row.confirmReceipt === 2
           ? "ไม่ได้รับพัสดุ"
+          : row.confirmReceipt === 1 && row.status === 5
+          ? ""
           : "เพิ่มสถานะด้วย";
 
       const createdAtFormatted = dayjs(row.createdAt)
@@ -643,6 +647,8 @@ const OrderList = () => {
                                 ? "text-green-500 bg-green-100 border border-green-500"
                                 : row.status === 2
                                 ? "text-red-500 bg-red-100 border border-red-500"
+                                : row.status === 5
+                                ? "text-violet-500 bg-violet-100 border border-violet-500"
                                 : "") + " px-3 py-1 rounded-full font-semibold"
                             }
                           >
@@ -667,7 +673,14 @@ const OrderList = () => {
                                   fontSize="smaller"
                                 />
                               </p>
-                            ) : (
+                            ) : row.status === 5 ? (
+                              <p className="FontPublic font-semibold">
+                                <MyContent
+                                  name="คืนเงินแล้ว"
+                                  fontSize="smaller"
+                                />
+                              </p>
+                            ):(
                               <p>
                                 <MyContent
                                   name="กรุณาเพิ่มสถานะ"

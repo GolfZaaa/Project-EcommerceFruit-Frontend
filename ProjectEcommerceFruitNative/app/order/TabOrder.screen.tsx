@@ -27,7 +27,7 @@ const TabOrderScreen = ({
   item: Order[];
   index: number | null;
 }) => {
-  const { changeConfirmReceiptOrder } = useStore().orderStore;
+  const { changeConfirmReceiptOrder, RefundOrder } = useStore().orderStore;
 
   const handleConfirm = (values: any) => {
     Alert.alert(
@@ -47,6 +47,22 @@ const TabOrderScreen = ({
         },
       ]
     );
+  };
+
+
+  const handleRefund = (orderId:any) => {
+    Alert.alert('ยืนยันการคืนเงิน', 'คุณต้องการคืนเงินใช่หรือไม่?', [
+      {
+        text: 'ยกเลิก',
+        style: 'cancel',
+      },
+      {
+        text: 'ยืนยัน',
+        onPress: () => {
+          RefundOrder(orderId)
+        },
+      },
+    ]);
   };
 
   const copyToClipboard = (item: string) => {
@@ -116,6 +132,8 @@ const TabOrderScreen = ({
                       ? "ยืนยันคำสั่งซื้อแล้ว"
                       : item.status === 2
                       ? "ยกเลิกคำสั่งซื้อแล้ว"
+                      : item.status === 5
+                      ? "คืนเงินแล้ว"
                       : "เพิ่มสถานะด้วย"}
                   </OrderStatus>
                 </View>
@@ -123,7 +141,7 @@ const TabOrderScreen = ({
                   status={item.status}
                   confirmReceipt={item.confirmReceipt}
                 >
-                  {item.confirmReceipt === 1 && "ได้รับสินค้าแล้ว"}
+                  {item.confirmReceipt === 1 && item.status === 1 && "ได้รับสินค้าแล้ว"}
                   {(item.status === 2 && "ยกเลิกแล้ว โดยร้านค้า") ||
                     (item.confirmReceipt === 2 && "ยกเลิกแล้ว โดยคุณ")}
                 </OrderStatus>
@@ -183,6 +201,17 @@ const TabOrderScreen = ({
                 </TotalRow>
               </TotalContainer>
             )}
+
+          {more &&
+         <View>
+          {item.status === 1 && item.confirmReceipt === 1 &&
+              <View>
+                  <TouchableOpacity style={styles.button} onPress={() => handleRefund(item.id)}>
+                  <Text style={styles.buttonText}>ขอคืนเงิน</Text>
+              </TouchableOpacity>
+              </View>
+          }
+          </View>}
 
             {((more === true && index === 5) ||
               (more === true && index === 3)) &&
@@ -308,6 +337,26 @@ const styles = StyleSheet.create({
     height: 550,
     marginVertical: 10,
   },
+  button: {
+    backgroundColor: '#01c446',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+    elevation: 3, 
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    height:50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom:10
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 });
 
 const OrderCard: any = styled.View`
@@ -373,6 +422,8 @@ const OrderStatus: any = styled.Text`
       ? "green"
       : props.status === 2
       ? "red"
+      : props.status === 5
+      ? "purple"
       : "gray"};
 `;
 

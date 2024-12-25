@@ -121,16 +121,12 @@ export default observer(function ShopScreen() {
     setTotalOrderSuccess(totalOrderSuccess);
 
     const totalOrderFailed = order
-      .filter((x) => x.confirmReceipt === 1)
-      .reduce((acc, currentOrder) => {
-        return currentOrder.status === 2 ? acc + 1 : acc;
-      }, 0);
-    setTotalOrderFailed(totalOrderFailed);
+    .filter((x) => x.confirmReceipt === 1)
+    .reduce((acc, currentOrder) => {
+      return currentOrder.status === 2 || currentOrder.status === 5 ? acc + 1 : acc;
+    }, 0);
+  setTotalOrderFailed(totalOrderFailed);
 
-    const years: any = [
-      ...new Set(order.map((o) => moment(o.createdAt).year() + 543)),
-    ].sort((a, b) => a - b);
-    setYearOptions(years.map((year: any) => ({ value: year, label: year })));
 
     const ordersByMonth = order
       .filter((x) => x.status === 1 && x.confirmReceipt === 1)
@@ -185,6 +181,8 @@ export default observer(function ShopScreen() {
       }).start(() => setIsDrawerOpen(true));
     }
   };
+
+  console.log("monthlyOrderData",monthlyOrderData)
 
   const handleEditStoreName = async () => {
     await GetShopByUserId();
@@ -247,7 +245,7 @@ export default observer(function ShopScreen() {
   useEffect(() => {
     if (order && order.length > 0) {
       const years: any = [
-        ...new Set(order.map((o) => new Date(o.createdAt).getFullYear())),
+        ...new Set(order.filter(x=>x.status === 1 && x.confirmReceipt === 1).map((o) => new Date(o.createdAt).getFullYear())),
       ].sort((a, b) => a - b);
       setYears(years);
       setSelectedYear(years[0]);

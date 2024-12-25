@@ -113,6 +113,16 @@ export default class OrderStore {
     }
   };
 
+  RefundOrder = async (orderId: number) => {
+    try {
+      const result = await agent.Order.RefundOrder(orderId);
+      this.getOrdersByUser();
+      return result;
+    } catch (error) {
+      return error;
+    }
+  };
+
   getMyOrderUserWantToTaketoSend = async () => {
     this.setLoadingOrder(true);
     try {
