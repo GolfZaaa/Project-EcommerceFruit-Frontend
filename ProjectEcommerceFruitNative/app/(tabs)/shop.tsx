@@ -182,8 +182,6 @@ export default observer(function ShopScreen() {
     }
   };
 
-  console.log("monthlyOrderData",monthlyOrderData)
-
   const handleEditStoreName = async () => {
     await GetShopByUserId();
     await GetAddressByStore();

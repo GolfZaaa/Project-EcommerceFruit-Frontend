@@ -20,14 +20,11 @@ export default class CommonStore {
   getToken = async () => {
     const result = await AsyncStorage.getItem("token");
     this.token = result ? JSON.parse(result) : null;
-    console.log("res result", result);
     if (result !== null) {
       try {
         const res: any = await store.userStore.getUserDetailbyId().catch(() => {
           this.logout();
         });
-
-        console.log("res getUserDetailbyId", res);
 
         if (res?.response?.request?.status !== undefined) {
           if (res.response.request.status === 401) {
@@ -93,8 +90,6 @@ export default class CommonStore {
 
     try {
       const user = await agent.Common.register(values);
-
-      console.log("user : ", user);
 
       runInAction(() => this.setLoadingCommon(false));
 
