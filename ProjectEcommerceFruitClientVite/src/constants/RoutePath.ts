@@ -1,7 +1,9 @@
 import { baseUrlImage } from "../api/agent";
 import { config } from "../helper/config";
 
-const HOST = config.baseURL ?? "/";
+// const HOST = config.baseURL ?? "/";
+
+const HOST = import.meta.env.VITE_HOST;
 
 export const RoutePath = {
   // public routes
@@ -32,8 +34,6 @@ export const RoutePath = {
 
   newsList: `${HOST}news-list`,
   newsListDetail: (id: string) => `${HOST}news-list-detail-screen/${id}`,
-
-  // shopdetailScreen: `${HOST}shop-detail-screen`,
 
   createshop: `${HOST}create-shop`,
   cartScreen: `${HOST}cart-screen`,

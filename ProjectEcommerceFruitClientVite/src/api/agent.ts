@@ -10,9 +10,16 @@ import { SystemSetting } from "./systemsetting.api";
 
 // axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_API_URL;
 
-const baseUr = "https://localhost:8168/";
+export const pathServer = import.meta.env.VITE_API_URL;
 
-axios.defaults.baseURL = baseUr + "api/";
+axios.defaults.baseURL = pathServer;
+
+export const baseUr = "https://tee.kru.ac.th/sell-fruit/assets/"
+
+
+// const baseUr = "https://localhost:8168/";
+
+// axios.defaults.baseURL = baseUr + "api/";
 
 export const pathImageProduct = baseUr + "product/";
 
