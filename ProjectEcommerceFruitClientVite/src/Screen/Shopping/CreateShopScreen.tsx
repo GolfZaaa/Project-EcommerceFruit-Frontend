@@ -30,7 +30,7 @@ type Props = Parameters<typeof CreateInput>[0];
 interface props {
   onChangeCU?: any;
   dataEdit?: any;
-  admin: boolean;
+  admin?: boolean;
 }
 
 const style = {

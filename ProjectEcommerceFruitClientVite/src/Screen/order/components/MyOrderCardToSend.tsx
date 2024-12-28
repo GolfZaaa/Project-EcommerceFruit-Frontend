@@ -544,6 +544,11 @@ const MyOrderCardToSend = ({ order, index }: props) => {
               (x) => x.statusDriver === 3 && x.userId === user?.id
             );
 
+            console.log(
+              "item.shippings[0].driverHistories",
+              item.shippings[0].driverHistories
+            );
+
             const myDriverFee = item.shippings[0].driverHistories.find(
               (x) => x.userId === user?.id
             );
@@ -631,23 +636,25 @@ const MyOrderCardToSend = ({ order, index }: props) => {
                         <MyContent name="ยืนยันการส่ง" fontSize="smaller" />
                       </Fab>
 
-                      <Fab
-                        variant="extended"
-                        color="error"
-                        onClick={() =>
-                          handleCancelOrderMyReceipt(
-                            item?.shippings[0]?.driverHistories[0]?.id
-                          )
-                        }
-                        sx={{
-                          zIndex: 1,
-                        }}
-                      >
-                        <MyContent
-                          name="ยกเลิกการส่งสินค้า"
-                          fontSize="smaller"
-                        />
-                      </Fab>
+                      {item.shippings[0].driverHistories.length === 1 && (
+                        <Fab
+                          variant="extended"
+                          color="error"
+                          onClick={() =>
+                            handleCancelOrderMyReceipt(
+                              item?.shippings[0]?.driverHistories[0]?.id
+                            )
+                          }
+                          sx={{
+                            zIndex: 1,
+                          }}
+                        >
+                          <MyContent
+                            name="ยกเลิกการส่งสินค้า"
+                            fontSize="smaller"
+                          />
+                        </Fab>
+                      )}
                     </div>
                   )}
 

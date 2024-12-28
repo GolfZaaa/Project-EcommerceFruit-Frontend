@@ -34,14 +34,12 @@ export default observer(function Navbar() {
     setAnchorEl(null);
   };
 
-  const resultCartItems = cartItems.length;
-
   useEffect(() => {
     getSystemSetting();
     if (token) {
       GetCartItemByUser();
     }
-  }, [token]);
+  }, []);
 
   const handleHomeScreen = () => {
     resetScroll();
@@ -50,7 +48,9 @@ export default observer(function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const toggleDrawer = () => setDrawerOpen(!drawerOpen);
 
-  console.log("image : ", systemSetting[0]?.image);
+  const CloseDrawer = () => setDrawerOpen(false);
+
+  console.log("image : ๅ : ", systemSetting[0]?.image);
 
   return (
     <div className="hiddenPrint">
@@ -70,27 +70,26 @@ export default observer(function Navbar() {
       <div>
         <nav className="fixed w-full p-4 flex justify-between items-center bg-white shadow-md z-50">
           {/* <NavLink to={RoutePath.firstscreen}> */}
-            {loadings ? (
-              <CircularProgress />
-            ) : (
-              <>
-                {systemSetting[0]?.id !== undefined ? (
-                  <div
-                    className="text-3xl leading-none"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                    }}
+          {loadings ? (
+            <CircularProgress />
+          ) : (
+            <>
+              {systemSetting[0]?.id !== undefined ? (
+                <div
+                  className="text-3xl leading-none"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <button
+                    className="lg:hidden text-2xl lg: mr-3"
+                    onClick={toggleDrawer}
                   >
-                    <button
-                      className="lg:hidden text-2xl lg: mr-3"
-                      onClick={toggleDrawer}
-                    >
-                      &#9776;
-                    </button>
+                    &#9776;
+                  </button>
 
-                    <NavLink to={RoutePath.firstscreen}>
-
+                  <NavLink to={RoutePath.firstscreen}>
                     <div className="hidden md:flex items-center justify-start ">
                       <img
                         src={
@@ -115,21 +114,18 @@ export default observer(function Navbar() {
                         />
                       </p>
                     </div>
-                    </NavLink>
-
-                  </div>
-                ) : (
-                  <p>
-                    <MyContent
-                      name={
-                        "กรุณาเพิ่มรูปภาพ และชื่อเว็บไซต์ ได้ที่ตั้งค่าระบบ"
-                      }
-                      fontSize="normal"
-                    />
-                  </p>
-                )}
-              </>
-            )}
+                  </NavLink>
+                </div>
+              ) : (
+                <p>
+                  <MyContent
+                    name={"กรุณาเพิ่มรูปภาพ และชื่อเว็บไซต์ ได้ที่ตั้งค่าระบบ"}
+                    fontSize="normal"
+                  />
+                </p>
+              )}
+            </>
+          )}
           {/* </NavLink> */}
 
           <ul className="hidden absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 lg:flex lg:mx-auto lg:items-center lg:w-auto lg:space-x-6">
@@ -278,6 +274,7 @@ export default observer(function Navbar() {
                 }}
               >
                 <NavLink
+                  onClick={CloseDrawer}
                   to={RoutePath.myaccountScreen}
                   style={{ textDecoration: "none", color: "#000" }}
                 >
@@ -290,6 +287,7 @@ export default observer(function Navbar() {
 
                 {user?.stores?.length ? (
                   <NavLink
+                    onClick={CloseDrawer}
                     to={RoutePath.dashboardShopScreen}
                     style={{ textDecoration: "none", color: "#000" }}
                   >
@@ -301,6 +299,7 @@ export default observer(function Navbar() {
                   </NavLink>
                 ) : (
                   <NavLink
+                    onClick={CloseDrawer}
                     to={RoutePath.createShopScreen}
                     style={{ textDecoration: "none", color: "#000" }}
                   >
@@ -332,7 +331,7 @@ export default observer(function Navbar() {
                 style={{ textDecoration: "none" }}
               >
                 <IconButton color="inherit" aria-label="cart">
-                  <Badge badgeContent={resultCartItems} color="error">
+                  <Badge badgeContent={cartItems.length} color="error">
                     <ShoppingCartIcon />
                   </Badge>
                 </IconButton>
@@ -365,6 +364,7 @@ export default observer(function Navbar() {
       >
         <div className="flex flex-col space-y-5 mt-5">
           <NavLink
+            onClick={toggleDrawer}
             to={RoutePath.firstscreen}
             className={({ isActive }) =>
               `text-sm ${
@@ -377,6 +377,7 @@ export default observer(function Navbar() {
             <MyContent name={"หน้าหลัก"} fontSize="normal" />
           </NavLink>
           <NavLink
+            onClick={toggleDrawer}
             to={RoutePath.homeScreen}
             className={({ isActive }) =>
               `text-sm ${
@@ -388,24 +389,25 @@ export default observer(function Navbar() {
           >
             <MyContent name={"สินค้า"} fontSize="normal" />
           </NavLink>
-          {!token && 
+          {!token && (
             <NavLink
-            to={RoutePath.loginScreen}
-            className={({ isActive }) =>
-              `text-sm ${
-                isActive
-                  ? "text-blue-600 font-bold"
-                  : "text-gray-400 hover:text-gray-500"
-              }`
-            }
-          >
-            <MyContent name={"เข้าสู่ระบบ"} fontSize="normal" />
-          </NavLink>
-          }
-        
+              onClick={toggleDrawer}
+              to={RoutePath.loginScreen}
+              className={({ isActive }) =>
+                `text-sm ${
+                  isActive
+                    ? "text-blue-600 font-bold"
+                    : "text-gray-400 hover:text-gray-500"
+                }`
+              }
+            >
+              <MyContent name={"เข้าสู่ระบบ"} fontSize="normal" />
+            </NavLink>
+          )}
 
           {user && user && (
             <NavLink
+              onClick={toggleDrawer}
               to={RoutePath.orderReceiptList}
               className={({ isActive }) =>
                 `text-sm ${
@@ -421,6 +423,7 @@ export default observer(function Navbar() {
 
           {user?.roleId == 1 && (
             <NavLink
+              onClick={toggleDrawer}
               to={RoutePath.dashboardAdminHomePageScreen}
               className={({ isActive }) =>
                 `text-sm ${
@@ -435,7 +438,7 @@ export default observer(function Navbar() {
           )}
         </div>
       </div>
-      
+
       <div className="border border-gray-200 mb-20"></div>
     </div>
   );

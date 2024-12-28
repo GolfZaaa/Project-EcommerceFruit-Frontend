@@ -5,12 +5,14 @@ import { RoutePath } from "../constants/RoutePath";
 import { Address } from "../models/Address";
 import { TextField, Box } from "@mui/material";
 import { CreateInput } from "thai-address-autocomplete-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { myToast } from "../helper/components";
 
 const InputThaiAddress = CreateInput();
 
 export default observer(function AddressScreen({ onChangePaging }: any) {
+  const navigate = useNavigate();
+
   const {
     createUpdateAddress,
     getAddressByUserId,
@@ -25,14 +27,22 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
     detail: "",
   });
 
-  const { GetCartItemByUser, cartItems, GetCartItemByUserOrderStore } =
-    useStore().cartStore;
+  const {
+    GetCartItemByUser,
+    cartItems,
+    GetCartItemByUserOrderStore,
+    selectMyCart,
+  } = useStore().cartStore;
 
   const getData = async () => {
     await GetCartItemByUser();
     await GetCartItemByUserOrderStore();
     await getAddressgotoOrderByUserId();
   };
+
+  if (!selectMyCart.length) {
+    navigate(RoutePath.cartScreen);
+  }
 
   useEffect(() => {
     getData();
@@ -126,8 +136,7 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
                 onChange={handleChange("zipcode")}
                 onSelect={(e: any) => handleSelect(e)}
                 style={{ height: "55px" }}
-          className="custom-district-input FontPublic"
-
+                className="custom-district-input FontPublic"
               />
               <label className="FontPublic text-xl">แขวง/ตำบล</label>
               <InputThaiAddress.District
@@ -135,8 +144,7 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
                 // onChange={handleChange("district")}
                 onSelect={(e: any) => handleSelect(e)}
                 style={{ height: "55px", pointerEvents: "none", opacity: 0.6 }}
-          className="custom-district-input FontPublic"
-
+                className="custom-district-input FontPublic"
               />
               <label className="FontPublic text-xl">เขต/อำเภอ</label>
 
@@ -145,8 +153,7 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
                 // onChange={handleChange("amphoe")}
                 onSelect={(e: any) => handleSelect(e)}
                 style={{ height: "55px", pointerEvents: "none", opacity: 0.6 }}
-          className="custom-district-input FontPublic"
-
+                className="custom-district-input FontPublic"
               />
               <label className="FontPublic text-xl">จังหวัด</label>
               <InputThaiAddress.Province
@@ -154,8 +161,7 @@ export default observer(function AddressScreen({ onChangePaging }: any) {
                 // onChange={handleChange("province")}
                 onSelect={(e: any) => handleSelect(e)}
                 style={{ height: "55px", pointerEvents: "none", opacity: 0.6 }}
-          className="custom-district-input FontPublic"
-
+                className="custom-district-input FontPublic"
               />
               <button
                 type="submit"

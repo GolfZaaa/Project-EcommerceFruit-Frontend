@@ -1,32 +1,15 @@
 import { observer } from "mobx-react-lite";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import AddressScreen from "../AddressScreen";
 import SummaryScreen from "../SummaryScreen";
 import { useStore } from "../../store/store";
 import MyContent from "../../component/MyContent";
 import SuccessComponent from "../../layout/component/SuccessComponent";
 import { imageLocal } from "../../constants/RoutePath";
+import { useParams } from "react-router-dom";
 
 const OrderSummary = () => {
-  const { getAddressgotoOrderByUserId } = useStore().addressStore;
-
-  const [paging, setPaging] = useState<number>(1);
-
-  const getData = async () => {
-    await getAddressgotoOrderByUserId().then((res) => {
-      console.log("res", JSON.stringify(res));
-
-      if (res) {
-        setPaging(2);
-      } else {
-        setPaging(1);
-      }
-    });
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
+  const { id } = useParams<{ id: string }>();
 
   const data = [
     {
@@ -51,6 +34,14 @@ const OrderSummary = () => {
       description: "ทำรายการเสร็จสิ้น",
     },
   ];
+
+  console.log("Number(id)", Number(id));
+
+  const [paging, setPaging] = useState<number>(
+    Number(id) !== 3 ? Number(id) : 2
+  );
+
+  console.log("paging", paging);
 
   const onChangePaging = (pageNumber: number) => {
     setPaging(pageNumber);

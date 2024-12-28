@@ -219,25 +219,25 @@ export default observer(function dashboarduser() {
     "ธ.ค.",
   ];
 
-  const englishToThaiMonthIndex: any = {
-    January: 11,
-    February: 10,
-    March: 9,
-    April: 8,
-    May: 7,
-    June: 6,
-    July: 5,
-    August: 4,
-    September: 3,
-    October: 2,
-    November: 1,
-    December: 0,
+  const thaiToIndex: any = {
+    มกราคม: 0,
+    กุมภาพันธ์: 1,
+    มีนาคม: 2,
+    เมษายน: 3,
+    พฤษภาคม: 4,
+    มิถุนายน: 5,
+    กรกฎาคม: 6,
+    สิงหาคม: 7,
+    กันยายน: 8,
+    ตุลาคม: 9,
+    พฤศจิกายน: 10,
+    ธันวาคม: 11,
   };
 
   const chartData = {
     labels: monthlyOrderData.map((data: any) => {
-      const monthIndex = englishToThaiMonthIndex[data.month];
-      return thaiMonthShort[monthIndex];
+      const monthIndex = thaiToIndex[data.month];
+      return thaiMonthShort[monthIndex] || "ไม่ทราบเดือน";
     }),
     datasets: [
       {
@@ -298,10 +298,6 @@ export default observer(function dashboarduser() {
   }, [order]);
 
   const screenWidth = Dimensions.get("window").width;
-
-  const CloseModel = () =>{
-    setIsDrawerOpen(false);
-  }
 
   return (
     <View style={styles.container}>
@@ -383,7 +379,6 @@ export default observer(function dashboarduser() {
         <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
           <Text style={styles.closeButtonText}>ปิด</Text>
         </TouchableOpacity>
-        
       </Animated.View>
 
       <ScrollView>

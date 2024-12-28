@@ -23,6 +23,7 @@ export default class CartStore {
   constructor() {
     makeAutoObservable(this);
   }
+
   setLoadingCart = (state: boolean) => (this.loadingCart = state);
 
   setMyCartItems = (state: any) => (this.myCartItems = state);

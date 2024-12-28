@@ -44,20 +44,24 @@ const CardOrderSearch = ({ item }: { item: Order }) => {
   const status = item?.shippings[0]?.shippingStatus;
 
   const handleSended = (id: number) => {
-    Alert.alert("", "ท่านแน่ใจหรือไม่ว่าส่งสินค้าถึงมือลูกค้าแล้ว?", [
-      {
-        text: "ยกเลิก",
-        // onPress: () => console.log("cancel passed"),
-      },
-      {
-        text: "ยืนยัน",
-        onPress: async () => {
-          await iWantToTakeOrdertoSend([id]).then((res) => {
-            // console.log("res : ", res);
-          });
+    Alert.alert(
+      "",
+      "ท่านแน่ใจหรือไม่ว่าจะขอรับคำสั่งซื้อนี้เพื่อส่งต่อให้สำเร็จ?",
+      [
+        {
+          text: "ยกเลิก",
+          // onPress: () => console.log("cancel passed"),
         },
-      },
-    ]);
+        {
+          text: "ยืนยัน",
+          onPress: async () => {
+            await iWantToTakeOrdertoSend([id]).then((res) => {
+              // console.log("res : ", res);
+            });
+          },
+        },
+      ]
+    );
   };
 
   const testHaha = item.shippings[0].driverHistories.find(

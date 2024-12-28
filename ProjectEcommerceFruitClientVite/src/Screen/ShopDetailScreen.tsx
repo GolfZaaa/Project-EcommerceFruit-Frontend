@@ -12,6 +12,7 @@ import { MdAccessTimeFilled } from "react-icons/md";
 import { BsFillBarChartLineFill } from "react-icons/bs";
 import { Fab, Grid } from "@mui/material";
 import IconOutStock from "../image/OutStock.png";
+
 export default observer(function ShopDetailScreen() {
   const { id: userId } = useParams<{ id: any }>();
 
@@ -44,7 +45,7 @@ export default observer(function ShopDetailScreen() {
         })
       );
     }
-  }, [shopDetail]);
+  }, []);
 
   useEffect(() => {
     handleSearch();
@@ -484,7 +485,7 @@ export default observer(function ShopDetailScreen() {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 pl-16 pr-16 mt-10 mb-10">
-        {shopProductUser.filter((x) => x.quantity > 0).length > 0 && (
+        {shopProductUser.filter((x) => x.quantity > 0).length > 0 &&
           shopProductUser
             .filter((x) => x.quantity > 0)
             .map((product) => {
@@ -550,20 +551,18 @@ export default observer(function ShopDetailScreen() {
                   </div>
                 </div>
               );
-            })
-        ) 
-        }
+            })}
       </div>
-      {shopProductUser.filter((x) => x.quantity > 0).length == 0 &&
+      {shopProductUser.filter((x) => x.quantity > 0).length == 0 && (
         <div>
-        <div className="h-full flex flex-col items-center justify-start md:justify-center mt-11">
-          <img src={IconOutStock} className="w-48 h-48 mb-4" alt="Logo" />
-          <p className="text-center FontPublic text-2xl font-semibold">
-            ไม่มีสินค้าในสต็อก
-          </p>
+          <div className="h-full flex flex-col items-center justify-start md:justify-center mt-11">
+            <img src={IconOutStock} className="w-48 h-48 mb-4" alt="Logo" />
+            <p className="text-center FontPublic text-2xl font-semibold">
+              ไม่มีสินค้าในสต็อก
+            </p>
+          </div>
         </div>
-      </div>
-        }
+      )}
     </div>
   );
 });

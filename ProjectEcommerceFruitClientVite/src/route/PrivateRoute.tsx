@@ -32,10 +32,9 @@ export const PrivateRoute: any = [
     path: RoutePath.addressScreen,
     element: <AddressScreen />,
   },
-
   {
     id: 15,
-    path: RoutePath.orderSummary,
+    path: RoutePath.firstscreen + "order-summary/:id",
     element: <OrderSummary />,
   },
   {

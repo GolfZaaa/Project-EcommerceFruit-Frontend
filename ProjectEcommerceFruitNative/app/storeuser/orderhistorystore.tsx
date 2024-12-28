@@ -258,10 +258,14 @@ const OrderHistoryStoreScreen = () => {
             </View>
           </OrderInfo>
 
-          <Image
-            source={{ uri: pathImagesApp.paymentImage + item.paymentImage }}
-            style={more ? styles.imageMore : styles.image}
-          />
+          {item.paymentImage ? (
+            <Image
+              source={{ uri: pathImagesApp.paymentImage + item.paymentImage }}
+              style={more ? styles.imageMore : styles.image}
+            />
+          ) : (
+            <OrderTitle>ชำระเงินเรียบร้อยแล้ว ผ่านบัตรเครดิต</OrderTitle>
+          )}
 
           {more && (
             <View>
@@ -541,7 +545,6 @@ const OrderHistoryStoreScreen = () => {
       </TouchableOpacity>
 
       <Title>ประวัติรายการคำสั่งซื้อ</Title>
-      
 
       <TabView
         navigationState={{ index, routes }}

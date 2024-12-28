@@ -50,11 +50,12 @@ export default observer(function CartScreen() {
   } = useStore().cartStore;
 
   const { getAddressgotoOrderByUserId } = useStore().addressStore;
+  const { setLoadingUser, loadingUser } = useStore().userStore;
 
   useEffect(() => {
     GetCartItemByUser();
     GetCartItemByUserOrderStore();
-    getAddressgotoOrderByUserId();
+    // getAddressgotoOrderByUserId();
     setselectMyCart([]);
   }, []);
 
@@ -184,21 +185,31 @@ export default observer(function CartScreen() {
     setselectMyCart(items);
   };
 
-  const handleToOrderSummary = () => {
+  const handleToOrderSummary = async () => {
     setLoadingUser(true);
-    setTimeout(() => {
-      setLoadingUser(false);
-      navigate(RoutePath.orderSummary);
-      resetScroll();
-    }, 700);
+
+    await getAddressgotoOrderByUserId()
+      .then((res) => {
+        console.log("res", JSON.stringify(res));
+
+        navigate(RoutePath.orderSummary(res ? "2" : "1"));
+
+        setLoadingUser(false);
+      })
+      .catch(() => {
+        setLoadingUser(false);
+      });
+
+    // setTimeout(() => {
+
+    // resetScroll();
+    // }, 700);
   };
 
   const handleBackHomeScreen = () => {
     navigate(RoutePath.homeScreen);
     resetScroll();
   };
-
-  const { setLoadingUser, loadingUser } = useStore().userStore;
 
   return (
     <div className="FontPublic">
@@ -260,16 +271,14 @@ export default observer(function CartScreen() {
                               height: 50,
                             }}
                             checked={checkedItem === storeName}
-                            onChange={() =>
-                              handleCheckboxChange(items, storeName)
-                            }
+                            onChange={() => {
+                              handleCheckboxChange(items, storeName);
+                            }}
                           />
                         </div>
 
                         {items.map((item: CartItem, i: number) => {
-                          console.log("item", item);
-
-                          checkExpireProductInCart(item.cartItemId);
+                          // checkExpireProductInCart(item.cartItemId);
 
                           return (
                             <div key={i} className="space-y-6">
@@ -463,7 +472,7 @@ export default observer(function CartScreen() {
                   </div>
                   <button
                     onClick={handleToOrderSummary}
-                    disabled={!checkedItem}
+                    disabled={!checkedItem || !selectMyCart.length}
                     className={`flex w-full items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium text-white focus:outline-none focus:ring-4 ${
                       !checkedItem
                         ? "bg-gray-400 cursor-not-allowed"

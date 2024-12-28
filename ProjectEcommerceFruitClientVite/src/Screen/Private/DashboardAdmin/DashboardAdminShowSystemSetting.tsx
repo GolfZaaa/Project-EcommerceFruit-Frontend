@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   TextField,
   Box,
@@ -113,16 +113,16 @@ const DashboardAdminShowSystemSetting = () => {
             required
             InputProps={{
               sx: {
-                fontSize: '1.3rem', 
-                color: '#333',   
-                fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                fontSize: "1.3rem",
+                color: "#333",
+                fontFamily: '"Noto Sans Thai Looped", sans-serif',
               },
             }}
             InputLabelProps={{
               sx: {
-                fontSize: '1.2rem',
-                color: '#888',
-                fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                fontSize: "1.2rem",
+                color: "#888",
+                fontFamily: '"Noto Sans Thai Looped", sans-serif',
               },
             }}
           />
@@ -136,16 +136,16 @@ const DashboardAdminShowSystemSetting = () => {
             required
             InputProps={{
               sx: {
-                fontSize: '1.3rem', 
-                color: '#333',   
-                fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                fontSize: "1.3rem",
+                color: "#333",
+                fontFamily: '"Noto Sans Thai Looped", sans-serif',
               },
             }}
             InputLabelProps={{
               sx: {
-                fontSize: '1.2rem',
-                color: '#888',
-                fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                fontSize: "1.2rem",
+                color: "#888",
+                fontFamily: '"Noto Sans Thai Looped", sans-serif',
               },
             }}
           />
@@ -160,16 +160,16 @@ const DashboardAdminShowSystemSetting = () => {
             required
             InputProps={{
               sx: {
-                fontSize: '1.3rem', 
-                color: '#333',   
-                fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                fontSize: "1.3rem",
+                color: "#333",
+                fontFamily: '"Noto Sans Thai Looped", sans-serif',
               },
             }}
             InputLabelProps={{
               sx: {
-                fontSize: '1.2rem',
-                color: '#888',
-                fontFamily: '"Noto Sans Thai Looped", sans-serif', 
+                fontSize: "1.2rem",
+                color: "#888",
+                fontFamily: '"Noto Sans Thai Looped", sans-serif',
               },
             }}
           />
@@ -182,7 +182,7 @@ const DashboardAdminShowSystemSetting = () => {
               fullWidth
             >
               <p className="FontPublic">
-              <MyContent name="บันทึก" fontSize="small" />
+                <MyContent name="บันทึก" fontSize="small" />
               </p>
             </Button>
           </CardActions>{" "}

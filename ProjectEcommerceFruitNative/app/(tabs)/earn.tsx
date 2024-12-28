@@ -289,7 +289,6 @@ export default observer(function TabTwoScreen() {
 
   return (
     <Container>
-
       <Title>คำสั่งซื้อที่สามารถรับหิ้วได้</Title>
 
       <ScrollView>

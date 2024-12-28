@@ -48,7 +48,7 @@ export default observer(function FirstScreenNew() {
 
   const { getOrdersAll, ordertotal } = useStore().orderStore;
 
-  console.log("ordertotal",ordertotal)
+  console.log("ordertotal", ordertotal);
 
   const { getUserAll, userAll, user } = useStore().userStore;
 
@@ -74,7 +74,7 @@ export default observer(function FirstScreenNew() {
       await getNEWSs();
     };
     fetchData();
-  }, [getProduct, getCategory, getNEWSs, getOrdersAll]);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -83,7 +83,6 @@ export default observer(function FirstScreenNew() {
     fetchData();
   }, []);
 
-
   useEffect(() => {
     const filterProduct = product.filter(
       (x) =>
@@ -91,7 +90,7 @@ export default observer(function FirstScreenNew() {
         x.status === true &&
         new Date(x.expire) > new Date() &&
         x.productGI.store.hidden != true &&
-        x.productGI.store.userId != user?.id 
+        x.productGI.store.userId != user?.id
     );
 
     if (filterProduct.length > 0) {
@@ -199,9 +198,9 @@ export default observer(function FirstScreenNew() {
     resetScroll();
   };
 
-  console.log("ordertotal",ordertotal)
+  console.log("ordertotal", ordertotal);
 
-  const productShowing = product.filter(x=>new Date(x.expire) > new Date());
+  const productShowing = product.filter((x) => new Date(x.expire) > new Date());
 
   return (
     <div>
