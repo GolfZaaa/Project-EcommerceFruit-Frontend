@@ -241,7 +241,7 @@ export default observer(function CartScreen() {
           )}
 
           <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
-            <div className="w-8/12 flex flex-col space-y-6">
+          <div className="w-full lg:w-8/12 flex flex-col space-y-6">
               {Object.entries(groupedCartItems).map(
                 ([storeName, items]: [string, CartItem[]], i) => (
                   <div
