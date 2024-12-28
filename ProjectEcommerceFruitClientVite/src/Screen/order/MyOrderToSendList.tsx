@@ -583,7 +583,7 @@ const MyOrderToSendList = ({ order }: { order: Order[] }) => {
 
   return (
     <div className="FontPublic -mt-12">
-      <div className="mt-2 relative flex flex-wrap justify-center items-center gap-10 bg-white p-8 rounded-lg shadow-md border">
+      <div className="mt-2 relative flex flex-wrap justify-center items-center gap-4 bg-white p-8 rounded-lg shadow-md border sm:gap-8 md:gap-10">
         <div className="absolute  top-5 left-5">
           <p className="text-lg font-bold">
             <MyContent name="ข้อมูลรายได้ของฉัน" fontSize="small" />

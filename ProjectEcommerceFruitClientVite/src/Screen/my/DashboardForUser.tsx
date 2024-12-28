@@ -454,7 +454,7 @@ export default observer(function DashboardForUser() {
   return (
     <div className="-ml-10 -mt-16">
       <div className="FontPublic">
-        <div className="mt-2 md:pt-5 sm:pt-5 relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center">
+      <div className="mt-2 relative flex flex-wrap justify-center items-center gap-4 sm:gap-8 md:gap-10">
           <a className="flex md:w-48 lg:w-44 h-28 w-44 flex-col items-center justify-center rounded-md border border-dashed border-gray-600 transition-colors duration-100 ease-in-out hover:border-gray-400/80">
             <div className="flex flex-row items-center justify-center">
               <FaDollarSign size={20} />

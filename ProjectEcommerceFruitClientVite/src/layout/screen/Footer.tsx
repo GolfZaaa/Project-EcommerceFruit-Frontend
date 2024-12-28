@@ -4,10 +4,14 @@ import logokru from "../../image/krulogo.png";
 import { useStore } from "../../store/store";
 
 export default function Footer() {
-  const { systemSetting, getSystemSetting, loadings } =
+  const { systemSetting} =
     useStore().systemSettingStore;
 
-  console.log("systemSetting", systemSetting);
+    if (!systemSetting || systemSetting.length === 0) {
+      return null;
+    }
+    
+
   return (
     <>
       <footer className="bg-white FontPublic">

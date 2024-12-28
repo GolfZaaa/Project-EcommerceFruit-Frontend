@@ -299,29 +299,51 @@ export default observer(function ProductDetailScreen() {
             }
           />
 
-          <div className="flex mt-2 space-x-4">
+                <div
+                  className="
+          mt-2
+          grid
+          grid-cols-2
+          gap-4
+          sm:grid-cols-3
+          md:grid-cols-4
+          lg:grid-cols-5
+        "
+          >
             {productDetail?.productGI.images.map((item) => (
-              <img
-                alt="images"
-                className="md:w-24 md:h-24 rounded-b-lg object-cover"
-                style={{
-                  cursor: "pointer",
-                  border:
-                    (preViewImage === pathImages.product_GI + item.imageName &&
-                      "2px solid red") ||
-                    "",
-                }}
-                onClick={() =>
-                  setPreViewImage(
-                    preViewImage === pathImages.product_GI + item.imageName
-                      ? productDetail?.images
-                        ? pathImages.product + productDetail?.images
-                        : imageLocal.noPicture
-                      : pathImages.product_GI + item.imageName
-                  )
-                }
-                src={pathImages.product_GI + item.imageName}
-              />
+              <div
+                key={item.imageName}
+                className="relative w-full aspect-square"
+              >
+                <img
+                  alt="images"
+                  src={pathImages.product_GI + item.imageName}
+                  className={`
+          absolute top-0 left-0
+          w-full h-full
+          object-cover
+          rounded-lg 
+          cursor-pointer
+          border-2
+          transition-all 
+          duration-300
+          ${
+            preViewImage === pathImages.product_GI + item.imageName
+              ? "border-red-500"
+              : "border-transparent"
+          }
+        `}
+                  onClick={() =>
+                    setPreViewImage(
+                      preViewImage === pathImages.product_GI + item.imageName
+                        ? productDetail?.images
+                          ? pathImages.product + productDetail?.images
+                          : imageLocal.noPicture
+                        : pathImages.product_GI + item.imageName
+                    )
+                  }
+                />
+              </div>
             ))}
           </div>
         </div>

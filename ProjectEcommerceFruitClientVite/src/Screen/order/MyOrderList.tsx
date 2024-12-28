@@ -54,7 +54,7 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
   };
 
   return (
-    <div className="-mt-12 ">
+    <div className="xl:-mt-12 lg:-mt-9 md:-mt-9 sm:-mt-9 ">
       <Box
         display="flex"
         flexDirection="column"
@@ -176,10 +176,6 @@ const MyOrderList = ({ order }: { order: Order[] }) => {
           <MyOrderCard
             order={order.filter(
               (item) =>
-                // item?.shippings[0]?.shippingStatus !== undefined //ที่ต้องได้รับ
-                //   ? item?.confirmReceipt === 0
-                // :
-                // item?.tag !== "จัดส่งผ่านผู้รับหิ้ว" &&
                 (item?.shippings[0].driverHistories.length > 0 ||
                   item.shippingType !== "อื่น ๆ") &&
                 item?.tag !== null &&

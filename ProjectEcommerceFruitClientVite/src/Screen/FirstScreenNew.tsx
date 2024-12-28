@@ -215,19 +215,16 @@ export default observer(function FirstScreenNew() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
               <div className="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                {/* <p className="text-lg font-semibold">รูปภาพ {index + 1}</p> */}
               </div>
             </div>
           ) : (
             <Slider {...settingsImageSlide}>
               {slideShow.map((image, index) => {
-                console.log("image" + index, JSON.stringify(image));
-
                 return (
                   <div key={index} className="p-2 relative group">
                     <img
                       src={pathImages.slideShow + image?.imageName || ""}
-                      className="w-full h-96 object-cover rounded-md transition-transform duration-500 ease-in-out group-hover:scale-110 group-hover:rotate-3"
+                      className="w-full h-96  rounded-md transition-transform duration-500 ease-in-out group-hover:scale-110 group-hover:rotate-3"
                       alt={`slide-${index}`}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
@@ -360,26 +357,27 @@ export default observer(function FirstScreenNew() {
                   className="w-full h-96 object-cover object-center transition-transform duration-500"
                 />
               </motion.div>
+              
               <motion.div
                 ref={ref}
                 initial={{ opacity: 0, x: -50, scale: 0.95, rotate: -5 }}
                 animate={controls}
-                className="w-full xl:w-1/2 xl:pl-12 xl:pr-24 mt-6 xl:mt-0 sm:pl-32 md:pl-28"
+                className="w-full xl:w-1/2 xl:pl-12 xl:pr-24 mt-6 xl:mt-0 pl-20 sm:pl-32 md:pl-28"
               >
                 <p
-                  className="FontPublic text-sm leading-none text-gray-600 pb-2 xl:pl-16"
+                  className="FontPublic text-sm leading-none  text-gray-600 pb-2 xl:pl-16"
                   style={{ fontSize: fontSizesmall }}
                 >
                   {randomProduct && randomProduct.productGI.category.name}
                 </p>
                 <p
-                  className="FontPublic md:text-3xl xl:text-4xl text-2xl font-semibold xl:leading-9 text-gray-800 xl:pb-6 md:pb-4 pb-2 xl:pl-16"
+                  className="FontPublic md:text-3xl xl:text-4xl text-2xl font-semibold xl:leading-9 text-gray-800 xl:pb-6 xl:pl-16"
                   style={{ fontSize: fontSizeBiglittle }}
                 >
                   {randomProduct && randomProduct.productGI.name}
                 </p>
                 <p
-                  className="FontPublic text-sm leading-5 text-gray-600 md:pb-10 pb-8 xl:pl-16"
+                  className="FontPublic text-sm leading-5 text-gray-600  pb-8 xl:pl-16"
                   style={{ fontSize: fontSizesmall }}
                 >
                   {randomProduct && randomProduct && (
