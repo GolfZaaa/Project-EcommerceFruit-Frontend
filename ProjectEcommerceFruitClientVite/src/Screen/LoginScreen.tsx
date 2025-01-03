@@ -8,8 +8,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 import "./css/register-style.css";
 import { resetScroll } from "../api/agent";
 import MyContent from "../component/MyContent";
-import LogoKru from "../image/krulogo.png";
-import BackgroundImg from "../image/login.jpg";
+// import LogoKru from "../image/krulogo.png";
+// import BackgroundImg from "../image/login.jpg";
+
+import { imageLocal } from "./../constants/RoutePath";
 
 export default observer(function LoginScreen() {
   const navigate = useNavigate();
@@ -94,12 +96,14 @@ export default observer(function LoginScreen() {
             <div
               className="hidden lg:block lg:w-1/2 bg-cover"
               style={{
-                backgroundImage: `url(${BackgroundImg})`,
+                backgroundImage: `url(${imageLocal.login})`,
               }}
             ></div>
+            {/* {imageLocal.login} */}
             <div className="w-full p-8 lg:w-1/2">
               <div className="align-middle justify-center flex items-center">
-                <img className="h-24" src={LogoKru} />
+                <img className="h-24" src={imageLocal.logoKru} />
+                {/* {imageLocal.logoKru} */}
               </div>
               <h2 className="FontPublic text-xl font-bold text-gray-600 text-center">
                 <MyContent

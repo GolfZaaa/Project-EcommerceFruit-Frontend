@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useStore } from "../../../store/store";
-import { pathImagepayment } from "../../../api/agent";
 import ExcelJS from "exceljs";
 import { AiFillFileExcel } from "react-icons/ai";
 import AOS from "aos";
@@ -12,6 +11,7 @@ import { VscFilePdf } from "react-icons/vsc";
 import { RiFileExcel2Line } from "react-icons/ri";
 import MyContent from "../../../component/MyContent";
 import { observer } from "mobx-react-lite";
+import { pathImages } from "../../../constants/RoutePath";
 
 export default observer(function DashboardAdminShowOrder() {
   const [searchUser, setSearchUser] = useState<any>("");
@@ -396,7 +396,7 @@ export default observer(function DashboardAdminShowOrder() {
                               {userItem.paymentImage ? (
                                 isGeneratingPDF ? (
                                   <a
-                                    href={`${pathImagepayment}${userItem.paymentImage}`}
+                                    href={`${pathImages.paymentImage}${userItem.paymentImage}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                   >
@@ -415,7 +415,7 @@ export default observer(function DashboardAdminShowOrder() {
                                 ) : (
                                   <img
                                     className="w-20 h-24 object-cover"
-                                    src={`${pathImagepayment}${userItem.paymentImage}`}
+                                    src={`${pathImages.paymentImage}${userItem.paymentImage}`}
                                     alt="Payment"
                                   />
                                 )

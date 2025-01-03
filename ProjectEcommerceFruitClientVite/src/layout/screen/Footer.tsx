@@ -1,16 +1,14 @@
 import MyContent from "../../component/MyContent";
-import { pathImages } from "../../constants/RoutePath";
-import logokru from "../../image/krulogo.png";
+import { imageLocal, pathImages } from "../../constants/RoutePath";
+// import logokru from "../../image/krulogo.png";
 import { useStore } from "../../store/store";
 
 export default function Footer() {
-  const { systemSetting} =
-    useStore().systemSettingStore;
+  const { systemSetting } = useStore().systemSettingStore;
 
-    if (!systemSetting || systemSetting.length === 0) {
-      return null;
-    }
-    
+  if (!systemSetting || systemSetting.length === 0) {
+    return null;
+  }
 
   return (
     <>
@@ -33,7 +31,7 @@ export default function Footer() {
                     />
                   ) : (
                     <img
-                      src={logokru}
+                      src={imageLocal.logoKru}
                       className="w-32 h-28 md:h-44  object-cover"
                       alt="image"
                     />
@@ -104,40 +102,30 @@ export default function Footer() {
                       style={{ color: "#8b8484" }}
                     >
                       <p className="pb-2">
-                      <MyContent
-                        name={
-                          "ที่อยู่ : 70 ม.4 ต.หนองบัว อ.เมืองกาญจนบุรี 71190"
-                        }
-                        fontSize="small"
-                      />
+                        <MyContent
+                          name={
+                            "ที่อยู่ : 70 ม.4 ต.หนองบัว อ.เมืองกาญจนบุรี 71190"
+                          }
+                          fontSize="small"
+                        />
                       </p>
                       <p className="pb-2">
-                      <MyContent
-                        name={
-                          "โทร : 034-534059-60"
-                        }
-                        fontSize="small"
-                      />
+                        <MyContent
+                          name={"โทร : 034-534059-60"}
+                          fontSize="small"
+                        />
                       </p>
 
                       <p className="pb-2">
-                      <MyContent
-                        name={
-                          "Fax : 034-534057"
-                        }
-                        fontSize="small"
-                      />
+                        <MyContent name={"Fax : 034-534057"} fontSize="small" />
                       </p>
-                      
+
                       <p className="pb-2">
-                      <MyContent
-                        name={
-                          "Email : kru@kru.ac.th"
-                        }
-                        fontSize="small"
-                      />
+                        <MyContent
+                          name={"Email : kru@kru.ac.th"}
+                          fontSize="small"
+                        />
                       </p>
-                       
                     </p>
                   </div>
                 )}

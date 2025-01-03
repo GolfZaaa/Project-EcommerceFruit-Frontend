@@ -25,7 +25,8 @@ import { SegmentedButtons } from "react-native-paper";
 import { Mytoast } from "@/components/MyToast";
 import { CardField, confirmPayment } from "@stripe/stripe-react-native";
 // @ts-ignore
-import Icon from "../assets/images/ProductOutStock.png";
+// import Icon from "../assets/images/ProductOutStock.png";
+import { imageLocal } from "./../../ProjectEcommerceFruitClientVite/src/constants/RoutePath";
 
 const formatNumberWithCommas = (number: number) => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -258,6 +259,8 @@ export default observer(function CartDetailScreen() {
     GetCartItemByUserOrderStore();
   };
 
+  const imageProductOutStock: any = imageLocal.imageStock;
+
   return (
     <ScrollView style={{ backgroundColor: "#fff" }}>
       {!CheckProduct && (
@@ -354,7 +357,7 @@ export default observer(function CartDetailScreen() {
           <View style={styles.overlayContainer}>
             <View style={styles.card}>
               <View style={styles.containerIcon}>
-                <Image source={Icon} style={styles.imageIcon} />
+                <Image source={imageProductOutStock} style={styles.imageIcon} />
               </View>
 
               <View style={styles.infoContainer}>

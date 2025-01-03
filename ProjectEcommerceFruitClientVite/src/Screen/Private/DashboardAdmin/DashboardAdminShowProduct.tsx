@@ -1,7 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useRef, useState } from "react";
 import { useStore } from "../../../store/store";
-import { pathImageProduct } from "../../../api/agent";
 import { AiFillFileExcel } from "react-icons/ai";
 import ExcelJS from "exceljs";
 import { Product } from "../../../models/Product";
@@ -15,9 +14,11 @@ import { VscFilePdf } from "react-icons/vsc";
 import { RiFileExcel2Line } from "react-icons/ri";
 import MyContent from "../../../component/MyContent";
 import { FaCheck } from "react-icons/fa";
+import { pathImages } from "../../../constants/RoutePath";
 
 export default observer(function DashboardAdminShowProduct() {
-  const { getProduct, product, DeleteProduct,isUsedProduct } = useStore().productStore;
+  const { getProduct, product, DeleteProduct, isUsedProduct } =
+    useStore().productStore;
   const [searchUser, setSearchUser] = useState<any>("");
   const [filterUser, setfilterUser] = useState<any>([]);
 
@@ -136,8 +137,8 @@ export default observer(function DashboardAdminShowProduct() {
 
   const handleDelete = (userItem: any) => {
     // DeleteProduct(userItem.id);
-    isUsedProduct(userItem.id)
-    console.log("DeleteProduct",userItem.id)
+    isUsedProduct(userItem.id);
+    console.log("DeleteProduct", userItem.id);
   };
 
   const onChangeCU = () => {
@@ -178,7 +179,7 @@ export default observer(function DashboardAdminShowProduct() {
       });
   }
 
-  console.log("product",product)
+  console.log("product", product);
 
   return (
     <>
@@ -388,7 +389,7 @@ export default observer(function DashboardAdminShowProduct() {
                               {" "}
                               {isGeneratingPDF ? (
                                 <a
-                                  href={pathImageProduct + userItem.images}
+                                  href={pathImages.product + userItem.images}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >
@@ -406,7 +407,7 @@ export default observer(function DashboardAdminShowProduct() {
                                 </a>
                               ) : (
                                 <img
-                                  src={pathImageProduct + userItem.images}
+                                  src={pathImages.product + userItem.images}
                                   className="w-20 object-cover"
                                 />
                               )}
@@ -443,30 +444,31 @@ export default observer(function DashboardAdminShowProduct() {
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                               <div>
                                 {isGeneratingPDF ? (
-                                    <div>
-                                  {userItem.hidden ? (
-                                    <div className="flex items-center justify-center">
-                                      <MyContent
-                                      name={"ปิดการใช้งาน"}
-                                      fontSize="small"
-                                    />
-                                  </div>
-                                  ):(
-                                    <div className="flex items-center justify-center">
-                                    <MyContent
-                                      name={"กำลังใช้งาน"}
-                                      fontSize="small"
-                                    />
-                                  </div>
-                                  )}
-                                  </div>
-                                ):(
                                   <div>
-                                  <MySwitch
-                                  handleChange={() => handleDelete(userItem)}
-                                  
-                                  checked={userItem.status}
-                                />
+                                    {userItem.hidden ? (
+                                      <div className="flex items-center justify-center">
+                                        <MyContent
+                                          name={"ปิดการใช้งาน"}
+                                          fontSize="small"
+                                        />
+                                      </div>
+                                    ) : (
+                                      <div className="flex items-center justify-center">
+                                        <MyContent
+                                          name={"กำลังใช้งาน"}
+                                          fontSize="small"
+                                        />
+                                      </div>
+                                    )}
+                                  </div>
+                                ) : (
+                                  <div>
+                                    <MySwitch
+                                      handleChange={() =>
+                                        handleDelete(userItem)
+                                      }
+                                      checked={userItem.status}
+                                    />
                                   </div>
                                 )}
                                 {/* <Switch

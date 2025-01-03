@@ -34,7 +34,7 @@ export const PrivateRoute: any = [
   },
   {
     id: 15,
-    path: RoutePath.firstscreen + "order-summary/:id",
+    path: RoutePath.home + "order-summary/:id",
     element: <OrderSummary />,
   },
   {

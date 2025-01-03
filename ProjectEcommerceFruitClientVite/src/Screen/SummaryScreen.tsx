@@ -3,14 +3,15 @@ import { useStore } from "../store/store";
 import { observer } from "mobx-react-lite";
 import AddressList from "./address/AddressList";
 import { useNavigate } from "react-router-dom";
-import { pathImages, RoutePath } from "../constants/RoutePath";
+import { imageLocal, pathImages, RoutePath } from "../constants/RoutePath";
 import DropZoneImageComponent from "../layout/component/DropZoneImageComponent";
 import dayjs from "dayjs";
 import { formatDateThai, myToast } from "../helper/components";
 import { resetScroll } from "../api/agent";
 import CircularProgress from "@mui/material/CircularProgress";
 import MyContent from "../component/MyContent";
-import ImageStock from "../assets/images/ProductOutToStock.png";
+// import ImageStock from "../assets/images/ProductOutToStock.png";
+
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import { CardCvcElement } from "@stripe/react-stripe-js";
 import { CardExpiryElement } from "@stripe/react-stripe-js";
@@ -677,7 +678,7 @@ export default observer(function SummaryScreen({ onChangePaging }: any) {
                 className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full text-center"
               >
                 <img
-                  src={ImageStock}
+                  src={imageLocal.imageStock}
                   alt="Notification Image"
                   className="w-32 h-32 mx-auto mb-4"
                 />

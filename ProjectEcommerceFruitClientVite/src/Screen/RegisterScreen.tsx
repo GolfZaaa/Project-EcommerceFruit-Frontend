@@ -2,13 +2,13 @@ import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { useStore } from "../store/store";
 import { NavLink, useNavigate } from "react-router-dom";
-import { RoutePath } from "../constants/RoutePath";
+import { imageLocal, RoutePath } from "../constants/RoutePath";
 import ToastLoginRegister from "../layout/component/ToastLoginRegister";
 import CircularProgress from "@mui/material/CircularProgress";
 import "./css/register-style.css";
 import { resetScroll } from "../api/agent";
 import MyContent from "../component/MyContent";
-import LogoKru from "../image/krulogo.png"
+// import LogoKru from "../image/krulogo.png"
 export default observer(function RegisterScreen() {
   const { register, loadingUser } = useStore().userStore;
   const navigate = useNavigate();
@@ -90,10 +90,7 @@ export default observer(function RegisterScreen() {
           ></div>
           <div className="w-full p-8 lg:w-1/2">
             <div className="align-middle justify-center flex items-center">
-              <img
-                className="h-24"
-                src={LogoKru}
-              />
+              <img className="h-24" src={imageLocal.logoKru} />
             </div>
             <h2 className="text-xl font-bold text-gray-600 text-center">
               <MyContent
@@ -145,8 +142,8 @@ export default observer(function RegisterScreen() {
                 //   }
                 // }}
                 onInput={(e: any) => {
-                  const value = e.target.value.replace(/[^0-9]/g, ""); 
-                  e.target.value = value.slice(0, 10); 
+                  const value = e.target.value.replace(/[^0-9]/g, "");
+                  e.target.value = value.slice(0, 10);
                 }}
               />
               {phoneNumberError && (
@@ -194,7 +191,7 @@ export default observer(function RegisterScreen() {
               >
                 {loadingUser ? (
                   <div>
-                    <CircularProgress color="inherit" size={32}/>
+                    <CircularProgress color="inherit" size={32} />
                   </div>
                 ) : (
                   <div>

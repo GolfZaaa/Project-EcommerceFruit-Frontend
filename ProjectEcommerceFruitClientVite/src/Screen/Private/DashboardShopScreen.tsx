@@ -22,14 +22,14 @@ import PeopleIcon from "@mui/icons-material/People";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
-import imageDashboard from "../../image/DashboardShop.png";
+// import imageDashboard from "../../image/DashboardShop.png";
 import { Link, NavLink } from "react-router-dom";
 import CreateShopScreen from "../Shopping/CreateShopScreen";
 import ProductGIList from "../Shopping/GI/ProductGIList";
 import ProductList from "../Shopping/product/ProductList";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import OrderList from "../order/OrderList";
-import { RoutePath } from "../../constants/RoutePath";
+import { imageLocal, RoutePath } from "../../constants/RoutePath";
 import ReactECharts from "echarts-for-react";
 import html2pdf from "html2pdf.js";
 import moment from "moment";
@@ -127,7 +127,7 @@ export default observer(function DashboardShopScreen() {
     setTotalQuantity(totalProduct);
 
     const totalOrderSuccess = order
-      .filter((x) => x.confirmReceipt === 1 )
+      .filter((x) => x.confirmReceipt === 1)
       .reduce((acc, currentOrder) => {
         return currentOrder.status === 1 ? acc + 1 : acc;
       }, 0);
@@ -136,7 +136,9 @@ export default observer(function DashboardShopScreen() {
     const totalOrderFailed = order
       .filter((x) => x.confirmReceipt === 1)
       .reduce((acc, currentOrder) => {
-        return currentOrder.status === 2 || currentOrder.status === 5 ? acc + 1 : acc;
+        return currentOrder.status === 2 || currentOrder.status === 5
+          ? acc + 1
+          : acc;
       }, 0);
     setTotalOrderFailed(totalOrderFailed);
 
@@ -181,7 +183,11 @@ export default observer(function DashboardShopScreen() {
   useEffect(() => {
     if (order) {
       const years: any = [
-        ...new Set(order.filter(x=>x.status === 1 && x.confirmReceipt === 1).map((o) => dayjs(o.createdAt).year() + 543)),
+        ...new Set(
+          order
+            .filter((x) => x.status === 1 && x.confirmReceipt === 1)
+            .map((o) => dayjs(o.createdAt).year() + 543)
+        ),
       ].sort((a, b) => a - b);
       setYearOptions(years.map((year: any) => ({ value: year, label: year })));
 
@@ -489,7 +495,7 @@ export default observer(function DashboardShopScreen() {
               <CardMedia
                 component="img"
                 style={{ height: "200px", objectFit: "cover" }}
-                image={imageDashboard}
+                image={imageLocal.dashboardShop}
                 alt="Dashboard"
               />
             </Card>
@@ -609,7 +615,9 @@ export default observer(function DashboardShopScreen() {
                         fontSize="small"
                       />
                     </p>
-                    {order.filter((x) => x.confirmReceipt === 1 && x.status === 1).length > 0 && (
+                    {order.filter(
+                      (x) => x.confirmReceipt === 1 && x.status === 1
+                    ).length > 0 && (
                       <div className="flex items-center">
                         <p className="mr-2">ปี :</p>
                         <Select
@@ -671,7 +679,7 @@ export default observer(function DashboardShopScreen() {
 
   const drawer = (
     <div>
-      <Toolbar sx={{ minHeight: 0 }} /> 
+      <Toolbar sx={{ minHeight: 0 }} />
       <Divider />
       <ListItem sx={{ marginTop: 3 }}>
         <ListItemText
@@ -885,7 +893,6 @@ export default observer(function DashboardShopScreen() {
               width: drawerWidth,
               // zIndex: (theme) => theme.zIndex.appBar - 1,
               zIndex: 1,
-
             },
           }}
           open

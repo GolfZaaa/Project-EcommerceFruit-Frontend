@@ -12,20 +12,19 @@ import { SystemSetting } from "./systemsetting.api";
 
 export const pathServer = import.meta.env.VITE_API_URL;
 
-axios.defaults.baseURL = pathServer;
+axios.defaults.baseURL = pathServer + "api/";
 
-export const baseUr = "https://tee.kru.ac.th/sell-fruit/assets/"
-
+// export const baseUr = "https://tee.kru.ac.th/sell-fruit/assets/";
 
 // const baseUr = "https://localhost:8168/";
 
 // axios.defaults.baseURL = baseUr + "api/";
 
-export const pathImageProduct = baseUr + "product/";
+// export const pathImageProduct = baseUr + "product/";
 
-export const pathImagepayment = baseUr + "paymentImage/";
+// export const pathImagepayment = baseUr + "paymentImage/";
 
-export const baseUrlImage = baseUr;
+// export const baseUrlImage = baseUr;
 
 export const fontSizenormal = "20px";
 

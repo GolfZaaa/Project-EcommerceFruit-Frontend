@@ -57,7 +57,7 @@ export const PublicRoute: any = [
   // },
   {
     id: 11,
-    path: RoutePath.firstscreen + "product-detail-screen/:id",
+    path: RoutePath.home + "product-detail-screen/:id",
     element: <ProductDetailScreen />,
   },
   {
@@ -67,7 +67,7 @@ export const PublicRoute: any = [
   },
   {
     id: 21,
-    path: RoutePath.firstscreen + "shop-detail-screen/:id",
+    path: RoutePath.home + "shop-detail-screen/:id",
     element: <ShopDetailScreen />,
   },
   {
@@ -77,7 +77,7 @@ export const PublicRoute: any = [
   },
   {
     id: 23,
-    path: RoutePath.firstscreen + "news-list-detail-screen/:id",
+    path: RoutePath.home + "news-list-detail-screen/:id",
     element: <NewsDetailScreen />,
   },
 ];

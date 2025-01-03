@@ -1,13 +1,14 @@
-import { baseUrlImage } from "../api/agent";
+import { pathServer } from "../api/agent";
 import { config } from "../helper/config";
 
-// const HOST = config.baseURL ?? "/";
+const HOST = config.baseURL ?? "/";
 
-const HOST = import.meta.env.VITE_HOST;
+// const HOST = import.meta.env.VITE_HOST;
 
 export const RoutePath = {
   // public routes
-  firstscreen: HOST,
+  home: HOST,
+  firstscreen: `${HOST}first-screen`,
   homeScreen: `${HOST}home-screen`,
   loginScreen: `${HOST}login-screen`,
   registerScreen: `${HOST}register-screen`,
@@ -45,7 +46,7 @@ export const RoutePath = {
   dashboardAdminHomePageScreen: `${HOST}dashboard-admin-homePage-screen`,
 };
 
-const path = config.baseURL ?? baseUrlImage;
+const path = config.baseURL ?? pathServer;
 
 export const pathImages = {
   paymentImage: `${path}paymentImage/`,
@@ -57,18 +58,52 @@ export const pathImages = {
   sendedOrder: `${path}sendedOrder/`,
 };
 
-const ass = HOST + "assets/";
+const assServer = HOST + "assets/";
 
-const local = "../assets/images/";
+const local_out_assets = "../image/";
 const local_assets = "/src/assets/images/";
 
 export const imageLocal = {
   noPicture: `${
-    config.baseURL ? ass + "1-00f046f9" : local_assets + "no-pictures"
+    config.baseURL ? assServer + "1-00f046f9" : local_assets + "no-pictures"
   }.png`,
-  step: `${config.baseURL ? ass + "1-0" : local_assets + "Steps"}.png`,
-  step2: `${config.baseURL ? ass + "1-0" : local_assets + "Steps2"}.png`,
-  step4: `${config.baseURL ? ass + "1-0" : local_assets + "Steps4"}.png`,
+  step: `${config.baseURL ? assServer + "1-0" : local_assets + "Steps"}.png`,
+  step2: `${config.baseURL ? assServer + "1-0" : local_assets + "Steps2"}.png`,
+  step4: `${config.baseURL ? assServer + "1-0" : local_assets + "Steps4"}.png`,
+  logoKru: `${
+    config.baseURL
+      ? assServer + "krulogo-CgIOk_xF"
+      : local_out_assets + "krulogo"
+  }.png`,
+  backgroundImg: `${
+    config.baseURL ? assServer + "login-CVBB5PO6" : local_out_assets + "login"
+  }.jpg`,
+  imageStock: `${
+    config.baseURL
+      ? assServer + "OutStock-Bs11ybOi"
+      : local_assets + "ProductOutToStock"
+  }.png`,
+  craditcard: `${
+    config.baseURL
+      ? assServer + "craditcard--fX92mnb"
+      : local_out_assets + "craditcard"
+  }.png`,
+  dashboardShop: `${
+    config.baseURL
+      ? assServer + "DashboardShop-H8JU-ywG"
+      : local_out_assets + "DashboardShop"
+  }.png`,
+  login: `${
+    config.baseURL ? assServer + "login-CVBB5PO6" : local_out_assets + "login"
+  }.jpg`,
+  Logo: `${
+    config.baseURL ? assServer + "6-68784b1a" : local_out_assets + "Logo"
+  }.png`,
+  outStock: `${
+    config.baseURL
+      ? assServer + "OutStock-Bs11ybOi"
+      : local_out_assets + "OutStock"
+  }.png`,
 };
 
 // export const imageLocal = {

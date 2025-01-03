@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { SlideShow } from "../../../models/SlideShow";
 import { useStore } from "../../../store/store";
 import { observer } from "mobx-react-lite";
-import { pathImageProduct } from "../../../api/agent";
 import { AiFillFileExcel } from "react-icons/ai";
 import ExcelJS from "exceljs";
 import { MySwitch } from "./../../../helper/components/MySwitch";
@@ -88,8 +87,8 @@ const DashboardAdminSlideShow = () => {
               >
                 <AddIcon sx={{ mr: 1 }} />
                 <p className="FontPublic">
-                            <MyContent name="เพิ่ม" fontSize="small" />
-                          </p>
+                  <MyContent name="เพิ่ม" fontSize="small" />
+                </p>
               </Fab>
             </Grid>
           </Grid>
@@ -176,19 +175,17 @@ const DashboardAdminSlideShow = () => {
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                         >
-                            <p>
+                          <p>
                             <MyContent name="รูปภาพ" fontSize="small" />
                           </p>
-                          
                         </th>
                         <th
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300"
                         >
-                            <p>
+                          <p>
                             <MyContent name="สถานะการใช้งาน" fontSize="small" />
                           </p>
-                          
                         </th>
                         <th
                           scope="col"
@@ -198,10 +195,9 @@ const DashboardAdminSlideShow = () => {
                           scope="col"
                           className="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize border-b border-gray-300 rounded-tr-lg"
                         >
-                            <p>
+                          <p>
                             <MyContent name="ตั้งค่า" fontSize="small" />
                           </p>
-                          
                         </th>
                       </tr>
                     </thead>
@@ -215,7 +211,6 @@ const DashboardAdminSlideShow = () => {
                           >
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
                               {" "}
-                              
                               <p className="font-normal">
                                 <MyContent name={index + 1} fontSize="small" />
                               </p>
@@ -228,10 +223,7 @@ const DashboardAdminSlideShow = () => {
                               />
                             </td>
                             <td className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                              <div
-                              >
-
-                                
+                              <div>
                                 <MySwitch
                                   handleChange={() => handleIsUsed(userItem)}
                                   checked={userItem.isUsed}
